@@ -482,24 +482,17 @@ impl Decode {
 
     #[wasm_bindgen]
     pub fn tx_content_init_proposal (binary: &[u8]) -> Result<Object, Error> {
-        let inner = InitProposalData::try_from_slice(&binary[..])
+        let inner = StorageProposal::try_from_slice(&binary[..])
             .map_err(|e|Error::new(&format!("{e}")))?;
-        object(&[
-            ("id".into(),
-                inner.id.into()), //               /*    pub id: u64,
-            ("content".into(),
-                format!("{}", inner.content).into()),//: Hash,
-            ("author".into(),
-                inner.author.encode().into()), // Address,
-            ("type".into(),
-                format!("{}", inner.r#type).into()),//    pub type: ProposalType,
-            ("votingStartEpoch".into(),
-                inner.voting_start_epoch.0.into()), //  pub voting_start_epoch: Epoch,
-            ("votingEndEpoch".into(),
-                inner.voting_end_epoch.0.into()),//    pub voting_end_epoch: Epoch,
-            ("graceEpoch".into(),
-                inner.grace_epoch.0.into()),//    pub grace_epoch: Epoch,*/
-        ])
+        Ok(to_object! {
+            "id"      = inner.id,
+            "content" = inner.content,
+            "author"  = inner.author,
+            "type"    = inner.r#type,
+            "votingStartEpoch" = inner.voting_start_epoch,
+            "votingEndEpoch"   = inner.voting_end_epoch,
+            "graceEpoch"       = inner.grace_epoch,
+        })
     }
 
     #[wasm_bindgen]
