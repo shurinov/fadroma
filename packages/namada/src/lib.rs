@@ -1,7 +1,19 @@
 extern crate wasm_bindgen;
+
 use wasm_bindgen::prelude::*;
+
 use js_sys::{Uint8Array, JsString, Error, Object, Array, Reflect, BigInt, Set};
+
 use std::collections::{HashMap, BTreeMap, BTreeSet};
+
+pub(crate) use tendermint_rpc::{
+    Response,
+    endpoint::{
+        block::Response as BlockResponse,
+        block_results::Response as BlockResultsResponse,
+    }
+};
+
 pub(crate) use namada::{
     account::{
         InitAccount,

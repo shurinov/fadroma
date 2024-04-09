@@ -1609,6 +1609,9 @@ dependencies = [
  "masp_primitives 1.0.0 (git+https://github.com/anoma/masp?tag=v1.1.0)",
  "masp_proofs 1.0.0 (git+https://github.com/anoma/masp?tag=v1.1.0)",
  "namada",
+ "tendermint",
+ "tendermint-rpc",
+ "tokio",
  "wasm-bindgen",
  "wasm-bindgen-test",
 ]

@@ -7,6 +7,18 @@ pub struct Decode;
 impl Decode {
 
     #[wasm_bindgen]
+    pub fn decoded_block (
+        block_json: String,
+        block_results_json: String
+    ) -> Result<Object, Error> {
+        let block = BlockResponse::from_string(&block_json)
+            .map_err(|e|Error::new(&format!("{e}")))?;
+        let results = BlockResultsResponse::from_string(&block_results_json)
+            .map_err(|e|Error::new(&format!("{e}")))?;
+        unimplemented!();
+    }
+
+    #[wasm_bindgen]
     pub fn address (source: Uint8Array) -> Result<JsString, Error> {
         let address = Address::decode_bytes(&to_bytes(&source))
             .map_err(|e|Error::new(&format!("{e}")))?;

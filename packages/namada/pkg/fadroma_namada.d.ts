@@ -5,6 +5,12 @@
 export class Decode {
   free(): void;
 /**
+* @param {string} block_json
+* @param {string} block_results_json
+* @returns {object}
+*/
+  static decoded_block(block_json: string, block_results_json: string): object;
+/**
 * @param {Uint8Array} source
 * @returns {string}
 */
@@ -186,6 +192,7 @@ export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembl
 export interface InitOutput {
   readonly memory: WebAssembly.Memory;
   readonly __wbg_decode_free: (a: number) => void;
+  readonly decode_decoded_block: (a: number, b: number, c: number, d: number, e: number) => void;
   readonly decode_address: (a: number, b: number) => void;
   readonly decode_addresses: (a: number, b: number) => void;
   readonly decode_address_to_amount: (a: number, b: number) => void;
@@ -223,6 +230,7 @@ export interface InitOutput {
   readonly decode_tx_content_resign_steward: (a: number, b: number, c: number) => void;
   readonly __wbindgen_add_to_stack_pointer: (a: number) => number;
   readonly __wbindgen_malloc: (a: number, b: number) => number;
+  readonly __wbindgen_realloc: (a: number, b: number, c: number, d: number) => number;
   readonly __wbindgen_exn_store: (a: number) => void;
 }
 
