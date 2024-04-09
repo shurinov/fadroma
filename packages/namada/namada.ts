@@ -11,6 +11,7 @@ import {
   NamadaMnemonicIdentity
 } from './namada-connection'
 export {
+  Core,
   connect,
   initDecoder,
   NamadaCLI              as CLI,
