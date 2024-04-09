@@ -5,11 +5,13 @@ import {
   NamadaConsole
 } from './namada-console'
 import {
+  connect,
   initDecoder,
   NamadaConnection,
   NamadaMnemonicIdentity
 } from './namada-connection'
 export {
+  connect,
   initDecoder,
   NamadaCLI              as CLI,
   NamadaConnection       as Connection,

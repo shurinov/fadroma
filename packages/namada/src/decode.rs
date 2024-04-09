@@ -70,6 +70,7 @@ impl Decode {
                     }
                 }
                 to_object! {
+                    "id"         = hex::encode_upper(&id),
                     "type"       = "Decrypted",
                     "returnCode" = ret,
                 }
