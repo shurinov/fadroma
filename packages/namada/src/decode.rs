@@ -11,42 +11,111 @@ impl Decode {
         block_json: String,
         block_results_json: String
     ) -> Result<Object, Error> {
+
         let block = BlockResponse::from_string(&block_json)
             .map_err(|e|Error::new(&format!("{e}")))?;
         let results = BlockResultsResponse::from_string(&block_results_json)
             .map_err(|e|Error::new(&format!("{e}")))?;
-        let txs: Vec<Object> = Vec::with_capacity(block.block.data.len());
-        let block_id = block.block.header.hash();
+
+        let id = block.block.header.hash();
+        let mut txs: Vec<Object> = Vec::with_capacity(block.block.data.len());
         for tx in block.block.data.iter() {
             let tx = Tx::try_from(tx.as_slice())
                 .map_err(|e|Error::new(&format!("{e}")))?;
-            let mut id = tx.header_hash().to_vec();
-            match tx.header().tx_type {
-                TxType::Decrypted(..) => {
-                    id = tx.clone().update_header(TxType::Raw).header_hash().to_vec();
-                    let mut ret: Option<i32> = None;
-                    for event in results.end_block_events.clone().unwrap() {
-                        for attr in event.attributes.iter() {
-                            // We look to confirm hash of transaction
-                            if attr.key == "hash"
-                                && attr.value.to_ascii_lowercase() == hex::encode(&id)
-                            {
-                                // Now we look for the return code
-                                for attr in event.attributes.iter() {
-                                    if attr.key == "code" {
-                                        // using unwrap here is ok because we assume it is always going to be a number unless there is a bug in the node
-                                        ret = Some(attr.value.parse().unwrap());
-                                    }
+            txs.push(Self::block_tx(&results, &tx)?);
+        }
+
+        Ok(to_object! {
+            "id"  = format!("{id}"),
+            "txs" = txs,
+        })
+    }
+
+    fn block_tx (results: &BlockResultsResponse, tx: &Tx) -> Result<Object, Error> {
+        let mut id = tx.header_hash().to_vec();
+
+        let tx_common = to_object! {
+            "id"         = hex::encode_upper(&id),
+            "chainId"    = tx.header().chain_id.as_str(),
+            "expiration" = tx.header().expiration.map(|t|t.to_rfc3339()),
+            "timestamp"  = tx.header().timestamp.to_rfc3339(),
+            "codeHash"   = tx.header().code_hash.raw(),
+            "dataHash"   = tx.header().data_hash.raw(),
+            "memoHash"   = tx.header().memo_hash.raw(),
+            "sections"   = {
+                let sections = Array::new();
+                for section in tx.sections.iter() {
+                    sections.push(&JsValue::from(Self::tx_section(&section)?));
+                }
+                sections
+            },
+        };
+
+        let tx_specific = match tx.header().tx_type {
+
+            TxType::Decrypted(..) => {
+                id = tx.clone().update_header(TxType::Raw).header_hash().to_vec();
+                let mut ret: Option<i32> = None;
+                for event in results.end_block_events.clone().unwrap() {
+                    for attr in event.attributes.iter() {
+                        if attr.key == "hash"
+                            && attr.value.to_ascii_lowercase() == hex::encode(&id)
+                        {
+                            for attr in event.attributes.iter() {
+                                if attr.key == "code" {
+                                    ret = Some(attr.value.parse().unwrap());
                                 }
                             }
                         }
                     }
-                },
-                TxType::Wrapper(..) => {},
-                _ => {}
+                }
+                to_object! {
+                    "type"       = "Decrypted",
+                    "returnCode" = ret,
+                }
+            },
+
+            TxType::Wrapper(txw) => {
+                // values only set if transaction type is Wrapper
+                let fee_amount_per_gas_unit =
+                    txw.fee.amount_per_gas_unit.to_string_precise();
+                let fee_token =
+                    txw.fee.token.to_string();
+                let multiplier: u64 =
+                    txw.gas_limit.into();
+                to_object! {
+                    "type"                = "Wrapper",
+                    "feeAmountPerGasUnit" = fee_amount_per_gas_unit,
+                    "feeToken"            = fee_token,
+                    "multiplier"          = multiplier,
+                    "gasLimitMultiplier"  = multiplier as i64,
+                }
+            },
+
+            TxType::Protocol(txp) => {
+                to_object! {
+                    "type" = "Protocol",
+                    "pk"   = txp.pk,
+                    "tx"   = match txp.tx {
+                        ProtocolTxType::EthereumEvents     => "EthereumEvents",
+                        ProtocolTxType::BridgePool         => "BridgePool",
+                        ProtocolTxType::ValidatorSetUpdate => "ValidatorSetUpdate",
+                        ProtocolTxType::EthEventsVext      => "EthEventsVext",
+                        ProtocolTxType::BridgePoolVext     => "BridgePoolVext",
+                        ProtocolTxType::ValSetUpdateVext   => "ValSetUpdateVext",
+                    },
+                }
+            },
+
+            TxType::Raw => {
+                to_object! {
+                    "type" = "Raw",
+                }
             }
-        }
-        Ok(to_object!{ "txs" = txs, })
+
+        };
+
+        Self::tx_content(tx, Object::assign(&tx_common, &tx_specific))
     }
 
     #[wasm_bindgen]
@@ -255,7 +324,7 @@ impl Decode {
                 sections
             },
         };
-        Self::tx_content(tx, result)
+        Self::tx_content(&tx, result)
     }
 
     fn tx_details_wrapper (tx: &WrapperTx) -> Result<Object, Error> {
@@ -293,7 +362,7 @@ impl Decode {
         })
     }
 
-    fn tx_content (tx: Tx, result: Object) -> Result<Object, Error> {
+    fn tx_content (tx: &Tx, result: Object) -> Result<Object, Error> {
         let mut tag: Option<String> = None;
         for section in tx.sections.iter() {
             if let Section::Code(code) = section {

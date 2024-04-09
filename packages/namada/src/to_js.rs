@@ -76,6 +76,18 @@ impl ToJS for String {
     }
 }
 
+impl ToJS for i32 {
+    fn to_js (&self) -> Result<JsValue, Error> {
+        Ok((*self).into())
+    }
+}
+
+impl ToJS for i64 {
+    fn to_js (&self) -> Result<JsValue, Error> {
+        Ok((*self).into())
+    }
+}
+
 impl ToJS for u64 {
     fn to_js (&self) -> Result<JsValue, Error> {
         Ok((*self).into())
