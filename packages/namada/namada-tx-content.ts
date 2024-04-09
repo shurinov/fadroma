@@ -122,6 +122,7 @@ export default {
   'tx_deactivate_validator.wasm':        DeactivateValidator,
   'tx_init_account.wasm':                InitAccount,
   'tx_init_proposal.wasm':               InitProposal,
+  'tx_redelegate.wasm':                  Redelegation,
   'tx_reactivate_validator.wasm':        ReactivateValidator,
   'tx_resign_steward.wasm':              ResignSteward,
   'tx_reveal_pk.wasm':                   RevealPK,
