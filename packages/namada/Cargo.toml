@@ -19,10 +19,6 @@ tendermint = "0.34.0"
 tendermint-rpc = { version = "0.34.0", default-features = false }
 wasm-bindgen = "0.2.86"
 
-[dependencies.tokio]
-default-features = false
-features = []
-
 [dev-dependencies]
 wasm-bindgen-test = "0.3.13"
 

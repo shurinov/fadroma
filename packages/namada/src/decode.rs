@@ -7,7 +7,7 @@ pub struct Decode;
 impl Decode {
 
     #[wasm_bindgen]
-    pub fn decoded_block (
+    pub fn block (
         block_json: String,
         block_results_json: String
     ) -> Result<Object, Error> {
@@ -15,7 +15,38 @@ impl Decode {
             .map_err(|e|Error::new(&format!("{e}")))?;
         let results = BlockResultsResponse::from_string(&block_results_json)
             .map_err(|e|Error::new(&format!("{e}")))?;
-        unimplemented!();
+        let txs: Vec<Object> = Vec::with_capacity(block.block.data.len());
+        let block_id = block.block.header.hash();
+        for tx in block.block.data.iter() {
+            let tx = Tx::try_from(tx.as_slice())
+                .map_err(|e|Error::new(&format!("{e}")))?;
+            let mut id = tx.header_hash().to_vec();
+            match tx.header().tx_type {
+                TxType::Decrypted(..) => {
+                    id = tx.clone().update_header(TxType::Raw).header_hash().to_vec();
+                    let mut ret: Option<i32> = None;
+                    for event in results.end_block_events.clone().unwrap() {
+                        for attr in event.attributes.iter() {
+                            // We look to confirm hash of transaction
+                            if attr.key == "hash"
+                                && attr.value.to_ascii_lowercase() == hex::encode(&id)
+                            {
+                                // Now we look for the return code
+                                for attr in event.attributes.iter() {
+                                    if attr.key == "code" {
+                                        // using unwrap here is ok because we assume it is always going to be a number unless there is a bug in the node
+                                        ret = Some(attr.value.parse().unwrap());
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                TxType::Wrapper(..) => {},
+                _ => {}
+            }
+        }
+        Ok(to_object!{ "txs" = txs, })
     }
 
     #[wasm_bindgen]

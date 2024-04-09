@@ -112,6 +112,16 @@ impl ToJS for Address {
     }
 }
 
+impl ToJS for Vec<Object> {
+    fn to_js (&self) -> Result<JsValue, Error> {
+        let array = Array::new();
+        for obj in self.iter() {
+            array.push(obj);
+        }
+        Ok(array.into())
+    }
+}
+
 impl ToJS for BTreeSet<Address> {
     fn to_js (&self) -> Result<JsValue, Error> {
         let set = Set::new(&JsValue::UNDEFINED);

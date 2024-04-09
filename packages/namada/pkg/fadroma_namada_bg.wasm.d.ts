@@ -2,7 +2,7 @@
 /* eslint-disable */
 export const memory: WebAssembly.Memory;
 export function __wbg_decode_free(a: number): void;
-export function decode_decoded_block(a: number, b: number, c: number, d: number, e: number): void;
+export function decode_block(a: number, b: number, c: number, d: number, e: number): void;
 export function decode_address(a: number, b: number): void;
 export function decode_addresses(a: number, b: number): void;
 export function decode_address_to_amount(a: number, b: number): void;

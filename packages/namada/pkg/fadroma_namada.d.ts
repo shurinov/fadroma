@@ -9,7 +9,7 @@ export class Decode {
 * @param {string} block_results_json
 * @returns {object}
 */
-  static decoded_block(block_json: string, block_results_json: string): object;
+  static block(block_json: string, block_results_json: string): object;
 /**
 * @param {Uint8Array} source
 * @returns {string}
@@ -192,7 +192,7 @@ export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembl
 export interface InitOutput {
   readonly memory: WebAssembly.Memory;
   readonly __wbg_decode_free: (a: number) => void;
-  readonly decode_decoded_block: (a: number, b: number, c: number, d: number, e: number) => void;
+  readonly decode_block: (a: number, b: number, c: number, d: number, e: number) => void;
   readonly decode_address: (a: number, b: number) => void;
   readonly decode_addresses: (a: number, b: number) => void;
   readonly decode_address_to_amount: (a: number, b: number) => void;
