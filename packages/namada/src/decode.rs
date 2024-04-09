@@ -482,7 +482,7 @@ impl Decode {
 
     #[wasm_bindgen]
     pub fn tx_content_init_proposal (binary: &[u8]) -> Result<Object, Error> {
-        let inner = StorageProposal::try_from_slice(&binary[..])
+        let inner = InitProposalData::try_from_slice(&binary[..])
             .map_err(|e|Error::new(&format!("{e}")))?;
         Ok(to_object! {
             "id"      = inner.id,
