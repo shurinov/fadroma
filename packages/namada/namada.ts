@@ -23,7 +23,10 @@ export const chainIds = {
 }
 
 export const testnets = new Set([
-  'https://namada-testnet-rpc.itrocket.net'
+  'https://namada-testnet-rpc.itrocket.net',
+  'https://namada-rpc.stake-machine.com',
+  'https://namadarpc.songfi.xyz',
+  'https://rpc.testnet.one',
 ])
 
 export const faucets = {
@@ -35,9 +38,9 @@ export const faucets = {
 /** Connect to Namada in testnet mode. */
 export const testnet = (options: Partial<NamadaConnection> = {}): NamadaConnection => {
   return new NamadaConnection({
-    chainId: chainIds.testnet,
-    url: Core.pickRandom(testnets),
-    ...options||{}
+    ...options||{},
+    chainId: options?.chainId || chainIds.testnet,
+    url:     options?.url     || Core.pickRandom(testnets),
   })
 }
 
