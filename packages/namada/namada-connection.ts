@@ -61,6 +61,8 @@ export class NamadaConnection extends CW.Connection {
       try {
         txsDecoded[i] = TX.Transaction.fromDecoded(Decode.tx(binary) as any)
       } catch (error) {
+        console.error(error)
+        console.warn(`Failed to decode transaction #${i} in block ${height}, see above for details.`)
         txsDecoded[i] = new TX.Transactions.Undecoded({ binary, error: error as any })
       }
     }
