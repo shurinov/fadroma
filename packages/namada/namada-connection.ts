@@ -61,21 +61,21 @@ export class NamadaConnection extends CW.Connection {
 
   decode = Decode
 
-  async doGetBlockInfo (height?: number): Promise<NamadaBlock> {
+  async doGetBlockInfo (wantedHeight?: number): Promise<NamadaBlock> {
     if (!this.url) {
       throw new CW.Error("Can't fetch block: missing connection URL")
     }
     // Fetch block and results as undecoded JSON
     const [block, results] = await Promise.all([
-      fetch(`${this.url}/block?height=${height||''}`)
+      fetch(`${this.url}/block?height=${wantedHeight||''}`)
         .then(response=>response.text()),
-      fetch(`${this.url}/block_results?height=${height||''}`)
+      fetch(`${this.url}/block_results?height=${wantedHeight||''}`)
         .then(response=>response.text()),
     ])
-    const { id, txs, header: { time } } = this.decode.block(block, results) as {
+    const { id, txs, header: { height, time } } = this.decode.block(block, results) as {
       id: string,
       txs: Partial<TX.Transaction[]>[]
-      header: { time: string }
+      header: { height: number, time: string }
     }
     const txsDecoded: TX.Transaction[] = []
     for (const i in txs) {
