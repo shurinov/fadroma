@@ -35,12 +35,10 @@ import {
 } from './cw-staking'
 
 export class CWBlock extends Chain.Block {
-  header: unknown
   rawTxs: Uint8Array[]
-  constructor ({ id, header, txs }: Partial<Block> = {}) {
-    super({ hash: id, height: header?.height })
-    this.header = header
-    this.rawTxs = [...txs]
+  constructor ({ hash, height, rawTxs }: Partial<CWBlock> = {}) {
+    super({ hash, height })
+    this.rawTxs = [...rawTxs||[]]
   }
 }
 
@@ -96,12 +94,17 @@ export class CWConnection extends Chain.Connection {
 
   async doGetBlockInfo (height?: number): Promise<CWBlock> {
     const api = await this.api
-    return new CWBlock(await api.getBlock(height))
+    const { id, header, txs } = await api.getBlock(height)
+    return new CWBlock({
+      hash:   id,
+      height: header.height,
+      rawTxs: txs as Uint8Array[],
+    })
   }
 
-  doGetHeight () {
-    return this.doGetBlockInfo().
-      then((info: { header: { height?: number } } = { header: {} }) => Number(info.header.height))
+  async doGetHeight () {
+    const { height } = await this.doGetBlockInfo()
+    return height
   }
 
   /** Query native token balance. */
