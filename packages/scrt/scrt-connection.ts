@@ -59,8 +59,11 @@ export class ScrtConnection extends Chain.Connection {
     }
   }
 
-  doGetBlockInfo () {
-    return this.api.query.tendermint.getLatestBlock({})
+  async doGetBlockInfo () {
+    const {
+      block_id: { hash, part_set_header } = {},
+      block: { header, data, evidence, last_commit } = {}
+    } = await this.api.query.tendermint.getLatestBlock({})
   }
 
   doGetHeight () {
@@ -325,6 +328,9 @@ export class ScrtConnection extends Chain.Connection {
     return new ScrtBatch({ connection: this }) as unknown as Chain.Batch<this>
   }
 
+}
+
+export class ScrtBlock extends Chain.Block {
 }
 
 export function decodeError (result: TxResponse) {
