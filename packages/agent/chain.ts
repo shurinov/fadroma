@@ -79,6 +79,14 @@ export abstract class Endpoint extends Logged {
   }
 }
 
+export class Block {
+  height: number
+  hash:   string
+  constructor (properties: Partial<Block> = {}) {
+    assign(this, properties, ["height", "hash"])
+  }
+}
+
 export abstract class Connection extends Endpoint {
   /** Native token of chain. */
   static gasToken: Token.Native = new Token.Native('')
@@ -174,9 +182,9 @@ export abstract class Connection extends Endpoint {
     return this.doGetHeight()
   }
 
-  abstract doGetBlockInfo (block?: number): Promise<unknown>
+  abstract doGetBlockInfo (height?: number): Promise<Block>
 
-  getBlock (block?: number): Promise<unknown> {
+  getBlock (height?: number): Promise<Block> {
     this.log.debug(block ? `Querying block ${block}` : `Querying latest block`)
     return this.doGetBlockInfo(block)
   }
