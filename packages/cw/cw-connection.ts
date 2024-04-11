@@ -34,6 +34,16 @@ import {
   getValidators,
 } from './cw-staking'
 
+export class CWBlock extends Chain.Block {
+  header: unknown
+  rawTxs: Uint8Array[]
+  constructor ({ id, header, txs }: Partial<Block> = {}) {
+    super({ hash: id, height: header?.height })
+    this.header = header
+    this.rawTxs = [...txs]
+  }
+}
+
 /** Generic agent for CosmWasm-enabled chains. */
 export class CWConnection extends Chain.Connection {
   /** The bech32 prefix for the account's address  */
@@ -84,9 +94,9 @@ export class CWConnection extends Chain.Connection {
     })
   }
 
-  doGetBlockInfo (height?: number): Promise<Block> {
-    return Promise.resolve(this.api)
-      .then(api=>api.getBlock(height))
+  async doGetBlockInfo (height?: number): Promise<CWBlock> {
+    const api = await this.api
+    return new CWBlock(await api.getBlock(height))
   }
 
   doGetHeight () {
