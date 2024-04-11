@@ -297,3 +297,75 @@ impl ToJS for DenominatedAmount {
         self.to_string_precise().to_js()
     }
 }
+
+impl ToJS for BlockHeader {
+    fn to_js (&self) -> Result<JsValue, Error> {
+        Ok(to_object! {
+            "version"            = self.version,
+            "chainId"            = self.chain_id,
+            "height"             = self.height,
+            "time"               = self.time,
+            "lastBlockId"        = self.last_block_id,
+            "lastCommitHash"     = self.last_commit_hash,
+            "dataHash"           = self.data_hash,
+            "validatorsHash"     = self.validators_hash,
+            "nextValidatorsHash" = self.next_validators_hash,
+            "consensusHash"      = self.consensus_hash,
+            "appHash"            = self.app_hash,
+            "lastResultsHash"    = self.last_results_hash,
+            "evidenceHash"       = self.evidence_hash,
+            "proposerAddress"    = self.proposer_address,
+        }.into())
+    }
+}
+
+impl ToJS for BlockVersion {
+    fn to_js (&self) -> Result<JsValue, Error> {
+        Ok(to_object! {
+            "block" = self.block,
+            "app"   = self.app,
+        }.into())
+    }
+}
+
+impl ToJS for ChainId {
+    fn to_js (&self) -> Result<JsValue, Error> {
+        self.as_str().to_js()
+    }
+}
+
+impl ToJS for AccountId {
+    fn to_js (&self) -> Result<JsValue, Error> {
+        hex::encode_upper(self.as_bytes()).to_js()
+    }
+}
+
+impl ToJS for AppHash {
+    fn to_js (&self) -> Result<JsValue, Error> {
+        hex::encode_upper(self.as_bytes()).to_js()
+    }
+}
+
+impl ToJS for TendermintHash {
+    fn to_js (&self) -> Result<JsValue, Error> {
+        hex::encode_upper(self.as_bytes()).to_js()
+    }
+}
+
+impl ToJS for BlockId {
+    fn to_js (&self) -> Result<JsValue, Error> {
+        self.hash.to_js()
+    }
+}
+
+impl ToJS for Time {
+    fn to_js (&self) -> Result<JsValue, Error> {
+        self.to_rfc3339().to_js()
+    }
+}
+
+impl ToJS for BlockHeight {
+    fn to_js (&self) -> Result<JsValue, Error> {
+        self.value().to_js()
+    }
+}

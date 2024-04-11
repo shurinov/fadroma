@@ -60,6 +60,17 @@ pub(crate) use namada::{
     },
     storage::KeySeg,
     string_encoding::Format,
+    tendermint::{
+        account::Id as AccountId,
+        block::Id as BlockId,
+        block::Header as BlockHeader,
+        block::Height as BlockHeight,
+        block::header::Version as BlockVersion,
+        chain::Id as ChainId,
+        hash::Hash as TendermintHash,
+        hash::AppHash,
+        time::Time
+    },
     token::{
         Amount,
         MaspDigitPos,
@@ -67,7 +78,8 @@ pub(crate) use namada::{
         DenominatedAmount
     },
     tx::{
-        Tx, Header, Section, Data, Code, Signature, Signer, MaspBuilder,
+        Tx, Header as TxHeader,
+        Section, Data, Code, Signature, Signer, MaspBuilder,
         data::{
             Fee,
             GasLimit,

@@ -48,26 +48,49 @@ export async function initDecoder (decoder: string|URL|Uint8Array) {
 
 export { Decode }
 
+export class NamadaBlock extends CW.Block {
+  txs:  TX.Transaction[]
+  time: string
+  constructor ({ hash, height, rawTxs, txs, time }: Partial<NamadaBlock> = {}) {
+    super({ hash, height, rawTxs })
+    this.txs = [...txs||[]]
+  }
+}
+
 export class NamadaConnection extends CW.Connection {
 
   decode = Decode
 
-  async getBlock (height?: number) {
-    const block = await super.getBlock(height)
+  async doGetBlockInfo (height?: number): Promise<NamadaBlock> {
+    if (!this.url) {
+      throw new CW.Error("Can't fetch block: missing connection URL")
+    }
+    // Fetch block and results as undecoded JSON
+    const [block, results] = await Promise.all([
+      fetch(`${this.url}/block?height=${height||''}`)
+        .then(response=>response.text()),
+      fetch(`${this.url}/block_results?height=${height||''}`)
+        .then(response=>response.text()),
+    ])
+    const { id, txs, header: { time } } = this.decode.block(block, results) as {
+      id: string,
+      txs: Partial<TX.Transaction[]>[]
+      header: { time: string }
+    }
     const txsDecoded: TX.Transaction[] = []
-    const {txs} = (block as { txs: Uint8Array[] })
     for (const i in txs) {
-      const binary = txs[i].slice(3)
       try {
-        txsDecoded[i] = TX.Transaction.fromDecoded(Decode.tx(binary) as any)
+        txsDecoded[i] = TX.Transaction.fromDecoded(txs[i] as any)
       } catch (error) {
         console.error(error)
         console.warn(`Failed to decode transaction #${i} in block ${height}, see above for details.`)
-        txsDecoded[i] = new TX.Transactions.Undecoded({ binary, error: error as any })
+        txsDecoded[i] = new TX.Transactions.Undecoded({
+          data: txs[i] as any,
+          error: error as any
+        })
       }
     }
-    Object.assign(block as any, { txsDecoded })
-    return block as typeof block & { txsDecoded: TX.Transaction[] }
+    return new NamadaBlock({ time, height, hash: id, rawTxs: [], txs: txsDecoded })
   }
 
   getPGFParameters () {

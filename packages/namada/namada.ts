@@ -407,6 +407,34 @@ export default class NamadaCLI extends CLI {
     process.exit(0)
   })
 
+  block = this.command({
+    name: 'block',
+    info: 'try to fetch a block',
+    args: 'RPC_URL [BLOCK]'
+  }, async (url: string, height?: number) => {
+    if (!url) {
+      this.log.error(Core.bold('Pass a RPC URL to query validators.'))
+      process.exit(1)
+    }
+    if (height !== undefined) {
+      if (isNaN(Number(height))) {
+        this.log.error(Core.bold(`{height} is not a valid block height`))
+        process.exit(1)
+      }
+      height = Number(height)
+    }
+    const connection = new NamadaConnection({ url })
+    const block = await connection.getBlock(height)
+    this.log.log()
+      .log('Block:', Core.bold(block.height))
+      .log('ID:   ', Core.bold(block.hash))
+      .log('Time: ', Core.bold(block.time))
+      .log(Core.bold('Transactions:'))
+    for (const tx of block.txs) {
+      this.log.log(tx)
+    }
+  })
+
   index = this.command({
     name: 'index',
     info: 'try to decode all transactions from latest block (or a given block) backwards',

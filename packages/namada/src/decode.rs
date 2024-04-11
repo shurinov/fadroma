@@ -26,8 +26,9 @@ impl Decode {
         }
 
         Ok(to_object! {
-            "id"  = format!("{id}"),
-            "txs" = txs,
+            "id"     = format!("{id}"),
+            "header" = block.block.header(),
+            "txs"    = txs,
         })
     }
 
@@ -1009,7 +1010,7 @@ impl Decode {
         ])
     }
 
-    fn tx_section_header (header: &Header) -> Result<Object, Error> {
+    fn tx_section_header (header: &TxHeader) -> Result<Object, Error> {
         object(&[
             ("type".into(),       "Header".into()),
             ("chain_id".into(),   header.chain_id.as_str().into()),
