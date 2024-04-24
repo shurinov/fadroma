@@ -16,6 +16,7 @@ const kinds = {
   module:      4,
   constant:    32,
   class:       128,
+  interface:   256,
   constructor: 512,
   property:    1024,
   method:      2048,
@@ -24,7 +25,7 @@ const kinds = {
 }
 
 documentModule({
-  sources: ['chain.ts']
+  sources: ['token.ts']
 })
 
 function documentModule ({ sources }: { sources: string[] }) {
@@ -43,7 +44,7 @@ function documentModule ({ sources }: { sources: string[] }) {
 
       if (ids.has(child.id)) {
         if (!Object.values(kinds).includes(child.kind)) {
-          console.warn('Unknown kind', child.kind)
+          console.warn('Unknown kind', child.kind, child)
           continue
         }
         if (child.kind === kinds.class) {
@@ -125,7 +126,7 @@ function documentClass (child) {
 function documentConstructor (item) {
   process.stdout.write('\n```typescript\n')
   for (const signature of item.signatures) {
-    if (signature.parameters.length > 0) {
+    if (signature.parameters?.length > 0) {
       process.stdout.write(`${signature.name}(`)
       for (const parameter of signature.parameters) {
         if (parameter.type?.typeArguments) {
