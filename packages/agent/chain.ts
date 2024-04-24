@@ -2,12 +2,16 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program. If not, see <http://www.gnu.org/licenses/>. **/
 import { ContractInstance } from './deploy'
-import { Error, Logged, colors, bold, randomColor, into } from './core'
-import { assign, Console } from './core'
+import {
+  Console, Error, Logged, colors, bold, randomColor, assign, hideProperties, into
+} from './core'
+import type { Address, Identity } from './identity'
 import * as Code from './program'
 import * as Deploy from './deploy'
 import * as Token from './token'
 import * as Store from './store'
+import { Batch } from './tx'
+import type { Transaction } from './tx'
 
 import { CompiledCode } from './program.browser'
 /** The `CompiledCode` class has an alternate implementation for non-browser environments.
@@ -19,10 +23,8 @@ import { CompiledCode } from './program.browser'
   * version which can also load code from disk (`LocalCompiledCode`). Ugh. */
 export const _$_HACK_$_ = { CompiledCode }
 
+/** A chain ID. */
 export type ChainId = string
-
-/** An address on a chain. */
-export type Address = string
 
 /** A contract's full unique on-chain label. */
 export type Label = string
@@ -32,22 +34,6 @@ export type Message = string|Record<string, unknown>
 
 /** A transaction hash, uniquely identifying an executed transaction on a chain. */
 export type TxHash = string
-
-export class Identity extends Logged {
-  /** Display name. */
-  name?: Address
-  /** Unique identifier. */
-  address?: Address
-
-  constructor (properties?: Partial<Identity>) {
-    super(properties)
-    assign(this, properties, ['name', 'address'])
-  }
-
-  sign (doc: any): unknown {
-    throw new Error("can't sign: stub")
-  }
-}
 
 export abstract class Endpoint extends Logged {
   /** Chain ID. */
@@ -79,12 +65,20 @@ export abstract class Endpoint extends Logged {
   }
 }
 
-export class Block {
-  height: number
-  hash:   string
-  constructor (properties: Partial<Block> = {}) {
-    assign(this, properties, ["height", "hash"])
+export abstract class Backend extends Logged {
+  /** The chain ID that will be passed to the devnet node. */
+  chainId?:  ChainId
+  /** Denomination of base gas token for this chain. */
+  gasToken?: Token.Native
+
+  constructor (properties?: Partial<Backend>) {
+    super(properties)
+    assign(this, properties, ["chainId"])
   }
+
+  abstract connect (parameter?: string|Partial<Identity>): Promise<Connection>
+
+  abstract getIdentity (name: string): Promise<{ address?: Address, mnemonic?: string }>
 }
 
 export abstract class Connection extends Endpoint {
@@ -554,17 +548,18 @@ export abstract class Connection extends Endpoint {
   }
 }
 
-async function timed <T> (
-  fn: ()=>Promise<T>, cb: (ctx: { elapsed: string, result: T })=>unknown
-): Promise<T> {
-  const t0 = performance.now()
-  const result = await fn()
-  const t1 = performance.now()
-  cb({
-    elapsed: ((t1-t0)/1000).toFixed(3)+'s',
-    result
-  })
-  return result
+export abstract class Block {
+  chain?: Connection
+  height: number
+  hash:   string
+  constructor (properties: Partial<Block> = {}) {
+    assign(this, properties, ["height", "hash"])
+    hideProperties(this, "block")
+  }
+  abstract getTransactionsById ():
+    Promise<Record<string, Transaction>>
+  abstract getTransactionsInOrder ():
+    Promise<Transaction[]>
 }
 
 /** Contract: interface to the API of a particular contract instance.
@@ -612,47 +607,15 @@ export class Contract extends Logged {
   }
 }
 
-export abstract class Backend extends Logged {
-  /** The chain ID that will be passed to the devnet node. */
-  chainId?:  ChainId
-  /** Denomination of base gas token for this chain. */
-  gasToken?: Token.Native
-
-  constructor (properties?: Partial<Backend>) {
-    super(properties)
-    assign(this, properties, ["chainId"])
-  }
-
-  abstract connect (parameter?: string|Partial<Identity>): Promise<Connection>
-
-  abstract getIdentity (name: string): Promise<{ address?: Address, mnemonic?: string }>
-}
-
-/** Builder object for batched transactions. */
-export class Batch<C extends Connection> extends Logged {
-  connection?: C
-
-  constructor (properties?: Partial<Batch<C>>) {
-    super(properties)
-  }
-  /** Add an upload message to the batch. */
-  upload (...args: Parameters<C["upload"]>): this {
-    this.log.warn('upload: stub (not implemented)')
-    return this
-  }
-  /** Add an instantiate message to the batch. */
-  instantiate (...args: Parameters<C["instantiate"]>): this {
-    this.log.warn('instantiate: stub (not implemented)')
-    return this
-  }
-  /** Add an execute message to the batch. */
-  execute (...args: Parameters<C["execute"]>): this {
-    this.log.warn('execute: stub (not implemented)')
-    return this
-  }
-  /** Submit the batch. */
-  async submit (...args: unknown[]): Promise<unknown> {
-    this.log.warn('submit: stub (not implemented)')
-    return {}
-  }
+async function timed <T> (
+  fn: ()=>Promise<T>, cb: (ctx: { elapsed: string, result: T })=>unknown
+): Promise<T> {
+  const t0 = performance.now()
+  const result = await fn()
+  const t1 = performance.now()
+  cb({
+    elapsed: ((t1-t0)/1000).toFixed(3)+'s',
+    result
+  })
+  return result
 }

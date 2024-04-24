@@ -2,13 +2,26 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>. **/
 import { assign, Console, Error, base16, SHA256, randomBech32 } from './core'
-import type { ChainId, Address, Message, Label, TxHash } from './chain'
-import { Connection, Block, Backend, Batch, Identity } from './chain'
+import type { ChainId, Message, Label, TxHash } from './chain'
+import { Connection, Block, Backend } from './chain'
+import type { Address } from './identity'
+import { Identity } from './identity'
+import { Batch } from './tx'
+import type { Transaction } from './tx'
 import type { CodeHash } from './program.browser'
 import { Compiler, SourceCode, CompiledCode } from './program.browser'
 import type { CodeId } from './deploy'
 import { UploadedCode, ContractInstance } from './deploy'
 import * as Token from './token'
+
+export class StubBlock extends Block {
+  async getTransactionsById (): Promise<Record<string, Transaction>> {
+    return {}
+  }
+  async getTransactionsInOrder (): Promise<Transaction[]> {
+    return []
+  }
+}
 
 export class StubConnection extends Connection {
   static gasToken: Token.Native = new Token.Native('ustub')
@@ -27,7 +40,7 @@ export class StubConnection extends Connection {
     return this.doGetBlockInfo().then(({height})=>height)
   }
   doGetBlockInfo () {
-    return Promise.resolve(new Block({ height: + new Date() }))
+    return Promise.resolve(new StubBlock({ height: + new Date() }))
   }
   doGetCodes () {
     return Promise.resolve(Object.fromEntries(

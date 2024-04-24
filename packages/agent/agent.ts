@@ -39,6 +39,7 @@ import {
 
 import CLI from '@hackbg/cmds'
 
+/** Base command line interface for Fadroma Agent. */
 export default class AgentCLI extends CLI {
 
   constructor (...args: ConstructorParameters<typeof CLI>) {

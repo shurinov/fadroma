@@ -18,29 +18,21 @@
 
 **/
 
-export * as Core    from './core'
-export * as Chain   from './chain'
-export * as Token   from './token'
-export * as Deploy  from './deploy'
-export * as Program from './program.browser'
-export * as Store   from './store'
-export * as Stub    from './stub'
+export * as Core       from './core'
+export * as Chain      from './chain'
+export * as Token      from './token'
+export * as Deploy     from './deploy'
+export * as Program    from './program.browser'
+export * as Store      from './store'
+export * as Stub       from './stub'
+export * as Governance from './governance'
+export * as Staking    from './staking'
 
-export type {
-  CodeHash
-} from './program.browser'
-export type {
-  ChainId,
-  Address,
-  Message,
-  TxHash
-} from './chain'
-export type {
-  CodeId
-} from './deploy'
-export type {
-  Uint128,
-  Uint256,
-  Decimal128,
-  Decimal256
-} from './token'
+export { Identity }           from './identity'
+export { Transaction, Batch } from './tx'
+
+export type { Address } from './identity'
+export type { CodeHash } from './program.browser'
+export type { ChainId, Message, TxHash } from './chain'
+export type { CodeId } from './deploy'
+export type { Uint128, Uint256, Decimal128, Decimal256 } from './token'
