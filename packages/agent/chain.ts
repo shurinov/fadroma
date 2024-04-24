@@ -3,7 +3,9 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>. **/
 import { ContractInstance } from './deploy'
 import {
-  Console, Error, Logged, colors, bold, randomColor, assign, hideProperties, into
+  Console, Error,
+  Logged, colors, bold, randomColor,
+  assign, hideProperties, into, timed
 } from './core'
 import type { Address, Identity } from './identity'
 import * as Code from './program'
@@ -36,14 +38,26 @@ export type Message = string|Record<string, unknown>
 export type TxHash = string
 
 export abstract class Endpoint extends Logged {
-  /** Chain ID. */
+  /** Chain ID. This is a string that uniquely identifies a chain.
+    * A project's mainnet and testnet have different chain IDs. */
   chainId?: ChainId
+  /** Connection URL.
+    *
+    * The same chain may be accessible via different endpoints, so
+    * this property contains the URL to which requests are sent. */
+  url?: string
+  /** Instance of platform SDK. This must be provided in a subclass.
+    *
+    * Since most chain SDKs initialize asynchronously, this is usually a `Promise`
+    * that resolves to an instance of the underlying client class (e.g. `CosmWasmClient` or `SecretNetworkClient`).
+    *
+    * Since transaction and query methods are always asynchronous as well, well-behaved
+    * implementations of Fadroma Agent begin each method that talks to the chain with
+    * e.g. `const { api } = await this.api`, making sure an initialized platform SDK instance
+    * is available. */
+  api?: unknown
   /** Setting this to false stops retries. */
   alive: boolean = true
-  /** Connection URL. */
-  url?: string
-  /** Platform SDK. */
-  api?: unknown
 
   constructor (properties: Partial<Endpoint> = {}) {
     super(properties)
@@ -92,6 +106,8 @@ export abstract class Connection extends Endpoint {
   identity?: Identity
   /** Default transaction fees. */
   fees?: { send?: Token.IFee, upload?: Token.IFee, init?: Token.IFee, exec?: Token.IFee }
+  /** Chain mode. */
+  mode?: 'Mainnet'|'Testnet'|'Devnet'|'Mocknet'
 
   constructor (properties: Partial<Connection> = {}) {
     super(properties)
@@ -123,10 +139,12 @@ export abstract class Connection extends Endpoint {
     return tag
   }
 
+  /** The address of this connection's default identity. */
   get address (): Address|undefined {
     return this.identity?.address
   }
 
+  /** The default gas token of the chain. */
   get defaultDenom (): string {
     return (this.constructor as Function & {gasToken: Token.Native}).gasToken?.id
   }
@@ -134,7 +152,7 @@ export abstract class Connection extends Endpoint {
   /** Time to ping for next block. */
   blockInterval = 250
 
-  /** Wait for the block height to increment. */
+  /** Wait until the block height increments, or until `this.alive` is set to false. */
   get nextBlock (): Promise<number> {
     return this.height.then(async startingHeight=>{
       startingHeight = Number(startingHeight)
@@ -171,6 +189,7 @@ export abstract class Connection extends Endpoint {
 
   abstract doGetHeight (): Promise<number>
 
+  /** Get the current block height. */
   get height (): Promise<number> {
     this.log.debug('Querying block height')
     return this.doGetHeight()
@@ -178,6 +197,8 @@ export abstract class Connection extends Endpoint {
 
   abstract doGetBlockInfo (height?: number): Promise<Block>
 
+  /** Get info about a specific block.
+    * If no height is passed, gets info about the latest block. */
   getBlock (height?: number): ReturnType<this["doGetBlockInfo"]> {
     this.log.debug(height ? `Querying block ${height}` : `Querying latest block`)
     return this.doGetBlockInfo(height) as ReturnType<this["doGetBlockInfo"]>
@@ -605,17 +626,4 @@ export class Contract extends Logged {
       this.instance as Deploy.ContractInstance & { address: Address }, message, options
     )
   }
-}
-
-async function timed <T> (
-  fn: ()=>Promise<T>, cb: (ctx: { elapsed: string, result: T })=>unknown
-): Promise<T> {
-  const t0 = performance.now()
-  const result = await fn()
-  const t1 = performance.now()
-  cb({
-    elapsed: ((t1-t0)/1000).toFixed(3)+'s',
-    result
-  })
-  return result
 }
