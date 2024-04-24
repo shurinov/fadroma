@@ -25,7 +25,7 @@ const kinds = {
 }
 
 documentModule({
-  sources: ['token.ts']
+  sources: ['deploy.ts']
 })
 
 function documentModule ({ sources }: { sources: string[] }) {

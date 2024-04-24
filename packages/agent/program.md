@@ -135,3 +135,223 @@ The code hash also uniquely identifies for the code that underpins a contract.
 However, unlike the code ID, which is opaque, the code hash corresponds to the
 actual content of the code. Uploading the same code multiple times will give
 you different code IDs, but the same code hash.
+
+
+# class *LocalCompiledCode*
+
+An object representing a given compiled binary on the local filesystem.
+
+```typescript
+new LocalCompiledCode(
+  properties: Partial<...>,
+)
+```
+
+<table><tbody>
+<tr><td valign="top">
+<strong>codeData</strong></td>
+<td><strong>Uint8Array</strong>. The compiled code.</td></tr>
+<tr><td valign="top">
+<strong>codeHash</strong></td>
+<td><strong>string</strong>. Code hash uniquely identifying the compiled code.</td></tr>
+<tr><td valign="top">
+<strong>codePath</strong></td>
+<td><strong>undefined</strong>. Location of the compiled code.</td></tr>
+<tr><td valign="top">
+<strong>canFetch</strong></td>
+<td></td></tr>
+<tr><td valign="top">
+<strong>canFetchInfo</strong></td>
+<td></td></tr>
+<tr><td valign="top">
+<strong>canUpload</strong></td>
+<td></td></tr>
+<tr><td valign="top">
+<strong>canUploadInfo</strong></td>
+<td></td></tr>
+<tr><td valign="top">
+<strong>computeHash()</strong></td>
+<td></td></tr>
+<tr><td valign="top">
+<strong>doFetch()</strong></td>
+<td></td></tr>
+<tr><td valign="top">
+<strong>fetch()</strong></td>
+<td></td></tr>
+<tr><td valign="top">
+<strong>serialize()</strong></td>
+<td></td></tr>
+<tr><td valign="top">
+<br><strong>toCodeHash(data )</strong></td>
+<td></td></tr></tbody></table>
+
+# class *CompiledCode*
+
+An object representing a given compiled binary.
+
+```typescript
+new CompiledCode(
+  properties: Partial<...>,
+)
+```
+
+<table><tbody>
+<tr><td valign="top">
+<strong>codeData</strong></td>
+<td><strong>Uint8Array</strong>. The compiled code.</td></tr>
+<tr><td valign="top">
+<strong>codeHash</strong></td>
+<td><strong>string</strong>. Code hash uniquely identifying the compiled code.</td></tr>
+<tr><td valign="top">
+<strong>codePath</strong></td>
+<td><strong>undefined</strong>. Location of the compiled code.</td></tr>
+<tr><td valign="top">
+<strong>canFetch</strong></td>
+<td></td></tr>
+<tr><td valign="top">
+<strong>canFetchInfo</strong></td>
+<td></td></tr>
+<tr><td valign="top">
+<strong>canUpload</strong></td>
+<td></td></tr>
+<tr><td valign="top">
+<strong>canUploadInfo</strong></td>
+<td></td></tr>
+<tr><td valign="top">
+<strong>computeHash()</strong></td>
+<td></td></tr>
+<tr><td valign="top">
+<strong>doFetch()</strong></td>
+<td></td></tr>
+<tr><td valign="top">
+<strong>fetch()</strong></td>
+<td></td></tr>
+<tr><td valign="top">
+<strong>serialize()</strong></td>
+<td></td></tr>
+<tr><td valign="top">
+<br><strong>toCodeHash(data )</strong></td>
+<td></td></tr></tbody></table>
+
+# class *Compiler*
+
+```typescript
+new Compiler(
+  properties: Partial<...>,
+)
+```
+
+<table><tbody>
+<tr><td valign="top">
+<strong>caching</strong></td>
+<td><strong>boolean</strong>. Whether to enable build caching.
+When set to false, this compiler will rebuild even when
+binary and checksum are both present in wasm/ directory</td></tr>
+<tr><td valign="top">
+<strong>id</strong></td>
+<td><strong>string</strong>. Unique identifier of this compiler implementation.</td></tr>
+<tr><td valign="top">
+<strong>log</strong></td>
+<td><strong>Console</strong>. </td></tr>
+<tr><td valign="top">
+<br><strong>build(source args )</strong></td>
+<td></td></tr>
+<tr><td valign="top">
+<br><strong>buildMany(inputs )</strong></td>
+<td></td></tr></tbody></table>
+
+# class *RustSourceCode*
+
+An object representing a given source code.
+
+```typescript
+new RustSourceCode(
+  properties: Partial<...>,
+)
+```
+
+<table><tbody>
+<tr><td valign="top">
+<strong>cargoCrate</strong></td>
+<td><strong>string</strong>. Name of crate.</td></tr>
+<tr><td valign="top">
+<strong>cargoFeatures</strong></td>
+<td><strong>undefined</strong>. List of crate features to enable during build.</td></tr>
+<tr><td valign="top">
+<strong>cargoToml</strong></td>
+<td><strong>string</strong>. Path to the crate's Cargo.toml under sourcePath</td></tr>
+<tr><td valign="top">
+<strong>cargoWorkspace</strong></td>
+<td><strong>string</strong>. Path to the workspace's Cargo.toml in the source tree.</td></tr>
+<tr><td valign="top">
+<strong>log</strong></td>
+<td><strong>Console</strong>. </td></tr>
+<tr><td valign="top">
+<strong>sourceDirty</strong></td>
+<td><strong>boolean</strong>. Whether the code contains uncommitted changes.</td></tr>
+<tr><td valign="top">
+<strong>sourceOrigin</strong></td>
+<td><strong>undefined</strong>. URL pointing to Git upstream containing the canonical source code.</td></tr>
+<tr><td valign="top">
+<strong>sourcePath</strong></td>
+<td><strong>string</strong>. Path to local checkout of the source code (with .git directory if sourceRef is set).</td></tr>
+<tr><td valign="top">
+<strong>sourceRef</strong></td>
+<td><strong>string</strong>. Pointer to the source commit.</td></tr>
+<tr><td valign="top">
+<strong>canCompile</strong></td>
+<td></td></tr>
+<tr><td valign="top">
+<strong>canCompileInfo</strong></td>
+<td></td></tr>
+<tr><td valign="top">
+<strong>canFetch</strong></td>
+<td></td></tr>
+<tr><td valign="top">
+<strong>canFetchInfo</strong></td>
+<td></td></tr>
+<tr><td valign="top">
+<strong>serialize()</strong></td>
+<td></td></tr></tbody></table>
+
+# class *SourceCode*
+
+An object representing a given source code.
+
+```typescript
+new SourceCode(
+  properties: Partial<...>,
+)
+```
+
+<table><tbody>
+<tr><td valign="top">
+<strong>log</strong></td>
+<td><strong>Console</strong>. </td></tr>
+<tr><td valign="top">
+<strong>sourceDirty</strong></td>
+<td><strong>boolean</strong>. Whether the code contains uncommitted changes.</td></tr>
+<tr><td valign="top">
+<strong>sourceOrigin</strong></td>
+<td><strong>undefined</strong>. URL pointing to Git upstream containing the canonical source code.</td></tr>
+<tr><td valign="top">
+<strong>sourcePath</strong></td>
+<td><strong>string</strong>. Path to local checkout of the source code (with .git directory if sourceRef is set).</td></tr>
+<tr><td valign="top">
+<strong>sourceRef</strong></td>
+<td><strong>string</strong>. Pointer to the source commit.</td></tr>
+<tr><td valign="top">
+<strong>canCompile</strong></td>
+<td></td></tr>
+<tr><td valign="top">
+<strong>canCompileInfo</strong></td>
+<td></td></tr>
+<tr><td valign="top">
+<strong>canFetch</strong></td>
+<td></td></tr>
+<tr><td valign="top">
+<strong>canFetchInfo</strong></td>
+<td></td></tr>
+<tr><td valign="top">
+<strong>serialize()</strong></td>
+<td></td></tr></tbody></table>

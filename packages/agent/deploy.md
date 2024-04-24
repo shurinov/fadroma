@@ -289,3 +289,386 @@ but a source and a compiler are present, this will also try to build the contrac
 ```typescript
 // TODO
 ```
+
+
+# class *ContractCode*
+
+```typescript
+new ContractCode(
+  properties: Partial<...>,
+)
+```
+
+<table><tbody>
+<tr><td valign="top">
+<strong>compiled</strong></td>
+<td><strong>CompiledCode</strong>. </td></tr>
+<tr><td valign="top">
+<strong>compiler</strong></td>
+<td><strong>Compiler</strong>. </td></tr>
+<tr><td valign="top">
+<strong>deployer</strong></td>
+<td><strong>undefined</strong>. </td></tr>
+<tr><td valign="top">
+<strong>log</strong></td>
+<td><strong>Console</strong>. </td></tr>
+<tr><td valign="top">
+<strong>source</strong></td>
+<td><strong>SourceCode</strong>. </td></tr>
+<tr><td valign="top">
+<strong>uploaded</strong></td>
+<td><strong>UploadedCode</strong>. </td></tr>
+<tr><td valign="top">
+<strong>uploader</strong></td>
+<td><strong>undefined</strong>. </td></tr>
+<tr><td valign="top">
+<br><strong>compile(__namedParameters )</strong></td>
+<td></td></tr>
+<tr><td valign="top">
+<br><strong>upload(__namedParameters )</strong></td>
+<td></td></tr></tbody></table>
+
+# class *ContractInstance*
+
+A contract that is part of a deploment.
+- needed for deployment-wide deduplication
+- generates structured label
+
+```typescript
+new ContractInstance(
+  properties: undefined
+)
+```
+
+<table><tbody>
+<tr><td valign="top">
+<strong>address</strong></td>
+<td><strong>string</strong>. Address of this contract instance. Unique per chain.</td></tr>
+<tr><td valign="top">
+<strong>chainId</strong></td>
+<td><strong>string</strong>. Code ID representing the identity of the contract's code on a specific chain.</td></tr>
+<tr><td valign="top">
+<strong>codeHash</strong></td>
+<td><strong>string</strong>. Code hash uniquely identifying the compiled code.</td></tr>
+<tr><td valign="top">
+<strong>codeId</strong></td>
+<td><strong>string</strong>. Code ID representing the identity of the contract's code on a specific chain.</td></tr>
+<tr><td valign="top">
+<strong>compiled</strong></td>
+<td><strong>CompiledCode</strong>. </td></tr>
+<tr><td valign="top">
+<strong>compiler</strong></td>
+<td><strong>Compiler</strong>. </td></tr>
+<tr><td valign="top">
+<strong>deployer</strong></td>
+<td><strong>undefined</strong>. </td></tr>
+<tr><td valign="top">
+<strong>deployment</strong></td>
+<td><strong>Deployment</strong>. Deployment to which this unit belongs.</td></tr>
+<tr><td valign="top">
+<strong>initBy</strong></td>
+<td><strong>undefined</strong>. Address of agent that performed the init tx.</td></tr>
+<tr><td valign="top">
+<strong>initFee</strong></td>
+<td><strong>unknown</strong>. Fee to use for init.</td></tr>
+<tr><td valign="top">
+<strong>initGas</strong></td>
+<td><strong>unknown</strong>. Contents of init message.</td></tr>
+<tr><td valign="top">
+<strong>initMemo</strong></td>
+<td><strong>string</strong>. Instantiation memo.</td></tr>
+<tr><td valign="top">
+<strong>initMsg</strong></td>
+<td><strong>Into</strong>. Contents of init message.</td></tr>
+<tr><td valign="top">
+<strong>initSend</strong></td>
+<td><strong>undefined</strong>. Native tokens to send to the new contract.</td></tr>
+<tr><td valign="top">
+<strong>initTx</strong></td>
+<td><strong>string</strong>. ID of transaction that performed the init.</td></tr>
+<tr><td valign="top">
+<strong>isTemplate</strong></td>
+<td><strong>undefined</strong>. </td></tr>
+<tr><td valign="top">
+<strong>label</strong></td>
+<td><strong>string</strong>. Full label of the instance. Unique for a given chain.</td></tr>
+<tr><td valign="top">
+<strong>log</strong></td>
+<td><strong>Console</strong>. </td></tr>
+<tr><td valign="top">
+<strong>name</strong></td>
+<td><strong>string</strong>. Name of this unit.</td></tr>
+<tr><td valign="top">
+<strong>source</strong></td>
+<td><strong>SourceCode</strong>. </td></tr>
+<tr><td valign="top">
+<strong>uploaded</strong></td>
+<td><strong>UploadedCode</strong>. </td></tr>
+<tr><td valign="top">
+<strong>uploader</strong></td>
+<td><strong>undefined</strong>. </td></tr>
+<tr><td valign="top">
+<br><strong>compile(__namedParameters )</strong></td>
+<td></td></tr>
+<tr><td valign="top">
+<br><strong>connect(agent )</strong></td>
+<td></td></tr>
+<tr><td valign="top">
+<br><strong>deploy(__namedParameters )</strong></td>
+<td></td></tr>
+<tr><td valign="top">
+<strong>isValid()</strong></td>
+<td></td></tr>
+<tr><td valign="top">
+<strong>serialize()</strong></td>
+<td></td></tr>
+<tr><td valign="top">
+<br><strong>upload(__namedParameters )</strong></td>
+<td></td></tr></tbody></table>
+
+# class *ContractTemplate*
+
+A contract that is part of a deploment.
+- needed for deployment-wide deduplication
+- generates structured label
+
+```typescript
+new ContractTemplate(
+  properties: undefined
+)
+```
+
+<table><tbody>
+<tr><td valign="top">
+<strong>chainId</strong></td>
+<td><strong>string</strong>. Code ID representing the identity of the contract's code on a specific chain.</td></tr>
+<tr><td valign="top">
+<strong>codeHash</strong></td>
+<td><strong>string</strong>. Code hash uniquely identifying the compiled code.</td></tr>
+<tr><td valign="top">
+<strong>codeId</strong></td>
+<td><strong>string</strong>. Code ID representing the identity of the contract's code on a specific chain.</td></tr>
+<tr><td valign="top">
+<strong>compiled</strong></td>
+<td><strong>CompiledCode</strong>. </td></tr>
+<tr><td valign="top">
+<strong>compiler</strong></td>
+<td><strong>Compiler</strong>. </td></tr>
+<tr><td valign="top">
+<strong>deployer</strong></td>
+<td><strong>undefined</strong>. </td></tr>
+<tr><td valign="top">
+<strong>deployment</strong></td>
+<td><strong>Deployment</strong>. Deployment to which this unit belongs.</td></tr>
+<tr><td valign="top">
+<strong>isTemplate</strong></td>
+<td><strong>undefined</strong>. </td></tr>
+<tr><td valign="top">
+<strong>log</strong></td>
+<td><strong>Console</strong>. </td></tr>
+<tr><td valign="top">
+<strong>name</strong></td>
+<td><strong>string</strong>. Name of this unit.</td></tr>
+<tr><td valign="top">
+<strong>source</strong></td>
+<td><strong>SourceCode</strong>. </td></tr>
+<tr><td valign="top">
+<strong>uploaded</strong></td>
+<td><strong>UploadedCode</strong>. </td></tr>
+<tr><td valign="top">
+<strong>uploader</strong></td>
+<td><strong>undefined</strong>. </td></tr>
+<tr><td valign="top">
+<br><strong>compile(__namedParameters )</strong></td>
+<td></td></tr>
+<tr><td valign="top">
+<br><strong>contract(name parameters )</strong></td>
+<td></td></tr>
+<tr><td valign="top">
+<br><strong>contracts(instanceParameters )</strong></td>
+<td></td></tr>
+<tr><td valign="top">
+<strong>serialize()</strong></td>
+<td></td></tr>
+<tr><td valign="top">
+<br><strong>upload(__namedParameters )</strong></td>
+<td></td></tr></tbody></table>
+
+# class *Deployment*
+
+A collection of contracts.
+
+```typescript
+new Deployment(
+  properties: Partial<...>,
+)
+```
+
+<table><tbody>
+<tr><td valign="top">
+<strong>log</strong></td>
+<td><strong>Console</strong>. </td></tr>
+<tr><td valign="top">
+<strong>name</strong></td>
+<td><strong>string</strong>. </td></tr>
+<tr><td valign="top">
+<strong>size</strong></td>
+<td><strong>number</strong>. </td></tr>
+<tr><td valign="top">
+<strong>[species]</strong></td>
+<td><strong>MapConstructor</strong>. </td></tr>
+<tr><td valign="top">
+<strong>[iterator]()</strong></td>
+<td></td></tr>
+<tr><td valign="top">
+<br><strong>addContract(args )</strong></td>
+<td></td></tr>
+<tr><td valign="top">
+<br><strong>addContracts(args )</strong></td>
+<td></td></tr>
+<tr><td valign="top">
+<br><strong>build(__namedParameters )</strong></td>
+<td></td></tr>
+<tr><td valign="top">
+<strong>clear()</strong></td>
+<td></td></tr>
+<tr><td valign="top">
+<br><strong>contract(name properties )</strong></td>
+<td></td></tr>
+<tr><td valign="top">
+<br><strong>delete(key )</strong></td>
+<td></td></tr>
+<tr><td valign="top">
+<br><strong>deploy(__namedParameters )</strong></td>
+<td></td></tr>
+<tr><td valign="top">
+<strong>entries()</strong></td>
+<td></td></tr>
+<tr><td valign="top">
+<br><strong>forEach(callbackfn thisArg )</strong></td>
+<td></td></tr>
+<tr><td valign="top">
+<br><strong>get(key )</strong></td>
+<td></td></tr>
+<tr><td valign="top">
+<br><strong>has(key )</strong></td>
+<td></td></tr>
+<tr><td valign="top">
+<strong>keys()</strong></td>
+<td></td></tr>
+<tr><td valign="top">
+<strong>serialize()</strong></td>
+<td></td></tr>
+<tr><td valign="top">
+<br><strong>set(name unit )</strong></td>
+<td></td></tr>
+<tr><td valign="top">
+<br><strong>template(name properties )</strong></td>
+<td></td></tr>
+<tr><td valign="top">
+<br><strong>upload(__namedParameters )</strong></td>
+<td></td></tr>
+<tr><td valign="top">
+<strong>values()</strong></td>
+<td></td></tr>
+<tr><td valign="top">
+<br><strong>fromSnapshot(__namedParameters )</strong></td>
+<td></td></tr></tbody></table>
+
+# class *DeploymentUnit*
+
+A contract that is part of a deploment.
+- needed for deployment-wide deduplication
+- generates structured label
+
+```typescript
+new DeploymentUnit(
+  properties: undefined
+)
+```
+
+<table><tbody>
+<tr><td valign="top">
+<strong>chainId</strong></td>
+<td><strong>string</strong>. Code ID representing the identity of the contract's code on a specific chain.</td></tr>
+<tr><td valign="top">
+<strong>codeHash</strong></td>
+<td><strong>string</strong>. Code hash uniquely identifying the compiled code.</td></tr>
+<tr><td valign="top">
+<strong>codeId</strong></td>
+<td><strong>string</strong>. Code ID representing the identity of the contract's code on a specific chain.</td></tr>
+<tr><td valign="top">
+<strong>compiled</strong></td>
+<td><strong>CompiledCode</strong>. </td></tr>
+<tr><td valign="top">
+<strong>compiler</strong></td>
+<td><strong>Compiler</strong>. </td></tr>
+<tr><td valign="top">
+<strong>deployer</strong></td>
+<td><strong>undefined</strong>. </td></tr>
+<tr><td valign="top">
+<strong>deployment</strong></td>
+<td><strong>Deployment</strong>. Deployment to which this unit belongs.</td></tr>
+<tr><td valign="top">
+<strong>log</strong></td>
+<td><strong>Console</strong>. </td></tr>
+<tr><td valign="top">
+<strong>name</strong></td>
+<td><strong>string</strong>. Name of this unit.</td></tr>
+<tr><td valign="top">
+<strong>source</strong></td>
+<td><strong>SourceCode</strong>. </td></tr>
+<tr><td valign="top">
+<strong>uploaded</strong></td>
+<td><strong>UploadedCode</strong>. </td></tr>
+<tr><td valign="top">
+<strong>uploader</strong></td>
+<td><strong>undefined</strong>. </td></tr>
+<tr><td valign="top">
+<br><strong>compile(__namedParameters )</strong></td>
+<td></td></tr>
+<tr><td valign="top">
+<strong>serialize()</strong></td>
+<td></td></tr>
+<tr><td valign="top">
+<br><strong>upload(__namedParameters )</strong></td>
+<td></td></tr></tbody></table>
+
+# class *UploadedCode*
+
+An object representing the contract's binary uploaded to a given chain.
+
+```typescript
+new UploadedCode(
+  properties: Partial<...>,
+)
+```
+
+<table><tbody>
+<tr><td valign="top">
+<strong>chainId</strong></td>
+<td><strong>string</strong>. ID of chain on which this contract is uploaded.</td></tr>
+<tr><td valign="top">
+<strong>codeHash</strong></td>
+<td><strong>string</strong>. Code hash uniquely identifying the compiled code.</td></tr>
+<tr><td valign="top">
+<strong>codeId</strong></td>
+<td><strong>string</strong>. Code ID representing the identity of the contract's code on a specific chain.</td></tr>
+<tr><td valign="top">
+<strong>uploadBy</strong></td>
+<td><strong>undefined</strong>. address of agent that performed the upload.</td></tr>
+<tr><td valign="top">
+<strong>uploadGas</strong></td>
+<td><strong>undefined</strong>. address of agent that performed the upload.</td></tr>
+<tr><td valign="top">
+<strong>uploadTx</strong></td>
+<td><strong>string</strong>. TXID of transaction that performed the upload.</td></tr>
+<tr><td valign="top">
+<strong>canInstantiate</strong></td>
+<td></td></tr>
+<tr><td valign="top">
+<strong>canInstantiateInfo</strong></td>
+<td></td></tr>
+<tr><td valign="top">
+<strong>serialize()</strong></td>
+<td></td></tr></tbody></table>

@@ -804,6 +804,12 @@ importers:
         specifier: workspace:^
         version: link:../over
 
+  toolbox/docs:
+    dependencies:
+      '@hackbg/logs':
+        specifier: workspace:^
+        version: link:../logs
+
   toolbox/dome: {}
 
   toolbox/dump: {}
