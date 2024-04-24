@@ -37,6 +37,10 @@ export type Message = string|Record<string, unknown>
 /** A transaction hash, uniquely identifying an executed transaction on a chain. */
 export type TxHash = string
 
+/** This is the base class for a remote endpoint.
+  *
+  * You shouldn't need to instantiate this class directly.
+  * Instead, see `Connection` and its subclasses. */
 export abstract class Endpoint extends Logged {
   /** Chain ID. This is a string that uniquely identifies a chain.
     * A project's mainnet and testnet have different chain IDs. */
@@ -79,6 +83,14 @@ export abstract class Endpoint extends Logged {
   }
 }
 
+/** This is the base class for any connection backend, such as:
+  *
+  *   * Remote RPC endpoint.
+  *   * Local devnet RPC endpoint.
+  *   * Stub/mock implementation of chain.
+  *
+  * You shouldn't need to instantiate this class directly.
+  * Instead, see `Connection`, `Devnet`, and their subclasses. */
 export abstract class Backend extends Logged {
   /** The chain ID that will be passed to the devnet node. */
   chainId?:  ChainId
@@ -95,6 +107,11 @@ export abstract class Backend extends Logged {
   abstract getIdentity (name: string): Promise<{ address?: Address, mnemonic?: string }>
 }
 
+/** This is the base class for a connection to a blockchain via a given endpoint.
+  *
+  * Use one of its subclasses in `@fadroma/scrt`, `@fadroma/cw`, `@fadroma/namada`
+  * to connect to the corresponding chain. Or, extend this class to implement
+  * support for new kinds of blockchains. */
 export abstract class Connection extends Endpoint {
   /** Native token of chain. */
   static gasToken: Token.Native = new Token.Native('')
@@ -260,7 +277,7 @@ export abstract class Connection extends Endpoint {
   getContract (
     options: Address|{ address: Address }): Contract
   getContract <C extends typeof Contract> (
-    options: Address|{ address: Address }, $C: C = Contract as C, 
+    options: Address|{ address: Address }, $C: C = Contract as C,
   ): InstanceType<C> {
     if (typeof options === 'string') {
       options = { address: options }
@@ -569,26 +586,38 @@ export abstract class Connection extends Endpoint {
   }
 }
 
+/** The building block of a blockchain is, well, the block.
+  * Each block contains collection of transactions that are
+  * appended to the blockchain at a given point in time. */
 export abstract class Block {
+  /** Connection to the chain to which this block belongs. */
   chain?: Connection
+  /** Monotonically incrementing ID of block. */
   height: number
+  /** Content-dependent ID of block. */
   hash:   string
+
   constructor (properties: Partial<Block> = {}) {
     assign(this, properties, ["height", "hash"])
     hideProperties(this, "block")
   }
+
   abstract getTransactionsById ():
     Promise<Record<string, Transaction>>
+
   abstract getTransactionsInOrder ():
     Promise<Transaction[]>
 }
 
-/** Contract: interface to the API of a particular contract instance.
-  * Has an `address` on a specific `chain`, usually also an `agent`.
-  * Subclass this to add the contract's methods. */
+/** Base class representing the API of a particular instance of a smart contract.
+  * Subclass this to add custom query and transaction methods. */
 export class Contract extends Logged {
-  instance?: { address?: Address }
+
+  /** Connection to the chain on which this contract is deployed. */
   connection?: Connection
+
+  instance?: { address?: Address }
+
   constructor (properties: Address|Partial<Contract>) {
     super((typeof properties === 'string')?{}:properties)
     if (typeof properties === 'string') {
@@ -599,6 +628,7 @@ export class Contract extends Logged {
     this.instance = instance as Partial<Deploy.ContractInstance>
     this.connection = connection
   }
+
   /** Execute a query on the specified instance as the specified Connection. */
   query <Q> (message: Message): Promise<Q> {
     if (!this.connection) {
@@ -611,6 +641,7 @@ export class Contract extends Logged {
       this.instance as Deploy.ContractInstance & { address: Address }, message
     )
   }
+
   /** Execute a transaction on the specified instance as the specified Connection. */
   execute (message: Message, options: Parameters<Connection["execute"]>[2] = {}): Promise<unknown> {
     if (!this.connection) {
@@ -626,4 +657,5 @@ export class Contract extends Logged {
       this.instance as Deploy.ContractInstance & { address: Address }, message, options
     )
   }
+
 }

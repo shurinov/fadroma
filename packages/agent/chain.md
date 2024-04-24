@@ -1,10 +1,11 @@
 # Fadroma Agent API: Connecting to chains
 
-The standard Fadroma workflow start with connecting to a chain.
-For this, you need at least the URL of a RPC endpoint.
+The standard Fadroma workflow starts with connecting to a chain.
+
+For this, you need at least the URL of a RPC endpoint. To develop
+with a local blockchain node instead, see `@fadroma/devnet`.
 
 <!-- generated docs begin here -->
-
 
 # class *Backend*
 
