@@ -32,16 +32,20 @@ let backend = new Backend(
 <td><strong>NativeToken</strong>. Denomination of base gas token for this chain.</td></tr>
 <tr><td valign="top">
 <strong>log</strong></td>
-<td><strong>Console</strong>. </td></tr>
-<tr><td valign="top">
-<br><strong>connect(parameter )</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<br><strong>getIdentity(name )</strong></td>
-<td></td></tr></tbody></table>
+<td><strong>Console</strong>. </td></tr></tbody></table>
+
+## method *backend.connect*
+```typescript
+backend.connect(parameter )
+```
+
+## method *backend.getIdentity*
+```typescript
+backend.getIdentity(name )
+```
 
 # class *Block*
-The building block of a blockchain is, well, the block.
+The building block of a blockchain.
 Each block contains collection of transactions that are
 appended to the blockchain at a given point in time.
 
@@ -60,13 +64,17 @@ let block = new Block(
 <td><strong>string</strong>. Content-dependent ID of block.</td></tr>
 <tr><td valign="top">
 <strong>height</strong></td>
-<td><strong>number</strong>. Monotonically incrementing ID of block.</td></tr>
-<tr><td valign="top">
-<strong>getTransactionsById()</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<strong>getTransactionsInOrder()</strong></td>
-<td></td></tr></tbody></table>
+<td><strong>number</strong>. Monotonically incrementing ID of block.</td></tr></tbody></table>
+
+## method *block.getTransactionsById*
+```typescript
+block.getTransactionsById()
+```
+
+## method *block.getTransactionsInOrder*
+```typescript
+block.getTransactionsInOrder()
+```
 
 # class *Connection*
 This is the base class for a connection to a blockchain via a given endpoint.
@@ -141,103 +149,171 @@ this property contains the URL to which requests are sent.</td></tr>
 <td></td></tr>
 <tr><td valign="top">
 <strong>nextBlock</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<strong>batch()</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<br><strong>doExecute(contract message options )</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<br><strong>doGetBalance(token address )</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<br><strong>doGetBlockInfo(height )</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<br><strong>doGetCodeHashOfAddress(contract )</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<br><strong>doGetCodeHashOfCodeId(codeId )</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<br><strong>doGetCodeId(contract )</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<strong>doGetCodes()</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<br><strong>doGetContractsByCodeId(id )</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<strong>doGetHeight()</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<br><strong>doInstantiate(codeId options )</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<br><strong>doQuery(contract message )</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<br><strong>doSend(recipient amounts options )</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<br><strong>doSendMany(outputs options )</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<br><strong>doUpload(data options )</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<br><strong>execute(contract message options )</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<br><strong>getBalanceIn(token address )</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<br><strong>getBalanceOf(address token )</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<br><strong>getBlock(height )</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<br><strong>getCodeHashOfAddress(contract )</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<br><strong>getCodeHashOfCodeId(contract )</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<br><strong>getCodeId(contract )</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<strong>getCodes()</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<br><strong>getContract(options )</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<br><strong>getContractsByCodeId(id )</strong>
-<br><strong>getContractsByCodeId(id $C )</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<br><strong>getContractsByCodeIds(ids )</strong>
-<br><strong>getContractsByCodeIds(ids $C )</strong>
-<br><strong>getContractsByCodeIds(ids )</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<br><strong>instantiate(contract options )</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<br><strong>query(contract message )</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<br><strong>send(recipient amounts options )</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<br><strong>upload(code options )</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<br><strong>gas(amount )</strong></td>
 <td></td></tr></tbody></table>
+
+## method *connection.batch*
+```typescript
+connection.batch()
+```
+
+## method *connection.doExecute*
+```typescript
+connection.doExecute(contract message options )
+```
+
+## method *connection.doGetBalance*
+```typescript
+connection.doGetBalance(token address )
+```
+
+## method *connection.doGetBlockInfo*
+```typescript
+connection.doGetBlockInfo(height )
+```
+
+## method *connection.doGetCodeHashOfAddress*
+```typescript
+connection.doGetCodeHashOfAddress(contract )
+```
+
+## method *connection.doGetCodeHashOfCodeId*
+```typescript
+connection.doGetCodeHashOfCodeId(codeId )
+```
+
+## method *connection.doGetCodeId*
+```typescript
+connection.doGetCodeId(contract )
+```
+
+## method *connection.doGetCodes*
+```typescript
+connection.doGetCodes()
+```
+
+## method *connection.doGetContractsByCodeId*
+```typescript
+connection.doGetContractsByCodeId(id )
+```
+
+## method *connection.doGetHeight*
+```typescript
+connection.doGetHeight()
+```
+
+## method *connection.doInstantiate*
+```typescript
+connection.doInstantiate(codeId options )
+```
+
+## method *connection.doQuery*
+```typescript
+connection.doQuery(contract message )
+```
+
+## method *connection.doSend*
+```typescript
+connection.doSend(recipient amounts options )
+```
+
+## method *connection.doSendMany*
+```typescript
+connection.doSendMany(outputs options )
+```
+
+## method *connection.doUpload*
+```typescript
+connection.doUpload(data options )
+```
+
+## method *connection.execute*
+```typescript
+connection.execute(contract message options )
+```
+
+## method *connection.getBalanceIn*
+```typescript
+connection.getBalanceIn(token address )
+```
+
+## method *connection.getBalanceOf*
+```typescript
+connection.getBalanceOf(address token )
+```
+
+## method *connection.getBlock*
+```typescript
+connection.getBlock(height )
+```
+
+## method *connection.getCodeHashOfAddress*
+```typescript
+connection.getCodeHashOfAddress(contract )
+```
+
+## method *connection.getCodeHashOfCodeId*
+```typescript
+connection.getCodeHashOfCodeId(contract )
+```
+
+## method *connection.getCodeId*
+```typescript
+connection.getCodeId(contract )
+```
+
+## method *connection.getCodes*
+```typescript
+connection.getCodes()
+```
+
+## method *connection.getContract*
+```typescript
+connection.getContract(options )
+```
+
+## method *connection.getContractsByCodeId*
+```typescript
+connection.getContractsByCodeId(id )
+```
+```typescript
+connection.getContractsByCodeId(id $C )
+```
+
+## method *connection.getContractsByCodeIds*
+```typescript
+connection.getContractsByCodeIds(ids )
+```
+```typescript
+connection.getContractsByCodeIds(ids $C )
+```
+```typescript
+connection.getContractsByCodeIds(ids )
+```
+
+## method *connection.instantiate*
+```typescript
+connection.instantiate(contract options )
+```
+
+## method *connection.query*
+```typescript
+connection.query(contract message )
+```
+
+## method *connection.send*
+```typescript
+connection.send(recipient amounts options )
+```
+
+## method *connection.upload*
+```typescript
+connection.upload(code options )
+```
+
+## method *connection.gas*
+```typescript
+connection.gas(amount )
+```
 
 # class *Contract*
 Base class representing the API of a particular instance of a smart contract.
@@ -258,13 +334,17 @@ let contract = new Contract(
 <td><strong>undefined</strong>. </td></tr>
 <tr><td valign="top">
 <strong>log</strong></td>
-<td><strong>Console</strong>. </td></tr>
-<tr><td valign="top">
-<br><strong>execute(message options )</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<br><strong>query(message )</strong></td>
-<td></td></tr></tbody></table>
+<td><strong>Console</strong>. </td></tr></tbody></table>
+
+## method *contract.execute*
+```typescript
+contract.execute(message options )
+```
+
+## method *contract.query*
+```typescript
+contract.query(message )
+```
 
 # class *Endpoint*
 This is the base class for a remote endpoint.

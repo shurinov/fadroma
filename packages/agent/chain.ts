@@ -586,7 +586,7 @@ export abstract class Connection extends Endpoint {
   }
 }
 
-/** The building block of a blockchain is, well, the block.
+/** The building block of a blockchain.
   * Each block contains collection of transactions that are
   * appended to the blockchain at a given point in time. */
 export abstract class Block {
