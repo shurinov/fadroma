@@ -147,50 +147,13 @@ new LocalCompiledCode(
 )
 ```
 
-<table><tbody>
-<tr><td valign="top">
-<strong>codeData</strong></td>
-<td><strong>Uint8Array</strong>. The compiled code.</td></tr>
-<tr><td valign="top">
-<strong>codeHash</strong></td>
-<td><strong>string</strong>. Code hash uniquely identifying the compiled code.</td></tr>
-<tr><td valign="top">
-<strong>codePath</strong></td>
-<td><strong>undefined</strong>. Location of the compiled code.</td></tr>
-<tr><td valign="top">
-<strong>canFetch</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<strong>canFetchInfo</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<strong>canUpload</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<strong>canUploadInfo</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<strong>computeHash()</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<strong>doFetch()</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<strong>fetch()</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<strong>serialize()</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<br><strong>toCodeHash(data )</strong></td>
-<td></td></tr></tbody></table>
+<!-- @hackbg/docs: begin -->
 
 # class *CompiledCode*
-
 An object representing a given compiled binary.
 
 ```typescript
-new CompiledCode(
+let compiledCode = new CompiledCode(
   properties: Partial<...>,
 )
 ```
@@ -216,27 +179,36 @@ new CompiledCode(
 <td></td></tr>
 <tr><td valign="top">
 <strong>canUploadInfo</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<strong>computeHash()</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<strong>doFetch()</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<strong>fetch()</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<strong>serialize()</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<br><strong>toCodeHash(data )</strong></td>
 <td></td></tr></tbody></table>
 
-# class *Compiler*
-
+## method *compiledCode.computeHash*
 ```typescript
-new Compiler(
+compiledCode.computeHash()
+```
+
+## method *compiledCode.doFetch*
+```typescript
+compiledCode.doFetch()
+```
+
+## method *compiledCode.fetch*
+```typescript
+compiledCode.fetch()
+```
+
+## method *compiledCode.serialize*
+```typescript
+compiledCode.serialize()
+```
+
+## method *compiledCode.toCodeHash*
+```typescript
+compiledCode.toCodeHash(data )
+```
+
+# class *Compiler*
+```typescript
+let compiler = new Compiler(
   properties: Partial<...>,
 )
 ```
@@ -252,20 +224,80 @@ binary and checksum are both present in wasm/ directory</td></tr>
 <td><strong>string</strong>. Unique identifier of this compiler implementation.</td></tr>
 <tr><td valign="top">
 <strong>log</strong></td>
-<td><strong>Console</strong>. </td></tr>
+<td><strong>Console</strong>. </td></tr></tbody></table>
+
+## method *compiler.build*
+```typescript
+compiler.build(source args )
+```
+
+## method *compiler.buildMany*
+```typescript
+compiler.buildMany(inputs )
+```
+
+# class *LocalCompiledCode*
+An object representing a given compiled binary on the local filesystem.
+
+```typescript
+let localCompiledCode = new LocalCompiledCode(
+  properties: Partial<...>,
+)
+```
+
+<table><tbody>
 <tr><td valign="top">
-<br><strong>build(source args )</strong></td>
+<strong>codeData</strong></td>
+<td><strong>Uint8Array</strong>. The compiled code.</td></tr>
+<tr><td valign="top">
+<strong>codeHash</strong></td>
+<td><strong>string</strong>. Code hash uniquely identifying the compiled code.</td></tr>
+<tr><td valign="top">
+<strong>codePath</strong></td>
+<td><strong>undefined</strong>. Location of the compiled code.</td></tr>
+<tr><td valign="top">
+<strong>canFetch</strong></td>
 <td></td></tr>
 <tr><td valign="top">
-<br><strong>buildMany(inputs )</strong></td>
+<strong>canFetchInfo</strong></td>
+<td></td></tr>
+<tr><td valign="top">
+<strong>canUpload</strong></td>
+<td></td></tr>
+<tr><td valign="top">
+<strong>canUploadInfo</strong></td>
 <td></td></tr></tbody></table>
 
-# class *RustSourceCode*
+## method *localCompiledCode.computeHash*
+```typescript
+localCompiledCode.computeHash()
+```
 
+## method *localCompiledCode.doFetch*
+```typescript
+localCompiledCode.doFetch()
+```
+
+## method *localCompiledCode.fetch*
+```typescript
+localCompiledCode.fetch()
+```
+
+## method *localCompiledCode.serialize*
+```typescript
+localCompiledCode.serialize()
+```
+
+## method *localCompiledCode.toCodeHash*
+```typescript
+localCompiledCode.toCodeHash(data )
+```
+
+# class *RustSourceCode*
 An object representing a given source code.
 
 ```typescript
-new RustSourceCode(
+let rustSourceCode = new RustSourceCode(
   properties: Partial<...>,
 )
 ```
@@ -309,17 +341,18 @@ new RustSourceCode(
 <td></td></tr>
 <tr><td valign="top">
 <strong>canFetchInfo</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<strong>serialize()</strong></td>
 <td></td></tr></tbody></table>
 
-# class *SourceCode*
+## method *rustSourceCode.serialize*
+```typescript
+rustSourceCode.serialize()
+```
 
+# class *SourceCode*
 An object representing a given source code.
 
 ```typescript
-new SourceCode(
+let sourceCode = new SourceCode(
   properties: Partial<...>,
 )
 ```
@@ -351,7 +384,9 @@ new SourceCode(
 <td></td></tr>
 <tr><td valign="top">
 <strong>canFetchInfo</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<strong>serialize()</strong></td>
 <td></td></tr></tbody></table>
+
+## method *sourceCode.serialize*
+```typescript
+sourceCode.serialize()
+```<!-- @hackbg/docs: end -->

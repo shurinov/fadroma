@@ -33,3 +33,30 @@ Examples:
 ```typescript
 // TODO
 ```
+
+<!-- @hackbg/docs: begin -->
+
+# class *Identity*
+A cryptographic identity.
+
+```typescript
+let identity = new Identity(
+  properties: Partial<...>,
+)
+```
+
+<table><tbody>
+<tr><td valign="top">
+<strong>address</strong></td>
+<td><strong>string</strong>. Unique identifier.</td></tr>
+<tr><td valign="top">
+<strong>log</strong></td>
+<td><strong>Console</strong>. </td></tr>
+<tr><td valign="top">
+<strong>name</strong></td>
+<td><strong>string</strong>. Display name.</td></tr></tbody></table>
+
+## method *identity.sign*
+```typescript
+identity.sign(doc )
+```<!-- @hackbg/docs: end -->

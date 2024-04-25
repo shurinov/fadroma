@@ -290,11 +290,11 @@ but a source and a compiler are present, this will also try to build the contrac
 // TODO
 ```
 
+<!-- @hackbg/docs: begin -->
 
 # class *ContractCode*
-
 ```typescript
-new ContractCode(
+let contractCode = new ContractCode(
   properties: Partial<...>,
 )
 ```
@@ -320,22 +320,25 @@ new ContractCode(
 <td><strong>UploadedCode</strong>. </td></tr>
 <tr><td valign="top">
 <strong>uploader</strong></td>
-<td><strong>undefined</strong>. </td></tr>
-<tr><td valign="top">
-<br><strong>compile(__namedParameters )</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<br><strong>upload(__namedParameters )</strong></td>
-<td></td></tr></tbody></table>
+<td><strong>undefined</strong>. </td></tr></tbody></table>
+
+## method *contractCode.compile*
+```typescript
+contractCode.compile(__namedParameters )
+```
+
+## method *contractCode.upload*
+```typescript
+contractCode.upload(__namedParameters )
+```
 
 # class *ContractInstance*
-
 A contract that is part of a deploment.
 - needed for deployment-wide deduplication
 - generates structured label
 
 ```typescript
-new ContractInstance(
+let contractInstance = new ContractInstance(
   properties: undefined
 )
 ```
@@ -406,34 +409,45 @@ new ContractInstance(
 <td><strong>UploadedCode</strong>. </td></tr>
 <tr><td valign="top">
 <strong>uploader</strong></td>
-<td><strong>undefined</strong>. </td></tr>
-<tr><td valign="top">
-<br><strong>compile(__namedParameters )</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<br><strong>connect(agent )</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<br><strong>deploy(__namedParameters )</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<strong>isValid()</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<strong>serialize()</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<br><strong>upload(__namedParameters )</strong></td>
-<td></td></tr></tbody></table>
+<td><strong>undefined</strong>. </td></tr></tbody></table>
+
+## method *contractInstance.compile*
+```typescript
+contractInstance.compile(__namedParameters )
+```
+
+## method *contractInstance.connect*
+```typescript
+contractInstance.connect(agent )
+```
+
+## method *contractInstance.deploy*
+```typescript
+contractInstance.deploy(__namedParameters )
+```
+
+## method *contractInstance.isValid*
+```typescript
+contractInstance.isValid()
+```
+
+## method *contractInstance.serialize*
+```typescript
+contractInstance.serialize()
+```
+
+## method *contractInstance.upload*
+```typescript
+contractInstance.upload(__namedParameters )
+```
 
 # class *ContractTemplate*
-
 A contract that is part of a deploment.
 - needed for deployment-wide deduplication
 - generates structured label
 
 ```typescript
-new ContractTemplate(
+let contractTemplate = new ContractTemplate(
   properties: undefined
 )
 ```
@@ -477,29 +491,38 @@ new ContractTemplate(
 <td><strong>UploadedCode</strong>. </td></tr>
 <tr><td valign="top">
 <strong>uploader</strong></td>
-<td><strong>undefined</strong>. </td></tr>
-<tr><td valign="top">
-<br><strong>compile(__namedParameters )</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<br><strong>contract(name parameters )</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<br><strong>contracts(instanceParameters )</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<strong>serialize()</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<br><strong>upload(__namedParameters )</strong></td>
-<td></td></tr></tbody></table>
+<td><strong>undefined</strong>. </td></tr></tbody></table>
+
+## method *contractTemplate.compile*
+```typescript
+contractTemplate.compile(__namedParameters )
+```
+
+## method *contractTemplate.contract*
+```typescript
+contractTemplate.contract(name parameters )
+```
+
+## method *contractTemplate.contracts*
+```typescript
+contractTemplate.contracts(instanceParameters )
+```
+
+## method *contractTemplate.serialize*
+```typescript
+contractTemplate.serialize()
+```
+
+## method *contractTemplate.upload*
+```typescript
+contractTemplate.upload(__namedParameters )
+```
 
 # class *Deployment*
-
 A collection of contracts.
 
 ```typescript
-new Deployment(
+let deployment = new Deployment(
   properties: Partial<...>,
 )
 ```
@@ -516,73 +539,110 @@ new Deployment(
 <td><strong>number</strong>. </td></tr>
 <tr><td valign="top">
 <strong>[species]</strong></td>
-<td><strong>MapConstructor</strong>. </td></tr>
-<tr><td valign="top">
-<strong>[iterator]()</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<br><strong>addContract(args )</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<br><strong>addContracts(args )</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<br><strong>build(__namedParameters )</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<strong>clear()</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<br><strong>contract(name properties )</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<br><strong>delete(key )</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<br><strong>deploy(__namedParameters )</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<strong>entries()</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<br><strong>forEach(callbackfn thisArg )</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<br><strong>get(key )</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<br><strong>has(key )</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<strong>keys()</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<strong>serialize()</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<br><strong>set(name unit )</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<br><strong>template(name properties )</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<br><strong>upload(__namedParameters )</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<strong>values()</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<br><strong>fromSnapshot(__namedParameters )</strong></td>
-<td></td></tr></tbody></table>
+<td><strong>MapConstructor</strong>. </td></tr></tbody></table>
+
+## method *deployment.[iterator]*
+```typescript
+deployment.[iterator]()
+```
+
+## method *deployment.addContract*
+```typescript
+deployment.addContract(args )
+```
+
+## method *deployment.addContracts*
+```typescript
+deployment.addContracts(args )
+```
+
+## method *deployment.build*
+```typescript
+deployment.build(__namedParameters )
+```
+
+## method *deployment.clear*
+```typescript
+deployment.clear()
+```
+
+## method *deployment.contract*
+```typescript
+deployment.contract(name properties )
+```
+
+## method *deployment.delete*
+```typescript
+deployment.delete(key )
+```
+
+## method *deployment.deploy*
+```typescript
+deployment.deploy(__namedParameters )
+```
+
+## method *deployment.entries*
+```typescript
+deployment.entries()
+```
+
+## method *deployment.forEach*
+```typescript
+deployment.forEach(callbackfn thisArg )
+```
+
+## method *deployment.get*
+```typescript
+deployment.get(key )
+```
+
+## method *deployment.has*
+```typescript
+deployment.has(key )
+```
+
+## method *deployment.keys*
+```typescript
+deployment.keys()
+```
+
+## method *deployment.serialize*
+```typescript
+deployment.serialize()
+```
+
+## method *deployment.set*
+```typescript
+deployment.set(name unit )
+```
+
+## method *deployment.template*
+```typescript
+deployment.template(name properties )
+```
+
+## method *deployment.upload*
+```typescript
+deployment.upload(__namedParameters )
+```
+
+## method *deployment.values*
+```typescript
+deployment.values()
+```
+
+## method *deployment.fromSnapshot*
+```typescript
+deployment.fromSnapshot(__namedParameters )
+```
 
 # class *DeploymentUnit*
-
 A contract that is part of a deploment.
 - needed for deployment-wide deduplication
 - generates structured label
 
 ```typescript
-new DeploymentUnit(
+let deploymentUnit = new DeploymentUnit(
   properties: undefined
 )
 ```
@@ -623,23 +683,28 @@ new DeploymentUnit(
 <td><strong>UploadedCode</strong>. </td></tr>
 <tr><td valign="top">
 <strong>uploader</strong></td>
-<td><strong>undefined</strong>. </td></tr>
-<tr><td valign="top">
-<br><strong>compile(__namedParameters )</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<strong>serialize()</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<br><strong>upload(__namedParameters )</strong></td>
-<td></td></tr></tbody></table>
+<td><strong>undefined</strong>. </td></tr></tbody></table>
+
+## method *deploymentUnit.compile*
+```typescript
+deploymentUnit.compile(__namedParameters )
+```
+
+## method *deploymentUnit.serialize*
+```typescript
+deploymentUnit.serialize()
+```
+
+## method *deploymentUnit.upload*
+```typescript
+deploymentUnit.upload(__namedParameters )
+```
 
 # class *UploadedCode*
-
 An object representing the contract's binary uploaded to a given chain.
 
 ```typescript
-new UploadedCode(
+let uploadedCode = new UploadedCode(
   properties: Partial<...>,
 )
 ```
@@ -668,7 +733,9 @@ new UploadedCode(
 <td></td></tr>
 <tr><td valign="top">
 <strong>canInstantiateInfo</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<strong>serialize()</strong></td>
 <td></td></tr></tbody></table>
+
+## method *uploadedCode.serialize*
+```typescript
+uploadedCode.serialize()
+```<!-- @hackbg/docs: end -->

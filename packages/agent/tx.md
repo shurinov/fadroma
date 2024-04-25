@@ -1,5 +1,3 @@
-
-
 ### Batching transactions
 
 The **agent.batch(...)** method creates an instance of **Batch**.
@@ -53,3 +51,72 @@ const fee2 = new Fee('200000', 'uscrt')
 
 assert.deepEqual(await client.withFee(fee2).getFee('my_method'), fee2)
 ```
+
+<!-- @hackbg/docs: begin -->
+
+# class *Batch*
+Builder object for batched transactions.
+
+```typescript
+let batch = new Batch(
+  properties: Partial<...>,
+)
+```
+
+<table><tbody>
+<tr><td valign="top">
+<strong>connection</strong></td>
+<td><strong>C</strong>. </td></tr>
+<tr><td valign="top">
+<strong>log</strong></td>
+<td><strong>Console</strong>. </td></tr></tbody></table>
+
+## method *batch.execute*
+```typescript
+batch.execute(args )
+```
+
+## method *batch.instantiate*
+```typescript
+batch.instantiate(args )
+```
+
+## method *batch.submit*
+```typescript
+batch.submit(args )
+```
+
+## method *batch.upload*
+```typescript
+batch.upload(args )
+```
+
+# class *Transaction*
+A transaction in a block on a chain.
+
+```typescript
+new Transaction()
+```
+
+<table><tbody>
+<tr><td valign="top">
+<strong>block</strong></td>
+<td><strong>Block</strong>. </td></tr>
+<tr><td valign="top">
+<strong>data</strong></td>
+<td><strong>unknown</strong>. </td></tr>
+<tr><td valign="top">
+<strong>gasLimit</strong></td>
+<td><strong>undefined</strong>. </td></tr>
+<tr><td valign="top">
+<strong>gasUsed</strong></td>
+<td><strong>undefined</strong>. </td></tr>
+<tr><td valign="top">
+<strong>hash</strong></td>
+<td><strong>string</strong>. </td></tr>
+<tr><td valign="top">
+<strong>status</strong></td>
+<td><strong>undefined</strong>. </td></tr>
+<tr><td valign="top">
+<strong>type</strong></td>
+<td><strong>unknown</strong>. </td></tr></tbody></table><!-- @hackbg/docs: end -->

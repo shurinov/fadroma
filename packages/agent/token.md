@@ -46,12 +46,13 @@ await agent.send('recipient-address', [
 ])
 ```
 
-# class *Amount*
+<!-- @hackbg/docs: begin -->
 
+# class *Amount*
 An amount of a fungible token.
 
 ```typescript
-new Amount(
+let amount = new Amount(
   amount: undefined
   token: FungibleToken
 )
@@ -69,23 +70,28 @@ new Amount(
 <td></td></tr>
 <tr><td valign="top">
 <strong>denom</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<strong>asCoin()</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<br><strong>asFee(gas )</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<strong>toString()</strong></td>
 <td></td></tr></tbody></table>
 
-# class *Coin*
+## method *amount.asCoin*
+```typescript
+amount.asCoin()
+```
 
+## method *amount.asFee*
+```typescript
+amount.asFee(gas )
+```
+
+## method *amount.toString*
+```typescript
+amount.toString()
+```
+
+# class *Coin*
 Represents some amount of native token.
 
 ```typescript
-new Coin(
+let coin = new Coin(
   amount: undefined
   denom: string
 )
@@ -100,11 +106,10 @@ new Coin(
 <td><strong>string</strong>. </td></tr></tbody></table>
 
 # class *Custom*
-
 A contract-based token.
 
 ```typescript
-new Custom(
+let custom = new Custom(
   address: string
   codeHash: string
 )
@@ -119,29 +124,38 @@ new Custom(
 <td><strong>string</strong>. </td></tr>
 <tr><td valign="top">
 <strong>id</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<br><strong>amount(amount )</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<strong>isCustom()</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<strong>isFungible()</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<strong>isNative()</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<br><strong>addZeros(n z )</strong></td>
 <td></td></tr></tbody></table>
 
-# class *Fee*
+## method *custom.amount*
+```typescript
+custom.amount(amount )
+```
 
+## method *custom.isCustom*
+```typescript
+custom.isCustom()
+```
+
+## method *custom.isFungible*
+```typescript
+custom.isFungible()
+```
+
+## method *custom.isNative*
+```typescript
+custom.isNative()
+```
+
+## method *custom.addZeros*
+```typescript
+custom.addZeros(n z )
+```
+
+# class *Fee*
 A constructable gas fee in native tokens.
 
 ```typescript
-new Fee(
+let fee = new Fee(
   amount: undefined
   denom: string
   gas: string
@@ -154,13 +168,14 @@ new Fee(
 <td><strong>undefined</strong>. </td></tr>
 <tr><td valign="top">
 <strong>gas</strong></td>
-<td><strong>string</strong>. </td></tr>
-<tr><td valign="top">
-<br><strong>add(amount denom )</strong></td>
-<td></td></tr></tbody></table>
+<td><strong>string</strong>. </td></tr></tbody></table>
+
+## method *fee.add*
+```typescript
+fee.add(amount denom )
+```
 
 # class *Fungible*
-
 An abstract fungible token.
 
 ```typescript
@@ -170,29 +185,38 @@ new Fungible()
 <table><tbody>
 <tr><td valign="top">
 <strong>id</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<br><strong>amount(amount )</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<strong>isCustom()</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<strong>isFungible()</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<strong>isNative()</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<br><strong>addZeros(n z )</strong></td>
 <td></td></tr></tbody></table>
 
-# class *Native*
+## method *fungible.amount*
+```typescript
+fungible.amount(amount )
+```
 
+## method *fungible.isCustom*
+```typescript
+fungible.isCustom()
+```
+
+## method *fungible.isFungible*
+```typescript
+fungible.isFungible()
+```
+
+## method *fungible.isNative*
+```typescript
+fungible.isNative()
+```
+
+## method *fungible.addZeros*
+```typescript
+fungible.addZeros(n z )
+```
+
+# class *Native*
 The chain's natively implemented token (such as SCRT on Secret Network).
 
 ```typescript
-new Native(
+let native = new Native(
   denom: string
 )
 ```
@@ -203,28 +227,39 @@ new Native(
 <td><strong>string</strong>. </td></tr>
 <tr><td valign="top">
 <strong>id</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<br><strong>amount(amount )</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<br><strong>fee(amount )</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<strong>isCustom()</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<strong>isFungible()</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<strong>isNative()</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<br><strong>addZeros(n z )</strong></td>
 <td></td></tr></tbody></table>
 
-# class *NonFungible*
+## method *native.amount*
+```typescript
+native.amount(amount )
+```
 
+## method *native.fee*
+```typescript
+native.fee(amount )
+```
+
+## method *native.isCustom*
+```typescript
+native.isCustom()
+```
+
+## method *native.isFungible*
+```typescript
+native.isFungible()
+```
+
+## method *native.isNative*
+```typescript
+native.isNative()
+```
+
+## method *native.addZeros*
+```typescript
+native.addZeros(n z )
+```
+
+# class *NonFungible*
 An abstract non-fungible token.
 
 ```typescript
@@ -234,17 +269,18 @@ new NonFungible()
 <table><tbody>
 <tr><td valign="top">
 <strong>id</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<strong>isFungible()</strong></td>
 <td></td></tr></tbody></table>
 
-# class *Pair*
+## method *nonFungible.isFungible*
+```typescript
+nonFungible.isFungible()
+```
 
+# class *Pair*
 A pair of tokens.
 
 ```typescript
-new Pair(
+let pair = new Pair(
   a: Token
   b: Token
 )
@@ -262,11 +298,10 @@ new Pair(
 <td></td></tr></tbody></table>
 
 # class *Swap*
-
 A pair of token amounts.
 
 ```typescript
-new Swap(
+let swap = new Swap(
   a: undefined
   b: undefined
 )
@@ -284,7 +319,6 @@ new Swap(
 <td></td></tr></tbody></table>
 
 # class *Token*
-
 An identifiable token on a network.
 
 ```typescript
@@ -294,7 +328,9 @@ new Token()
 <table><tbody>
 <tr><td valign="top">
 <strong>id</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<strong>isFungible()</strong></td>
 <td></td></tr></tbody></table>
+
+## method *token.isFungible*
+```typescript
+token.isFungible()
+```<!-- @hackbg/docs: end -->
