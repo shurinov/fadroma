@@ -63,6 +63,9 @@ importers:
       '@ganesha/esbuild':
         specifier: workspace:^
         version: link:toolbox/ganesha/esbuild
+      '@hackbg/docs':
+        specifier: workspace:^
+        version: link:toolbox/docs
       '@hackbg/dump':
         specifier: workspace:^
         version: link:toolbox/dump

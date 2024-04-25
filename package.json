@@ -67,6 +67,8 @@
     }
   },
   "devDependencies": {
+    "@hackbg/docs": "workspace:^",
+
     "@hackbg/fadroma":   "workspace:^",
 
     "@fadroma/compile":  "workspace:^",
