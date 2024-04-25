@@ -5,12 +5,20 @@ The standard Fadroma workflow starts with connecting to a chain.
 For this, you need at least the URL of a RPC endpoint. To develop
 with a local blockchain node instead, see `@fadroma/devnet`.
 
-<!-- generated docs begin here -->
+<!-- @hackbg/docs: begin -->
 
 # class *Backend*
+This is the base class for any connection backend, such as:
+
+  * Remote RPC endpoint.
+  * Local devnet RPC endpoint.
+  * Stub/mock implementation of chain.
+
+You shouldn't need to instantiate this class directly.
+Instead, see `Connection`, `Devnet`, and their subclasses.
 
 ```typescript
-new Backend(
+let backend = new Backend(
   properties: Partial<...>,
 )
 ```
@@ -33,9 +41,12 @@ new Backend(
 <td></td></tr></tbody></table>
 
 # class *Block*
+The building block of a blockchain is, well, the block.
+Each block contains collection of transactions that are
+appended to the blockchain at a given point in time.
 
 ```typescript
-new Block(
+let block = new Block(
   properties: Partial<...>,
 )
 ```
@@ -43,13 +54,13 @@ new Block(
 <table><tbody>
 <tr><td valign="top">
 <strong>chain</strong></td>
-<td><strong>Connection</strong>. </td></tr>
+<td><strong>Connection</strong>. Connection to the chain to which this block belongs.</td></tr>
 <tr><td valign="top">
 <strong>hash</strong></td>
-<td><strong>string</strong>. </td></tr>
+<td><strong>string</strong>. Content-dependent ID of block.</td></tr>
 <tr><td valign="top">
 <strong>height</strong></td>
-<td><strong>number</strong>. </td></tr>
+<td><strong>number</strong>. Monotonically incrementing ID of block.</td></tr>
 <tr><td valign="top">
 <strong>getTransactionsById()</strong></td>
 <td></td></tr>
@@ -58,9 +69,14 @@ new Block(
 <td></td></tr></tbody></table>
 
 # class *Connection*
+This is the base class for a connection to a blockchain via a given endpoint.
+
+Use one of its subclasses in `@fadroma/scrt`, `@fadroma/cw`, `@fadroma/namada`
+to connect to the corresponding chain. Or, extend this class to implement
+support for new kinds of blockchains.
 
 ```typescript
-new Connection(
+let connection = new Connection(
   properties: Partial<...>,
 )
 ```
@@ -224,13 +240,11 @@ this property contains the URL to which requests are sent.</td></tr>
 <td></td></tr></tbody></table>
 
 # class *Contract*
-
-Contract: interface to the API of a particular contract instance.
-Has an `address` on a specific `chain`, usually also an `agent`.
-Subclass this to add the contract's methods.
+Base class representing the API of a particular instance of a smart contract.
+Subclass this to add custom query and transaction methods.
 
 ```typescript
-new Contract(
+let contract = new Contract(
   properties: undefined
 )
 ```
@@ -238,7 +252,7 @@ new Contract(
 <table><tbody>
 <tr><td valign="top">
 <strong>connection</strong></td>
-<td><strong>Connection</strong>. </td></tr>
+<td><strong>Connection</strong>. Connection to the chain on which this contract is deployed.</td></tr>
 <tr><td valign="top">
 <strong>instance</strong></td>
 <td><strong>undefined</strong>. </td></tr>
@@ -253,9 +267,13 @@ new Contract(
 <td></td></tr></tbody></table>
 
 # class *Endpoint*
+This is the base class for a remote endpoint.
+
+You shouldn't need to instantiate this class directly.
+Instead, see `Connection` and its subclasses.
 
 ```typescript
-new Endpoint(
+let endpoint = new Endpoint(
   properties: Partial<...>,
 )
 ```
@@ -287,4 +305,4 @@ A project's mainnet and testnet have different chain IDs.</td></tr>
 <td><strong>string</strong>. Connection URL.
 
 The same chain may be accessible via different endpoints, so
-this property contains the URL to which requests are sent.</td></tr></tbody></table>
+this property contains the URL to which requests are sent.</td></tr></tbody></table><!-- @hackbg/docs: end -->
