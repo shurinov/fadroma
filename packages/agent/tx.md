@@ -71,7 +71,7 @@ const batch = new Batch(
 <strong>log</strong></td>
 <td><strong>Console</strong>. </td></tr></tbody></table>
 
-## method [*batch.execute*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/tx.ts#L38)
+## method [*batch.execute*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/tx.ts#L38)
 Add an execute message to the batch.
 <pre>
 batch.execute(
@@ -79,7 +79,7 @@ batch.execute(
 )
 </pre>
 
-## method [*batch.instantiate*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/tx.ts#L32)
+## method [*batch.instantiate*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/tx.ts#L32)
 Add an instantiate message to the batch.
 <pre>
 batch.instantiate(
@@ -87,7 +87,7 @@ batch.instantiate(
 )
 </pre>
 
-## method [*batch.submit*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/tx.ts#L44)
+## method [*batch.submit*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/tx.ts#L44)
 Submit the batch.
 <pre>
 <strong>const</strong> result: <em>unknown</em> = batch.submit(
@@ -95,7 +95,7 @@ Submit the batch.
 )
 </pre>
 
-## method [*batch.upload*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/tx.ts#L26)
+## method [*batch.upload*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/tx.ts#L26)
 Add an upload message to the batch.
 <pre>
 batch.upload(

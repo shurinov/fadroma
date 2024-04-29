@@ -51,42 +51,42 @@ const stubBackend = new StubBackend(
 <strong>url</strong></td>
 <td><strong>string</strong>. </td></tr></tbody></table>
 
-## method [*stubBackend.connect*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/stub.ts#L190)
+## method [*stubBackend.connect*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/stub.ts#L190)
 <pre>
 <strong>const</strong> result: <em><a href="#">Connection</a></em> = <strong>await</strong> stubBackend.connect(
   parameter,
 )
 </pre>
 
-## method [*stubBackend.execute*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/stub.ts#L258)
+## method [*stubBackend.execute*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/stub.ts#L258)
 <pre>
 <strong>const</strong> result: <em>unknown</em> = stubBackend.execute(
   ...args: <em>unknown</em>,
 )
 </pre>
 
-## method [*stubBackend.export*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/stub.ts#L229)
+## method [*stubBackend.export*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/stub.ts#L229)
 <pre>
 <strong>const</strong> result: <em>unknown</em> = stubBackend.export(
   ...args: <em>unknown</em>,
 )
 </pre>
 
-## method [*stubBackend.getIdentity*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/stub.ts#L208)
+## method [*stubBackend.getIdentity*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/stub.ts#L208)
 <pre>
 <strong>const</strong> result: <em><a href="#">Identity</a></em> = <strong>await</strong> stubBackend.getIdentity(
   name: <em>string</em>,
 )
 </pre>
 
-## method [*stubBackend.import*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/stub.ts#L225)
+## method [*stubBackend.import*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/stub.ts#L225)
 <pre>
 <strong>const</strong> result: <em>unknown</em> = stubBackend.import(
   ...args: <em>unknown</em>,
 )
 </pre>
 
-## method [*stubBackend.instantiate*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/stub.ts#L243)
+## method [*stubBackend.instantiate*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/stub.ts#L243)
 <pre>
 stubBackend.instantiate(
   creator: <em>string</em>,
@@ -95,17 +95,17 @@ stubBackend.instantiate(
 )
 </pre>
 
-## method [*stubBackend.pause*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/stub.ts#L220)
+## method [*stubBackend.pause*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/stub.ts#L220)
 <pre>
 <strong>const</strong> result: <em><a href="#">StubBackend</a></em> = <strong>await</strong> stubBackend.pause()
 </pre>
 
-## method [*stubBackend.start*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/stub.ts#L215)
+## method [*stubBackend.start*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/stub.ts#L215)
 <pre>
 <strong>const</strong> result: <em><a href="#">StubBackend</a></em> = <strong>await</strong> stubBackend.start()
 </pre>
 
-## method [*stubBackend.upload*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/stub.ts#L233)
+## method [*stubBackend.upload*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/stub.ts#L233)
 <pre>
 stubBackend.upload(
   codeData: <em>Uint8Array</em>,
@@ -132,7 +132,7 @@ const stubBatch = new StubBatch(
 <strong>messages</strong></td>
 <td><strong>undefined</strong>. </td></tr></tbody></table>
 
-## method [*stubBatch.execute*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/stub.ts#L276)
+## method [*stubBatch.execute*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/stub.ts#L276)
 Add an execute message to the batch.
 <pre>
 <strong>const</strong> result: <em><a href="#">StubBatch</a></em> = stubBatch.execute(
@@ -140,7 +140,7 @@ Add an execute message to the batch.
 )
 </pre>
 
-## method [*stubBatch.instantiate*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/stub.ts#L271)
+## method [*stubBatch.instantiate*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/stub.ts#L271)
 Add an instantiate message to the batch.
 <pre>
 <strong>const</strong> result: <em><a href="#">StubBatch</a></em> = stubBatch.instantiate(
@@ -148,13 +148,13 @@ Add an instantiate message to the batch.
 )
 </pre>
 
-## method [*stubBatch.submit*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/stub.ts#L281)
+## method [*stubBatch.submit*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/stub.ts#L281)
 Submit the batch.
 <pre>
 stubBatch.submit()
 </pre>
 
-## method [*stubBatch.upload*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/stub.ts#L266)
+## method [*stubBatch.upload*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/stub.ts#L266)
 Add an upload message to the batch.
 <pre>
 <strong>const</strong> result: <em><a href="#">StubBatch</a></em> = stubBatch.upload(
@@ -163,7 +163,7 @@ Add an upload message to the batch.
 </pre>
 
 # class *StubBlock*
-The building block of a blockchain is, well, the block.
+The building block of a blockchain.
 Each block contains collection of transactions that are
 appended to the blockchain at a given point in time.
 
@@ -184,12 +184,12 @@ const stubBlock = new StubBlock(
 <strong>height</strong></td>
 <td><strong>number</strong>. Monotonically incrementing ID of block.</td></tr></tbody></table>
 
-## method [*stubBlock.getTransactionsById*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/stub.ts#L18)
+## method [*stubBlock.getTransactionsById*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/stub.ts#L18)
 <pre>
 <strong>const</strong> result: <em>Record&lt;string, Transaction&gt;</em> = <strong>await</strong> stubBlock.getTransactionsById()
 </pre>
 
-## method [*stubBlock.getTransactionsInOrder*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/stub.ts#L21)
+## method [*stubBlock.getTransactionsInOrder*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/stub.ts#L21)
 <pre>
 stubBlock.getTransactionsInOrder()
 </pre>
@@ -216,7 +216,7 @@ binary and checksum are both present in wasm/ directory</td></tr>
 <strong>log</strong></td>
 <td><strong>Console</strong>. </td></tr></tbody></table>
 
-## method [*stubCompiler.build*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/stub.ts#L297)
+## method [*stubCompiler.build*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/stub.ts#L297)
 Compile a source.
 `@hackbg/fadroma` implements dockerized and non-dockerized
 variants using its `build.impl.mjs` script.
@@ -227,7 +227,7 @@ variants using its `build.impl.mjs` script.
 )
 </pre>
 
-## method [*stubCompiler.buildMany*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/program.browser.ts#L27)
+## method [*stubCompiler.buildMany*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/program.browser.ts#L27)
 Build multiple sources.
 Default implementation of buildMany is sequential.
 Compiler classes may override this to optimize.
@@ -315,13 +315,13 @@ this property contains the URL to which requests are sent.</td></tr>
 <strong>nextBlock</strong></td>
 <td></td></tr></tbody></table>
 
-## method [*stubConnection.batch*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/stub.ts#L36)
+## method [*stubConnection.batch*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/stub.ts#L36)
 Construct a transaction batch.
 <pre>
 <strong>const</strong> result: <em><a href="#">Batch&lt;StubConnection&gt;</a></em> = stubConnection.batch()
 </pre>
 
-## method [*stubConnection.doExecute*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/stub.ts#L125)
+## method [*stubConnection.doExecute*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/stub.ts#L125)
 <pre>
 <strong>const</strong> result: <em>unknown</em> = stubConnection.doExecute(
   contract,
@@ -330,7 +330,7 @@ Construct a transaction batch.
 )
 </pre>
 
-## method [*stubConnection.doGetBalance*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/stub.ts#L52)
+## method [*stubConnection.doGetBalance*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/stub.ts#L52)
 <pre>
 <strong>const</strong> result: <em>string</em> = stubConnection.doGetBalance(
   token: <em>string</em>,
@@ -338,50 +338,50 @@ Construct a transaction batch.
 )
 </pre>
 
-## method [*stubConnection.doGetBlockInfo*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/stub.ts#L42)
+## method [*stubConnection.doGetBlockInfo*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/stub.ts#L42)
 <pre>
 <strong>const</strong> result: <em><a href="#">StubBlock</a></em> = <strong>await</strong> stubConnection.doGetBlockInfo()
 </pre>
 
-## method [*stubConnection.doGetCodeHashOfAddress*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/stub.ts#L69)
+## method [*stubConnection.doGetCodeHashOfAddress*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/stub.ts#L69)
 <pre>
 <strong>const</strong> result: <em>string</em> = stubConnection.doGetCodeHashOfAddress(
   address: <em>string</em>,
 )
 </pre>
 
-## method [*stubConnection.doGetCodeHashOfCodeId*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/stub.ts#L73)
+## method [*stubConnection.doGetCodeHashOfCodeId*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/stub.ts#L73)
 <pre>
 <strong>const</strong> result: <em>string</em> = stubConnection.doGetCodeHashOfCodeId(
   id: <em>string</em>,
 )
 </pre>
 
-## method [*stubConnection.doGetCodeId*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/stub.ts#L58)
+## method [*stubConnection.doGetCodeId*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/stub.ts#L58)
 <pre>
 <strong>const</strong> result: <em>string</em> = stubConnection.doGetCodeId(
   address: <em>string</em>,
 )
 </pre>
 
-## method [*stubConnection.doGetCodes*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/stub.ts#L45)
+## method [*stubConnection.doGetCodes*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/stub.ts#L45)
 <pre>
 stubConnection.doGetCodes()
 </pre>
 
-## method [*stubConnection.doGetContractsByCodeId*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/stub.ts#L65)
+## method [*stubConnection.doGetContractsByCodeId*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/stub.ts#L65)
 <pre>
 stubConnection.doGetContractsByCodeId(
   id: <em>string</em>,
 )
 </pre>
 
-## method [*stubConnection.doGetHeight*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/stub.ts#L39)
+## method [*stubConnection.doGetHeight*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/stub.ts#L39)
 <pre>
 <strong>const</strong> result: <em>number</em> = stubConnection.doGetHeight()
 </pre>
 
-## method [*stubConnection.doInstantiate*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/stub.ts#L116)
+## method [*stubConnection.doInstantiate*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/stub.ts#L116)
 <pre>
 stubConnection.doInstantiate(
   codeId: <em>string</em>,
@@ -389,7 +389,7 @@ stubConnection.doInstantiate(
 )
 </pre>
 
-## method [*stubConnection.doQuery*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/stub.ts#L80)
+## method [*stubConnection.doQuery*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/stub.ts#L80)
 <pre>
 <strong>const</strong> result: <em>Q</em> = <strong>await</strong> stubConnection.doQuery(
   contract,
@@ -397,7 +397,7 @@ stubConnection.doInstantiate(
 )
 </pre>
 
-## method [*stubConnection.doSend*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/stub.ts#L83)
+## method [*stubConnection.doSend*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/stub.ts#L83)
 <pre>
 <strong>const</strong> result: <em>void</em> = stubConnection.doSend(
   recipient: <em>string</em>,
@@ -406,7 +406,7 @@ stubConnection.doInstantiate(
 )
 </pre>
 
-## method [*stubConnection.doSendMany*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/stub.ts#L110)
+## method [*stubConnection.doSendMany*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/stub.ts#L110)
 <pre>
 <strong>const</strong> result: <em>void</em> = stubConnection.doSendMany(
   outputs,
@@ -414,14 +414,14 @@ stubConnection.doInstantiate(
 )
 </pre>
 
-## method [*stubConnection.doUpload*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/stub.ts#L113)
+## method [*stubConnection.doUpload*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/stub.ts#L113)
 <pre>
 <strong>const</strong> result: <em><a href="#">UploadedCode</a></em> = <strong>await</strong> stubConnection.doUpload(
   codeData: <em>Uint8Array</em>,
 )
 </pre>
 
-## method [*stubConnection.execute*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/chain.ts#L557)
+## method [*stubConnection.execute*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/chain.ts#L564)
 Call a given program's transaction method.
 <pre>
 <strong>const</strong> result: <em>unknown</em> = stubConnection.execute(
@@ -431,7 +431,7 @@ Call a given program's transaction method.
 )
 </pre>
 
-## method [*stubConnection.getBalanceIn*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/chain.ts#L384)
+## method [*stubConnection.getBalanceIn*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/chain.ts#L385)
 Get the balance in a given native token, of
 either this connection's identity's address,
 or of another given address.
@@ -442,7 +442,7 @@ or of another given address.
 )
 </pre>
 
-## method [*stubConnection.getBalanceOf*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/chain.ts#L359)
+## method [*stubConnection.getBalanceOf*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/chain.ts#L360)
 Get the balance in a native token of a given address,
 either in this connection's gas token,
 or in another given token.
@@ -453,16 +453,16 @@ or in another given token.
 )
 </pre>
 
-## method [*stubConnection.getBlock*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/chain.ts#L219)
+## method [*stubConnection.getBlock*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/chain.ts#L219)
 Get info about a specific block.
 If no height is passed, gets info about the latest block.
 <pre>
-<strong>const</strong> result: <em><a href="#">StubBlock</a></em> = <strong>await</strong> stubConnection.getBlock(
+<strong>const</strong> result: <em><a href="#">Block</a></em> = <strong>await</strong> stubConnection.getBlock(
   height: <em>number</em>,
 )
 </pre>
 
-## method [*stubConnection.getCodeHashOfAddress*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/chain.ts#L261)
+## method [*stubConnection.getCodeHashOfAddress*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/chain.ts#L261)
 Get the code hash of a given address.
 <pre>
 <strong>const</strong> result: <em>string</em> = stubConnection.getCodeHashOfAddress(
@@ -470,7 +470,7 @@ Get the code hash of a given address.
 )
 </pre>
 
-## method [*stubConnection.getCodeHashOfCodeId*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/chain.ts#L245)
+## method [*stubConnection.getCodeHashOfCodeId*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/chain.ts#L245)
 Get the code hash of a given code id.
 <pre>
 <strong>const</strong> result: <em>string</em> = stubConnection.getCodeHashOfCodeId(
@@ -478,7 +478,7 @@ Get the code hash of a given code id.
 )
 </pre>
 
-## method [*stubConnection.getCodeId*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/chain.ts#L229)
+## method [*stubConnection.getCodeId*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/chain.ts#L229)
 Get the code id of a given address.
 <pre>
 <strong>const</strong> result: <em>string</em> = stubConnection.getCodeId(
@@ -486,12 +486,12 @@ Get the code id of a given address.
 )
 </pre>
 
-## method [*stubConnection.getCodes*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/chain.ts#L291)
+## method [*stubConnection.getCodes*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/chain.ts#L291)
 <pre>
 <strong>const</strong> result: <em>Record&lt;string, UploadedCode&gt;</em> = <strong>await</strong> stubConnection.getCodes()
 </pre>
 
-## method [*stubConnection.getContract*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/chain.ts#L277)
+## method [*stubConnection.getContract*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/chain.ts#L277)
 Get a client handle for a specific smart contract, authenticated as as this agent.
 <pre>
 <strong>const</strong> result: <em><a href="#">Contract</a></em> = stubConnection.getContract(
@@ -499,7 +499,7 @@ Get a client handle for a specific smart contract, authenticated as as this agen
 )
 </pre>
 
-## method [*stubConnection.getContractsByCodeId*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/chain.ts#L299)
+## method [*stubConnection.getContractsByCodeId*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/chain.ts#L300)
 Get client handles for all contracts that match a code ID
 <pre>
 <strong>const</strong> result: <em>Record&lt;string, Contract&gt;</em> = <strong>await</strong> stubConnection.getContractsByCodeId(
@@ -513,7 +513,7 @@ Get client handles for all contracts that match a code ID
 )
 </pre>
 
-## method [*stubConnection.getContractsByCodeIds*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/chain.ts#L321)
+## method [*stubConnection.getContractsByCodeIds*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/chain.ts#L322)
 Get client handles for all contracts that match multiple code IDs
 <pre>
 <strong>const</strong> result: <em>Record&lt;string, Record&gt;</em> = <strong>await</strong> stubConnection.getContractsByCodeIds(
@@ -532,7 +532,7 @@ Get client handles for all contracts that match multiple code IDs
 )
 </pre>
 
-## method [*stubConnection.instantiate*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/chain.ts#L513)
+## method [*stubConnection.instantiate*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/chain.ts#L520)
 Instantiate a new program from a code id, label and init message.
 <pre>
 stubConnection.instantiate(
@@ -541,7 +541,7 @@ stubConnection.instantiate(
 )
 </pre>
 
-## method [*stubConnection.query*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/chain.ts#L411)
+## method [*stubConnection.query*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/chain.ts#L412)
 Query a contract.
 <pre>
 <strong>const</strong> result: <em>Q</em> = <strong>await</strong> stubConnection.query(
@@ -550,7 +550,7 @@ Query a contract.
 )
 </pre>
 
-## method [*stubConnection.send*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/chain.ts#L427)
+## method [*stubConnection.send*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/chain.ts#L428)
 Send native tokens to 1 recipient.
 <pre>
 <strong>const</strong> result: <em>unknown</em> = stubConnection.send(
@@ -560,7 +560,7 @@ Send native tokens to 1 recipient.
 )
 </pre>
 
-## method [*stubConnection.upload*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/chain.ts#L459)
+## method [*stubConnection.upload*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/chain.ts#L460)
 Upload a contract's code, generating a new code id/hash pair.
 <pre>
 stubConnection.upload(
@@ -569,7 +569,7 @@ stubConnection.upload(
 )
 </pre>
 
-## method [*stubConnection.gas*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/chain.ts#L119)
+## method [*stubConnection.gas*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/chain.ts#L119)
 Native token of chain.
 <pre>
 <strong>const</strong> result: <em><a href="#">TokenAmount</a></em> = stubConnection.gas(
