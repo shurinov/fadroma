@@ -80,7 +80,7 @@ const amount = new Amount(
 ## method [*amount.asFee*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/token.ts#L122)
 <pre>
 <strong>const</strong> result: <em><a href="#">IFee</a></em> = amount.asFee(
-  gas,
+  gas: <em>string</em>,
 )
 </pre>
 
@@ -157,7 +157,7 @@ const custom = new Custom(
 <pre>
 <strong>const</strong> result: <em>string</em> = custom.addZeros(
   n,
-  z,
+  z: <em>number</em>,
 )
 </pre>
 
@@ -184,7 +184,7 @@ const fee = new Fee(
 <pre>
 <strong>const</strong> result: <em>void</em> = fee.add(
   amount,
-  denom,
+  denom: <em>string</em>,
 )
 </pre>
 
@@ -207,7 +207,7 @@ new Fungible()
 )
 </pre>
 
-## method [*fungible.isCustom*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/token.ts#L78)
+## abstract method [*fungible.isCustom*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/token.ts#L78)
 Whether this token is implemented by a smart contract.
 <pre>
 fungible.isCustom()
@@ -219,7 +219,7 @@ fungible.isCustom()
 <strong>const</strong> result: <em>boolean</em> = fungible.isFungible()
 </pre>
 
-## method [*fungible.isNative*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/token.ts#L76)
+## abstract method [*fungible.isNative*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/token.ts#L76)
 Whether this token is natively supported by the chain.
 <pre>
 fungible.isNative()
@@ -229,7 +229,7 @@ fungible.isNative()
 <pre>
 <strong>const</strong> result: <em>string</em> = fungible.addZeros(
   n,
-  z,
+  z: <em>number</em>,
 )
 </pre>
 
@@ -286,7 +286,7 @@ const native = new Native(
 <pre>
 <strong>const</strong> result: <em>string</em> = native.addZeros(
   n,
-  z,
+  z: <em>number</em>,
 )
 </pre>
 
@@ -362,7 +362,7 @@ new Token()
 <strong>id</strong></td>
 <td></td></tr></tbody></table>
 
-## method [*token.isFungible*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/token.ts#L62)
+## abstract method [*token.isFungible*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/token.ts#L62)
 Whether this token is fungible.
 <pre>
 token.isFungible()

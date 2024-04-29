@@ -37,7 +37,7 @@ Returns an iterable of entries in the map.
 
 <pre>
 <strong>const</strong> result: <em>boolean</em> = deployStore.delete(
-  key,
+  key: <em>string</em>,
 )
 </pre>
 
@@ -52,14 +52,14 @@ Executes a provided function once per each key/value pair in the Map, in inserti
 <pre>
 <strong>const</strong> result: <em>void</em> = deployStore.forEach(
   callbackfn,
-  thisArg,
+  thisArg: <em>any</em>,
 )
 </pre>
 
 ## method [*deployStore.get*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/store.ts#L17)
 <pre>
 <strong>const</strong> result: <em>Partial&lt;&gt;</em> = deployStore.get(
-  name,
+  name: <em>string</em>,
 )
 </pre>
 
@@ -67,7 +67,7 @@ Executes a provided function once per each key/value pair in the Map, in inserti
 
 <pre>
 <strong>const</strong> result: <em>boolean</em> = deployStore.has(
-  key,
+  key: <em>string</em>,
 )
 </pre>
 
@@ -80,7 +80,7 @@ Returns an iterable of keys in the map
 ## method [*deployStore.set*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/store.ts#L24)
 <pre>
 deployStore.set(
-  name,
+  name: <em>string</em>,
   state,
 )
 </pre>
@@ -122,7 +122,7 @@ Returns an iterable of entries in the map.
 
 <pre>
 <strong>const</strong> result: <em>boolean</em> = uploadStore.delete(
-  key,
+  key: <em>string</em>,
 )
 </pre>
 
@@ -137,14 +137,14 @@ Executes a provided function once per each key/value pair in the Map, in inserti
 <pre>
 <strong>const</strong> result: <em>void</em> = uploadStore.forEach(
   callbackfn,
-  thisArg,
+  thisArg: <em>any</em>,
 )
 </pre>
 
 ## method [*uploadStore.get*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/store.ts#L37)
 <pre>
 <strong>const</strong> result: <em><a href="#">UploadedCode</a></em> = uploadStore.get(
-  codeHash,
+  codeHash: <em>string</em>,
 )
 </pre>
 
@@ -152,7 +152,7 @@ Executes a provided function once per each key/value pair in the Map, in inserti
 
 <pre>
 <strong>const</strong> result: <em>boolean</em> = uploadStore.has(
-  key,
+  key: <em>string</em>,
 )
 </pre>
 
@@ -165,7 +165,7 @@ Returns an iterable of keys in the map
 ## method [*uploadStore.set*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/store.ts#L41)
 <pre>
 uploadStore.set(
-  codeHash,
+  codeHash: <em>string</em>,
   value: <em>Partial&lt;UploadedCode&gt;</em>,
 )
 </pre>

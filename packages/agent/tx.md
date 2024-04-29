@@ -91,7 +91,7 @@ batch.instantiate(
 Submit the batch.
 <pre>
 <strong>const</strong> result: <em>unknown</em> = batch.submit(
-  ...args,
+  ...args: <em>unknown</em>,
 )
 </pre>
 

@@ -522,7 +522,7 @@ contractTemplate.compile(
 Create a new instance of this contract.
 <pre>
 <strong>const</strong> result: <em><a href="#">ContractInstance</a></em> = contractTemplate.contract(
-  name,
+  name: <em>string</em>,
   parameters: <em>Partial&lt;ContractInstance&gt;</em>,
 )
 </pre>
@@ -608,7 +608,7 @@ Define a contract that will be automatically compiled, uploaded,
 and instantiated as part of this deployment.
 <pre>
 <strong>const</strong> result: <em><a href="#">ContractInstance</a></em> = deployment.contract(
-  name,
+  name: <em>string</em>,
   properties,
 )
 </pre>
@@ -617,7 +617,7 @@ and instantiated as part of this deployment.
 
 <pre>
 <strong>const</strong> result: <em>boolean</em> = deployment.delete(
-  key,
+  key: <em>string</em>,
 )
 </pre>
 
@@ -639,7 +639,7 @@ Executes a provided function once per each key/value pair in the Map, in inserti
 <pre>
 <strong>const</strong> result: <em>void</em> = deployment.forEach(
   callbackfn,
-  thisArg,
+  thisArg: <em>any</em>,
 )
 </pre>
 
@@ -647,7 +647,7 @@ Executes a provided function once per each key/value pair in the Map, in inserti
 Returns a specified element from the Map object. If the value that is associated to the provided key is an object, then you will get a reference to that object and any change made to that object will effectively modify it inside the Map.
 <pre>
 <strong>const</strong> result: <em><a href="#">DeploymentUnit</a></em> = deployment.get(
-  key,
+  key: <em>string</em>,
 )
 </pre>
 
@@ -655,7 +655,7 @@ Returns a specified element from the Map object. If the value that is associated
 
 <pre>
 <strong>const</strong> result: <em>boolean</em> = deployment.has(
-  key,
+  key: <em>string</em>,
 )
 </pre>
 
@@ -673,7 +673,7 @@ deployment.serialize()
 ## method [*deployment.set*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/deploy.ts#L318)
 <pre>
 deployment.set(
-  name,
+  name: <em>string</em>,
   unit: <em>DeploymentUnit</em>,
 )
 </pre>
@@ -685,7 +685,7 @@ This can then be used to define multiple instances of
 the same code.
 <pre>
 <strong>const</strong> result: <em><a href="#">ContractTemplate</a></em> = deployment.template(
-  name,
+  name: <em>string</em>,
   properties,
 )
 </pre>

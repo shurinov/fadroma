@@ -61,37 +61,37 @@ const stubBackend = new StubBackend(
 ## method [*stubBackend.execute*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/stub.ts#L258)
 <pre>
 <strong>const</strong> result: <em>unknown</em> = stubBackend.execute(
-  ...args,
+  ...args: <em>unknown</em>,
 )
 </pre>
 
 ## method [*stubBackend.export*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/stub.ts#L229)
 <pre>
 <strong>const</strong> result: <em>unknown</em> = stubBackend.export(
-  ...args,
+  ...args: <em>unknown</em>,
 )
 </pre>
 
 ## method [*stubBackend.getIdentity*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/stub.ts#L208)
 <pre>
 <strong>const</strong> result: <em><a href="#">Identity</a></em> = <strong>await</strong> stubBackend.getIdentity(
-  name,
+  name: <em>string</em>,
 )
 </pre>
 
 ## method [*stubBackend.import*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/stub.ts#L225)
 <pre>
 <strong>const</strong> result: <em>unknown</em> = stubBackend.import(
-  ...args,
+  ...args: <em>unknown</em>,
 )
 </pre>
 
 ## method [*stubBackend.instantiate*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/stub.ts#L243)
 <pre>
 stubBackend.instantiate(
-  creator,
-  codeId,
-  options,
+  creator: <em>string</em>,
+  codeId: <em>string</em>,
+  options: <em>unknown</em>,
 )
 </pre>
 
@@ -223,7 +223,7 @@ variants using its `build.impl.mjs` script.
 <pre>
 <strong>const</strong> result: <em><a href="#">CompiledCode</a></em> = <strong>await</strong> stubCompiler.build(
   source,
-  ...args,
+  ...args: <em>any</em>,
 )
 </pre>
 
@@ -333,8 +333,8 @@ Construct a transaction batch.
 ## method [*stubConnection.doGetBalance*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/stub.ts#L52)
 <pre>
 <strong>const</strong> result: <em>string</em> = stubConnection.doGetBalance(
-  token,
-  address,
+  token: <em>string</em>,
+  address: <em>string</em>,
 )
 </pre>
 
@@ -346,21 +346,21 @@ Construct a transaction batch.
 ## method [*stubConnection.doGetCodeHashOfAddress*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/stub.ts#L69)
 <pre>
 <strong>const</strong> result: <em>string</em> = stubConnection.doGetCodeHashOfAddress(
-  address,
+  address: <em>string</em>,
 )
 </pre>
 
 ## method [*stubConnection.doGetCodeHashOfCodeId*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/stub.ts#L73)
 <pre>
 <strong>const</strong> result: <em>string</em> = stubConnection.doGetCodeHashOfCodeId(
-  id,
+  id: <em>string</em>,
 )
 </pre>
 
 ## method [*stubConnection.doGetCodeId*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/stub.ts#L58)
 <pre>
 <strong>const</strong> result: <em>string</em> = stubConnection.doGetCodeId(
-  address,
+  address: <em>string</em>,
 )
 </pre>
 
@@ -372,7 +372,7 @@ stubConnection.doGetCodes()
 ## method [*stubConnection.doGetContractsByCodeId*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/stub.ts#L65)
 <pre>
 stubConnection.doGetContractsByCodeId(
-  id,
+  id: <em>string</em>,
 )
 </pre>
 
@@ -384,7 +384,7 @@ stubConnection.doGetContractsByCodeId(
 ## method [*stubConnection.doInstantiate*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/stub.ts#L116)
 <pre>
 stubConnection.doInstantiate(
-  codeId,
+  codeId: <em>string</em>,
   options: <em>Partial&lt;ContractInstance&gt;</em>,
 )
 </pre>
@@ -400,9 +400,9 @@ stubConnection.doInstantiate(
 ## method [*stubConnection.doSend*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/stub.ts#L83)
 <pre>
 <strong>const</strong> result: <em>void</em> = stubConnection.doSend(
-  recipient,
+  recipient: <em>string</em>,
   sums: <em>ICoin[]</em>,
-  opts,
+  opts: <em>never</em>,
 )
 </pre>
 
@@ -410,7 +410,7 @@ stubConnection.doInstantiate(
 <pre>
 <strong>const</strong> result: <em>void</em> = stubConnection.doSendMany(
   outputs,
-  opts,
+  opts: <em>never</em>,
 )
 </pre>
 
@@ -437,7 +437,7 @@ either this connection's identity's address,
 or of another given address.
 <pre>
 <strong>const</strong> result: <em>unknown</em> = stubConnection.getBalanceIn(
-  token,
+  token: <em>string</em>,
   address,
 )
 </pre>
@@ -449,7 +449,7 @@ or in another given token.
 <pre>
 <strong>const</strong> result: <em>unknown</em> = stubConnection.getBalanceOf(
   address,
-  token,
+  token: <em>string</em>,
 )
 </pre>
 
@@ -458,7 +458,7 @@ Get info about a specific block.
 If no height is passed, gets info about the latest block.
 <pre>
 <strong>const</strong> result: <em><a href="#">StubBlock</a></em> = <strong>await</strong> stubConnection.getBlock(
-  height,
+  height: <em>number</em>,
 )
 </pre>
 
@@ -503,12 +503,12 @@ Get a client handle for a specific smart contract, authenticated as as this agen
 Get client handles for all contracts that match a code ID
 <pre>
 <strong>const</strong> result: <em>Record&lt;string, Contract&gt;</em> = <strong>await</strong> stubConnection.getContractsByCodeId(
-  id,
+  id: <em>string</em>,
 )
 </pre>
 <pre>
 <strong>const</strong> result: <em>Record&lt;string, InstanceType&gt;</em> = <strong>await</strong> stubConnection.getContractsByCodeId(
-  id,
+  id: <em>string</em>,
   $C: <em>C</em>,
 )
 </pre>
