@@ -337,7 +337,18 @@ contractCode.compile(
 Upload this contract, unless a valid upload is present and a rebuild is not requested.
 <pre>
 contractCode.upload(
-  <em></em>,
+  <em>{
+    compiler,
+    rebuild,
+  } & {
+    reupload,
+    uploadFee,
+    uploadMemo,
+    uploadStore,
+  } & {
+    reupload,
+    uploader,
+  }</em>,
 )
 </pre>
 
@@ -442,7 +453,21 @@ Returns a client to this contract instance.
 ## method [*contractInstance.deploy*](https://github.com/hackbg/fadroma/blob/0dad4acde5441c08749fd7b46d47288231605082/packages/agent/deploy.ts#L235)
 <pre>
 contractInstance.deploy(
-  <em></em>,
+  <em>{
+    compiler,
+    rebuild,
+  } & {
+    reupload,
+    uploadFee,
+    uploadMemo,
+    uploadStore,
+  } & {
+    reupload,
+    uploader,
+  } & Partial&lt;ContractInstance&gt; & {
+    deployer,
+    redeploy,
+  }</em>,
 )
 </pre>
 
@@ -460,7 +485,18 @@ contractInstance.serialize()
 Upload this contract, unless a valid upload is present and a rebuild is not requested.
 <pre>
 contractInstance.upload(
-  <em></em>,
+  <em>{
+    compiler,
+    rebuild,
+  } & {
+    reupload,
+    uploadFee,
+    uploadMemo,
+    uploadStore,
+  } & {
+    reupload,
+    uploader,
+  }</em>,
 )
 </pre>
 
@@ -553,7 +589,18 @@ contractTemplate.serialize()
 Upload this contract, unless a valid upload is present and a rebuild is not requested.
 <pre>
 contractTemplate.upload(
-  <em></em>,
+  <em>{
+    compiler,
+    rebuild,
+  } & {
+    reupload,
+    uploadFee,
+    uploadMemo,
+    uploadStore,
+  } & {
+    reupload,
+    uploader,
+  }</em>,
 )
 </pre>
 
@@ -589,21 +636,34 @@ Returns an iterable of entries in the map.
 ## method [*deployment.addContract*](https://github.com/hackbg/fadroma/blob/0dad4acde5441c08749fd7b46d47288231605082/packages/agent/deploy.ts#L374)
 <pre>
 <strong>const</strong> result: <em><a href="#">Deployment</a></em> = deployment.addContract(
-  ...args: <em></em>,
+  ...args: <em>[string, {
+    language,
+  } & Partial&lt;RustSourceCode&gt; | {
+    language,
+  } & Partial&lt;SourceCode&gt; & Partial&lt;CompiledCode&gt; & Partial&lt;UploadedCode&gt; & Partial&lt;ContractInstance&gt;]</em>,
 )
 </pre>
 
 ## method [*deployment.addContracts*](https://github.com/hackbg/fadroma/blob/0dad4acde5441c08749fd7b46d47288231605082/packages/agent/deploy.ts#L382)
 <pre>
 <strong>const</strong> result: <em><a href="#">Deployment</a></em> = deployment.addContracts(
-  ...args: <em></em>,
+  ...args: <em>[string, {
+    language,
+  } & Partial&lt;RustSourceCode&gt; | {
+    language,
+  } & Partial&lt;SourceCode&gt; & Partial&lt;CompiledCode&gt; & Partial&lt;UploadedCode&gt;]</em>,
 )
 </pre>
 
 ## method [*deployment.build*](https://github.com/hackbg/fadroma/blob/0dad4acde5441c08749fd7b46d47288231605082/packages/agent/deploy.ts#L390)
 <pre>
 <strong>const</strong> result: <em>Record&lt;string, &gt;</em> = <strong>await</strong> deployment.build(
-  <em></em>,
+  <em>{
+    compiler,
+    rebuild,
+  } & {
+    units,
+  }</em>,
 )
 </pre>
 
@@ -618,7 +678,11 @@ and instantiated as part of this deployment.
 <pre>
 <strong>const</strong> result: <em><a href="#">ContractInstance</a></em> = deployment.contract(
   name: <em>string</em>,
-  properties: <em></em>,
+  properties: <em>{
+    language,
+  } & Partial&lt;RustSourceCode&gt; | {
+    language,
+  } & Partial&lt;SourceCode&gt; & Partial&lt;CompiledCode&gt; & Partial&lt;UploadedCode&gt; & Partial&lt;ContractInstance&gt;</em>,
 )
 </pre>
 
@@ -633,7 +697,24 @@ and instantiated as part of this deployment.
 ## method [*deployment.deploy*](https://github.com/hackbg/fadroma/blob/0dad4acde5441c08749fd7b46d47288231605082/packages/agent/deploy.ts#L444)
 <pre>
 <strong>const</strong> result: <em>Record&lt;string, &gt;</em> = <strong>await</strong> deployment.deploy(
-  <em></em>,
+  <em>{
+    compiler,
+    rebuild,
+  } & {
+    reupload,
+    uploadFee,
+    uploadMemo,
+    uploadStore,
+  } & {
+    reupload,
+    uploader,
+  } & Partial&lt;ContractInstance&gt; & {
+    deployer,
+    redeploy,
+  } & {
+    deployStore,
+    units,
+  }</em>,
 )
 </pre>
 
@@ -695,14 +776,32 @@ the same code.
 <pre>
 <strong>const</strong> result: <em><a href="#">ContractTemplate</a></em> = deployment.template(
   name: <em>string</em>,
-  properties: <em></em>,
+  properties: <em>{
+    language,
+  } & Partial&lt;RustSourceCode&gt; | {
+    language,
+  } & Partial&lt;SourceCode&gt; & Partial&lt;CompiledCode&gt; & Partial&lt;UploadedCode&gt;</em>,
 )
 </pre>
 
 ## method [*deployment.upload*](https://github.com/hackbg/fadroma/blob/0dad4acde5441c08749fd7b46d47288231605082/packages/agent/deploy.ts#L427)
 <pre>
 <strong>const</strong> result: <em>Record&lt;string, &gt;</em> = <strong>await</strong> deployment.upload(
-  <em></em>,
+  <em>{
+    compiler,
+    rebuild,
+  } & {
+    reupload,
+    uploadFee,
+    uploadMemo,
+    uploadStore,
+  } & {
+    reupload,
+    uploader,
+  } & {
+    units,
+    uploadStore,
+  }</em>,
 )
 </pre>
 
@@ -788,7 +887,18 @@ deploymentUnit.serialize()
 Upload this contract, unless a valid upload is present and a rebuild is not requested.
 <pre>
 deploymentUnit.upload(
-  <em></em>,
+  <em>{
+    compiler,
+    rebuild,
+  } & {
+    reupload,
+    uploadFee,
+    uploadMemo,
+    uploadStore,
+  } & {
+    reupload,
+    uploader,
+  }</em>,
 )
 </pre>
 

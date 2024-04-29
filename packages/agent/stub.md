@@ -136,7 +136,11 @@ const stubBatch = new StubBatch(
 Add an execute message to the batch.
 <pre>
 <strong>const</strong> result: <em><a href="#">StubBatch</a></em> = stubBatch.execute(
-  ...args: <em></em>,
+  ...args: <em>[string | Partial&lt;ContractInstance&gt;, Message, {
+    execFee,
+    execMemo,
+    execSend,
+  }]</em>,
 )
 </pre>
 
@@ -144,7 +148,7 @@ Add an execute message to the batch.
 Add an instantiate message to the batch.
 <pre>
 <strong>const</strong> result: <em><a href="#">StubBatch</a></em> = stubBatch.instantiate(
-  ...args: <em></em>,
+  ...args: <em>[string | Partial&lt;UploadedCode&gt;, Partial&lt;ContractInstance&gt;]</em>,
 )
 </pre>
 
@@ -158,7 +162,12 @@ Submit the batch.
 Add an upload message to the batch.
 <pre>
 <strong>const</strong> result: <em><a href="#">StubBatch</a></em> = stubBatch.upload(
-  ...args: <em></em>,
+  ...args: <em>[string | Uint8Array | URL | Partial&lt;CompiledCode&gt;, {
+    reupload,
+    uploadFee,
+    uploadMemo,
+    uploadStore,
+  }]</em>,
 )
 </pre>
 
