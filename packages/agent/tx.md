@@ -90,7 +90,7 @@ batch.instantiate(
 ## method [*batch.submit*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/tx.ts#L44)
 Submit the batch.
 <pre>
-<strong>const</strong> result: <em>unknown</em> = batch.submit(
+<strong>const</strong> result: <em>unknown</em> = <strong>await</strong> batch.submit(
   ...args: <em>unknown</em>,
 )
 </pre>

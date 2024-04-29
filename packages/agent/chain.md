@@ -164,7 +164,7 @@ Construct a transaction batch.
 ## method [*connection.execute*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/chain.ts#L564)
 Call a given program's transaction method.
 <pre>
-<strong>const</strong> result: <em>unknown</em> = connection.execute(
+<strong>const</strong> result: <em>unknown</em> = <strong>await</strong> connection.execute(
   contract,
   message: <em>Message</em>,
   options,
@@ -176,7 +176,7 @@ Get the balance in a given native token, of
 either this connection's identity's address,
 or of another given address.
 <pre>
-<strong>const</strong> result: <em>unknown</em> = connection.getBalanceIn(
+<strong>const</strong> result: <em>unknown</em> = <strong>await</strong> connection.getBalanceIn(
   token: <em>string</em>,
   address,
 )
@@ -187,7 +187,7 @@ Get the balance in a native token of a given address,
 either in this connection's gas token,
 or in another given token.
 <pre>
-<strong>const</strong> result: <em>unknown</em> = connection.getBalanceOf(
+<strong>const</strong> result: <em>unknown</em> = <strong>await</strong> connection.getBalanceOf(
   address,
   token: <em>string</em>,
 )
@@ -205,7 +205,7 @@ If no height is passed, gets info about the latest block.
 ## method [*connection.getCodeHashOfAddress*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/chain.ts#L261)
 Get the code hash of a given address.
 <pre>
-<strong>const</strong> result: <em>string</em> = connection.getCodeHashOfAddress(
+<strong>const</strong> result: <em>string</em> = <strong>await</strong> connection.getCodeHashOfAddress(
   contract,
 )
 </pre>
@@ -213,7 +213,7 @@ Get the code hash of a given address.
 ## method [*connection.getCodeHashOfCodeId*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/chain.ts#L245)
 Get the code hash of a given code id.
 <pre>
-<strong>const</strong> result: <em>string</em> = connection.getCodeHashOfCodeId(
+<strong>const</strong> result: <em>string</em> = <strong>await</strong> connection.getCodeHashOfCodeId(
   contract,
 )
 </pre>
@@ -221,7 +221,7 @@ Get the code hash of a given code id.
 ## method [*connection.getCodeId*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/chain.ts#L229)
 Get the code id of a given address.
 <pre>
-<strong>const</strong> result: <em>string</em> = connection.getCodeId(
+<strong>const</strong> result: <em>string</em> = <strong>await</strong> connection.getCodeId(
   contract,
 )
 </pre>
@@ -293,7 +293,7 @@ Query a contract.
 ## method [*connection.send*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/chain.ts#L428)
 Send native tokens to 1 recipient.
 <pre>
-<strong>const</strong> result: <em>unknown</em> = connection.send(
+<strong>const</strong> result: <em>unknown</em> = <strong>await</strong> connection.send(
   recipient,
   amounts,
   options,
@@ -341,7 +341,7 @@ const contract = new Contract(
 ## method [*contract.execute*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/chain.ts#L653)
 Execute a transaction on the specified instance as the specified Connection.
 <pre>
-<strong>const</strong> result: <em>unknown</em> = contract.execute(
+<strong>const</strong> result: <em>unknown</em> = <strong>await</strong> contract.execute(
   message: <em>Message</em>,
   options,
 )
