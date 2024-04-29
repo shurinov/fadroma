@@ -243,7 +243,7 @@ connection.doGetBalance(
 <pre>
 <strong>const</strong> result: <em>unknown</em> = connection.doSend(
   recipient,
-  amounts,
+  amounts: <em>ICoin[]</em>,
   options,
 )
 </pre>

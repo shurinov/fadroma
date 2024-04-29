@@ -233,7 +233,7 @@ Default implementation of buildMany is sequential.
 Compiler classes may override this to optimize.
 <pre>
 stubCompiler.buildMany(
-  inputs,
+  inputs: <em>Partial&lt;SourceCode&gt;[]</em>,
 )
 </pre>
 
@@ -401,7 +401,7 @@ stubConnection.doInstantiate(
 <pre>
 <strong>const</strong> result: <em>void</em> = stubConnection.doSend(
   recipient,
-  sums,
+  sums: <em>ICoin[]</em>,
   opts,
 )
 </pre>

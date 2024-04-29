@@ -246,7 +246,7 @@ Default implementation of buildMany is sequential.
 Compiler classes may override this to optimize.
 <pre>
 compiler.buildMany(
-  inputs,
+  inputs: <em>Partial&lt;SourceCode&gt;[]</em>,
 )
 </pre>
 
