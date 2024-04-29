@@ -25,6 +25,9 @@ import { CompiledCode } from './program.browser'
   * version which can also load code from disk (`LocalCompiledCode`). Ugh. */
 export const _$_HACK_$_ = { CompiledCode }
 
+export * from './identity'
+export * from './tx'
+
 /** A chain ID. */
 export type ChainId = string
 

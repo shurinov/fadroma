@@ -56,7 +56,7 @@ Executes a provided function once per each key/value pair in the Map, in inserti
 )
 </pre>
 
-## method [*deployStore.get*](https://github.com/hackbg/fadroma/blob/dcce4232c7f1613b8a8273ce114e07b545f3a959/packages/agent/store.ts#L17)
+## method [*deployStore.get*](https://github.com/hackbg/fadroma/blob/0dad4acde5441c08749fd7b46d47288231605082/packages/agent/store.ts#L17)
 <pre>
 <strong>const</strong> result: <em>Partial&lt;&gt;</em> = deployStore.get(
   name: <em>string</em>,
@@ -77,7 +77,7 @@ Returns an iterable of keys in the map
 <strong>const</strong> result: <em>IterableIterator&lt;string&gt;</em> = deployStore.keys()
 </pre>
 
-## method [*deployStore.set*](https://github.com/hackbg/fadroma/blob/dcce4232c7f1613b8a8273ce114e07b545f3a959/packages/agent/store.ts#L24)
+## method [*deployStore.set*](https://github.com/hackbg/fadroma/blob/0dad4acde5441c08749fd7b46d47288231605082/packages/agent/store.ts#L24)
 <pre>
 deployStore.set(
   name: <em>string</em>,
@@ -141,7 +141,7 @@ Executes a provided function once per each key/value pair in the Map, in inserti
 )
 </pre>
 
-## method [*uploadStore.get*](https://github.com/hackbg/fadroma/blob/dcce4232c7f1613b8a8273ce114e07b545f3a959/packages/agent/store.ts#L37)
+## method [*uploadStore.get*](https://github.com/hackbg/fadroma/blob/0dad4acde5441c08749fd7b46d47288231605082/packages/agent/store.ts#L37)
 <pre>
 <strong>const</strong> result: <em><a href="#">UploadedCode</a></em> = uploadStore.get(
   codeHash: <em>string</em>,
@@ -162,7 +162,7 @@ Returns an iterable of keys in the map
 <strong>const</strong> result: <em>IterableIterator&lt;string&gt;</em> = uploadStore.keys()
 </pre>
 
-## method [*uploadStore.set*](https://github.com/hackbg/fadroma/blob/dcce4232c7f1613b8a8273ce114e07b545f3a959/packages/agent/store.ts#L41)
+## method [*uploadStore.set*](https://github.com/hackbg/fadroma/blob/0dad4acde5441c08749fd7b46d47288231605082/packages/agent/store.ts#L41)
 <pre>
 uploadStore.set(
   codeHash: <em>string</em>,
