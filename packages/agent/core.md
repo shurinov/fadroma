@@ -2,9 +2,9 @@
 
 # class *Error*
 ```typescript
-let error = new Error(
+const error = new Error(
   message: string
-)let error = new Error(
+)const error = new Error(
   message: string
   options: ErrorOptions
 )
@@ -33,7 +33,7 @@ let error = new Error(
 ## method *error.captureStackTrace*
 Create .stack property on a target object
 ```typescript
-error.captureStackTrace(
+const result: void = error.captureStackTrace(
   targetObject,
   constructorOpt,
 )

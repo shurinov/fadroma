@@ -153,7 +153,7 @@ new LocalCompiledCode(
 An object representing a given compiled binary.
 
 ```typescript
-let compiledCode = new CompiledCode(
+const compiledCode = new CompiledCode(
   properties: Partial<...>,
 )
 ```
@@ -184,17 +184,17 @@ let compiledCode = new CompiledCode(
 ## method *compiledCode.computeHash*
 Compute the code hash if missing; throw if different.
 ```typescript
-compiledCode.computeHash()
+const result: Promise<> = compiledCode.computeHash()
 ```
 
 ## method *compiledCode.doFetch*
 ```typescript
-compiledCode.doFetch()
+const result: Promise<Uint8Array> = compiledCode.doFetch()
 ```
 
 ## method *compiledCode.fetch*
 ```typescript
-compiledCode.fetch()
+const result: Promise<Uint8Array> = compiledCode.fetch()
 ```
 
 ## method *compiledCode.serialize*
@@ -204,14 +204,14 @@ compiledCode.serialize()
 
 ## method *compiledCode.toCodeHash*
 ```typescript
-compiledCode.toCodeHash(
+const result: string = compiledCode.toCodeHash(
   data,
 )
 ```
 
 # class *Compiler*
 ```typescript
-let compiler = new Compiler(
+const compiler = new Compiler(
   properties: Partial<...>,
 )
 ```
@@ -234,7 +234,7 @@ Compile a source.
 `@hackbg/fadroma` implements dockerized and non-dockerized
 variants using its `build.impl.mjs` script.
 ```typescript
-compiler.build(
+const result: Promise<CompiledCode> = compiler.build(
   source,
   args,
 )
@@ -245,7 +245,7 @@ Build multiple sources.
 Default implementation of buildMany is sequential.
 Compiler classes may override this to optimize.
 ```typescript
-compiler.buildMany(
+const result: Promise<> = compiler.buildMany(
   inputs,
 )
 ```
@@ -254,7 +254,7 @@ compiler.buildMany(
 An object representing a given compiled binary on the local filesystem.
 
 ```typescript
-let localCompiledCode = new LocalCompiledCode(
+const localCompiledCode = new LocalCompiledCode(
   properties: Partial<...>,
 )
 ```
@@ -285,17 +285,17 @@ let localCompiledCode = new LocalCompiledCode(
 ## method *localCompiledCode.computeHash*
 Compute the code hash if missing; throw if different.
 ```typescript
-localCompiledCode.computeHash()
+const result: Promise<> = localCompiledCode.computeHash()
 ```
 
 ## method *localCompiledCode.doFetch*
 ```typescript
-localCompiledCode.doFetch()
+const result: Promise<> = localCompiledCode.doFetch()
 ```
 
 ## method *localCompiledCode.fetch*
 ```typescript
-localCompiledCode.fetch()
+const result: Promise<Uint8Array> = localCompiledCode.fetch()
 ```
 
 ## method *localCompiledCode.serialize*
@@ -305,7 +305,7 @@ localCompiledCode.serialize()
 
 ## method *localCompiledCode.toCodeHash*
 ```typescript
-localCompiledCode.toCodeHash(
+const result: string = localCompiledCode.toCodeHash(
   data,
 )
 ```
@@ -314,7 +314,7 @@ localCompiledCode.toCodeHash(
 An object representing a given source code.
 
 ```typescript
-let rustSourceCode = new RustSourceCode(
+const rustSourceCode = new RustSourceCode(
   properties: Partial<...>,
 )
 ```
@@ -369,7 +369,7 @@ rustSourceCode.serialize()
 An object representing a given source code.
 
 ```typescript
-let sourceCode = new SourceCode(
+const sourceCode = new SourceCode(
   properties: Partial<...>,
 )
 ```

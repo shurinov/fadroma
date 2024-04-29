@@ -11,7 +11,7 @@ You shouldn't need to instantiate this class directly.
 Instead, see `Connection`, `Devnet`, and their subclasses.
 
 ```typescript
-let stubBackend = new StubBackend(
+const stubBackend = new StubBackend(
   properties: Partial<...>,
 )
 ```
@@ -53,42 +53,42 @@ let stubBackend = new StubBackend(
 
 ## method *stubBackend.connect*
 ```typescript
-stubBackend.connect(
+const result: Promise<Connection> = stubBackend.connect(
   parameter,
 )
 ```
 
 ## method *stubBackend.execute*
 ```typescript
-stubBackend.execute(
+const result: Promise<unknown> = stubBackend.execute(
   args,
 )
 ```
 
 ## method *stubBackend.export*
 ```typescript
-stubBackend.export(
+const result: Promise<unknown> = stubBackend.export(
   args,
 )
 ```
 
 ## method *stubBackend.getIdentity*
 ```typescript
-stubBackend.getIdentity(
+const result: Promise<Identity> = stubBackend.getIdentity(
   name,
 )
 ```
 
 ## method *stubBackend.import*
 ```typescript
-stubBackend.import(
+const result: Promise<unknown> = stubBackend.import(
   args,
 )
 ```
 
 ## method *stubBackend.instantiate*
 ```typescript
-stubBackend.instantiate(
+const result: Promise<> = stubBackend.instantiate(
   creator,
   codeId,
   options,
@@ -97,17 +97,17 @@ stubBackend.instantiate(
 
 ## method *stubBackend.pause*
 ```typescript
-stubBackend.pause()
+const result: Promise<StubBackend> = stubBackend.pause()
 ```
 
 ## method *stubBackend.start*
 ```typescript
-stubBackend.start()
+const result: Promise<StubBackend> = stubBackend.start()
 ```
 
 ## method *stubBackend.upload*
 ```typescript
-stubBackend.upload(
+const result: Promise<> = stubBackend.upload(
   codeData,
 )
 ```
@@ -116,7 +116,7 @@ stubBackend.upload(
 Builder object for batched transactions.
 
 ```typescript
-let stubBatch = new StubBatch(
+const stubBatch = new StubBatch(
   properties: Partial<...>,
 )
 ```
@@ -135,7 +135,7 @@ let stubBatch = new StubBatch(
 ## method *stubBatch.execute*
 Add an execute message to the batch.
 ```typescript
-stubBatch.execute(
+const result: StubBatch = stubBatch.execute(
   args,
 )
 ```
@@ -143,7 +143,7 @@ stubBatch.execute(
 ## method *stubBatch.instantiate*
 Add an instantiate message to the batch.
 ```typescript
-stubBatch.instantiate(
+const result: StubBatch = stubBatch.instantiate(
   args,
 )
 ```
@@ -151,13 +151,13 @@ stubBatch.instantiate(
 ## method *stubBatch.submit*
 Submit the batch.
 ```typescript
-stubBatch.submit()
+const result: Promise<> = stubBatch.submit()
 ```
 
 ## method *stubBatch.upload*
 Add an upload message to the batch.
 ```typescript
-stubBatch.upload(
+const result: StubBatch = stubBatch.upload(
   args,
 )
 ```
@@ -168,7 +168,7 @@ Each block contains collection of transactions that are
 appended to the blockchain at a given point in time.
 
 ```typescript
-let stubBlock = new StubBlock(
+const stubBlock = new StubBlock(
   properties: Partial<...>,
 )
 ```
@@ -186,19 +186,19 @@ let stubBlock = new StubBlock(
 
 ## method *stubBlock.getTransactionsById*
 ```typescript
-stubBlock.getTransactionsById()
+const result: Promise<Record> = stubBlock.getTransactionsById()
 ```
 
 ## method *stubBlock.getTransactionsInOrder*
 ```typescript
-stubBlock.getTransactionsInOrder()
+const result: Promise<> = stubBlock.getTransactionsInOrder()
 ```
 
 # class *StubCompiler*
 A compiler that does nothing. Used for testing.
 
 ```typescript
-let stubCompiler = new StubCompiler(
+const stubCompiler = new StubCompiler(
   properties: Partial<...>,
 )
 ```
@@ -221,7 +221,7 @@ Compile a source.
 `@hackbg/fadroma` implements dockerized and non-dockerized
 variants using its `build.impl.mjs` script.
 ```typescript
-stubCompiler.build(
+const result: Promise<CompiledCode> = stubCompiler.build(
   source,
   args,
 )
@@ -232,7 +232,7 @@ Build multiple sources.
 Default implementation of buildMany is sequential.
 Compiler classes may override this to optimize.
 ```typescript
-stubCompiler.buildMany(
+const result: Promise<> = stubCompiler.buildMany(
   inputs,
 )
 ```
@@ -245,7 +245,7 @@ to connect to the corresponding chain. Or, extend this class to implement
 support for new kinds of blockchains.
 
 ```typescript
-let stubConnection = new StubConnection(
+const stubConnection = new StubConnection(
   properties: Partial<...>,
 )
 ```
@@ -318,12 +318,12 @@ this property contains the URL to which requests are sent.</td></tr>
 ## method *stubConnection.batch*
 Construct a transaction batch.
 ```typescript
-stubConnection.batch()
+const result: Batch<StubConnection> = stubConnection.batch()
 ```
 
 ## method *stubConnection.doExecute*
 ```typescript
-stubConnection.doExecute(
+const result: Promise<unknown> = stubConnection.doExecute(
   contract,
   message,
   options,
@@ -332,7 +332,7 @@ stubConnection.doExecute(
 
 ## method *stubConnection.doGetBalance*
 ```typescript
-stubConnection.doGetBalance(
+const result: Promise<string> = stubConnection.doGetBalance(
   token,
   address,
 )
@@ -340,50 +340,50 @@ stubConnection.doGetBalance(
 
 ## method *stubConnection.doGetBlockInfo*
 ```typescript
-stubConnection.doGetBlockInfo()
+const result: Promise<StubBlock> = stubConnection.doGetBlockInfo()
 ```
 
 ## method *stubConnection.doGetCodeHashOfAddress*
 ```typescript
-stubConnection.doGetCodeHashOfAddress(
+const result: Promise<string> = stubConnection.doGetCodeHashOfAddress(
   address,
 )
 ```
 
 ## method *stubConnection.doGetCodeHashOfCodeId*
 ```typescript
-stubConnection.doGetCodeHashOfCodeId(
+const result: Promise<string> = stubConnection.doGetCodeHashOfCodeId(
   id,
 )
 ```
 
 ## method *stubConnection.doGetCodeId*
 ```typescript
-stubConnection.doGetCodeId(
+const result: Promise<string> = stubConnection.doGetCodeId(
   address,
 )
 ```
 
 ## method *stubConnection.doGetCodes*
 ```typescript
-stubConnection.doGetCodes()
+const result: Promise<> = stubConnection.doGetCodes()
 ```
 
 ## method *stubConnection.doGetContractsByCodeId*
 ```typescript
-stubConnection.doGetContractsByCodeId(
+const result: Promise<> = stubConnection.doGetContractsByCodeId(
   id,
 )
 ```
 
 ## method *stubConnection.doGetHeight*
 ```typescript
-stubConnection.doGetHeight()
+const result: Promise<number> = stubConnection.doGetHeight()
 ```
 
 ## method *stubConnection.doInstantiate*
 ```typescript
-stubConnection.doInstantiate(
+const result: Promise<> = stubConnection.doInstantiate(
   codeId,
   options,
 )
@@ -391,7 +391,7 @@ stubConnection.doInstantiate(
 
 ## method *stubConnection.doQuery*
 ```typescript
-stubConnection.doQuery(
+const result: Promise<Q> = stubConnection.doQuery(
   contract,
   message,
 )
@@ -399,7 +399,7 @@ stubConnection.doQuery(
 
 ## method *stubConnection.doSend*
 ```typescript
-stubConnection.doSend(
+const result: Promise<void> = stubConnection.doSend(
   recipient,
   sums,
   opts,
@@ -408,7 +408,7 @@ stubConnection.doSend(
 
 ## method *stubConnection.doSendMany*
 ```typescript
-stubConnection.doSendMany(
+const result: Promise<void> = stubConnection.doSendMany(
   outputs,
   opts,
 )
@@ -416,7 +416,7 @@ stubConnection.doSendMany(
 
 ## method *stubConnection.doUpload*
 ```typescript
-stubConnection.doUpload(
+const result: Promise<UploadedCode> = stubConnection.doUpload(
   codeData,
 )
 ```
@@ -424,7 +424,7 @@ stubConnection.doUpload(
 ## method *stubConnection.execute*
 Call a given program's transaction method.
 ```typescript
-stubConnection.execute(
+const result: Promise<unknown> = stubConnection.execute(
   contract,
   message,
   options,
@@ -436,7 +436,7 @@ Get the balance in a given native token, of
 either this connection's identity's address,
 or of another given address.
 ```typescript
-stubConnection.getBalanceIn(
+const result: Promise<unknown> = stubConnection.getBalanceIn(
   token,
   address,
 )
@@ -447,7 +447,7 @@ Get the balance in a native token of a given address,
 either in this connection's gas token,
 or in another given token.
 ```typescript
-stubConnection.getBalanceOf(
+const result: Promise<unknown> = stubConnection.getBalanceOf(
   address,
   token,
 )
@@ -457,7 +457,7 @@ stubConnection.getBalanceOf(
 Get info about a specific block.
 If no height is passed, gets info about the latest block.
 ```typescript
-stubConnection.getBlock(
+const result: Promise<StubBlock> = stubConnection.getBlock(
   height,
 )
 ```
@@ -465,7 +465,7 @@ stubConnection.getBlock(
 ## method *stubConnection.getCodeHashOfAddress*
 Get the code hash of a given address.
 ```typescript
-stubConnection.getCodeHashOfAddress(
+const result: Promise<string> = stubConnection.getCodeHashOfAddress(
   contract,
 )
 ```
@@ -473,7 +473,7 @@ stubConnection.getCodeHashOfAddress(
 ## method *stubConnection.getCodeHashOfCodeId*
 Get the code hash of a given code id.
 ```typescript
-stubConnection.getCodeHashOfCodeId(
+const result: Promise<string> = stubConnection.getCodeHashOfCodeId(
   contract,
 )
 ```
@@ -481,20 +481,20 @@ stubConnection.getCodeHashOfCodeId(
 ## method *stubConnection.getCodeId*
 Get the code id of a given address.
 ```typescript
-stubConnection.getCodeId(
+const result: Promise<string> = stubConnection.getCodeId(
   contract,
 )
 ```
 
 ## method *stubConnection.getCodes*
 ```typescript
-stubConnection.getCodes()
+const result: Promise<Record> = stubConnection.getCodes()
 ```
 
 ## method *stubConnection.getContract*
 Get a client handle for a specific smart contract, authenticated as as this agent.
 ```typescript
-stubConnection.getContract(
+const result: Contract = stubConnection.getContract(
   options,
 )
 ```
@@ -502,12 +502,12 @@ stubConnection.getContract(
 ## method *stubConnection.getContractsByCodeId*
 Get client handles for all contracts that match a code ID
 ```typescript
-stubConnection.getContractsByCodeId(
+const result: Promise<Record> = stubConnection.getContractsByCodeId(
   id,
 )
 ```
 ```typescript
-stubConnection.getContractsByCodeId(
+const result: Promise<Record> = stubConnection.getContractsByCodeId(
   id,
   $C,
 )
@@ -516,18 +516,18 @@ stubConnection.getContractsByCodeId(
 ## method *stubConnection.getContractsByCodeIds*
 Get client handles for all contracts that match multiple code IDs
 ```typescript
-stubConnection.getContractsByCodeIds(
+const result: Promise<Record> = stubConnection.getContractsByCodeIds(
   ids,
 )
 ```
 ```typescript
-stubConnection.getContractsByCodeIds(
+const result: Promise<Record> = stubConnection.getContractsByCodeIds(
   ids,
   $C,
 )
 ```
 ```typescript
-stubConnection.getContractsByCodeIds(
+const result: Promise<Record> = stubConnection.getContractsByCodeIds(
   ids,
 )
 ```
@@ -535,7 +535,7 @@ stubConnection.getContractsByCodeIds(
 ## method *stubConnection.instantiate*
 Instantiate a new program from a code id, label and init message.
 ```typescript
-stubConnection.instantiate(
+const result: Promise<> = stubConnection.instantiate(
   contract,
   options,
 )
@@ -544,7 +544,7 @@ stubConnection.instantiate(
 ## method *stubConnection.query*
 Query a contract.
 ```typescript
-stubConnection.query(
+const result: Promise<Q> = stubConnection.query(
   contract,
   message,
 )
@@ -553,7 +553,7 @@ stubConnection.query(
 ## method *stubConnection.send*
 Send native tokens to 1 recipient.
 ```typescript
-stubConnection.send(
+const result: Promise<unknown> = stubConnection.send(
   recipient,
   amounts,
   options,
@@ -563,7 +563,7 @@ stubConnection.send(
 ## method *stubConnection.upload*
 Upload a contract's code, generating a new code id/hash pair.
 ```typescript
-stubConnection.upload(
+const result: Promise<> = stubConnection.upload(
   code,
   options,
 )
@@ -572,7 +572,7 @@ stubConnection.upload(
 ## method *stubConnection.gas*
 Native token of chain.
 ```typescript
-stubConnection.gas(
+const result: TokenAmount = stubConnection.gas(
   amount,
 )
 ```

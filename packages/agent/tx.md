@@ -58,7 +58,7 @@ assert.deepEqual(await client.withFee(fee2).getFee('my_method'), fee2)
 Builder object for batched transactions.
 
 ```typescript
-let batch = new Batch(
+const batch = new Batch(
   properties: Partial<...>,
 )
 ```
@@ -90,7 +90,7 @@ batch.instantiate(
 ## method *batch.submit*
 Submit the batch.
 ```typescript
-batch.submit(
+const result: Promise<unknown> = batch.submit(
   args,
 )
 ```

@@ -40,7 +40,7 @@ Examples:
 A cryptographic identity.
 
 ```typescript
-let identity = new Identity(
+const identity = new Identity(
   properties: Partial<...>,
 )
 ```
@@ -58,7 +58,7 @@ let identity = new Identity(
 
 ## method *identity.sign*
 ```typescript
-identity.sign(
+const result: unknown = identity.sign(
   doc,
 )
 ```

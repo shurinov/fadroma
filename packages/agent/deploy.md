@@ -294,7 +294,7 @@ but a source and a compiler are present, this will also try to build the contrac
 
 # class *ContractCode*
 ```typescript
-let contractCode = new ContractCode(
+const contractCode = new ContractCode(
   properties: Partial<...>,
 )
 ```
@@ -325,7 +325,7 @@ let contractCode = new ContractCode(
 ## method *contractCode.compile*
 Compile this contract, unless a valid binary is present and a rebuild is not requested.
 ```typescript
-contractCode.compile(
+const result: Promise<> = contractCode.compile(
   __namedParameters,
 )
 ```
@@ -333,7 +333,7 @@ contractCode.compile(
 ## method *contractCode.upload*
 Upload this contract, unless a valid upload is present and a rebuild is not requested.
 ```typescript
-contractCode.upload(
+const result: Promise<> = contractCode.upload(
   __namedParameters,
 )
 ```
@@ -344,7 +344,7 @@ A contract that is part of a deploment.
 - generates structured label
 
 ```typescript
-let contractInstance = new ContractInstance(
+const contractInstance = new ContractInstance(
   properties: undefined
 )
 ```
@@ -420,7 +420,7 @@ let contractInstance = new ContractInstance(
 ## method *contractInstance.compile*
 Compile this contract, unless a valid binary is present and a rebuild is not requested.
 ```typescript
-contractInstance.compile(
+const result: Promise<> = contractInstance.compile(
   __namedParameters,
 )
 ```
@@ -428,14 +428,14 @@ contractInstance.compile(
 ## method *contractInstance.connect*
 Returns a client to this contract instance.
 ```typescript
-contractInstance.connect(
+const result: Contract = contractInstance.connect(
   agent,
 )
 ```
 
 ## method *contractInstance.deploy*
 ```typescript
-contractInstance.deploy(
+const result: Promise<> = contractInstance.deploy(
   __namedParameters,
 )
 ```
@@ -453,7 +453,7 @@ contractInstance.serialize()
 ## method *contractInstance.upload*
 Upload this contract, unless a valid upload is present and a rebuild is not requested.
 ```typescript
-contractInstance.upload(
+const result: Promise<> = contractInstance.upload(
   __namedParameters,
 )
 ```
@@ -464,7 +464,7 @@ A contract that is part of a deploment.
 - generates structured label
 
 ```typescript
-let contractTemplate = new ContractTemplate(
+const contractTemplate = new ContractTemplate(
   properties: undefined
 )
 ```
@@ -513,7 +513,7 @@ let contractTemplate = new ContractTemplate(
 ## method *contractTemplate.compile*
 Compile this contract, unless a valid binary is present and a rebuild is not requested.
 ```typescript
-contractTemplate.compile(
+const result: Promise<> = contractTemplate.compile(
   __namedParameters,
 )
 ```
@@ -521,7 +521,7 @@ contractTemplate.compile(
 ## method *contractTemplate.contract*
 Create a new instance of this contract.
 ```typescript
-contractTemplate.contract(
+const result: ContractInstance = contractTemplate.contract(
   name,
   parameters,
 )
@@ -530,7 +530,7 @@ contractTemplate.contract(
 ## method *contractTemplate.contracts*
 Create multiple instances of this contract.
 ```typescript
-contractTemplate.contracts(
+const result: Record<string, ContractInstance> = contractTemplate.contracts(
   instanceParameters,
 )
 ```
@@ -543,7 +543,7 @@ contractTemplate.serialize()
 ## method *contractTemplate.upload*
 Upload this contract, unless a valid upload is present and a rebuild is not requested.
 ```typescript
-contractTemplate.upload(
+const result: Promise<> = contractTemplate.upload(
   __namedParameters,
 )
 ```
@@ -552,7 +552,7 @@ contractTemplate.upload(
 A collection of contracts.
 
 ```typescript
-let deployment = new Deployment(
+const deployment = new Deployment(
   properties: Partial<...>,
 )
 ```
@@ -574,40 +574,40 @@ let deployment = new Deployment(
 ## method *deployment.[iterator]*
 Returns an iterable of entries in the map.
 ```typescript
-deployment.[iterator]()
+const result: IterableIterator<> = deployment.[iterator]()
 ```
 
 ## method *deployment.addContract*
 ```typescript
-deployment.addContract(
+const result: Deployment = deployment.addContract(
   args,
 )
 ```
 
 ## method *deployment.addContracts*
 ```typescript
-deployment.addContracts(
+const result: Deployment = deployment.addContracts(
   args,
 )
 ```
 
 ## method *deployment.build*
 ```typescript
-deployment.build(
+const result: Promise<Record> = deployment.build(
   __namedParameters,
 )
 ```
 
 ## method *deployment.clear*
 ```typescript
-deployment.clear()
+const result: void = deployment.clear()
 ```
 
 ## method *deployment.contract*
 Define a contract that will be automatically compiled, uploaded,
 and instantiated as part of this deployment.
 ```typescript
-deployment.contract(
+const result: ContractInstance = deployment.contract(
   name,
   properties,
 )
@@ -616,14 +616,14 @@ deployment.contract(
 ## method *deployment.delete*
 
 ```typescript
-deployment.delete(
+const result: boolean = deployment.delete(
   key,
 )
 ```
 
 ## method *deployment.deploy*
 ```typescript
-deployment.deploy(
+const result: Promise<Record> = deployment.deploy(
   __namedParameters,
 )
 ```
@@ -631,13 +631,13 @@ deployment.deploy(
 ## method *deployment.entries*
 Returns an iterable of key, value pairs for every entry in the map.
 ```typescript
-deployment.entries()
+const result: IterableIterator<> = deployment.entries()
 ```
 
 ## method *deployment.forEach*
 Executes a provided function once per each key/value pair in the Map, in insertion order.
 ```typescript
-deployment.forEach(
+const result: void = deployment.forEach(
   callbackfn,
   thisArg,
 )
@@ -646,7 +646,7 @@ deployment.forEach(
 ## method *deployment.get*
 Returns a specified element from the Map object. If the value that is associated to the provided key is an object, then you will get a reference to that object and any change made to that object will effectively modify it inside the Map.
 ```typescript
-deployment.get(
+const result: DeploymentUnit = deployment.get(
   key,
 )
 ```
@@ -654,7 +654,7 @@ deployment.get(
 ## method *deployment.has*
 
 ```typescript
-deployment.has(
+const result: boolean = deployment.has(
   key,
 )
 ```
@@ -662,7 +662,7 @@ deployment.has(
 ## method *deployment.keys*
 Returns an iterable of keys in the map
 ```typescript
-deployment.keys()
+const result: IterableIterator<string> = deployment.keys()
 ```
 
 ## method *deployment.serialize*
@@ -684,7 +684,7 @@ and uploaded, but will not be automatically instantiated.
 This can then be used to define multiple instances of
 the same code.
 ```typescript
-deployment.template(
+const result: ContractTemplate = deployment.template(
   name,
   properties,
 )
@@ -692,7 +692,7 @@ deployment.template(
 
 ## method *deployment.upload*
 ```typescript
-deployment.upload(
+const result: Promise<Record> = deployment.upload(
   __namedParameters,
 )
 ```
@@ -700,12 +700,12 @@ deployment.upload(
 ## method *deployment.values*
 Returns an iterable of values in the map
 ```typescript
-deployment.values()
+const result: IterableIterator<DeploymentUnit> = deployment.values()
 ```
 
 ## method *deployment.fromSnapshot*
 ```typescript
-deployment.fromSnapshot(
+const result: Deployment = deployment.fromSnapshot(
   __namedParameters,
 )
 ```
@@ -716,7 +716,7 @@ A contract that is part of a deploment.
 - generates structured label
 
 ```typescript
-let deploymentUnit = new DeploymentUnit(
+const deploymentUnit = new DeploymentUnit(
   properties: undefined
 )
 ```
@@ -762,7 +762,7 @@ let deploymentUnit = new DeploymentUnit(
 ## method *deploymentUnit.compile*
 Compile this contract, unless a valid binary is present and a rebuild is not requested.
 ```typescript
-deploymentUnit.compile(
+const result: Promise<> = deploymentUnit.compile(
   __namedParameters,
 )
 ```
@@ -775,7 +775,7 @@ deploymentUnit.serialize()
 ## method *deploymentUnit.upload*
 Upload this contract, unless a valid upload is present and a rebuild is not requested.
 ```typescript
-deploymentUnit.upload(
+const result: Promise<> = deploymentUnit.upload(
   __namedParameters,
 )
 ```
@@ -784,7 +784,7 @@ deploymentUnit.upload(
 An object representing the contract's binary uploaded to a given chain.
 
 ```typescript
-let uploadedCode = new UploadedCode(
+const uploadedCode = new UploadedCode(
   properties: Partial<...>,
 )
 ```

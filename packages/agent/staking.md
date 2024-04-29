@@ -2,7 +2,7 @@
 
 # class *Validator*
 ```typescript
-let validator = new Validator(
+const validator = new Validator(
   properties: Partial<...>,
 )
 ```

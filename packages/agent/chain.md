@@ -18,7 +18,7 @@ You shouldn't need to instantiate this class directly.
 Instead, see `Connection`, `Devnet`, and their subclasses.
 
 ```typescript
-let backend = new Backend(
+const backend = new Backend(
   properties: Partial<...>,
 )
 ```
@@ -36,14 +36,14 @@ let backend = new Backend(
 
 ## method *backend.connect*
 ```typescript
-backend.connect(
+const result: Promise<Connection> = backend.connect(
   parameter,
 )
 ```
 
 ## method *backend.getIdentity*
 ```typescript
-backend.getIdentity(
+const result: Promise<> = backend.getIdentity(
   name,
 )
 ```
@@ -54,7 +54,7 @@ Each block contains collection of transactions that are
 appended to the blockchain at a given point in time.
 
 ```typescript
-let block = new Block(
+const block = new Block(
   properties: Partial<...>,
 )
 ```
@@ -72,12 +72,12 @@ let block = new Block(
 
 ## method *block.getTransactionsById*
 ```typescript
-block.getTransactionsById()
+const result: Promise<Record> = block.getTransactionsById()
 ```
 
 ## method *block.getTransactionsInOrder*
 ```typescript
-block.getTransactionsInOrder()
+const result: Promise<> = block.getTransactionsInOrder()
 ```
 
 # class *Connection*
@@ -88,7 +88,7 @@ to connect to the corresponding chain. Or, extend this class to implement
 support for new kinds of blockchains.
 
 ```typescript
-let connection = new Connection(
+const connection = new Connection(
   properties: Partial<...>,
 )
 ```
@@ -158,12 +158,12 @@ this property contains the URL to which requests are sent.</td></tr>
 ## method *connection.batch*
 Construct a transaction batch.
 ```typescript
-connection.batch()
+const result: Batch<Connection> = connection.batch()
 ```
 
 ## method *connection.doExecute*
 ```typescript
-connection.doExecute(
+const result: Promise<unknown> = connection.doExecute(
   contract,
   message,
   options,
@@ -172,7 +172,7 @@ connection.doExecute(
 
 ## method *connection.doGetBalance*
 ```typescript
-connection.doGetBalance(
+const result: Promise<> = connection.doGetBalance(
   token,
   address,
 )
@@ -180,52 +180,52 @@ connection.doGetBalance(
 
 ## method *connection.doGetBlockInfo*
 ```typescript
-connection.doGetBlockInfo(
+const result: Promise<Block> = connection.doGetBlockInfo(
   height,
 )
 ```
 
 ## method *connection.doGetCodeHashOfAddress*
 ```typescript
-connection.doGetCodeHashOfAddress(
+const result: Promise<string> = connection.doGetCodeHashOfAddress(
   contract,
 )
 ```
 
 ## method *connection.doGetCodeHashOfCodeId*
 ```typescript
-connection.doGetCodeHashOfCodeId(
+const result: Promise<string> = connection.doGetCodeHashOfCodeId(
   codeId,
 )
 ```
 
 ## method *connection.doGetCodeId*
 ```typescript
-connection.doGetCodeId(
+const result: Promise<string> = connection.doGetCodeId(
   contract,
 )
 ```
 
 ## method *connection.doGetCodes*
 ```typescript
-connection.doGetCodes()
+const result: Promise<Record> = connection.doGetCodes()
 ```
 
 ## method *connection.doGetContractsByCodeId*
 ```typescript
-connection.doGetContractsByCodeId(
+const result: Promise<Iterable> = connection.doGetContractsByCodeId(
   id,
 )
 ```
 
 ## method *connection.doGetHeight*
 ```typescript
-connection.doGetHeight()
+const result: Promise<number> = connection.doGetHeight()
 ```
 
 ## method *connection.doInstantiate*
 ```typescript
-connection.doInstantiate(
+const result: Promise<Partial> = connection.doInstantiate(
   codeId,
   options,
 )
@@ -233,7 +233,7 @@ connection.doInstantiate(
 
 ## method *connection.doQuery*
 ```typescript
-connection.doQuery(
+const result: Promise<unknown> = connection.doQuery(
   contract,
   message,
 )
@@ -241,7 +241,7 @@ connection.doQuery(
 
 ## method *connection.doSend*
 ```typescript
-connection.doSend(
+const result: Promise<unknown> = connection.doSend(
   recipient,
   amounts,
   options,
@@ -250,7 +250,7 @@ connection.doSend(
 
 ## method *connection.doSendMany*
 ```typescript
-connection.doSendMany(
+const result: Promise<unknown> = connection.doSendMany(
   outputs,
   options,
 )
@@ -258,7 +258,7 @@ connection.doSendMany(
 
 ## method *connection.doUpload*
 ```typescript
-connection.doUpload(
+const result: Promise<Partial> = connection.doUpload(
   data,
   options,
 )
@@ -267,7 +267,7 @@ connection.doUpload(
 ## method *connection.execute*
 Call a given program's transaction method.
 ```typescript
-connection.execute(
+const result: Promise<unknown> = connection.execute(
   contract,
   message,
   options,
@@ -279,7 +279,7 @@ Get the balance in a given native token, of
 either this connection's identity's address,
 or of another given address.
 ```typescript
-connection.getBalanceIn(
+const result: Promise<unknown> = connection.getBalanceIn(
   token,
   address,
 )
@@ -290,7 +290,7 @@ Get the balance in a native token of a given address,
 either in this connection's gas token,
 or in another given token.
 ```typescript
-connection.getBalanceOf(
+const result: Promise<unknown> = connection.getBalanceOf(
   address,
   token,
 )
@@ -300,7 +300,7 @@ connection.getBalanceOf(
 Get info about a specific block.
 If no height is passed, gets info about the latest block.
 ```typescript
-connection.getBlock(
+const result: Promise<Block> = connection.getBlock(
   height,
 )
 ```
@@ -308,7 +308,7 @@ connection.getBlock(
 ## method *connection.getCodeHashOfAddress*
 Get the code hash of a given address.
 ```typescript
-connection.getCodeHashOfAddress(
+const result: Promise<string> = connection.getCodeHashOfAddress(
   contract,
 )
 ```
@@ -316,7 +316,7 @@ connection.getCodeHashOfAddress(
 ## method *connection.getCodeHashOfCodeId*
 Get the code hash of a given code id.
 ```typescript
-connection.getCodeHashOfCodeId(
+const result: Promise<string> = connection.getCodeHashOfCodeId(
   contract,
 )
 ```
@@ -324,20 +324,20 @@ connection.getCodeHashOfCodeId(
 ## method *connection.getCodeId*
 Get the code id of a given address.
 ```typescript
-connection.getCodeId(
+const result: Promise<string> = connection.getCodeId(
   contract,
 )
 ```
 
 ## method *connection.getCodes*
 ```typescript
-connection.getCodes()
+const result: Promise<Record> = connection.getCodes()
 ```
 
 ## method *connection.getContract*
 Get a client handle for a specific smart contract, authenticated as as this agent.
 ```typescript
-connection.getContract(
+const result: Contract = connection.getContract(
   options,
 )
 ```
@@ -345,12 +345,12 @@ connection.getContract(
 ## method *connection.getContractsByCodeId*
 Get client handles for all contracts that match a code ID
 ```typescript
-connection.getContractsByCodeId(
+const result: Promise<Record> = connection.getContractsByCodeId(
   id,
 )
 ```
 ```typescript
-connection.getContractsByCodeId(
+const result: Promise<Record> = connection.getContractsByCodeId(
   id,
   $C,
 )
@@ -359,18 +359,18 @@ connection.getContractsByCodeId(
 ## method *connection.getContractsByCodeIds*
 Get client handles for all contracts that match multiple code IDs
 ```typescript
-connection.getContractsByCodeIds(
+const result: Promise<Record> = connection.getContractsByCodeIds(
   ids,
 )
 ```
 ```typescript
-connection.getContractsByCodeIds(
+const result: Promise<Record> = connection.getContractsByCodeIds(
   ids,
   $C,
 )
 ```
 ```typescript
-connection.getContractsByCodeIds(
+const result: Promise<Record> = connection.getContractsByCodeIds(
   ids,
 )
 ```
@@ -378,7 +378,7 @@ connection.getContractsByCodeIds(
 ## method *connection.instantiate*
 Instantiate a new program from a code id, label and init message.
 ```typescript
-connection.instantiate(
+const result: Promise<> = connection.instantiate(
   contract,
   options,
 )
@@ -387,7 +387,7 @@ connection.instantiate(
 ## method *connection.query*
 Query a contract.
 ```typescript
-connection.query(
+const result: Promise<Q> = connection.query(
   contract,
   message,
 )
@@ -396,7 +396,7 @@ connection.query(
 ## method *connection.send*
 Send native tokens to 1 recipient.
 ```typescript
-connection.send(
+const result: Promise<unknown> = connection.send(
   recipient,
   amounts,
   options,
@@ -406,7 +406,7 @@ connection.send(
 ## method *connection.upload*
 Upload a contract's code, generating a new code id/hash pair.
 ```typescript
-connection.upload(
+const result: Promise<> = connection.upload(
   code,
   options,
 )
@@ -415,7 +415,7 @@ connection.upload(
 ## method *connection.gas*
 Native token of chain.
 ```typescript
-connection.gas(
+const result: TokenAmount = connection.gas(
   amount,
 )
 ```
@@ -425,7 +425,7 @@ Base class representing the API of a particular instance of a smart contract.
 Subclass this to add custom query and transaction methods.
 
 ```typescript
-let contract = new Contract(
+const contract = new Contract(
   properties: undefined
 )
 ```
@@ -444,7 +444,7 @@ let contract = new Contract(
 ## method *contract.execute*
 Execute a transaction on the specified instance as the specified Connection.
 ```typescript
-contract.execute(
+const result: Promise<unknown> = contract.execute(
   message,
   options,
 )
@@ -453,7 +453,7 @@ contract.execute(
 ## method *contract.query*
 Execute a query on the specified instance as the specified Connection.
 ```typescript
-contract.query(
+const result: Promise<Q> = contract.query(
   message,
 )
 ```
@@ -465,7 +465,7 @@ You shouldn't need to instantiate this class directly.
 Instead, see `Connection` and its subclasses.
 
 ```typescript
-let endpoint = new Endpoint(
+const endpoint = new Endpoint(
   properties: Partial<...>,
 )
 ```

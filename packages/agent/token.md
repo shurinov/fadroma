@@ -52,7 +52,7 @@ await agent.send('recipient-address', [
 An amount of a fungible token.
 
 ```typescript
-let amount = new Amount(
+const amount = new Amount(
   amount: undefined
   token: FungibleToken
 )
@@ -74,26 +74,26 @@ let amount = new Amount(
 
 ## method *amount.asCoin*
 ```typescript
-amount.asCoin()
+const result: ICoin = amount.asCoin()
 ```
 
 ## method *amount.asFee*
 ```typescript
-amount.asFee(
+const result: IFee = amount.asFee(
   gas,
 )
 ```
 
 ## method *amount.toString*
 ```typescript
-amount.toString()
+const result: string = amount.toString()
 ```
 
 # class *Coin*
 Represents some amount of native token.
 
 ```typescript
-let coin = new Coin(
+const coin = new Coin(
   amount: undefined
   denom: string
 )
@@ -111,7 +111,7 @@ let coin = new Coin(
 A contract-based token.
 
 ```typescript
-let custom = new Custom(
+const custom = new Custom(
   address: string
   codeHash: string
 )
@@ -130,7 +130,7 @@ let custom = new Custom(
 
 ## method *custom.amount*
 ```typescript
-custom.amount(
+const result: TokenAmount = custom.amount(
   amount,
 )
 ```
@@ -138,24 +138,24 @@ custom.amount(
 ## method *custom.isCustom*
 
 ```typescript
-custom.isCustom()
+const result: boolean = custom.isCustom()
 ```
 
 ## method *custom.isFungible*
 
 ```typescript
-custom.isFungible()
+const result: boolean = custom.isFungible()
 ```
 
 ## method *custom.isNative*
 
 ```typescript
-custom.isNative()
+const result: boolean = custom.isNative()
 ```
 
 ## method *custom.addZeros*
 ```typescript
-custom.addZeros(
+const result: string = custom.addZeros(
   n,
   z,
 )
@@ -165,7 +165,7 @@ custom.addZeros(
 A constructable gas fee in native tokens.
 
 ```typescript
-let fee = new Fee(
+const fee = new Fee(
   amount: undefined
   denom: string
   gas: string
@@ -182,7 +182,7 @@ let fee = new Fee(
 
 ## method *fee.add*
 ```typescript
-fee.add(
+const result: void = fee.add(
   amount,
   denom,
 )
@@ -202,7 +202,7 @@ new Fungible()
 
 ## method *fungible.amount*
 ```typescript
-fungible.amount(
+const result: TokenAmount = fungible.amount(
   amount,
 )
 ```
@@ -216,7 +216,7 @@ fungible.isCustom()
 ## method *fungible.isFungible*
 
 ```typescript
-fungible.isFungible()
+const result: boolean = fungible.isFungible()
 ```
 
 ## method *fungible.isNative*
@@ -227,7 +227,7 @@ fungible.isNative()
 
 ## method *fungible.addZeros*
 ```typescript
-fungible.addZeros(
+const result: string = fungible.addZeros(
   n,
   z,
 )
@@ -237,7 +237,7 @@ fungible.addZeros(
 The chain's natively implemented token (such as SCRT on Secret Network).
 
 ```typescript
-let native = new Native(
+const native = new Native(
   denom: string
 )
 ```
@@ -252,14 +252,14 @@ let native = new Native(
 
 ## method *native.amount*
 ```typescript
-native.amount(
+const result: TokenAmount = native.amount(
   amount,
 )
 ```
 
 ## method *native.fee*
 ```typescript
-native.fee(
+const result: IFee = native.fee(
   amount,
 )
 ```
@@ -267,24 +267,24 @@ native.fee(
 ## method *native.isCustom*
 
 ```typescript
-native.isCustom()
+const result: boolean = native.isCustom()
 ```
 
 ## method *native.isFungible*
 
 ```typescript
-native.isFungible()
+const result: boolean = native.isFungible()
 ```
 
 ## method *native.isNative*
 
 ```typescript
-native.isNative()
+const result: boolean = native.isNative()
 ```
 
 ## method *native.addZeros*
 ```typescript
-native.addZeros(
+const result: string = native.addZeros(
   n,
   z,
 )
@@ -305,14 +305,14 @@ new NonFungible()
 ## method *nonFungible.isFungible*
 
 ```typescript
-nonFungible.isFungible()
+const result: boolean = nonFungible.isFungible()
 ```
 
 # class *Pair*
 A pair of tokens.
 
 ```typescript
-let pair = new Pair(
+const pair = new Pair(
   a: Token
   b: Token
 )
@@ -333,7 +333,7 @@ let pair = new Pair(
 A pair of token amounts.
 
 ```typescript
-let swap = new Swap(
+const swap = new Swap(
   a: undefined
   b: undefined
 )
