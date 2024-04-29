@@ -391,7 +391,7 @@ stubConnection.doInstantiate(
 
 ## method *stubConnection.doQuery*
 <pre>
-<strong>const</strong> result: <em><a href="#">Q</a></em> = <strong>await</strong> stubConnection.doQuery(
+<strong>const</strong> result: <em>Q</em> = <strong>await</strong> stubConnection.doQuery(
   contract,
   message: <em>Message</em>,
 )
@@ -544,7 +544,7 @@ stubConnection.instantiate(
 ## method *stubConnection.query*
 Query a contract.
 <pre>
-<strong>const</strong> result: <em><a href="#">Q</a></em> = <strong>await</strong> stubConnection.query(
+<strong>const</strong> result: <em>Q</em> = <strong>await</strong> stubConnection.query(
   contract,
   message: <em>Message</em>,
 )

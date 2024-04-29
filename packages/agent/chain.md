@@ -387,7 +387,7 @@ connection.instantiate(
 ## method *connection.query*
 Query a contract.
 <pre>
-<strong>const</strong> result: <em><a href="#">Q</a></em> = <strong>await</strong> connection.query(
+<strong>const</strong> result: <em>Q</em> = <strong>await</strong> connection.query(
   contract,
   message: <em>Message</em>,
 )
@@ -453,7 +453,7 @@ Execute a transaction on the specified instance as the specified Connection.
 ## method *contract.query*
 Execute a query on the specified instance as the specified Connection.
 <pre>
-<strong>const</strong> result: <em><a href="#">Q</a></em> = <strong>await</strong> contract.query(
+<strong>const</strong> result: <em>Q</em> = <strong>await</strong> contract.query(
   message: <em>Message</em>,
 )
 </pre>
