@@ -30,7 +30,7 @@ const error = new Error(
 <strong>stackTraceLimit</strong></td>
 <td><strong>number</strong>. </td></tr></tbody></table>
 
-## method *error.captureStackTrace*
+## method [*error.captureStackTrace*](undefined)
 Create .stack property on a target object
 <pre>
 <strong>const</strong> result: <em>void</em> = error.captureStackTrace(
@@ -39,7 +39,7 @@ Create .stack property on a target object
 )
 </pre>
 
-## method *error.define*
+## method [*error.define*](undefined)
 Define an error subclass.
 <pre>
 error.define(

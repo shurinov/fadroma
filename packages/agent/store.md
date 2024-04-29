@@ -22,18 +22,18 @@ new DeployStore()
 <strong>[species]</strong></td>
 <td><strong>MapConstructor</strong>. </td></tr></tbody></table>
 
-## method *deployStore.[iterator]*
+## method [*deployStore.[iterator]*](undefined)
 Returns an iterable of entries in the map.
 <pre>
 <strong>const</strong> result: <em>IterableIterator&lt;&gt;</em> = deployStore.[iterator]()
 </pre>
 
-## method *deployStore.clear*
+## method [*deployStore.clear*](undefined)
 <pre>
 <strong>const</strong> result: <em>void</em> = deployStore.clear()
 </pre>
 
-## method *deployStore.delete*
+## method [*deployStore.delete*](undefined)
 
 <pre>
 <strong>const</strong> result: <em>boolean</em> = deployStore.delete(
@@ -41,13 +41,13 @@ Returns an iterable of entries in the map.
 )
 </pre>
 
-## method *deployStore.entries*
+## method [*deployStore.entries*](undefined)
 Returns an iterable of key, value pairs for every entry in the map.
 <pre>
 <strong>const</strong> result: <em>IterableIterator&lt;&gt;</em> = deployStore.entries()
 </pre>
 
-## method *deployStore.forEach*
+## method [*deployStore.forEach*](undefined)
 Executes a provided function once per each key/value pair in the Map, in insertion order.
 <pre>
 <strong>const</strong> result: <em>void</em> = deployStore.forEach(
@@ -56,14 +56,14 @@ Executes a provided function once per each key/value pair in the Map, in inserti
 )
 </pre>
 
-## method *deployStore.get*
+## method [*deployStore.get*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/store.ts#L17)
 <pre>
 <strong>const</strong> result: <em>Partial&lt;&gt;</em> = deployStore.get(
   name,
 )
 </pre>
 
-## method *deployStore.has*
+## method [*deployStore.has*](undefined)
 
 <pre>
 <strong>const</strong> result: <em>boolean</em> = deployStore.has(
@@ -71,13 +71,13 @@ Executes a provided function once per each key/value pair in the Map, in inserti
 )
 </pre>
 
-## method *deployStore.keys*
+## method [*deployStore.keys*](undefined)
 Returns an iterable of keys in the map
 <pre>
 <strong>const</strong> result: <em>IterableIterator&lt;string&gt;</em> = deployStore.keys()
 </pre>
 
-## method *deployStore.set*
+## method [*deployStore.set*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/store.ts#L24)
 <pre>
 deployStore.set(
   name,
@@ -85,7 +85,7 @@ deployStore.set(
 )
 </pre>
 
-## method *deployStore.values*
+## method [*deployStore.values*](undefined)
 Returns an iterable of values in the map
 <pre>
 <strong>const</strong> result: <em>IterableIterator&lt;Partial&gt;</em> = deployStore.values()
@@ -107,18 +107,18 @@ new UploadStore()
 <strong>[species]</strong></td>
 <td><strong>MapConstructor</strong>. </td></tr></tbody></table>
 
-## method *uploadStore.[iterator]*
+## method [*uploadStore.[iterator]*](undefined)
 Returns an iterable of entries in the map.
 <pre>
 <strong>const</strong> result: <em>IterableIterator&lt;&gt;</em> = uploadStore.[iterator]()
 </pre>
 
-## method *uploadStore.clear*
+## method [*uploadStore.clear*](undefined)
 <pre>
 <strong>const</strong> result: <em>void</em> = uploadStore.clear()
 </pre>
 
-## method *uploadStore.delete*
+## method [*uploadStore.delete*](undefined)
 
 <pre>
 <strong>const</strong> result: <em>boolean</em> = uploadStore.delete(
@@ -126,13 +126,13 @@ Returns an iterable of entries in the map.
 )
 </pre>
 
-## method *uploadStore.entries*
+## method [*uploadStore.entries*](undefined)
 Returns an iterable of key, value pairs for every entry in the map.
 <pre>
 <strong>const</strong> result: <em>IterableIterator&lt;&gt;</em> = uploadStore.entries()
 </pre>
 
-## method *uploadStore.forEach*
+## method [*uploadStore.forEach*](undefined)
 Executes a provided function once per each key/value pair in the Map, in insertion order.
 <pre>
 <strong>const</strong> result: <em>void</em> = uploadStore.forEach(
@@ -141,14 +141,14 @@ Executes a provided function once per each key/value pair in the Map, in inserti
 )
 </pre>
 
-## method *uploadStore.get*
+## method [*uploadStore.get*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/store.ts#L37)
 <pre>
 <strong>const</strong> result: <em><a href="#">UploadedCode</a></em> = uploadStore.get(
   codeHash,
 )
 </pre>
 
-## method *uploadStore.has*
+## method [*uploadStore.has*](undefined)
 
 <pre>
 <strong>const</strong> result: <em>boolean</em> = uploadStore.has(
@@ -156,13 +156,13 @@ Executes a provided function once per each key/value pair in the Map, in inserti
 )
 </pre>
 
-## method *uploadStore.keys*
+## method [*uploadStore.keys*](undefined)
 Returns an iterable of keys in the map
 <pre>
 <strong>const</strong> result: <em>IterableIterator&lt;string&gt;</em> = uploadStore.keys()
 </pre>
 
-## method *uploadStore.set*
+## method [*uploadStore.set*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/store.ts#L41)
 <pre>
 uploadStore.set(
   codeHash,
@@ -170,7 +170,7 @@ uploadStore.set(
 )
 </pre>
 
-## method *uploadStore.values*
+## method [*uploadStore.values*](undefined)
 Returns an iterable of values in the map
 <pre>
 <strong>const</strong> result: <em>IterableIterator&lt;UploadedCode&gt;</em> = uploadStore.values()

@@ -181,28 +181,28 @@ const compiledCode = new CompiledCode(
 <strong>canUploadInfo</strong></td>
 <td></td></tr></tbody></table>
 
-## method *compiledCode.computeHash*
+## method [*compiledCode.computeHash*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/program.browser.ts#L262)
 Compute the code hash if missing; throw if different.
 <pre>
 compiledCode.computeHash()
 </pre>
 
-## method *compiledCode.doFetch*
+## method [*compiledCode.doFetch*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/program.browser.ts#L252)
 <pre>
 <strong>const</strong> result: <em>Uint8Array</em> = <strong>await</strong> compiledCode.doFetch()
 </pre>
 
-## method *compiledCode.fetch*
+## method [*compiledCode.fetch*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/program.browser.ts#L226)
 <pre>
 <strong>const</strong> result: <em>Uint8Array</em> = <strong>await</strong> compiledCode.fetch()
 </pre>
 
-## method *compiledCode.serialize*
+## method [*compiledCode.serialize*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/program.browser.ts#L194)
 <pre>
 compiledCode.serialize()
 </pre>
 
-## method *compiledCode.toCodeHash*
+## method [*compiledCode.toCodeHash*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/program.browser.ts#L274)
 <pre>
 <strong>const</strong> result: <em>string</em> = compiledCode.toCodeHash(
   data: <em>Uint8Array</em>,
@@ -229,7 +229,7 @@ binary and checksum are both present in wasm/ directory</td></tr>
 <strong>log</strong></td>
 <td><strong>Console</strong>. </td></tr></tbody></table>
 
-## method *compiler.build*
+## method [*compiler.build*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/program.browser.ts#L21)
 Compile a source.
 `@hackbg/fadroma` implements dockerized and non-dockerized
 variants using its `build.impl.mjs` script.
@@ -240,7 +240,7 @@ variants using its `build.impl.mjs` script.
 )
 </pre>
 
-## method *compiler.buildMany*
+## method [*compiler.buildMany*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/program.browser.ts#L27)
 Build multiple sources.
 Default implementation of buildMany is sequential.
 Compiler classes may override this to optimize.
@@ -282,28 +282,28 @@ const localCompiledCode = new LocalCompiledCode(
 <strong>canUploadInfo</strong></td>
 <td></td></tr></tbody></table>
 
-## method *localCompiledCode.computeHash*
+## method [*localCompiledCode.computeHash*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/program.browser.ts#L262)
 Compute the code hash if missing; throw if different.
 <pre>
 localCompiledCode.computeHash()
 </pre>
 
-## method *localCompiledCode.doFetch*
+## method [*localCompiledCode.doFetch*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/program.ts#L12)
 <pre>
 localCompiledCode.doFetch()
 </pre>
 
-## method *localCompiledCode.fetch*
+## method [*localCompiledCode.fetch*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/program.browser.ts#L226)
 <pre>
 <strong>const</strong> result: <em>Uint8Array</em> = <strong>await</strong> localCompiledCode.fetch()
 </pre>
 
-## method *localCompiledCode.serialize*
+## method [*localCompiledCode.serialize*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/program.browser.ts#L194)
 <pre>
 localCompiledCode.serialize()
 </pre>
 
-## method *localCompiledCode.toCodeHash*
+## method [*localCompiledCode.toCodeHash*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/program.browser.ts#L274)
 <pre>
 <strong>const</strong> result: <em>string</em> = localCompiledCode.toCodeHash(
   data: <em>Uint8Array</em>,
@@ -360,7 +360,7 @@ const rustSourceCode = new RustSourceCode(
 <strong>canFetchInfo</strong></td>
 <td></td></tr></tbody></table>
 
-## method *rustSourceCode.serialize*
+## method [*rustSourceCode.serialize*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/program.browser.ts#L116)
 <pre>
 rustSourceCode.serialize()
 </pre>
@@ -403,7 +403,7 @@ const sourceCode = new SourceCode(
 <strong>canFetchInfo</strong></td>
 <td></td></tr></tbody></table>
 
-## method *sourceCode.serialize*
+## method [*sourceCode.serialize*](https://github.com/hackbg/fadroma/blob/fd82719114381eb4818e3b70fed53c9bdc7209b6/packages/agent/program.browser.ts#L61)
 <pre>
 sourceCode.serialize()
 </pre>
