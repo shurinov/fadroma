@@ -54,7 +54,7 @@ const stubBackend = new StubBackend(
 ## method [*stubBackend.connect*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/stub.ts#L190)
 <pre>
 <strong>const</strong> result: <em><a href="#">Connection</a></em> = <strong>await</strong> stubBackend.connect(
-  parameter,
+  parameter: <em>string | Partial&lt;&gt;</em>,
 )
 </pre>
 
@@ -136,7 +136,7 @@ const stubBatch = new StubBatch(
 Add an execute message to the batch.
 <pre>
 <strong>const</strong> result: <em><a href="#">StubBatch</a></em> = stubBatch.execute(
-  ...args,
+  ...args: <em></em>,
 )
 </pre>
 
@@ -144,7 +144,7 @@ Add an execute message to the batch.
 Add an instantiate message to the batch.
 <pre>
 <strong>const</strong> result: <em><a href="#">StubBatch</a></em> = stubBatch.instantiate(
-  ...args,
+  ...args: <em></em>,
 )
 </pre>
 
@@ -158,7 +158,7 @@ Submit the batch.
 Add an upload message to the batch.
 <pre>
 <strong>const</strong> result: <em><a href="#">StubBatch</a></em> = stubBatch.upload(
-  ...args,
+  ...args: <em></em>,
 )
 </pre>
 
@@ -222,7 +222,7 @@ Compile a source.
 variants using its `build.impl.mjs` script.
 <pre>
 <strong>const</strong> result: <em><a href="#">CompiledCode</a></em> = <strong>await</strong> stubCompiler.build(
-  source,
+  source: <em>string | Partial&lt;SourceCode&gt;</em>,
   ...args: <em>any</em>,
 )
 </pre>
@@ -324,9 +324,9 @@ Construct a transaction batch.
 ## method [*stubConnection.doExecute*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/stub.ts#L125)
 <pre>
 <strong>const</strong> result: <em>unknown</em> = <strong>await</strong> stubConnection.doExecute(
-  contract,
+  contract: <em>???</em>,
   message: <em>Message</em>,
-  options,
+  options: <em>???</em>,
 )
 </pre>
 
@@ -392,7 +392,7 @@ stubConnection.doInstantiate(
 ## method [*stubConnection.doQuery*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/stub.ts#L80)
 <pre>
 <strong>const</strong> result: <em>Q</em> = <strong>await</strong> stubConnection.doQuery(
-  contract,
+  contract: <em>???</em>,
   message: <em>Message</em>,
 )
 </pre>
@@ -409,7 +409,7 @@ stubConnection.doInstantiate(
 ## method [*stubConnection.doSendMany*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/stub.ts#L110)
 <pre>
 <strong>const</strong> result: <em>void</em> = <strong>await</strong> stubConnection.doSendMany(
-  outputs,
+  outputs: <em></em>,
   opts: <em>never</em>,
 )
 </pre>
@@ -425,9 +425,9 @@ stubConnection.doInstantiate(
 Call a given program's transaction method.
 <pre>
 <strong>const</strong> result: <em>unknown</em> = <strong>await</strong> stubConnection.execute(
-  contract,
+  contract: <em>string | Partial&lt;ContractInstance&gt;</em>,
   message: <em>Message</em>,
-  options,
+  options: <em>???</em>,
 )
 </pre>
 
@@ -438,7 +438,7 @@ or of another given address.
 <pre>
 <strong>const</strong> result: <em>unknown</em> = <strong>await</strong> stubConnection.getBalanceIn(
   token: <em>string</em>,
-  address,
+  address: <em>string | ???</em>,
 )
 </pre>
 
@@ -448,7 +448,7 @@ either in this connection's gas token,
 or in another given token.
 <pre>
 <strong>const</strong> result: <em>unknown</em> = <strong>await</strong> stubConnection.getBalanceOf(
-  address,
+  address: <em>string | ???</em>,
   token: <em>string</em>,
 )
 </pre>
@@ -466,7 +466,7 @@ If no height is passed, gets info about the latest block.
 Get the code hash of a given address.
 <pre>
 <strong>const</strong> result: <em>string</em> = <strong>await</strong> stubConnection.getCodeHashOfAddress(
-  contract,
+  contract: <em>string | ???</em>,
 )
 </pre>
 
@@ -474,7 +474,7 @@ Get the code hash of a given address.
 Get the code hash of a given code id.
 <pre>
 <strong>const</strong> result: <em>string</em> = <strong>await</strong> stubConnection.getCodeHashOfCodeId(
-  contract,
+  contract: <em>string | ???</em>,
 )
 </pre>
 
@@ -482,7 +482,7 @@ Get the code hash of a given code id.
 Get the code id of a given address.
 <pre>
 <strong>const</strong> result: <em>string</em> = <strong>await</strong> stubConnection.getCodeId(
-  contract,
+  contract: <em>string | ???</em>,
 )
 </pre>
 
@@ -495,7 +495,7 @@ Get the code id of a given address.
 Get a client handle for a specific smart contract, authenticated as as this agent.
 <pre>
 <strong>const</strong> result: <em><a href="#">Contract</a></em> = stubConnection.getContract(
-  options,
+  options: <em>string | ???</em>,
 )
 </pre>
 
@@ -536,7 +536,7 @@ Get client handles for all contracts that match multiple code IDs
 Instantiate a new program from a code id, label and init message.
 <pre>
 stubConnection.instantiate(
-  contract,
+  contract: <em>string | Partial&lt;UploadedCode&gt;</em>,
   options: <em>Partial&lt;ContractInstance&gt;</em>,
 )
 </pre>
@@ -545,7 +545,7 @@ stubConnection.instantiate(
 Query a contract.
 <pre>
 <strong>const</strong> result: <em>Q</em> = <strong>await</strong> stubConnection.query(
-  contract,
+  contract: <em>string | ???</em>,
   message: <em>Message</em>,
 )
 </pre>
@@ -554,9 +554,9 @@ Query a contract.
 Send native tokens to 1 recipient.
 <pre>
 <strong>const</strong> result: <em>unknown</em> = <strong>await</strong> stubConnection.send(
-  recipient,
-  amounts,
-  options,
+  recipient: <em>string | ???</em>,
+  amounts: <em>ICoin | TokenAmount</em>,
+  options: <em>???</em>,
 )
 </pre>
 
@@ -564,8 +564,8 @@ Send native tokens to 1 recipient.
 Upload a contract's code, generating a new code id/hash pair.
 <pre>
 stubConnection.upload(
-  code,
-  options,
+  code: <em>string | Uint8Array | URL | Partial&lt;CompiledCode&gt;</em>,
+  options: <em>???</em>,
 )
 </pre>
 
@@ -573,7 +573,7 @@ stubConnection.upload(
 Native token of chain.
 <pre>
 <strong>const</strong> result: <em><a href="#">TokenAmount</a></em> = stubConnection.gas(
-  amount,
+  amount: <em>string | number</em>,
 )
 </pre>
 <!-- @hackbg/docs: end -->

@@ -37,7 +37,7 @@ const backend = new Backend(
 ## abstract method [*backend.connect*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/chain.ts#L105)
 <pre>
 <strong>const</strong> result: <em><a href="#">Connection</a></em> = <strong>await</strong> backend.connect(
-  parameter,
+  parameter: <em>string | Partial&lt;Identity&gt;</em>,
 )
 </pre>
 
@@ -165,9 +165,9 @@ Construct a transaction batch.
 Call a given program's transaction method.
 <pre>
 <strong>const</strong> result: <em>unknown</em> = <strong>await</strong> connection.execute(
-  contract,
+  contract: <em>string | Partial&lt;ContractInstance&gt;</em>,
   message: <em>Message</em>,
-  options,
+  options: <em>???</em>,
 )
 </pre>
 
@@ -178,7 +178,7 @@ or of another given address.
 <pre>
 <strong>const</strong> result: <em>unknown</em> = <strong>await</strong> connection.getBalanceIn(
   token: <em>string</em>,
-  address,
+  address: <em>string | ???</em>,
 )
 </pre>
 
@@ -188,7 +188,7 @@ either in this connection's gas token,
 or in another given token.
 <pre>
 <strong>const</strong> result: <em>unknown</em> = <strong>await</strong> connection.getBalanceOf(
-  address,
+  address: <em>string | ???</em>,
   token: <em>string</em>,
 )
 </pre>
@@ -206,7 +206,7 @@ If no height is passed, gets info about the latest block.
 Get the code hash of a given address.
 <pre>
 <strong>const</strong> result: <em>string</em> = <strong>await</strong> connection.getCodeHashOfAddress(
-  contract,
+  contract: <em>string | ???</em>,
 )
 </pre>
 
@@ -214,7 +214,7 @@ Get the code hash of a given address.
 Get the code hash of a given code id.
 <pre>
 <strong>const</strong> result: <em>string</em> = <strong>await</strong> connection.getCodeHashOfCodeId(
-  contract,
+  contract: <em>string | ???</em>,
 )
 </pre>
 
@@ -222,7 +222,7 @@ Get the code hash of a given code id.
 Get the code id of a given address.
 <pre>
 <strong>const</strong> result: <em>string</em> = <strong>await</strong> connection.getCodeId(
-  contract,
+  contract: <em>string | ???</em>,
 )
 </pre>
 
@@ -235,7 +235,7 @@ Get the code id of a given address.
 Get a client handle for a specific smart contract, authenticated as as this agent.
 <pre>
 <strong>const</strong> result: <em><a href="#">Contract</a></em> = connection.getContract(
-  options,
+  options: <em>string | ???</em>,
 )
 </pre>
 
@@ -276,7 +276,7 @@ Get client handles for all contracts that match multiple code IDs
 Instantiate a new program from a code id, label and init message.
 <pre>
 connection.instantiate(
-  contract,
+  contract: <em>string | Partial&lt;UploadedCode&gt;</em>,
   options: <em>Partial&lt;ContractInstance&gt;</em>,
 )
 </pre>
@@ -285,7 +285,7 @@ connection.instantiate(
 Query a contract.
 <pre>
 <strong>const</strong> result: <em>Q</em> = <strong>await</strong> connection.query(
-  contract,
+  contract: <em>string | ???</em>,
   message: <em>Message</em>,
 )
 </pre>
@@ -294,9 +294,9 @@ Query a contract.
 Send native tokens to 1 recipient.
 <pre>
 <strong>const</strong> result: <em>unknown</em> = <strong>await</strong> connection.send(
-  recipient,
-  amounts,
-  options,
+  recipient: <em>string | ???</em>,
+  amounts: <em>ICoin | TokenAmount</em>,
+  options: <em>???</em>,
 )
 </pre>
 
@@ -304,8 +304,8 @@ Send native tokens to 1 recipient.
 Upload a contract's code, generating a new code id/hash pair.
 <pre>
 connection.upload(
-  code,
-  options,
+  code: <em>string | Uint8Array | URL | Partial&lt;CompiledCode&gt;</em>,
+  options: <em>???</em>,
 )
 </pre>
 
@@ -313,7 +313,7 @@ connection.upload(
 Native token of chain.
 <pre>
 <strong>const</strong> result: <em><a href="#">TokenAmount</a></em> = connection.gas(
-  amount,
+  amount: <em>string | number</em>,
 )
 </pre>
 
@@ -343,7 +343,7 @@ Execute a transaction on the specified instance as the specified Connection.
 <pre>
 <strong>const</strong> result: <em>unknown</em> = <strong>await</strong> contract.execute(
   message: <em>Message</em>,
-  options,
+  options: <em>???</em>,
 )
 </pre>
 

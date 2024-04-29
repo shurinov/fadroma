@@ -230,7 +230,7 @@ Compile a source.
 variants using its `build.impl.mjs` script.
 <pre>
 <strong>const</strong> result: <em><a href="#">CompiledCode</a></em> = <strong>await</strong> compiler.build(
-  source,
+  source: <em>string | Partial&lt;SourceCode&gt;</em>,
   ...args: <em>unknown</em>,
 )
 </pre>

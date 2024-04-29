@@ -51,7 +51,7 @@ Returns an iterable of key, value pairs for every entry in the map.
 Executes a provided function once per each key/value pair in the Map, in insertion order.
 <pre>
 <strong>const</strong> result: <em>void</em> = deployStore.forEach(
-  callbackfn,
+  callbackfn: <em>???</em>,
   thisArg: <em>any</em>,
 )
 </pre>
@@ -81,7 +81,7 @@ Returns an iterable of keys in the map
 <pre>
 deployStore.set(
   name: <em>string</em>,
-  state,
+  state: <em>Partial&lt;&gt; | Partial&lt;Deployment&gt;</em>,
 )
 </pre>
 
@@ -136,7 +136,7 @@ Returns an iterable of key, value pairs for every entry in the map.
 Executes a provided function once per each key/value pair in the Map, in insertion order.
 <pre>
 <strong>const</strong> result: <em>void</em> = uploadStore.forEach(
-  callbackfn,
+  callbackfn: <em>???</em>,
   thisArg: <em>any</em>,
 )
 </pre>

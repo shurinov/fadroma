@@ -131,7 +131,7 @@ const custom = new Custom(
 ## method [*custom.amount*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/token.ts#L84)
 <pre>
 <strong>const</strong> result: <em><a href="#">TokenAmount</a></em> = custom.amount(
-  amount,
+  amount: <em>string | number</em>,
 )
 </pre>
 
@@ -156,7 +156,7 @@ const custom = new Custom(
 ## method [*custom.addZeros*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/token.ts#L80)
 <pre>
 <strong>const</strong> result: <em>string</em> = custom.addZeros(
-  n,
+  n: <em>string | number</em>,
   z: <em>number</em>,
 )
 </pre>
@@ -183,7 +183,7 @@ const fee = new Fee(
 ## method [*fee.add*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/token.ts#L32)
 <pre>
 <strong>const</strong> result: <em>void</em> = fee.add(
-  amount,
+  amount: <em>string | number | bigint</em>,
   denom: <em>string</em>,
 )
 </pre>
@@ -203,7 +203,7 @@ new Fungible()
 ## method [*fungible.amount*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/token.ts#L84)
 <pre>
 <strong>const</strong> result: <em><a href="#">TokenAmount</a></em> = fungible.amount(
-  amount,
+  amount: <em>string | number</em>,
 )
 </pre>
 
@@ -228,7 +228,7 @@ fungible.isNative()
 ## method [*fungible.addZeros*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/token.ts#L80)
 <pre>
 <strong>const</strong> result: <em>string</em> = fungible.addZeros(
-  n,
+  n: <em>string | number</em>,
   z: <em>number</em>,
 )
 </pre>
@@ -253,14 +253,14 @@ const native = new Native(
 ## method [*native.amount*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/token.ts#L84)
 <pre>
 <strong>const</strong> result: <em><a href="#">TokenAmount</a></em> = native.amount(
-  amount,
+  amount: <em>string | number</em>,
 )
 </pre>
 
 ## method [*native.fee*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/token.ts#L140)
 <pre>
 <strong>const</strong> result: <em><a href="#">IFee</a></em> = native.fee(
-  amount,
+  amount: <em>string | number | bigint</em>,
 )
 </pre>
 
@@ -285,7 +285,7 @@ const native = new Native(
 ## method [*native.addZeros*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/token.ts#L80)
 <pre>
 <strong>const</strong> result: <em>string</em> = native.addZeros(
-  n,
+  n: <em>string | number</em>,
   z: <em>number</em>,
 )
 </pre>

@@ -44,8 +44,8 @@ Define an error subclass.
 <pre>
 error.define(
   name: <em>string</em>,
-  getMessage,
-  construct,
+  getMessage: <em>string | ???</em>,
+  construct: <em>???</em>,
 )
 </pre>
 <!-- @hackbg/docs: end -->

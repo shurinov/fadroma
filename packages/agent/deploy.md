@@ -326,7 +326,7 @@ const contractCode = new ContractCode(
 Compile this contract, unless a valid binary is present and a rebuild is not requested.
 <pre>
 contractCode.compile(
-  __namedParameters,
+  __namedParameters: <em>???</em>,
 )
 </pre>
 
@@ -334,7 +334,7 @@ contractCode.compile(
 Upload this contract, unless a valid upload is present and a rebuild is not requested.
 <pre>
 contractCode.upload(
-  __namedParameters,
+  __namedParameters: <em></em>,
 )
 </pre>
 
@@ -421,7 +421,7 @@ const contractInstance = new ContractInstance(
 Compile this contract, unless a valid binary is present and a rebuild is not requested.
 <pre>
 contractInstance.compile(
-  __namedParameters,
+  __namedParameters: <em>???</em>,
 )
 </pre>
 
@@ -436,7 +436,7 @@ Returns a client to this contract instance.
 ## method [*contractInstance.deploy*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/deploy.ts#L235)
 <pre>
 contractInstance.deploy(
-  __namedParameters,
+  __namedParameters: <em></em>,
 )
 </pre>
 
@@ -454,7 +454,7 @@ contractInstance.serialize()
 Upload this contract, unless a valid upload is present and a rebuild is not requested.
 <pre>
 contractInstance.upload(
-  __namedParameters,
+  __namedParameters: <em></em>,
 )
 </pre>
 
@@ -514,7 +514,7 @@ const contractTemplate = new ContractTemplate(
 Compile this contract, unless a valid binary is present and a rebuild is not requested.
 <pre>
 contractTemplate.compile(
-  __namedParameters,
+  __namedParameters: <em>???</em>,
 )
 </pre>
 
@@ -544,7 +544,7 @@ contractTemplate.serialize()
 Upload this contract, unless a valid upload is present and a rebuild is not requested.
 <pre>
 contractTemplate.upload(
-  __namedParameters,
+  __namedParameters: <em></em>,
 )
 </pre>
 
@@ -580,21 +580,21 @@ Returns an iterable of entries in the map.
 ## method [*deployment.addContract*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/deploy.ts#L374)
 <pre>
 <strong>const</strong> result: <em><a href="#">Deployment</a></em> = deployment.addContract(
-  ...args,
+  ...args: <em></em>,
 )
 </pre>
 
 ## method [*deployment.addContracts*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/deploy.ts#L382)
 <pre>
 <strong>const</strong> result: <em><a href="#">Deployment</a></em> = deployment.addContracts(
-  ...args,
+  ...args: <em></em>,
 )
 </pre>
 
 ## method [*deployment.build*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/deploy.ts#L390)
 <pre>
 <strong>const</strong> result: <em>Record&lt;string, &gt;</em> = <strong>await</strong> deployment.build(
-  __namedParameters,
+  __namedParameters: <em></em>,
 )
 </pre>
 
@@ -609,7 +609,7 @@ and instantiated as part of this deployment.
 <pre>
 <strong>const</strong> result: <em><a href="#">ContractInstance</a></em> = deployment.contract(
   name: <em>string</em>,
-  properties,
+  properties: <em></em>,
 )
 </pre>
 
@@ -624,7 +624,7 @@ and instantiated as part of this deployment.
 ## method [*deployment.deploy*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/deploy.ts#L444)
 <pre>
 <strong>const</strong> result: <em>Record&lt;string, &gt;</em> = <strong>await</strong> deployment.deploy(
-  __namedParameters,
+  __namedParameters: <em></em>,
 )
 </pre>
 
@@ -638,7 +638,7 @@ Returns an iterable of key, value pairs for every entry in the map.
 Executes a provided function once per each key/value pair in the Map, in insertion order.
 <pre>
 <strong>const</strong> result: <em>void</em> = deployment.forEach(
-  callbackfn,
+  callbackfn: <em>???</em>,
   thisArg: <em>any</em>,
 )
 </pre>
@@ -686,14 +686,14 @@ the same code.
 <pre>
 <strong>const</strong> result: <em><a href="#">ContractTemplate</a></em> = deployment.template(
   name: <em>string</em>,
-  properties,
+  properties: <em></em>,
 )
 </pre>
 
 ## method [*deployment.upload*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/deploy.ts#L427)
 <pre>
 <strong>const</strong> result: <em>Record&lt;string, &gt;</em> = <strong>await</strong> deployment.upload(
-  __namedParameters,
+  __namedParameters: <em></em>,
 )
 </pre>
 
@@ -763,7 +763,7 @@ const deploymentUnit = new DeploymentUnit(
 Compile this contract, unless a valid binary is present and a rebuild is not requested.
 <pre>
 deploymentUnit.compile(
-  __namedParameters,
+  __namedParameters: <em>???</em>,
 )
 </pre>
 
@@ -776,7 +776,7 @@ deploymentUnit.serialize()
 Upload this contract, unless a valid upload is present and a rebuild is not requested.
 <pre>
 deploymentUnit.upload(
-  __namedParameters,
+  __namedParameters: <em></em>,
 )
 </pre>
 
