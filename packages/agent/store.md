@@ -25,7 +25,7 @@ new DeployStore()
 ## method *deployStore.[iterator]*
 Returns an iterable of entries in the map.
 <pre>
-const result: IterableIterator<> = deployStore.[iterator]()
+const result: *IterableIterator<>* = deployStore.[iterator]()
 </pre>
 
 ## method *deployStore.clear*
@@ -44,7 +44,7 @@ const result: boolean = deployStore.delete(
 ## method *deployStore.entries*
 Returns an iterable of key, value pairs for every entry in the map.
 <pre>
-const result: IterableIterator<> = deployStore.entries()
+const result: *IterableIterator<>* = deployStore.entries()
 </pre>
 
 ## method *deployStore.forEach*
@@ -58,7 +58,7 @@ const result: void = deployStore.forEach(
 
 ## method *deployStore.get*
 <pre>
-const result: Partial<> = deployStore.get(
+const result: *Partial<>* = deployStore.get(
   name,
 )
 </pre>
@@ -74,7 +74,7 @@ const result: boolean = deployStore.has(
 ## method *deployStore.keys*
 Returns an iterable of keys in the map
 <pre>
-const result: IterableIterator<string> = deployStore.keys()
+const result: *IterableIterator<string>* = deployStore.keys()
 </pre>
 
 ## method *deployStore.set*
@@ -88,7 +88,7 @@ deployStore.set(
 ## method *deployStore.values*
 Returns an iterable of values in the map
 <pre>
-const result: IterableIterator<Partial> = deployStore.values()
+const result: *IterableIterator<Partial>* = deployStore.values()
 </pre>
 
 # class *UploadStore*
@@ -110,7 +110,7 @@ new UploadStore()
 ## method *uploadStore.[iterator]*
 Returns an iterable of entries in the map.
 <pre>
-const result: IterableIterator<> = uploadStore.[iterator]()
+const result: *IterableIterator<>* = uploadStore.[iterator]()
 </pre>
 
 ## method *uploadStore.clear*
@@ -129,7 +129,7 @@ const result: boolean = uploadStore.delete(
 ## method *uploadStore.entries*
 Returns an iterable of key, value pairs for every entry in the map.
 <pre>
-const result: IterableIterator<> = uploadStore.entries()
+const result: *IterableIterator<>* = uploadStore.entries()
 </pre>
 
 ## method *uploadStore.forEach*
@@ -143,7 +143,7 @@ const result: void = uploadStore.forEach(
 
 ## method *uploadStore.get*
 <pre>
-const result: UploadedCode = uploadStore.get(
+const result: *UploadedCode* = uploadStore.get(
   codeHash,
 )
 </pre>
@@ -159,7 +159,7 @@ const result: boolean = uploadStore.has(
 ## method *uploadStore.keys*
 Returns an iterable of keys in the map
 <pre>
-const result: IterableIterator<string> = uploadStore.keys()
+const result: *IterableIterator<string>* = uploadStore.keys()
 </pre>
 
 ## method *uploadStore.set*
@@ -173,6 +173,6 @@ uploadStore.set(
 ## method *uploadStore.values*
 Returns an iterable of values in the map
 <pre>
-const result: IterableIterator<UploadedCode> = uploadStore.values()
+const result: *IterableIterator<UploadedCode>* = uploadStore.values()
 </pre>
 <!-- @hackbg/docs: end -->
