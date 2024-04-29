@@ -428,7 +428,7 @@ contractInstance.compile(
 ## method *contractInstance.connect*
 Returns a client to this contract instance.
 <pre>
-const result: *Contract* = contractInstance.connect(
+const result: [Contract](https://example.com) = contractInstance.connect(
   agent: Connection,
 )
 </pre>
@@ -521,7 +521,7 @@ contractTemplate.compile(
 ## method *contractTemplate.contract*
 Create a new instance of this contract.
 <pre>
-const result: *ContractInstance* = contractTemplate.contract(
+const result: [ContractInstance](https://example.com) = contractTemplate.contract(
   name,
   parameters: Partial<ContractInstance>,
 )
@@ -530,7 +530,7 @@ const result: *ContractInstance* = contractTemplate.contract(
 ## method *contractTemplate.contracts*
 Create multiple instances of this contract.
 <pre>
-const result: *Record<string, ContractInstance>* = contractTemplate.contracts(
+const result: [Record<string, ContractInstance>](https://example.com) = contractTemplate.contracts(
   instanceParameters: Record<string, Partial>,
 )
 </pre>
@@ -574,26 +574,26 @@ const deployment = new Deployment(
 ## method *deployment.[iterator]*
 Returns an iterable of entries in the map.
 <pre>
-const result: *IterableIterator<>* = deployment.[iterator]()
+const result: [IterableIterator<>](https://example.com) = deployment.[iterator]()
 </pre>
 
 ## method *deployment.addContract*
 <pre>
-const result: *Deployment* = deployment.addContract(
+const result: [Deployment](https://example.com) = deployment.addContract(
   ...args,
 )
 </pre>
 
 ## method *deployment.addContracts*
 <pre>
-const result: *Deployment* = deployment.addContracts(
+const result: [Deployment](https://example.com) = deployment.addContracts(
   ...args,
 )
 </pre>
 
 ## method *deployment.build*
 <pre>
-const result: *Record<string, >* = await deployment.build(
+const result: [Record<string, >](https://example.com) = await deployment.build(
   __namedParameters,
 )
 </pre>
@@ -607,7 +607,7 @@ const result: void = deployment.clear()
 Define a contract that will be automatically compiled, uploaded,
 and instantiated as part of this deployment.
 <pre>
-const result: *ContractInstance* = deployment.contract(
+const result: [ContractInstance](https://example.com) = deployment.contract(
   name,
   properties,
 )
@@ -623,7 +623,7 @@ const result: boolean = deployment.delete(
 
 ## method *deployment.deploy*
 <pre>
-const result: *Record<string, >* = await deployment.deploy(
+const result: [Record<string, >](https://example.com) = await deployment.deploy(
   __namedParameters,
 )
 </pre>
@@ -631,7 +631,7 @@ const result: *Record<string, >* = await deployment.deploy(
 ## method *deployment.entries*
 Returns an iterable of key, value pairs for every entry in the map.
 <pre>
-const result: *IterableIterator<>* = deployment.entries()
+const result: [IterableIterator<>](https://example.com) = deployment.entries()
 </pre>
 
 ## method *deployment.forEach*
@@ -646,7 +646,7 @@ const result: void = deployment.forEach(
 ## method *deployment.get*
 Returns a specified element from the Map object. If the value that is associated to the provided key is an object, then you will get a reference to that object and any change made to that object will effectively modify it inside the Map.
 <pre>
-const result: *DeploymentUnit* = deployment.get(
+const result: [DeploymentUnit](https://example.com) = deployment.get(
   key,
 )
 </pre>
@@ -662,7 +662,7 @@ const result: boolean = deployment.has(
 ## method *deployment.keys*
 Returns an iterable of keys in the map
 <pre>
-const result: *IterableIterator<string>* = deployment.keys()
+const result: [IterableIterator<string>](https://example.com) = deployment.keys()
 </pre>
 
 ## method *deployment.serialize*
@@ -684,7 +684,7 @@ and uploaded, but will not be automatically instantiated.
 This can then be used to define multiple instances of
 the same code.
 <pre>
-const result: *ContractTemplate* = deployment.template(
+const result: [ContractTemplate](https://example.com) = deployment.template(
   name,
   properties,
 )
@@ -692,7 +692,7 @@ const result: *ContractTemplate* = deployment.template(
 
 ## method *deployment.upload*
 <pre>
-const result: *Record<string, >* = await deployment.upload(
+const result: [Record<string, >](https://example.com) = await deployment.upload(
   __namedParameters,
 )
 </pre>
@@ -700,12 +700,12 @@ const result: *Record<string, >* = await deployment.upload(
 ## method *deployment.values*
 Returns an iterable of values in the map
 <pre>
-const result: *IterableIterator<DeploymentUnit>* = deployment.values()
+const result: [IterableIterator<DeploymentUnit>](https://example.com) = deployment.values()
 </pre>
 
 ## method *deployment.fromSnapshot*
 <pre>
-const result: *Deployment* = deployment.fromSnapshot(
+const result: [Deployment](https://example.com) = deployment.fromSnapshot(
   __namedParameters: Partial<>,
 )
 </pre>

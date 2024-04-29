@@ -53,7 +53,7 @@ const stubBackend = new StubBackend(
 
 ## method *stubBackend.connect*
 <pre>
-const result: *Connection* = await stubBackend.connect(
+const result: [Connection](https://example.com) = await stubBackend.connect(
   parameter,
 )
 </pre>
@@ -74,7 +74,7 @@ const result: unknown = stubBackend.export(
 
 ## method *stubBackend.getIdentity*
 <pre>
-const result: *Identity* = await stubBackend.getIdentity(
+const result: [Identity](https://example.com) = await stubBackend.getIdentity(
   name,
 )
 </pre>
@@ -97,12 +97,12 @@ stubBackend.instantiate(
 
 ## method *stubBackend.pause*
 <pre>
-const result: *StubBackend* = await stubBackend.pause()
+const result: [StubBackend](https://example.com) = await stubBackend.pause()
 </pre>
 
 ## method *stubBackend.start*
 <pre>
-const result: *StubBackend* = await stubBackend.start()
+const result: [StubBackend](https://example.com) = await stubBackend.start()
 </pre>
 
 ## method *stubBackend.upload*
@@ -135,7 +135,7 @@ const stubBatch = new StubBatch(
 ## method *stubBatch.execute*
 Add an execute message to the batch.
 <pre>
-const result: *StubBatch* = stubBatch.execute(
+const result: [StubBatch](https://example.com) = stubBatch.execute(
   ...args,
 )
 </pre>
@@ -143,7 +143,7 @@ const result: *StubBatch* = stubBatch.execute(
 ## method *stubBatch.instantiate*
 Add an instantiate message to the batch.
 <pre>
-const result: *StubBatch* = stubBatch.instantiate(
+const result: [StubBatch](https://example.com) = stubBatch.instantiate(
   ...args,
 )
 </pre>
@@ -157,7 +157,7 @@ stubBatch.submit()
 ## method *stubBatch.upload*
 Add an upload message to the batch.
 <pre>
-const result: *StubBatch* = stubBatch.upload(
+const result: [StubBatch](https://example.com) = stubBatch.upload(
   ...args,
 )
 </pre>
@@ -186,7 +186,7 @@ const stubBlock = new StubBlock(
 
 ## method *stubBlock.getTransactionsById*
 <pre>
-const result: *Record<string, Transaction>* = await stubBlock.getTransactionsById()
+const result: [Record<string, Transaction>](https://example.com) = await stubBlock.getTransactionsById()
 </pre>
 
 ## method *stubBlock.getTransactionsInOrder*
@@ -221,7 +221,7 @@ Compile a source.
 `@hackbg/fadroma` implements dockerized and non-dockerized
 variants using its `build.impl.mjs` script.
 <pre>
-const result: *CompiledCode* = await stubCompiler.build(
+const result: [CompiledCode](https://example.com) = await stubCompiler.build(
   source,
   ...args,
 )
@@ -318,7 +318,7 @@ this property contains the URL to which requests are sent.</td></tr>
 ## method *stubConnection.batch*
 Construct a transaction batch.
 <pre>
-const result: *Batch<StubConnection>* = stubConnection.batch()
+const result: [Batch<StubConnection>](https://example.com) = stubConnection.batch()
 </pre>
 
 ## method *stubConnection.doExecute*
@@ -340,7 +340,7 @@ const result: string = stubConnection.doGetBalance(
 
 ## method *stubConnection.doGetBlockInfo*
 <pre>
-const result: *StubBlock* = await stubConnection.doGetBlockInfo()
+const result: [StubBlock](https://example.com) = await stubConnection.doGetBlockInfo()
 </pre>
 
 ## method *stubConnection.doGetCodeHashOfAddress*
@@ -391,7 +391,7 @@ stubConnection.doInstantiate(
 
 ## method *stubConnection.doQuery*
 <pre>
-const result: *Q* = await stubConnection.doQuery(
+const result: [Q](https://example.com) = await stubConnection.doQuery(
   contract,
   message: Message,
 )
@@ -416,7 +416,7 @@ const result: void = stubConnection.doSendMany(
 
 ## method *stubConnection.doUpload*
 <pre>
-const result: *UploadedCode* = await stubConnection.doUpload(
+const result: [UploadedCode](https://example.com) = await stubConnection.doUpload(
   codeData: Uint8Array,
 )
 </pre>
@@ -457,7 +457,7 @@ const result: unknown = stubConnection.getBalanceOf(
 Get info about a specific block.
 If no height is passed, gets info about the latest block.
 <pre>
-const result: *StubBlock* = await stubConnection.getBlock(
+const result: [StubBlock](https://example.com) = await stubConnection.getBlock(
   height,
 )
 </pre>
@@ -488,13 +488,13 @@ const result: string = stubConnection.getCodeId(
 
 ## method *stubConnection.getCodes*
 <pre>
-const result: *Record<string, UploadedCode>* = await stubConnection.getCodes()
+const result: [Record<string, UploadedCode>](https://example.com) = await stubConnection.getCodes()
 </pre>
 
 ## method *stubConnection.getContract*
 Get a client handle for a specific smart contract, authenticated as as this agent.
 <pre>
-const result: *Contract* = stubConnection.getContract(
+const result: [Contract](https://example.com) = stubConnection.getContract(
   options,
 )
 </pre>
@@ -502,12 +502,12 @@ const result: *Contract* = stubConnection.getContract(
 ## method *stubConnection.getContractsByCodeId*
 Get client handles for all contracts that match a code ID
 <pre>
-const result: *Record<string, Contract>* = await stubConnection.getContractsByCodeId(
+const result: [Record<string, Contract>](https://example.com) = await stubConnection.getContractsByCodeId(
   id,
 )
 </pre>
 <pre>
-const result: *Record<string, InstanceType>* = await stubConnection.getContractsByCodeId(
+const result: [Record<string, InstanceType>](https://example.com) = await stubConnection.getContractsByCodeId(
   id,
   $C: C,
 )
@@ -516,18 +516,18 @@ const result: *Record<string, InstanceType>* = await stubConnection.getContracts
 ## method *stubConnection.getContractsByCodeIds*
 Get client handles for all contracts that match multiple code IDs
 <pre>
-const result: *Record<string, Record>* = await stubConnection.getContractsByCodeIds(
+const result: [Record<string, Record>](https://example.com) = await stubConnection.getContractsByCodeIds(
   ids: Iterable<string>,
 )
 </pre>
 <pre>
-const result: *Record<string, Record>* = await stubConnection.getContractsByCodeIds(
+const result: [Record<string, Record>](https://example.com) = await stubConnection.getContractsByCodeIds(
   ids: Iterable<string>,
   $C: C,
 )
 </pre>
 <pre>
-const result: *Record<string, Record>* = await stubConnection.getContractsByCodeIds(
+const result: [Record<string, Record>](https://example.com) = await stubConnection.getContractsByCodeIds(
   ids: Record<string, C>,
 )
 </pre>
@@ -544,7 +544,7 @@ stubConnection.instantiate(
 ## method *stubConnection.query*
 Query a contract.
 <pre>
-const result: *Q* = await stubConnection.query(
+const result: [Q](https://example.com) = await stubConnection.query(
   contract,
   message: Message,
 )
@@ -572,7 +572,7 @@ stubConnection.upload(
 ## method *stubConnection.gas*
 Native token of chain.
 <pre>
-const result: *TokenAmount* = stubConnection.gas(
+const result: [TokenAmount](https://example.com) = stubConnection.gas(
   amount,
 )
 </pre>

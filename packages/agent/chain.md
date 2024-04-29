@@ -36,7 +36,7 @@ const backend = new Backend(
 
 ## method *backend.connect*
 <pre>
-const result: *Connection* = await backend.connect(
+const result: [Connection](https://example.com) = await backend.connect(
   parameter,
 )
 </pre>
@@ -72,7 +72,7 @@ const block = new Block(
 
 ## method *block.getTransactionsById*
 <pre>
-const result: *Record<string, Transaction>* = await block.getTransactionsById()
+const result: [Record<string, Transaction>](https://example.com) = await block.getTransactionsById()
 </pre>
 
 ## method *block.getTransactionsInOrder*
@@ -158,7 +158,7 @@ this property contains the URL to which requests are sent.</td></tr>
 ## method *connection.batch*
 Construct a transaction batch.
 <pre>
-const result: *Batch<Connection>* = connection.batch()
+const result: [Batch<Connection>](https://example.com) = connection.batch()
 </pre>
 
 ## method *connection.doExecute*
@@ -180,7 +180,7 @@ connection.doGetBalance(
 
 ## method *connection.doGetBlockInfo*
 <pre>
-const result: *Block* = await connection.doGetBlockInfo(
+const result: [Block](https://example.com) = await connection.doGetBlockInfo(
   height,
 )
 </pre>
@@ -208,12 +208,12 @@ const result: string = connection.doGetCodeId(
 
 ## method *connection.doGetCodes*
 <pre>
-const result: *Record<string, UploadedCode>* = await connection.doGetCodes()
+const result: [Record<string, UploadedCode>](https://example.com) = await connection.doGetCodes()
 </pre>
 
 ## method *connection.doGetContractsByCodeId*
 <pre>
-const result: *Iterable<>* = await connection.doGetContractsByCodeId(
+const result: [Iterable<>](https://example.com) = await connection.doGetContractsByCodeId(
   id,
 )
 </pre>
@@ -225,7 +225,7 @@ const result: number = connection.doGetHeight()
 
 ## method *connection.doInstantiate*
 <pre>
-const result: *Partial<ContractInstance>* = await connection.doInstantiate(
+const result: [Partial<ContractInstance>](https://example.com) = await connection.doInstantiate(
   codeId,
   options: Partial<ContractInstance>,
 )
@@ -258,7 +258,7 @@ const result: unknown = connection.doSendMany(
 
 ## method *connection.doUpload*
 <pre>
-const result: *Partial<UploadedCode>* = await connection.doUpload(
+const result: [Partial<UploadedCode>](https://example.com) = await connection.doUpload(
   data: Uint8Array,
   options,
 )
@@ -300,7 +300,7 @@ const result: unknown = connection.getBalanceOf(
 Get info about a specific block.
 If no height is passed, gets info about the latest block.
 <pre>
-const result: *Block* = await connection.getBlock(
+const result: [Block](https://example.com) = await connection.getBlock(
   height,
 )
 </pre>
@@ -331,13 +331,13 @@ const result: string = connection.getCodeId(
 
 ## method *connection.getCodes*
 <pre>
-const result: *Record<string, UploadedCode>* = await connection.getCodes()
+const result: [Record<string, UploadedCode>](https://example.com) = await connection.getCodes()
 </pre>
 
 ## method *connection.getContract*
 Get a client handle for a specific smart contract, authenticated as as this agent.
 <pre>
-const result: *Contract* = connection.getContract(
+const result: [Contract](https://example.com) = connection.getContract(
   options,
 )
 </pre>
@@ -345,12 +345,12 @@ const result: *Contract* = connection.getContract(
 ## method *connection.getContractsByCodeId*
 Get client handles for all contracts that match a code ID
 <pre>
-const result: *Record<string, Contract>* = await connection.getContractsByCodeId(
+const result: [Record<string, Contract>](https://example.com) = await connection.getContractsByCodeId(
   id,
 )
 </pre>
 <pre>
-const result: *Record<string, InstanceType>* = await connection.getContractsByCodeId(
+const result: [Record<string, InstanceType>](https://example.com) = await connection.getContractsByCodeId(
   id,
   $C: C,
 )
@@ -359,18 +359,18 @@ const result: *Record<string, InstanceType>* = await connection.getContractsByCo
 ## method *connection.getContractsByCodeIds*
 Get client handles for all contracts that match multiple code IDs
 <pre>
-const result: *Record<string, Record>* = await connection.getContractsByCodeIds(
+const result: [Record<string, Record>](https://example.com) = await connection.getContractsByCodeIds(
   ids: Iterable<string>,
 )
 </pre>
 <pre>
-const result: *Record<string, Record>* = await connection.getContractsByCodeIds(
+const result: [Record<string, Record>](https://example.com) = await connection.getContractsByCodeIds(
   ids: Iterable<string>,
   $C: C,
 )
 </pre>
 <pre>
-const result: *Record<string, Record>* = await connection.getContractsByCodeIds(
+const result: [Record<string, Record>](https://example.com) = await connection.getContractsByCodeIds(
   ids: Record<string, C>,
 )
 </pre>
@@ -387,7 +387,7 @@ connection.instantiate(
 ## method *connection.query*
 Query a contract.
 <pre>
-const result: *Q* = await connection.query(
+const result: [Q](https://example.com) = await connection.query(
   contract,
   message: Message,
 )
@@ -415,7 +415,7 @@ connection.upload(
 ## method *connection.gas*
 Native token of chain.
 <pre>
-const result: *TokenAmount* = connection.gas(
+const result: [TokenAmount](https://example.com) = connection.gas(
   amount,
 )
 </pre>
@@ -453,7 +453,7 @@ const result: unknown = contract.execute(
 ## method *contract.query*
 Execute a query on the specified instance as the specified Connection.
 <pre>
-const result: *Q* = await contract.query(
+const result: [Q](https://example.com) = await contract.query(
   message: Message,
 )
 </pre>
