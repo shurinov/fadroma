@@ -32,20 +32,20 @@ const error = new Error(
 
 ## method *error.captureStackTrace*
 Create .stack property on a target object
-```typescript
+<pre>
 const result: void = error.captureStackTrace(
   targetObject,
   constructorOpt: Function,
 )
-```
+</pre>
 
 ## method *error.define*
 Define an error subclass.
-```typescript
+<pre>
 error.define(
   name,
   getMessage,
   construct,
 )
-```
+</pre>
 <!-- @hackbg/docs: end -->

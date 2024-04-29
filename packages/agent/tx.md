@@ -73,35 +73,35 @@ const batch = new Batch(
 
 ## method *batch.execute*
 Add an execute message to the batch.
-```typescript
+<pre>
 batch.execute(
   ...args: Parameters<>,
 )
-```
+</pre>
 
 ## method *batch.instantiate*
 Add an instantiate message to the batch.
-```typescript
+<pre>
 batch.instantiate(
   ...args: Parameters<>,
 )
-```
+</pre>
 
 ## method *batch.submit*
 Submit the batch.
-```typescript
+<pre>
 const result: unknown = batch.submit(
   ...args,
 )
-```
+</pre>
 
 ## method *batch.upload*
 Add an upload message to the batch.
-```typescript
+<pre>
 batch.upload(
   ...args: Parameters<>,
 )
-```
+</pre>
 
 # class *Transaction*
 A transaction in a block on a chain.

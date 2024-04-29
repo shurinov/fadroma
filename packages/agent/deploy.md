@@ -324,19 +324,19 @@ const contractCode = new ContractCode(
 
 ## method *contractCode.compile*
 Compile this contract, unless a valid binary is present and a rebuild is not requested.
-```typescript
+<pre>
 contractCode.compile(
   __namedParameters,
 )
-```
+</pre>
 
 ## method *contractCode.upload*
 Upload this contract, unless a valid upload is present and a rebuild is not requested.
-```typescript
+<pre>
 contractCode.upload(
   __namedParameters,
 )
-```
+</pre>
 
 # class *ContractInstance*
 A contract that is part of a deploment.
@@ -419,44 +419,44 @@ const contractInstance = new ContractInstance(
 
 ## method *contractInstance.compile*
 Compile this contract, unless a valid binary is present and a rebuild is not requested.
-```typescript
+<pre>
 contractInstance.compile(
   __namedParameters,
 )
-```
+</pre>
 
 ## method *contractInstance.connect*
 Returns a client to this contract instance.
-```typescript
+<pre>
 const result: Contract = contractInstance.connect(
   agent: Connection,
 )
-```
+</pre>
 
 ## method *contractInstance.deploy*
-```typescript
+<pre>
 contractInstance.deploy(
   __namedParameters,
 )
-```
+</pre>
 
 ## method *contractInstance.isValid*
-```typescript
+<pre>
 contractInstance.isValid()
-```
+</pre>
 
 ## method *contractInstance.serialize*
-```typescript
+<pre>
 contractInstance.serialize()
-```
+</pre>
 
 ## method *contractInstance.upload*
 Upload this contract, unless a valid upload is present and a rebuild is not requested.
-```typescript
+<pre>
 contractInstance.upload(
   __namedParameters,
 )
-```
+</pre>
 
 # class *ContractTemplate*
 A contract that is part of a deploment.
@@ -512,41 +512,41 @@ const contractTemplate = new ContractTemplate(
 
 ## method *contractTemplate.compile*
 Compile this contract, unless a valid binary is present and a rebuild is not requested.
-```typescript
+<pre>
 contractTemplate.compile(
   __namedParameters,
 )
-```
+</pre>
 
 ## method *contractTemplate.contract*
 Create a new instance of this contract.
-```typescript
+<pre>
 const result: ContractInstance = contractTemplate.contract(
   name,
   parameters: Partial<ContractInstance>,
 )
-```
+</pre>
 
 ## method *contractTemplate.contracts*
 Create multiple instances of this contract.
-```typescript
+<pre>
 const result: Record<string, ContractInstance> = contractTemplate.contracts(
   instanceParameters: Record<string, Partial>,
 )
-```
+</pre>
 
 ## method *contractTemplate.serialize*
-```typescript
+<pre>
 contractTemplate.serialize()
-```
+</pre>
 
 ## method *contractTemplate.upload*
 Upload this contract, unless a valid upload is present and a rebuild is not requested.
-```typescript
+<pre>
 contractTemplate.upload(
   __namedParameters,
 )
-```
+</pre>
 
 # class *Deployment*
 A collection of contracts.
@@ -573,142 +573,142 @@ const deployment = new Deployment(
 
 ## method *deployment.[iterator]*
 Returns an iterable of entries in the map.
-```typescript
+<pre>
 const result: IterableIterator<> = deployment.[iterator]()
-```
+</pre>
 
 ## method *deployment.addContract*
-```typescript
+<pre>
 const result: Deployment = deployment.addContract(
   ...args,
 )
-```
+</pre>
 
 ## method *deployment.addContracts*
-```typescript
+<pre>
 const result: Deployment = deployment.addContracts(
   ...args,
 )
-```
+</pre>
 
 ## method *deployment.build*
-```typescript
+<pre>
 const result: Record<string, > = await deployment.build(
   __namedParameters,
 )
-```
+</pre>
 
 ## method *deployment.clear*
-```typescript
+<pre>
 const result: void = deployment.clear()
-```
+</pre>
 
 ## method *deployment.contract*
 Define a contract that will be automatically compiled, uploaded,
 and instantiated as part of this deployment.
-```typescript
+<pre>
 const result: ContractInstance = deployment.contract(
   name,
   properties,
 )
-```
+</pre>
 
 ## method *deployment.delete*
 
-```typescript
+<pre>
 const result: boolean = deployment.delete(
   key,
 )
-```
+</pre>
 
 ## method *deployment.deploy*
-```typescript
+<pre>
 const result: Record<string, > = await deployment.deploy(
   __namedParameters,
 )
-```
+</pre>
 
 ## method *deployment.entries*
 Returns an iterable of key, value pairs for every entry in the map.
-```typescript
+<pre>
 const result: IterableIterator<> = deployment.entries()
-```
+</pre>
 
 ## method *deployment.forEach*
 Executes a provided function once per each key/value pair in the Map, in insertion order.
-```typescript
+<pre>
 const result: void = deployment.forEach(
   callbackfn,
   thisArg,
 )
-```
+</pre>
 
 ## method *deployment.get*
 Returns a specified element from the Map object. If the value that is associated to the provided key is an object, then you will get a reference to that object and any change made to that object will effectively modify it inside the Map.
-```typescript
+<pre>
 const result: DeploymentUnit = deployment.get(
   key,
 )
-```
+</pre>
 
 ## method *deployment.has*
 
-```typescript
+<pre>
 const result: boolean = deployment.has(
   key,
 )
-```
+</pre>
 
 ## method *deployment.keys*
 Returns an iterable of keys in the map
-```typescript
+<pre>
 const result: IterableIterator<string> = deployment.keys()
-```
+</pre>
 
 ## method *deployment.serialize*
-```typescript
+<pre>
 deployment.serialize()
-```
+</pre>
 
 ## method *deployment.set*
-```typescript
+<pre>
 deployment.set(
   name,
   unit: DeploymentUnit,
 )
-```
+</pre>
 
 ## method *deployment.template*
 Define a template, representing code that can be compiled
 and uploaded, but will not be automatically instantiated.
 This can then be used to define multiple instances of
 the same code.
-```typescript
+<pre>
 const result: ContractTemplate = deployment.template(
   name,
   properties,
 )
-```
+</pre>
 
 ## method *deployment.upload*
-```typescript
+<pre>
 const result: Record<string, > = await deployment.upload(
   __namedParameters,
 )
-```
+</pre>
 
 ## method *deployment.values*
 Returns an iterable of values in the map
-```typescript
+<pre>
 const result: IterableIterator<DeploymentUnit> = deployment.values()
-```
+</pre>
 
 ## method *deployment.fromSnapshot*
-```typescript
+<pre>
 const result: Deployment = deployment.fromSnapshot(
   __namedParameters: Partial<>,
 )
-```
+</pre>
 
 # class *DeploymentUnit*
 A contract that is part of a deploment.
@@ -761,24 +761,24 @@ const deploymentUnit = new DeploymentUnit(
 
 ## method *deploymentUnit.compile*
 Compile this contract, unless a valid binary is present and a rebuild is not requested.
-```typescript
+<pre>
 deploymentUnit.compile(
   __namedParameters,
 )
-```
+</pre>
 
 ## method *deploymentUnit.serialize*
-```typescript
+<pre>
 deploymentUnit.serialize()
-```
+</pre>
 
 ## method *deploymentUnit.upload*
 Upload this contract, unless a valid upload is present and a rebuild is not requested.
-```typescript
+<pre>
 deploymentUnit.upload(
   __namedParameters,
 )
-```
+</pre>
 
 # class *UploadedCode*
 An object representing the contract's binary uploaded to a given chain.
@@ -816,7 +816,7 @@ const uploadedCode = new UploadedCode(
 <td></td></tr></tbody></table>
 
 ## method *uploadedCode.serialize*
-```typescript
+<pre>
 uploadedCode.serialize()
-```
+</pre>
 <!-- @hackbg/docs: end -->

@@ -35,18 +35,18 @@ const backend = new Backend(
 <td><strong>Console</strong>. </td></tr></tbody></table>
 
 ## method *backend.connect*
-```typescript
+<pre>
 const result: Connection = await backend.connect(
   parameter,
 )
-```
+</pre>
 
 ## method *backend.getIdentity*
-```typescript
+<pre>
 backend.getIdentity(
   name,
 )
-```
+</pre>
 
 # class *Block*
 The building block of a blockchain.
@@ -71,14 +71,14 @@ const block = new Block(
 <td><strong>number</strong>. Monotonically incrementing ID of block.</td></tr></tbody></table>
 
 ## method *block.getTransactionsById*
-```typescript
+<pre>
 const result: Record<string, Transaction> = await block.getTransactionsById()
-```
+</pre>
 
 ## method *block.getTransactionsInOrder*
-```typescript
+<pre>
 block.getTransactionsInOrder()
-```
+</pre>
 
 # class *Connection*
 This is the base class for a connection to a blockchain via a given endpoint.
@@ -157,268 +157,268 @@ this property contains the URL to which requests are sent.</td></tr>
 
 ## method *connection.batch*
 Construct a transaction batch.
-```typescript
+<pre>
 const result: Batch<Connection> = connection.batch()
-```
+</pre>
 
 ## method *connection.doExecute*
-```typescript
+<pre>
 const result: unknown = connection.doExecute(
   contract,
   message: Message,
   options,
 )
-```
+</pre>
 
 ## method *connection.doGetBalance*
-```typescript
+<pre>
 connection.doGetBalance(
   token,
   address,
 )
-```
+</pre>
 
 ## method *connection.doGetBlockInfo*
-```typescript
+<pre>
 const result: Block = await connection.doGetBlockInfo(
   height,
 )
-```
+</pre>
 
 ## method *connection.doGetCodeHashOfAddress*
-```typescript
+<pre>
 const result: string = connection.doGetCodeHashOfAddress(
   contract,
 )
-```
+</pre>
 
 ## method *connection.doGetCodeHashOfCodeId*
-```typescript
+<pre>
 const result: string = connection.doGetCodeHashOfCodeId(
   codeId,
 )
-```
+</pre>
 
 ## method *connection.doGetCodeId*
-```typescript
+<pre>
 const result: string = connection.doGetCodeId(
   contract,
 )
-```
+</pre>
 
 ## method *connection.doGetCodes*
-```typescript
+<pre>
 const result: Record<string, UploadedCode> = await connection.doGetCodes()
-```
+</pre>
 
 ## method *connection.doGetContractsByCodeId*
-```typescript
+<pre>
 const result: Iterable<> = await connection.doGetContractsByCodeId(
   id,
 )
-```
+</pre>
 
 ## method *connection.doGetHeight*
-```typescript
+<pre>
 const result: number = connection.doGetHeight()
-```
+</pre>
 
 ## method *connection.doInstantiate*
-```typescript
+<pre>
 const result: Partial<ContractInstance> = await connection.doInstantiate(
   codeId,
   options: Partial<ContractInstance>,
 )
-```
+</pre>
 
 ## method *connection.doQuery*
-```typescript
+<pre>
 const result: unknown = connection.doQuery(
   contract,
   message: Message,
 )
-```
+</pre>
 
 ## method *connection.doSend*
-```typescript
+<pre>
 const result: unknown = connection.doSend(
   recipient,
   amounts,
   options,
 )
-```
+</pre>
 
 ## method *connection.doSendMany*
-```typescript
+<pre>
 const result: unknown = connection.doSendMany(
   outputs,
   options,
 )
-```
+</pre>
 
 ## method *connection.doUpload*
-```typescript
+<pre>
 const result: Partial<UploadedCode> = await connection.doUpload(
   data: Uint8Array,
   options,
 )
-```
+</pre>
 
 ## method *connection.execute*
 Call a given program's transaction method.
-```typescript
+<pre>
 const result: unknown = connection.execute(
   contract,
   message: Message,
   options,
 )
-```
+</pre>
 
 ## method *connection.getBalanceIn*
 Get the balance in a given native token, of
 either this connection's identity's address,
 or of another given address.
-```typescript
+<pre>
 const result: unknown = connection.getBalanceIn(
   token,
   address,
 )
-```
+</pre>
 
 ## method *connection.getBalanceOf*
 Get the balance in a native token of a given address,
 either in this connection's gas token,
 or in another given token.
-```typescript
+<pre>
 const result: unknown = connection.getBalanceOf(
   address,
   token,
 )
-```
+</pre>
 
 ## method *connection.getBlock*
 Get info about a specific block.
 If no height is passed, gets info about the latest block.
-```typescript
+<pre>
 const result: Block = await connection.getBlock(
   height,
 )
-```
+</pre>
 
 ## method *connection.getCodeHashOfAddress*
 Get the code hash of a given address.
-```typescript
+<pre>
 const result: string = connection.getCodeHashOfAddress(
   contract,
 )
-```
+</pre>
 
 ## method *connection.getCodeHashOfCodeId*
 Get the code hash of a given code id.
-```typescript
+<pre>
 const result: string = connection.getCodeHashOfCodeId(
   contract,
 )
-```
+</pre>
 
 ## method *connection.getCodeId*
 Get the code id of a given address.
-```typescript
+<pre>
 const result: string = connection.getCodeId(
   contract,
 )
-```
+</pre>
 
 ## method *connection.getCodes*
-```typescript
+<pre>
 const result: Record<string, UploadedCode> = await connection.getCodes()
-```
+</pre>
 
 ## method *connection.getContract*
 Get a client handle for a specific smart contract, authenticated as as this agent.
-```typescript
+<pre>
 const result: Contract = connection.getContract(
   options,
 )
-```
+</pre>
 
 ## method *connection.getContractsByCodeId*
 Get client handles for all contracts that match a code ID
-```typescript
+<pre>
 const result: Record<string, Contract> = await connection.getContractsByCodeId(
   id,
 )
-```
-```typescript
+</pre>
+<pre>
 const result: Record<string, InstanceType> = await connection.getContractsByCodeId(
   id,
   $C: C,
 )
-```
+</pre>
 
 ## method *connection.getContractsByCodeIds*
 Get client handles for all contracts that match multiple code IDs
-```typescript
+<pre>
 const result: Record<string, Record> = await connection.getContractsByCodeIds(
   ids: Iterable<string>,
 )
-```
-```typescript
+</pre>
+<pre>
 const result: Record<string, Record> = await connection.getContractsByCodeIds(
   ids: Iterable<string>,
   $C: C,
 )
-```
-```typescript
+</pre>
+<pre>
 const result: Record<string, Record> = await connection.getContractsByCodeIds(
   ids: Record<string, C>,
 )
-```
+</pre>
 
 ## method *connection.instantiate*
 Instantiate a new program from a code id, label and init message.
-```typescript
+<pre>
 connection.instantiate(
   contract,
   options: Partial<ContractInstance>,
 )
-```
+</pre>
 
 ## method *connection.query*
 Query a contract.
-```typescript
+<pre>
 const result: Q = await connection.query(
   contract,
   message: Message,
 )
-```
+</pre>
 
 ## method *connection.send*
 Send native tokens to 1 recipient.
-```typescript
+<pre>
 const result: unknown = connection.send(
   recipient,
   amounts,
   options,
 )
-```
+</pre>
 
 ## method *connection.upload*
 Upload a contract's code, generating a new code id/hash pair.
-```typescript
+<pre>
 connection.upload(
   code,
   options,
 )
-```
+</pre>
 
 ## method *connection.gas*
 Native token of chain.
-```typescript
+<pre>
 const result: TokenAmount = connection.gas(
   amount,
 )
-```
+</pre>
 
 # class *Contract*
 Base class representing the API of a particular instance of a smart contract.
@@ -443,20 +443,20 @@ const contract = new Contract(
 
 ## method *contract.execute*
 Execute a transaction on the specified instance as the specified Connection.
-```typescript
+<pre>
 const result: unknown = contract.execute(
   message: Message,
   options,
 )
-```
+</pre>
 
 ## method *contract.query*
 Execute a query on the specified instance as the specified Connection.
-```typescript
+<pre>
 const result: Q = await contract.query(
   message: Message,
 )
-```
+</pre>
 
 # class *Endpoint*
 This is the base class for a remote endpoint.

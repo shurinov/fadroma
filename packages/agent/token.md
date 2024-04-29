@@ -73,21 +73,21 @@ const amount = new Amount(
 <td></td></tr></tbody></table>
 
 ## method *amount.asCoin*
-```typescript
+<pre>
 const result: ICoin = amount.asCoin()
-```
+</pre>
 
 ## method *amount.asFee*
-```typescript
+<pre>
 const result: IFee = amount.asFee(
   gas,
 )
-```
+</pre>
 
 ## method *amount.toString*
-```typescript
+<pre>
 const result: string = amount.toString()
-```
+</pre>
 
 # class *Coin*
 Represents some amount of native token.
@@ -129,37 +129,37 @@ const custom = new Custom(
 <td></td></tr></tbody></table>
 
 ## method *custom.amount*
-```typescript
+<pre>
 const result: TokenAmount = custom.amount(
   amount,
 )
-```
+</pre>
 
 ## method *custom.isCustom*
 
-```typescript
+<pre>
 const result: boolean = custom.isCustom()
-```
+</pre>
 
 ## method *custom.isFungible*
 
-```typescript
+<pre>
 const result: boolean = custom.isFungible()
-```
+</pre>
 
 ## method *custom.isNative*
 
-```typescript
+<pre>
 const result: boolean = custom.isNative()
-```
+</pre>
 
 ## method *custom.addZeros*
-```typescript
+<pre>
 const result: string = custom.addZeros(
   n,
   z,
 )
-```
+</pre>
 
 # class *Fee*
 A constructable gas fee in native tokens.
@@ -181,12 +181,12 @@ const fee = new Fee(
 <td><strong>string</strong>. </td></tr></tbody></table>
 
 ## method *fee.add*
-```typescript
+<pre>
 const result: void = fee.add(
   amount,
   denom,
 )
-```
+</pre>
 
 # class *Fungible*
 An abstract fungible token.
@@ -201,37 +201,37 @@ new Fungible()
 <td></td></tr></tbody></table>
 
 ## method *fungible.amount*
-```typescript
+<pre>
 const result: TokenAmount = fungible.amount(
   amount,
 )
-```
+</pre>
 
 ## method *fungible.isCustom*
 Whether this token is implemented by a smart contract.
-```typescript
+<pre>
 fungible.isCustom()
-```
+</pre>
 
 ## method *fungible.isFungible*
 
-```typescript
+<pre>
 const result: boolean = fungible.isFungible()
-```
+</pre>
 
 ## method *fungible.isNative*
 Whether this token is natively supported by the chain.
-```typescript
+<pre>
 fungible.isNative()
-```
+</pre>
 
 ## method *fungible.addZeros*
-```typescript
+<pre>
 const result: string = fungible.addZeros(
   n,
   z,
 )
-```
+</pre>
 
 # class *Native*
 The chain's natively implemented token (such as SCRT on Secret Network).
@@ -251,44 +251,44 @@ const native = new Native(
 <td></td></tr></tbody></table>
 
 ## method *native.amount*
-```typescript
+<pre>
 const result: TokenAmount = native.amount(
   amount,
 )
-```
+</pre>
 
 ## method *native.fee*
-```typescript
+<pre>
 const result: IFee = native.fee(
   amount,
 )
-```
+</pre>
 
 ## method *native.isCustom*
 
-```typescript
+<pre>
 const result: boolean = native.isCustom()
-```
+</pre>
 
 ## method *native.isFungible*
 
-```typescript
+<pre>
 const result: boolean = native.isFungible()
-```
+</pre>
 
 ## method *native.isNative*
 
-```typescript
+<pre>
 const result: boolean = native.isNative()
-```
+</pre>
 
 ## method *native.addZeros*
-```typescript
+<pre>
 const result: string = native.addZeros(
   n,
   z,
 )
-```
+</pre>
 
 # class *NonFungible*
 An abstract non-fungible token.
@@ -304,9 +304,9 @@ new NonFungible()
 
 ## method *nonFungible.isFungible*
 
-```typescript
+<pre>
 const result: boolean = nonFungible.isFungible()
-```
+</pre>
 
 # class *Pair*
 A pair of tokens.
@@ -364,7 +364,7 @@ new Token()
 
 ## method *token.isFungible*
 Whether this token is fungible.
-```typescript
+<pre>
 token.isFungible()
-```
+</pre>
 <!-- @hackbg/docs: end -->

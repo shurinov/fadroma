@@ -183,31 +183,31 @@ const compiledCode = new CompiledCode(
 
 ## method *compiledCode.computeHash*
 Compute the code hash if missing; throw if different.
-```typescript
+<pre>
 compiledCode.computeHash()
-```
+</pre>
 
 ## method *compiledCode.doFetch*
-```typescript
+<pre>
 const result: Uint8Array = await compiledCode.doFetch()
-```
+</pre>
 
 ## method *compiledCode.fetch*
-```typescript
+<pre>
 const result: Uint8Array = await compiledCode.fetch()
-```
+</pre>
 
 ## method *compiledCode.serialize*
-```typescript
+<pre>
 compiledCode.serialize()
-```
+</pre>
 
 ## method *compiledCode.toCodeHash*
-```typescript
+<pre>
 const result: string = compiledCode.toCodeHash(
   data: Uint8Array,
 )
-```
+</pre>
 
 # class *Compiler*
 ```typescript
@@ -233,22 +233,22 @@ binary and checksum are both present in wasm/ directory</td></tr>
 Compile a source.
 `@hackbg/fadroma` implements dockerized and non-dockerized
 variants using its `build.impl.mjs` script.
-```typescript
+<pre>
 const result: CompiledCode = await compiler.build(
   source,
   ...args,
 )
-```
+</pre>
 
 ## method *compiler.buildMany*
 Build multiple sources.
 Default implementation of buildMany is sequential.
 Compiler classes may override this to optimize.
-```typescript
+<pre>
 compiler.buildMany(
   inputs,
 )
-```
+</pre>
 
 # class *LocalCompiledCode*
 An object representing a given compiled binary on the local filesystem.
@@ -284,31 +284,31 @@ const localCompiledCode = new LocalCompiledCode(
 
 ## method *localCompiledCode.computeHash*
 Compute the code hash if missing; throw if different.
-```typescript
+<pre>
 localCompiledCode.computeHash()
-```
+</pre>
 
 ## method *localCompiledCode.doFetch*
-```typescript
+<pre>
 localCompiledCode.doFetch()
-```
+</pre>
 
 ## method *localCompiledCode.fetch*
-```typescript
+<pre>
 const result: Uint8Array = await localCompiledCode.fetch()
-```
+</pre>
 
 ## method *localCompiledCode.serialize*
-```typescript
+<pre>
 localCompiledCode.serialize()
-```
+</pre>
 
 ## method *localCompiledCode.toCodeHash*
-```typescript
+<pre>
 const result: string = localCompiledCode.toCodeHash(
   data: Uint8Array,
 )
-```
+</pre>
 
 # class *RustSourceCode*
 An object representing a given source code.
@@ -361,9 +361,9 @@ const rustSourceCode = new RustSourceCode(
 <td></td></tr></tbody></table>
 
 ## method *rustSourceCode.serialize*
-```typescript
+<pre>
 rustSourceCode.serialize()
-```
+</pre>
 
 # class *SourceCode*
 An object representing a given source code.
@@ -404,7 +404,7 @@ const sourceCode = new SourceCode(
 <td></td></tr></tbody></table>
 
 ## method *sourceCode.serialize*
-```typescript
+<pre>
 sourceCode.serialize()
-```
+</pre>
 <!-- @hackbg/docs: end -->

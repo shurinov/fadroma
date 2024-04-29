@@ -57,9 +57,9 @@ const identity = new Identity(
 <td><strong>string</strong>. Display name.</td></tr></tbody></table>
 
 ## method *identity.sign*
-```typescript
+<pre>
 const result: unknown = identity.sign(
   doc,
 )
-```
+</pre>
 <!-- @hackbg/docs: end -->

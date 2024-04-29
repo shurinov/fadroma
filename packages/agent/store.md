@@ -24,72 +24,72 @@ new DeployStore()
 
 ## method *deployStore.[iterator]*
 Returns an iterable of entries in the map.
-```typescript
+<pre>
 const result: IterableIterator<> = deployStore.[iterator]()
-```
+</pre>
 
 ## method *deployStore.clear*
-```typescript
+<pre>
 const result: void = deployStore.clear()
-```
+</pre>
 
 ## method *deployStore.delete*
 
-```typescript
+<pre>
 const result: boolean = deployStore.delete(
   key,
 )
-```
+</pre>
 
 ## method *deployStore.entries*
 Returns an iterable of key, value pairs for every entry in the map.
-```typescript
+<pre>
 const result: IterableIterator<> = deployStore.entries()
-```
+</pre>
 
 ## method *deployStore.forEach*
 Executes a provided function once per each key/value pair in the Map, in insertion order.
-```typescript
+<pre>
 const result: void = deployStore.forEach(
   callbackfn,
   thisArg,
 )
-```
+</pre>
 
 ## method *deployStore.get*
-```typescript
+<pre>
 const result: Partial<> = deployStore.get(
   name,
 )
-```
+</pre>
 
 ## method *deployStore.has*
 
-```typescript
+<pre>
 const result: boolean = deployStore.has(
   key,
 )
-```
+</pre>
 
 ## method *deployStore.keys*
 Returns an iterable of keys in the map
-```typescript
+<pre>
 const result: IterableIterator<string> = deployStore.keys()
-```
+</pre>
 
 ## method *deployStore.set*
-```typescript
+<pre>
 deployStore.set(
   name,
   state,
 )
-```
+</pre>
 
 ## method *deployStore.values*
 Returns an iterable of values in the map
-```typescript
+<pre>
 const result: IterableIterator<Partial> = deployStore.values()
-```
+</pre>
 
 # class *UploadStore*
 ```typescript
@@ -109,70 +109,70 @@ new UploadStore()
 
 ## method *uploadStore.[iterator]*
 Returns an iterable of entries in the map.
-```typescript
+<pre>
 const result: IterableIterator<> = uploadStore.[iterator]()
-```
+</pre>
 
 ## method *uploadStore.clear*
-```typescript
+<pre>
 const result: void = uploadStore.clear()
-```
+</pre>
 
 ## method *uploadStore.delete*
 
-```typescript
+<pre>
 const result: boolean = uploadStore.delete(
   key,
 )
-```
+</pre>
 
 ## method *uploadStore.entries*
 Returns an iterable of key, value pairs for every entry in the map.
-```typescript
+<pre>
 const result: IterableIterator<> = uploadStore.entries()
-```
+</pre>
 
 ## method *uploadStore.forEach*
 Executes a provided function once per each key/value pair in the Map, in insertion order.
-```typescript
+<pre>
 const result: void = uploadStore.forEach(
   callbackfn,
   thisArg,
 )
-```
+</pre>
 
 ## method *uploadStore.get*
-```typescript
+<pre>
 const result: UploadedCode = uploadStore.get(
   codeHash,
 )
-```
+</pre>
 
 ## method *uploadStore.has*
 
-```typescript
+<pre>
 const result: boolean = uploadStore.has(
   key,
 )
-```
+</pre>
 
 ## method *uploadStore.keys*
 Returns an iterable of keys in the map
-```typescript
+<pre>
 const result: IterableIterator<string> = uploadStore.keys()
-```
+</pre>
 
 ## method *uploadStore.set*
-```typescript
+<pre>
 uploadStore.set(
   codeHash,
   value: Partial<UploadedCode>,
 )
-```
+</pre>
 
 ## method *uploadStore.values*
 Returns an iterable of values in the map
-```typescript
+<pre>
 const result: IterableIterator<UploadedCode> = uploadStore.values()
-```
+</pre>
 <!-- @hackbg/docs: end -->

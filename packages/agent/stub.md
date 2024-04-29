@@ -52,65 +52,65 @@ const stubBackend = new StubBackend(
 <td><strong>string</strong>. </td></tr></tbody></table>
 
 ## method *stubBackend.connect*
-```typescript
+<pre>
 const result: Connection = await stubBackend.connect(
   parameter,
 )
-```
+</pre>
 
 ## method *stubBackend.execute*
-```typescript
+<pre>
 const result: unknown = stubBackend.execute(
   ...args,
 )
-```
+</pre>
 
 ## method *stubBackend.export*
-```typescript
+<pre>
 const result: unknown = stubBackend.export(
   ...args,
 )
-```
+</pre>
 
 ## method *stubBackend.getIdentity*
-```typescript
+<pre>
 const result: Identity = await stubBackend.getIdentity(
   name,
 )
-```
+</pre>
 
 ## method *stubBackend.import*
-```typescript
+<pre>
 const result: unknown = stubBackend.import(
   ...args,
 )
-```
+</pre>
 
 ## method *stubBackend.instantiate*
-```typescript
+<pre>
 stubBackend.instantiate(
   creator,
   codeId,
   options,
 )
-```
+</pre>
 
 ## method *stubBackend.pause*
-```typescript
+<pre>
 const result: StubBackend = await stubBackend.pause()
-```
+</pre>
 
 ## method *stubBackend.start*
-```typescript
+<pre>
 const result: StubBackend = await stubBackend.start()
-```
+</pre>
 
 ## method *stubBackend.upload*
-```typescript
+<pre>
 stubBackend.upload(
   codeData: Uint8Array,
 )
-```
+</pre>
 
 # class *StubBatch*
 Builder object for batched transactions.
@@ -134,33 +134,33 @@ const stubBatch = new StubBatch(
 
 ## method *stubBatch.execute*
 Add an execute message to the batch.
-```typescript
+<pre>
 const result: StubBatch = stubBatch.execute(
   ...args,
 )
-```
+</pre>
 
 ## method *stubBatch.instantiate*
 Add an instantiate message to the batch.
-```typescript
+<pre>
 const result: StubBatch = stubBatch.instantiate(
   ...args,
 )
-```
+</pre>
 
 ## method *stubBatch.submit*
 Submit the batch.
-```typescript
+<pre>
 stubBatch.submit()
-```
+</pre>
 
 ## method *stubBatch.upload*
 Add an upload message to the batch.
-```typescript
+<pre>
 const result: StubBatch = stubBatch.upload(
   ...args,
 )
-```
+</pre>
 
 # class *StubBlock*
 The building block of a blockchain is, well, the block.
@@ -185,14 +185,14 @@ const stubBlock = new StubBlock(
 <td><strong>number</strong>. Monotonically incrementing ID of block.</td></tr></tbody></table>
 
 ## method *stubBlock.getTransactionsById*
-```typescript
+<pre>
 const result: Record<string, Transaction> = await stubBlock.getTransactionsById()
-```
+</pre>
 
 ## method *stubBlock.getTransactionsInOrder*
-```typescript
+<pre>
 stubBlock.getTransactionsInOrder()
-```
+</pre>
 
 # class *StubCompiler*
 A compiler that does nothing. Used for testing.
@@ -220,22 +220,22 @@ binary and checksum are both present in wasm/ directory</td></tr>
 Compile a source.
 `@hackbg/fadroma` implements dockerized and non-dockerized
 variants using its `build.impl.mjs` script.
-```typescript
+<pre>
 const result: CompiledCode = await stubCompiler.build(
   source,
   ...args,
 )
-```
+</pre>
 
 ## method *stubCompiler.buildMany*
 Build multiple sources.
 Default implementation of buildMany is sequential.
 Compiler classes may override this to optimize.
-```typescript
+<pre>
 stubCompiler.buildMany(
   inputs,
 )
-```
+</pre>
 
 # class *StubConnection*
 This is the base class for a connection to a blockchain via a given endpoint.
@@ -317,263 +317,263 @@ this property contains the URL to which requests are sent.</td></tr>
 
 ## method *stubConnection.batch*
 Construct a transaction batch.
-```typescript
+<pre>
 const result: Batch<StubConnection> = stubConnection.batch()
-```
+</pre>
 
 ## method *stubConnection.doExecute*
-```typescript
+<pre>
 const result: unknown = stubConnection.doExecute(
   contract,
   message: Message,
   options,
 )
-```
+</pre>
 
 ## method *stubConnection.doGetBalance*
-```typescript
+<pre>
 const result: string = stubConnection.doGetBalance(
   token,
   address,
 )
-```
+</pre>
 
 ## method *stubConnection.doGetBlockInfo*
-```typescript
+<pre>
 const result: StubBlock = await stubConnection.doGetBlockInfo()
-```
+</pre>
 
 ## method *stubConnection.doGetCodeHashOfAddress*
-```typescript
+<pre>
 const result: string = stubConnection.doGetCodeHashOfAddress(
   address,
 )
-```
+</pre>
 
 ## method *stubConnection.doGetCodeHashOfCodeId*
-```typescript
+<pre>
 const result: string = stubConnection.doGetCodeHashOfCodeId(
   id,
 )
-```
+</pre>
 
 ## method *stubConnection.doGetCodeId*
-```typescript
+<pre>
 const result: string = stubConnection.doGetCodeId(
   address,
 )
-```
+</pre>
 
 ## method *stubConnection.doGetCodes*
-```typescript
+<pre>
 stubConnection.doGetCodes()
-```
+</pre>
 
 ## method *stubConnection.doGetContractsByCodeId*
-```typescript
+<pre>
 stubConnection.doGetContractsByCodeId(
   id,
 )
-```
+</pre>
 
 ## method *stubConnection.doGetHeight*
-```typescript
+<pre>
 const result: number = stubConnection.doGetHeight()
-```
+</pre>
 
 ## method *stubConnection.doInstantiate*
-```typescript
+<pre>
 stubConnection.doInstantiate(
   codeId,
   options: Partial<ContractInstance>,
 )
-```
+</pre>
 
 ## method *stubConnection.doQuery*
-```typescript
+<pre>
 const result: Q = await stubConnection.doQuery(
   contract,
   message: Message,
 )
-```
+</pre>
 
 ## method *stubConnection.doSend*
-```typescript
+<pre>
 const result: void = stubConnection.doSend(
   recipient,
   sums,
   opts,
 )
-```
+</pre>
 
 ## method *stubConnection.doSendMany*
-```typescript
+<pre>
 const result: void = stubConnection.doSendMany(
   outputs,
   opts,
 )
-```
+</pre>
 
 ## method *stubConnection.doUpload*
-```typescript
+<pre>
 const result: UploadedCode = await stubConnection.doUpload(
   codeData: Uint8Array,
 )
-```
+</pre>
 
 ## method *stubConnection.execute*
 Call a given program's transaction method.
-```typescript
+<pre>
 const result: unknown = stubConnection.execute(
   contract,
   message: Message,
   options,
 )
-```
+</pre>
 
 ## method *stubConnection.getBalanceIn*
 Get the balance in a given native token, of
 either this connection's identity's address,
 or of another given address.
-```typescript
+<pre>
 const result: unknown = stubConnection.getBalanceIn(
   token,
   address,
 )
-```
+</pre>
 
 ## method *stubConnection.getBalanceOf*
 Get the balance in a native token of a given address,
 either in this connection's gas token,
 or in another given token.
-```typescript
+<pre>
 const result: unknown = stubConnection.getBalanceOf(
   address,
   token,
 )
-```
+</pre>
 
 ## method *stubConnection.getBlock*
 Get info about a specific block.
 If no height is passed, gets info about the latest block.
-```typescript
+<pre>
 const result: StubBlock = await stubConnection.getBlock(
   height,
 )
-```
+</pre>
 
 ## method *stubConnection.getCodeHashOfAddress*
 Get the code hash of a given address.
-```typescript
+<pre>
 const result: string = stubConnection.getCodeHashOfAddress(
   contract,
 )
-```
+</pre>
 
 ## method *stubConnection.getCodeHashOfCodeId*
 Get the code hash of a given code id.
-```typescript
+<pre>
 const result: string = stubConnection.getCodeHashOfCodeId(
   contract,
 )
-```
+</pre>
 
 ## method *stubConnection.getCodeId*
 Get the code id of a given address.
-```typescript
+<pre>
 const result: string = stubConnection.getCodeId(
   contract,
 )
-```
+</pre>
 
 ## method *stubConnection.getCodes*
-```typescript
+<pre>
 const result: Record<string, UploadedCode> = await stubConnection.getCodes()
-```
+</pre>
 
 ## method *stubConnection.getContract*
 Get a client handle for a specific smart contract, authenticated as as this agent.
-```typescript
+<pre>
 const result: Contract = stubConnection.getContract(
   options,
 )
-```
+</pre>
 
 ## method *stubConnection.getContractsByCodeId*
 Get client handles for all contracts that match a code ID
-```typescript
+<pre>
 const result: Record<string, Contract> = await stubConnection.getContractsByCodeId(
   id,
 )
-```
-```typescript
+</pre>
+<pre>
 const result: Record<string, InstanceType> = await stubConnection.getContractsByCodeId(
   id,
   $C: C,
 )
-```
+</pre>
 
 ## method *stubConnection.getContractsByCodeIds*
 Get client handles for all contracts that match multiple code IDs
-```typescript
+<pre>
 const result: Record<string, Record> = await stubConnection.getContractsByCodeIds(
   ids: Iterable<string>,
 )
-```
-```typescript
+</pre>
+<pre>
 const result: Record<string, Record> = await stubConnection.getContractsByCodeIds(
   ids: Iterable<string>,
   $C: C,
 )
-```
-```typescript
+</pre>
+<pre>
 const result: Record<string, Record> = await stubConnection.getContractsByCodeIds(
   ids: Record<string, C>,
 )
-```
+</pre>
 
 ## method *stubConnection.instantiate*
 Instantiate a new program from a code id, label and init message.
-```typescript
+<pre>
 stubConnection.instantiate(
   contract,
   options: Partial<ContractInstance>,
 )
-```
+</pre>
 
 ## method *stubConnection.query*
 Query a contract.
-```typescript
+<pre>
 const result: Q = await stubConnection.query(
   contract,
   message: Message,
 )
-```
+</pre>
 
 ## method *stubConnection.send*
 Send native tokens to 1 recipient.
-```typescript
+<pre>
 const result: unknown = stubConnection.send(
   recipient,
   amounts,
   options,
 )
-```
+</pre>
 
 ## method *stubConnection.upload*
 Upload a contract's code, generating a new code id/hash pair.
-```typescript
+<pre>
 stubConnection.upload(
   code,
   options,
 )
-```
+</pre>
 
 ## method *stubConnection.gas*
 Native token of chain.
-```typescript
+<pre>
 const result: TokenAmount = stubConnection.gas(
   amount,
 )
-```
+</pre>
 <!-- @hackbg/docs: end -->
