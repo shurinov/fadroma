@@ -204,7 +204,7 @@ export abstract class Connection extends Endpoint {
     })
   }
 
-  abstract doGetHeight (): Promise<number>
+  protected abstract doGetHeight (): Promise<number>
 
   /** Get the current block height. */
   get height (): Promise<number> {
@@ -212,16 +212,16 @@ export abstract class Connection extends Endpoint {
     return this.doGetHeight()
   }
 
-  abstract doGetBlockInfo (height?: number): Promise<Block>
+  protected abstract doGetBlockInfo (height?: number): Promise<Block>
 
   /** Get info about a specific block.
     * If no height is passed, gets info about the latest block. */
-  getBlock (height?: number): ReturnType<this["doGetBlockInfo"]> {
+  getBlock (height?: number): Promise<Block> {
     this.log.debug(height ? `Querying block ${height}` : `Querying latest block`)
-    return this.doGetBlockInfo(height) as ReturnType<this["doGetBlockInfo"]>
+    return this.doGetBlockInfo(height) as Promise<Block>
   }
 
-  get block (): ReturnType<this["getBlock"]> {
+  get block (): Promise<Block> {
     return this.getBlock()
   }
 
@@ -237,7 +237,7 @@ export abstract class Connection extends Endpoint {
     )
   }
 
-  abstract doGetCodeId (
+  protected abstract doGetCodeId (
     contract: Address
   ): Promise<Deploy.CodeId>
 
@@ -253,7 +253,7 @@ export abstract class Connection extends Endpoint {
     )
   }
 
-  abstract doGetCodeHashOfCodeId (
+  protected abstract doGetCodeHashOfCodeId (
     codeId: Deploy.CodeId
   ): Promise<Code.CodeHash>
 
@@ -269,7 +269,7 @@ export abstract class Connection extends Endpoint {
     )
   }
 
-  abstract doGetCodeHashOfAddress (
+  protected abstract doGetCodeHashOfAddress (
     contract: Address
   ): Promise<Code.CodeHash>
 
@@ -293,7 +293,8 @@ export abstract class Connection extends Endpoint {
     return this.doGetCodes()
   }
 
-  abstract doGetCodes (): Promise<Record<Deploy.CodeId, Deploy.UploadedCode>>
+  protected abstract doGetCodes ():
+    Promise<Record<Deploy.CodeId, Deploy.UploadedCode>>
 
   /** Get client handles for all contracts that match a code ID */
   getContractsByCodeId (
@@ -313,7 +314,7 @@ export abstract class Connection extends Endpoint {
     })
   }
 
-  abstract doGetContractsByCodeId (
+  protected abstract doGetContractsByCodeId (
     id: Deploy.CodeId
   ): Promise<Iterable<{ address: Address }>>
 
@@ -403,7 +404,7 @@ export abstract class Connection extends Endpoint {
     )
   }
 
-  abstract doGetBalance (
+  protected abstract doGetBalance (
     token?: string, address?: string
   ): Promise<string|number|bigint>
 
@@ -419,7 +420,7 @@ export abstract class Connection extends Endpoint {
     return result as Q
   }
 
-  abstract doQuery (
+  protected abstract doQuery (
     contract: { address: Address }, message: Message
   ): Promise<unknown>
 
@@ -447,11 +448,11 @@ export abstract class Connection extends Endpoint {
     )
   }
 
-  abstract doSend (
+  protected abstract doSend (
     recipient: Address, amounts: Token.ICoin[], options?: Parameters<Connection["send"]>[2]
   ): Promise<unknown>
 
-  abstract doSendMany (
+  protected abstract doSendMany (
     outputs: [Address, Token.ICoin[]][], options?: unknown
   ): Promise<unknown>
 
@@ -464,7 +465,10 @@ export abstract class Connection extends Endpoint {
       uploadFee?:   Token.ICoin[]|'auto',
       uploadMemo?:  string
     } = {},
-  ): Promise<Deploy.UploadedCode & { chainId: ChainId, codeId: Deploy.CodeId }> {
+  ): Promise<Deploy.UploadedCode & {
+    chainId: ChainId,
+    codeId:  Deploy.CodeId
+  }> {
 
     let template: Uint8Array
     if (code instanceof Uint8Array) {
@@ -500,9 +504,12 @@ export abstract class Connection extends Endpoint {
 
   }
 
-  abstract doUpload (
+  protected abstract doUpload (
     data: Uint8Array, options: Parameters<Connection["upload"]>[1]
-  ): Promise<Partial<Deploy.UploadedCode>>
+  ): Promise<Partial<Deploy.UploadedCode & {
+    chainId: ChainId,
+    codeId:  Deploy.CodeId
+  }>>
 
   /** Instantiate a new program from a code id, label and init message.
     * @example
@@ -549,9 +556,9 @@ export abstract class Connection extends Endpoint {
     }
   }
 
-  abstract doInstantiate (
+  protected abstract doInstantiate (
     codeId: Deploy.CodeId, options: Partial<Deploy.ContractInstance>
-  ): Promise<Partial<Deploy.ContractInstance>>
+  ): Promise<Deploy.ContractInstance & { address: Address, }>
 
   /** Call a given program's transaction method. */
   async execute (
@@ -576,7 +583,7 @@ export abstract class Connection extends Endpoint {
     )
   }
 
-  abstract doExecute (
+  protected abstract doExecute (
     contract: { address: Address }, message: Message, options: Parameters<Connection["execute"]>[2]
   ): Promise<unknown>
 
