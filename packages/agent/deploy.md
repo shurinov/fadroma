@@ -322,7 +322,7 @@ const contractCode = new ContractCode(
 <strong>uploader</strong></td>
 <td><strong>undefined</strong>. </td></tr></tbody></table>
 
-## method [*contractCode.compile*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/deploy.ts#L36)
+## method [*contractCode.compile*](https://github.com/hackbg/fadroma/blob/dcce4232c7f1613b8a8273ce114e07b545f3a959/packages/agent/deploy.ts#L36)
 Compile this contract, unless a valid binary is present and a rebuild is not requested.
 <pre>
 contractCode.compile(
@@ -330,7 +330,7 @@ contractCode.compile(
 )
 </pre>
 
-## method [*contractCode.upload*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/deploy.ts#L68)
+## method [*contractCode.upload*](https://github.com/hackbg/fadroma/blob/dcce4232c7f1613b8a8273ce114e07b545f3a959/packages/agent/deploy.ts#L68)
 Upload this contract, unless a valid upload is present and a rebuild is not requested.
 <pre>
 contractCode.upload(
@@ -417,7 +417,7 @@ const contractInstance = new ContractInstance(
 <strong>uploader</strong></td>
 <td><strong>undefined</strong>. </td></tr></tbody></table>
 
-## method [*contractInstance.compile*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/deploy.ts#L36)
+## method [*contractInstance.compile*](https://github.com/hackbg/fadroma/blob/dcce4232c7f1613b8a8273ce114e07b545f3a959/packages/agent/deploy.ts#L36)
 Compile this contract, unless a valid binary is present and a rebuild is not requested.
 <pre>
 contractInstance.compile(
@@ -425,7 +425,7 @@ contractInstance.compile(
 )
 </pre>
 
-## method [*contractInstance.connect*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/deploy.ts#L274)
+## method [*contractInstance.connect*](https://github.com/hackbg/fadroma/blob/dcce4232c7f1613b8a8273ce114e07b545f3a959/packages/agent/deploy.ts#L274)
 Returns a client to this contract instance.
 <pre>
 <strong>const</strong> result: <em><a href="#">Contract</a></em> = contractInstance.connect(
@@ -433,24 +433,24 @@ Returns a client to this contract instance.
 )
 </pre>
 
-## method [*contractInstance.deploy*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/deploy.ts#L235)
+## method [*contractInstance.deploy*](https://github.com/hackbg/fadroma/blob/dcce4232c7f1613b8a8273ce114e07b545f3a959/packages/agent/deploy.ts#L235)
 <pre>
 contractInstance.deploy(
   __namedParameters: <em></em>,
 )
 </pre>
 
-## method [*contractInstance.isValid*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/deploy.ts#L282)
+## method [*contractInstance.isValid*](https://github.com/hackbg/fadroma/blob/dcce4232c7f1613b8a8273ce114e07b545f3a959/packages/agent/deploy.ts#L282)
 <pre>
 contractInstance.isValid()
 </pre>
 
-## method [*contractInstance.serialize*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/deploy.ts#L265)
+## method [*contractInstance.serialize*](https://github.com/hackbg/fadroma/blob/dcce4232c7f1613b8a8273ce114e07b545f3a959/packages/agent/deploy.ts#L265)
 <pre>
 contractInstance.serialize()
 </pre>
 
-## method [*contractInstance.upload*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/deploy.ts#L68)
+## method [*contractInstance.upload*](https://github.com/hackbg/fadroma/blob/dcce4232c7f1613b8a8273ce114e07b545f3a959/packages/agent/deploy.ts#L68)
 Upload this contract, unless a valid upload is present and a rebuild is not requested.
 <pre>
 contractInstance.upload(
@@ -510,7 +510,7 @@ const contractTemplate = new ContractTemplate(
 <strong>uploader</strong></td>
 <td><strong>undefined</strong>. </td></tr></tbody></table>
 
-## method [*contractTemplate.compile*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/deploy.ts#L36)
+## method [*contractTemplate.compile*](https://github.com/hackbg/fadroma/blob/dcce4232c7f1613b8a8273ce114e07b545f3a959/packages/agent/deploy.ts#L36)
 Compile this contract, unless a valid binary is present and a rebuild is not requested.
 <pre>
 contractTemplate.compile(
@@ -518,7 +518,7 @@ contractTemplate.compile(
 )
 </pre>
 
-## method [*contractTemplate.contract*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/deploy.ts#L187)
+## method [*contractTemplate.contract*](https://github.com/hackbg/fadroma/blob/dcce4232c7f1613b8a8273ce114e07b545f3a959/packages/agent/deploy.ts#L187)
 Create a new instance of this contract.
 <pre>
 <strong>const</strong> result: <em><a href="#">ContractInstance</a></em> = contractTemplate.contract(
@@ -527,7 +527,7 @@ Create a new instance of this contract.
 )
 </pre>
 
-## method [*contractTemplate.contracts*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/deploy.ts#L193)
+## method [*contractTemplate.contracts*](https://github.com/hackbg/fadroma/blob/dcce4232c7f1613b8a8273ce114e07b545f3a959/packages/agent/deploy.ts#L193)
 Create multiple instances of this contract.
 <pre>
 <strong>const</strong> result: <em>Record&lt;string, ContractInstance&gt;</em> = contractTemplate.contracts(
@@ -535,12 +535,12 @@ Create multiple instances of this contract.
 )
 </pre>
 
-## method [*contractTemplate.serialize*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/deploy.ts#L178)
+## method [*contractTemplate.serialize*](https://github.com/hackbg/fadroma/blob/dcce4232c7f1613b8a8273ce114e07b545f3a959/packages/agent/deploy.ts#L178)
 <pre>
 contractTemplate.serialize()
 </pre>
 
-## method [*contractTemplate.upload*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/deploy.ts#L68)
+## method [*contractTemplate.upload*](https://github.com/hackbg/fadroma/blob/dcce4232c7f1613b8a8273ce114e07b545f3a959/packages/agent/deploy.ts#L68)
 Upload this contract, unless a valid upload is present and a rebuild is not requested.
 <pre>
 contractTemplate.upload(
@@ -577,21 +577,21 @@ Returns an iterable of entries in the map.
 <strong>const</strong> result: <em>IterableIterator&lt;&gt;</em> = deployment.[iterator]()
 </pre>
 
-## method [*deployment.addContract*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/deploy.ts#L374)
+## method [*deployment.addContract*](https://github.com/hackbg/fadroma/blob/dcce4232c7f1613b8a8273ce114e07b545f3a959/packages/agent/deploy.ts#L374)
 <pre>
 <strong>const</strong> result: <em><a href="#">Deployment</a></em> = deployment.addContract(
   ...args: <em></em>,
 )
 </pre>
 
-## method [*deployment.addContracts*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/deploy.ts#L382)
+## method [*deployment.addContracts*](https://github.com/hackbg/fadroma/blob/dcce4232c7f1613b8a8273ce114e07b545f3a959/packages/agent/deploy.ts#L382)
 <pre>
 <strong>const</strong> result: <em><a href="#">Deployment</a></em> = deployment.addContracts(
   ...args: <em></em>,
 )
 </pre>
 
-## method [*deployment.build*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/deploy.ts#L390)
+## method [*deployment.build*](https://github.com/hackbg/fadroma/blob/dcce4232c7f1613b8a8273ce114e07b545f3a959/packages/agent/deploy.ts#L390)
 <pre>
 <strong>const</strong> result: <em>Record&lt;string, &gt;</em> = <strong>await</strong> deployment.build(
   __namedParameters: <em></em>,
@@ -603,7 +603,7 @@ Returns an iterable of entries in the map.
 <strong>const</strong> result: <em>void</em> = deployment.clear()
 </pre>
 
-## method [*deployment.contract*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/deploy.ts#L352)
+## method [*deployment.contract*](https://github.com/hackbg/fadroma/blob/dcce4232c7f1613b8a8273ce114e07b545f3a959/packages/agent/deploy.ts#L352)
 Define a contract that will be automatically compiled, uploaded,
 and instantiated as part of this deployment.
 <pre>
@@ -621,7 +621,7 @@ and instantiated as part of this deployment.
 )
 </pre>
 
-## method [*deployment.deploy*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/deploy.ts#L444)
+## method [*deployment.deploy*](https://github.com/hackbg/fadroma/blob/dcce4232c7f1613b8a8273ce114e07b545f3a959/packages/agent/deploy.ts#L444)
 <pre>
 <strong>const</strong> result: <em>Record&lt;string, &gt;</em> = <strong>await</strong> deployment.deploy(
   __namedParameters: <em></em>,
@@ -665,12 +665,12 @@ Returns an iterable of keys in the map
 <strong>const</strong> result: <em>IterableIterator&lt;string&gt;</em> = deployment.keys()
 </pre>
 
-## method [*deployment.serialize*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/deploy.ts#L310)
+## method [*deployment.serialize*](https://github.com/hackbg/fadroma/blob/dcce4232c7f1613b8a8273ce114e07b545f3a959/packages/agent/deploy.ts#L310)
 <pre>
 deployment.serialize()
 </pre>
 
-## method [*deployment.set*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/deploy.ts#L318)
+## method [*deployment.set*](https://github.com/hackbg/fadroma/blob/dcce4232c7f1613b8a8273ce114e07b545f3a959/packages/agent/deploy.ts#L318)
 <pre>
 deployment.set(
   name: <em>string</em>,
@@ -678,7 +678,7 @@ deployment.set(
 )
 </pre>
 
-## method [*deployment.template*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/deploy.ts#L329)
+## method [*deployment.template*](https://github.com/hackbg/fadroma/blob/dcce4232c7f1613b8a8273ce114e07b545f3a959/packages/agent/deploy.ts#L329)
 Define a template, representing code that can be compiled
 and uploaded, but will not be automatically instantiated.
 This can then be used to define multiple instances of
@@ -690,7 +690,7 @@ the same code.
 )
 </pre>
 
-## method [*deployment.upload*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/deploy.ts#L427)
+## method [*deployment.upload*](https://github.com/hackbg/fadroma/blob/dcce4232c7f1613b8a8273ce114e07b545f3a959/packages/agent/deploy.ts#L427)
 <pre>
 <strong>const</strong> result: <em>Record&lt;string, &gt;</em> = <strong>await</strong> deployment.upload(
   __namedParameters: <em></em>,
@@ -703,7 +703,7 @@ Returns an iterable of values in the map
 <strong>const</strong> result: <em>IterableIterator&lt;DeploymentUnit&gt;</em> = deployment.values()
 </pre>
 
-## method [*deployment.fromSnapshot*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/deploy.ts#L295)
+## method [*deployment.fromSnapshot*](https://github.com/hackbg/fadroma/blob/dcce4232c7f1613b8a8273ce114e07b545f3a959/packages/agent/deploy.ts#L295)
 <pre>
 <strong>const</strong> result: <em><a href="#">Deployment</a></em> = deployment.fromSnapshot(
   __namedParameters: <em>Partial&lt;&gt;</em>,
@@ -759,7 +759,7 @@ const deploymentUnit = new DeploymentUnit(
 <strong>uploader</strong></td>
 <td><strong>undefined</strong>. </td></tr></tbody></table>
 
-## method [*deploymentUnit.compile*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/deploy.ts#L36)
+## method [*deploymentUnit.compile*](https://github.com/hackbg/fadroma/blob/dcce4232c7f1613b8a8273ce114e07b545f3a959/packages/agent/deploy.ts#L36)
 Compile this contract, unless a valid binary is present and a rebuild is not requested.
 <pre>
 deploymentUnit.compile(
@@ -767,12 +767,12 @@ deploymentUnit.compile(
 )
 </pre>
 
-## method [*deploymentUnit.serialize*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/deploy.ts#L178)
+## method [*deploymentUnit.serialize*](https://github.com/hackbg/fadroma/blob/dcce4232c7f1613b8a8273ce114e07b545f3a959/packages/agent/deploy.ts#L178)
 <pre>
 deploymentUnit.serialize()
 </pre>
 
-## method [*deploymentUnit.upload*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/deploy.ts#L68)
+## method [*deploymentUnit.upload*](https://github.com/hackbg/fadroma/blob/dcce4232c7f1613b8a8273ce114e07b545f3a959/packages/agent/deploy.ts#L68)
 Upload this contract, unless a valid upload is present and a rebuild is not requested.
 <pre>
 deploymentUnit.upload(
@@ -815,7 +815,7 @@ const uploadedCode = new UploadedCode(
 <strong>canInstantiateInfo</strong></td>
 <td></td></tr></tbody></table>
 
-## method [*uploadedCode.serialize*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/deploy.ts#L124)
+## method [*uploadedCode.serialize*](https://github.com/hackbg/fadroma/blob/dcce4232c7f1613b8a8273ce114e07b545f3a959/packages/agent/deploy.ts#L124)
 <pre>
 uploadedCode.serialize()
 </pre>

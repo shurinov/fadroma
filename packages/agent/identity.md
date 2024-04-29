@@ -56,7 +56,7 @@ const identity = new Identity(
 <strong>name</strong></td>
 <td><strong>string</strong>. Display name.</td></tr></tbody></table>
 
-## method [*identity.sign*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/identity.ts#L18)
+## method [*identity.sign*](https://github.com/hackbg/fadroma/blob/dcce4232c7f1613b8a8273ce114e07b545f3a959/packages/agent/identity.ts#L18)
 <pre>
 <strong>const</strong> result: <em>unknown</em> = identity.sign(
   doc: <em>any</em>,

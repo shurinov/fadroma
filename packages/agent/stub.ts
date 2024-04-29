@@ -36,51 +36,51 @@ export class StubConnection extends Connection {
   batch (): Batch<this> {
     return new StubBatch({ connection: this }) as unknown as Batch<this>
   }
-  doGetHeight () {
+  protected doGetHeight () {
     return this.doGetBlockInfo().then(({height})=>height)
   }
-  doGetBlockInfo () {
+  protected doGetBlockInfo () {
     return Promise.resolve(new StubBlock({ height: + new Date() }))
   }
-  doGetCodes () {
+  protected doGetCodes () {
     return Promise.resolve(Object.fromEntries(
       [...this.backend.uploads.entries()].map(
         ([key, val])=>[key, new UploadedCode(val)]
       )
     ))
   }
-  doGetBalance (token?: string, address?: string): Promise<string> {
+  protected doGetBalance (token?: string, address?: string): Promise<string> {
     token ??= this.defaultDenom
     address ??= this.address
     const balance = (this.backend.balances.get(address!)||{})[token] ?? 0
     return Promise.resolve(String(balance))
   }
-  async doGetCodeId (address: Address): Promise<CodeId> {
+  protected async doGetCodeId (address: Address): Promise<CodeId> {
     const contract = this.backend.instances.get(address)
     if (!contract) {
       throw new Error(`unknown contract ${address}`)
     }
     return contract.codeId
   }
-  doGetContractsByCodeId (id: CodeId) {
+  protected doGetContractsByCodeId (id: CodeId) {
     return Promise.resolve([...this.backend.uploads.get(id)!.instances]
       .map(address=>({address})))
   }
-  doGetCodeHashOfAddress (address: Address): Promise<CodeHash> {
+  protected doGetCodeHashOfAddress (address: Address): Promise<CodeHash> {
     return this.getCodeId(address)
       .then(id=>this.getCodeHashOfCodeId(id))
   }
-  doGetCodeHashOfCodeId (id: CodeId): Promise<CodeHash> {
+  protected doGetCodeHashOfCodeId (id: CodeId): Promise<CodeHash> {
     const code = this.backend.uploads.get(id)
     if (!code) {
       throw new Error(`unknown code ${id}`)
     }
     return Promise.resolve(code.codeHash)
   }
-  doQuery <Q> (contract: { address: Address }, message: Message): Promise<Q> {
+  protected doQuery <Q> (contract: { address: Address }, message: Message): Promise<Q> {
     return Promise.resolve({} as Q)
   }
-  doSend (recipient: Address, sums: Token.ICoin[], opts?: never): Promise<void> {
+  protected doSend (recipient: Address, sums: Token.ICoin[], opts?: never): Promise<void> {
     if (!this.address) {
       throw new Error('not authenticated')
     }
@@ -107,13 +107,13 @@ export class StubConnection extends Connection {
     this.backend.balances.set(recipient, recipientBalances)
     return Promise.resolve()
   }
-  doSendMany (outputs: [Address, Token.ICoin[]][], opts?: never): Promise<void> {
+  protected doSendMany (outputs: [Address, Token.ICoin[]][], opts?: never): Promise<void> {
     return Promise.resolve()
   }
-  async doUpload (codeData: Uint8Array): Promise<UploadedCode> {
+  protected async doUpload (codeData: Uint8Array): Promise<UploadedCode> {
     return new UploadedCode(await this.backend.upload(codeData))
   }
-  async doInstantiate (
+  protected async doInstantiate (
     codeId: CodeId, options: Parameters<Connection["doInstantiate"]>[1]
   ): Promise<ContractInstance & { address: Address }> {
     return new ContractInstance(await this.backend.instantiate(
@@ -122,7 +122,7 @@ export class StubConnection extends Connection {
       address: Address
     }
   }
-  doExecute (
+  protected doExecute (
     contract: { address: Address, codeHash: CodeHash },
     message:  Message,
     options?: Parameters<Connection["doExecute"]>[2]
