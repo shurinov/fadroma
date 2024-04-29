@@ -75,7 +75,7 @@ const batch = new Batch(
 Add an execute message to the batch.
 <pre>
 batch.execute(
-  ...args: <em>Parameters<></em>,
+  ...args: <em>Parameters&lt;&gt;</em>,
 )
 </pre>
 
@@ -83,7 +83,7 @@ batch.execute(
 Add an instantiate message to the batch.
 <pre>
 batch.instantiate(
-  ...args: <em>Parameters<></em>,
+  ...args: <em>Parameters&lt;&gt;</em>,
 )
 </pre>
 
@@ -99,7 +99,7 @@ Submit the batch.
 Add an upload message to the batch.
 <pre>
 batch.upload(
-  ...args: <em>Parameters<></em>,
+  ...args: <em>Parameters&lt;&gt;</em>,
 )
 </pre>
 

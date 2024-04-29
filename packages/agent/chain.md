@@ -72,7 +72,7 @@ const block = new Block(
 
 ## method *block.getTransactionsById*
 <pre>
-<strong>const</strong> result: <em><a href="#">Record<string, Transaction></a></em> = <strong>await</strong> block.getTransactionsById()
+<strong>const</strong> result: <em><a href="#">Record&lt;string, Transaction&gt;</a></em> = <strong>await</strong> block.getTransactionsById()
 </pre>
 
 ## method *block.getTransactionsInOrder*
@@ -158,7 +158,7 @@ this property contains the URL to which requests are sent.</td></tr>
 ## method *connection.batch*
 Construct a transaction batch.
 <pre>
-<strong>const</strong> result: <em><a href="#">Batch<Connection></a></em> = connection.batch()
+<strong>const</strong> result: <em><a href="#">Batch&lt;Connection&gt;</a></em> = connection.batch()
 </pre>
 
 ## method *connection.doExecute*
@@ -208,12 +208,12 @@ connection.doGetBalance(
 
 ## method *connection.doGetCodes*
 <pre>
-<strong>const</strong> result: <em><a href="#">Record<string, UploadedCode></a></em> = <strong>await</strong> connection.doGetCodes()
+<strong>const</strong> result: <em><a href="#">Record&lt;string, UploadedCode&gt;</a></em> = <strong>await</strong> connection.doGetCodes()
 </pre>
 
 ## method *connection.doGetContractsByCodeId*
 <pre>
-<strong>const</strong> result: <em><a href="#">Iterable<></a></em> = <strong>await</strong> connection.doGetContractsByCodeId(
+<strong>const</strong> result: <em><a href="#">Iterable&lt;&gt;</a></em> = <strong>await</strong> connection.doGetContractsByCodeId(
   id,
 )
 </pre>
@@ -225,9 +225,9 @@ connection.doGetBalance(
 
 ## method *connection.doInstantiate*
 <pre>
-<strong>const</strong> result: <em><a href="#">Partial<ContractInstance></a></em> = <strong>await</strong> connection.doInstantiate(
+<strong>const</strong> result: <em><a href="#">Partial&lt;ContractInstance&gt;</a></em> = <strong>await</strong> connection.doInstantiate(
   codeId,
-  options: <em>Partial<ContractInstance></em>,
+  options: <em>Partial&lt;ContractInstance&gt;</em>,
 )
 </pre>
 
@@ -258,7 +258,7 @@ connection.doGetBalance(
 
 ## method *connection.doUpload*
 <pre>
-<strong>const</strong> result: <em><a href="#">Partial<UploadedCode></a></em> = <strong>await</strong> connection.doUpload(
+<strong>const</strong> result: <em><a href="#">Partial&lt;UploadedCode&gt;</a></em> = <strong>await</strong> connection.doUpload(
   data: <em>Uint8Array</em>,
   options,
 )
@@ -331,7 +331,7 @@ Get the code id of a given address.
 
 ## method *connection.getCodes*
 <pre>
-<strong>const</strong> result: <em><a href="#">Record<string, UploadedCode></a></em> = <strong>await</strong> connection.getCodes()
+<strong>const</strong> result: <em><a href="#">Record&lt;string, UploadedCode&gt;</a></em> = <strong>await</strong> connection.getCodes()
 </pre>
 
 ## method *connection.getContract*
@@ -345,12 +345,12 @@ Get a client handle for a specific smart contract, authenticated as as this agen
 ## method *connection.getContractsByCodeId*
 Get client handles for all contracts that match a code ID
 <pre>
-<strong>const</strong> result: <em><a href="#">Record<string, Contract></a></em> = <strong>await</strong> connection.getContractsByCodeId(
+<strong>const</strong> result: <em><a href="#">Record&lt;string, Contract&gt;</a></em> = <strong>await</strong> connection.getContractsByCodeId(
   id,
 )
 </pre>
 <pre>
-<strong>const</strong> result: <em><a href="#">Record<string, InstanceType></a></em> = <strong>await</strong> connection.getContractsByCodeId(
+<strong>const</strong> result: <em><a href="#">Record&lt;string, InstanceType&gt;</a></em> = <strong>await</strong> connection.getContractsByCodeId(
   id,
   $C: <em>C</em>,
 )
@@ -359,19 +359,19 @@ Get client handles for all contracts that match a code ID
 ## method *connection.getContractsByCodeIds*
 Get client handles for all contracts that match multiple code IDs
 <pre>
-<strong>const</strong> result: <em><a href="#">Record<string, Record></a></em> = <strong>await</strong> connection.getContractsByCodeIds(
-  ids: <em>Iterable<string></em>,
+<strong>const</strong> result: <em><a href="#">Record&lt;string, Record&gt;</a></em> = <strong>await</strong> connection.getContractsByCodeIds(
+  ids: <em>Iterable&lt;string&gt;</em>,
 )
 </pre>
 <pre>
-<strong>const</strong> result: <em><a href="#">Record<string, Record></a></em> = <strong>await</strong> connection.getContractsByCodeIds(
-  ids: <em>Iterable<string></em>,
+<strong>const</strong> result: <em><a href="#">Record&lt;string, Record&gt;</a></em> = <strong>await</strong> connection.getContractsByCodeIds(
+  ids: <em>Iterable&lt;string&gt;</em>,
   $C: <em>C</em>,
 )
 </pre>
 <pre>
-<strong>const</strong> result: <em><a href="#">Record<string, Record></a></em> = <strong>await</strong> connection.getContractsByCodeIds(
-  ids: <em>Record<string, C></em>,
+<strong>const</strong> result: <em><a href="#">Record&lt;string, Record&gt;</a></em> = <strong>await</strong> connection.getContractsByCodeIds(
+  ids: <em>Record&lt;string, C&gt;</em>,
 )
 </pre>
 
@@ -380,7 +380,7 @@ Instantiate a new program from a code id, label and init message.
 <pre>
 connection.instantiate(
   contract,
-  options: <em>Partial<ContractInstance></em>,
+  options: <em>Partial&lt;ContractInstance&gt;</em>,
 )
 </pre>
 

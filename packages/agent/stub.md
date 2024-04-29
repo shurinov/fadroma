@@ -186,7 +186,7 @@ const stubBlock = new StubBlock(
 
 ## method *stubBlock.getTransactionsById*
 <pre>
-<strong>const</strong> result: <em><a href="#">Record<string, Transaction></a></em> = <strong>await</strong> stubBlock.getTransactionsById()
+<strong>const</strong> result: <em><a href="#">Record&lt;string, Transaction&gt;</a></em> = <strong>await</strong> stubBlock.getTransactionsById()
 </pre>
 
 ## method *stubBlock.getTransactionsInOrder*
@@ -318,7 +318,7 @@ this property contains the URL to which requests are sent.</td></tr>
 ## method *stubConnection.batch*
 Construct a transaction batch.
 <pre>
-<strong>const</strong> result: <em><a href="#">Batch<StubConnection></a></em> = stubConnection.batch()
+<strong>const</strong> result: <em><a href="#">Batch&lt;StubConnection&gt;</a></em> = stubConnection.batch()
 </pre>
 
 ## method *stubConnection.doExecute*
@@ -385,7 +385,7 @@ stubConnection.doGetContractsByCodeId(
 <pre>
 stubConnection.doInstantiate(
   codeId,
-  options: <em>Partial<ContractInstance></em>,
+  options: <em>Partial&lt;ContractInstance&gt;</em>,
 )
 </pre>
 
@@ -488,7 +488,7 @@ Get the code id of a given address.
 
 ## method *stubConnection.getCodes*
 <pre>
-<strong>const</strong> result: <em><a href="#">Record<string, UploadedCode></a></em> = <strong>await</strong> stubConnection.getCodes()
+<strong>const</strong> result: <em><a href="#">Record&lt;string, UploadedCode&gt;</a></em> = <strong>await</strong> stubConnection.getCodes()
 </pre>
 
 ## method *stubConnection.getContract*
@@ -502,12 +502,12 @@ Get a client handle for a specific smart contract, authenticated as as this agen
 ## method *stubConnection.getContractsByCodeId*
 Get client handles for all contracts that match a code ID
 <pre>
-<strong>const</strong> result: <em><a href="#">Record<string, Contract></a></em> = <strong>await</strong> stubConnection.getContractsByCodeId(
+<strong>const</strong> result: <em><a href="#">Record&lt;string, Contract&gt;</a></em> = <strong>await</strong> stubConnection.getContractsByCodeId(
   id,
 )
 </pre>
 <pre>
-<strong>const</strong> result: <em><a href="#">Record<string, InstanceType></a></em> = <strong>await</strong> stubConnection.getContractsByCodeId(
+<strong>const</strong> result: <em><a href="#">Record&lt;string, InstanceType&gt;</a></em> = <strong>await</strong> stubConnection.getContractsByCodeId(
   id,
   $C: <em>C</em>,
 )
@@ -516,19 +516,19 @@ Get client handles for all contracts that match a code ID
 ## method *stubConnection.getContractsByCodeIds*
 Get client handles for all contracts that match multiple code IDs
 <pre>
-<strong>const</strong> result: <em><a href="#">Record<string, Record></a></em> = <strong>await</strong> stubConnection.getContractsByCodeIds(
-  ids: <em>Iterable<string></em>,
+<strong>const</strong> result: <em><a href="#">Record&lt;string, Record&gt;</a></em> = <strong>await</strong> stubConnection.getContractsByCodeIds(
+  ids: <em>Iterable&lt;string&gt;</em>,
 )
 </pre>
 <pre>
-<strong>const</strong> result: <em><a href="#">Record<string, Record></a></em> = <strong>await</strong> stubConnection.getContractsByCodeIds(
-  ids: <em>Iterable<string></em>,
+<strong>const</strong> result: <em><a href="#">Record&lt;string, Record&gt;</a></em> = <strong>await</strong> stubConnection.getContractsByCodeIds(
+  ids: <em>Iterable&lt;string&gt;</em>,
   $C: <em>C</em>,
 )
 </pre>
 <pre>
-<strong>const</strong> result: <em><a href="#">Record<string, Record></a></em> = <strong>await</strong> stubConnection.getContractsByCodeIds(
-  ids: <em>Record<string, C></em>,
+<strong>const</strong> result: <em><a href="#">Record&lt;string, Record&gt;</a></em> = <strong>await</strong> stubConnection.getContractsByCodeIds(
+  ids: <em>Record&lt;string, C&gt;</em>,
 )
 </pre>
 
@@ -537,7 +537,7 @@ Instantiate a new program from a code id, label and init message.
 <pre>
 stubConnection.instantiate(
   contract,
-  options: <em>Partial<ContractInstance></em>,
+  options: <em>Partial&lt;ContractInstance&gt;</em>,
 )
 </pre>
 

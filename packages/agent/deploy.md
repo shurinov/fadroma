@@ -523,15 +523,15 @@ Create a new instance of this contract.
 <pre>
 <strong>const</strong> result: <em><a href="#">ContractInstance</a></em> = contractTemplate.contract(
   name,
-  parameters: <em>Partial<ContractInstance></em>,
+  parameters: <em>Partial&lt;ContractInstance&gt;</em>,
 )
 </pre>
 
 ## method *contractTemplate.contracts*
 Create multiple instances of this contract.
 <pre>
-<strong>const</strong> result: <em><a href="#">Record<string, ContractInstance></a></em> = contractTemplate.contracts(
-  instanceParameters: <em>Record<string, Partial></em>,
+<strong>const</strong> result: <em><a href="#">Record&lt;string, ContractInstance&gt;</a></em> = contractTemplate.contracts(
+  instanceParameters: <em>Record&lt;string, Partial&gt;</em>,
 )
 </pre>
 
@@ -574,7 +574,7 @@ const deployment = new Deployment(
 ## method *deployment.[iterator]*
 Returns an iterable of entries in the map.
 <pre>
-<strong>const</strong> result: <em><a href="#">IterableIterator<></a></em> = deployment.[iterator]()
+<strong>const</strong> result: <em><a href="#">IterableIterator&lt;&gt;</a></em> = deployment.[iterator]()
 </pre>
 
 ## method *deployment.addContract*
@@ -593,7 +593,7 @@ Returns an iterable of entries in the map.
 
 ## method *deployment.build*
 <pre>
-<strong>const</strong> result: <em><a href="#">Record<string, ></a></em> = <strong>await</strong> deployment.build(
+<strong>const</strong> result: <em><a href="#">Record&lt;string, &gt;</a></em> = <strong>await</strong> deployment.build(
   __namedParameters,
 )
 </pre>
@@ -623,7 +623,7 @@ and instantiated as part of this deployment.
 
 ## method *deployment.deploy*
 <pre>
-<strong>const</strong> result: <em><a href="#">Record<string, ></a></em> = <strong>await</strong> deployment.deploy(
+<strong>const</strong> result: <em><a href="#">Record&lt;string, &gt;</a></em> = <strong>await</strong> deployment.deploy(
   __namedParameters,
 )
 </pre>
@@ -631,7 +631,7 @@ and instantiated as part of this deployment.
 ## method *deployment.entries*
 Returns an iterable of key, value pairs for every entry in the map.
 <pre>
-<strong>const</strong> result: <em><a href="#">IterableIterator<></a></em> = deployment.entries()
+<strong>const</strong> result: <em><a href="#">IterableIterator&lt;&gt;</a></em> = deployment.entries()
 </pre>
 
 ## method *deployment.forEach*
@@ -662,7 +662,7 @@ Returns a specified element from the Map object. If the value that is associated
 ## method *deployment.keys*
 Returns an iterable of keys in the map
 <pre>
-<strong>const</strong> result: <em><a href="#">IterableIterator<string></a></em> = deployment.keys()
+<strong>const</strong> result: <em><a href="#">IterableIterator&lt;string&gt;</a></em> = deployment.keys()
 </pre>
 
 ## method *deployment.serialize*
@@ -692,7 +692,7 @@ the same code.
 
 ## method *deployment.upload*
 <pre>
-<strong>const</strong> result: <em><a href="#">Record<string, ></a></em> = <strong>await</strong> deployment.upload(
+<strong>const</strong> result: <em><a href="#">Record&lt;string, &gt;</a></em> = <strong>await</strong> deployment.upload(
   __namedParameters,
 )
 </pre>
@@ -700,13 +700,13 @@ the same code.
 ## method *deployment.values*
 Returns an iterable of values in the map
 <pre>
-<strong>const</strong> result: <em><a href="#">IterableIterator<DeploymentUnit></a></em> = deployment.values()
+<strong>const</strong> result: <em><a href="#">IterableIterator&lt;DeploymentUnit&gt;</a></em> = deployment.values()
 </pre>
 
 ## method *deployment.fromSnapshot*
 <pre>
 <strong>const</strong> result: <em><a href="#">Deployment</a></em> = deployment.fromSnapshot(
-  __namedParameters: <em>Partial<></em>,
+  __namedParameters: <em>Partial&lt;&gt;</em>,
 )
 </pre>
 
