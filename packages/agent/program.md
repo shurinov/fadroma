@@ -184,17 +184,17 @@ const compiledCode = new CompiledCode(
 ## method *compiledCode.computeHash*
 Compute the code hash if missing; throw if different.
 ```typescript
-const result: Promise<> = compiledCode.computeHash()
+compiledCode.computeHash()
 ```
 
 ## method *compiledCode.doFetch*
 ```typescript
-const result: Promise<Uint8Array> = compiledCode.doFetch()
+const result: Uint8Array = await compiledCode.doFetch()
 ```
 
 ## method *compiledCode.fetch*
 ```typescript
-const result: Promise<Uint8Array> = compiledCode.fetch()
+const result: Uint8Array = await compiledCode.fetch()
 ```
 
 ## method *compiledCode.serialize*
@@ -234,7 +234,7 @@ Compile a source.
 `@hackbg/fadroma` implements dockerized and non-dockerized
 variants using its `build.impl.mjs` script.
 ```typescript
-const result: Promise<CompiledCode> = compiler.build(
+const result: CompiledCode = await compiler.build(
   source,
   args,
 )
@@ -245,7 +245,7 @@ Build multiple sources.
 Default implementation of buildMany is sequential.
 Compiler classes may override this to optimize.
 ```typescript
-const result: Promise<> = compiler.buildMany(
+compiler.buildMany(
   inputs,
 )
 ```
@@ -285,17 +285,17 @@ const localCompiledCode = new LocalCompiledCode(
 ## method *localCompiledCode.computeHash*
 Compute the code hash if missing; throw if different.
 ```typescript
-const result: Promise<> = localCompiledCode.computeHash()
+localCompiledCode.computeHash()
 ```
 
 ## method *localCompiledCode.doFetch*
 ```typescript
-const result: Promise<> = localCompiledCode.doFetch()
+localCompiledCode.doFetch()
 ```
 
 ## method *localCompiledCode.fetch*
 ```typescript
-const result: Promise<Uint8Array> = localCompiledCode.fetch()
+const result: Uint8Array = await localCompiledCode.fetch()
 ```
 
 ## method *localCompiledCode.serialize*

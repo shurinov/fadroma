@@ -36,14 +36,14 @@ const backend = new Backend(
 
 ## method *backend.connect*
 ```typescript
-const result: Promise<Connection> = backend.connect(
+const result: Connection = await backend.connect(
   parameter,
 )
 ```
 
 ## method *backend.getIdentity*
 ```typescript
-const result: Promise<> = backend.getIdentity(
+backend.getIdentity(
   name,
 )
 ```
@@ -72,12 +72,12 @@ const block = new Block(
 
 ## method *block.getTransactionsById*
 ```typescript
-const result: Promise<Record> = block.getTransactionsById()
+const result: Record<string, Transaction> = await block.getTransactionsById()
 ```
 
 ## method *block.getTransactionsInOrder*
 ```typescript
-const result: Promise<> = block.getTransactionsInOrder()
+block.getTransactionsInOrder()
 ```
 
 # class *Connection*
@@ -163,7 +163,7 @@ const result: Batch<Connection> = connection.batch()
 
 ## method *connection.doExecute*
 ```typescript
-const result: Promise<unknown> = connection.doExecute(
+const result: unknown = connection.doExecute(
   contract,
   message,
   options,
@@ -172,7 +172,7 @@ const result: Promise<unknown> = connection.doExecute(
 
 ## method *connection.doGetBalance*
 ```typescript
-const result: Promise<> = connection.doGetBalance(
+connection.doGetBalance(
   token,
   address,
 )
@@ -180,52 +180,52 @@ const result: Promise<> = connection.doGetBalance(
 
 ## method *connection.doGetBlockInfo*
 ```typescript
-const result: Promise<Block> = connection.doGetBlockInfo(
+const result: Block = await connection.doGetBlockInfo(
   height,
 )
 ```
 
 ## method *connection.doGetCodeHashOfAddress*
 ```typescript
-const result: Promise<string> = connection.doGetCodeHashOfAddress(
+const result: string = connection.doGetCodeHashOfAddress(
   contract,
 )
 ```
 
 ## method *connection.doGetCodeHashOfCodeId*
 ```typescript
-const result: Promise<string> = connection.doGetCodeHashOfCodeId(
+const result: string = connection.doGetCodeHashOfCodeId(
   codeId,
 )
 ```
 
 ## method *connection.doGetCodeId*
 ```typescript
-const result: Promise<string> = connection.doGetCodeId(
+const result: string = connection.doGetCodeId(
   contract,
 )
 ```
 
 ## method *connection.doGetCodes*
 ```typescript
-const result: Promise<Record> = connection.doGetCodes()
+const result: Record<string, UploadedCode> = await connection.doGetCodes()
 ```
 
 ## method *connection.doGetContractsByCodeId*
 ```typescript
-const result: Promise<Iterable> = connection.doGetContractsByCodeId(
+const result: Iterable<> = await connection.doGetContractsByCodeId(
   id,
 )
 ```
 
 ## method *connection.doGetHeight*
 ```typescript
-const result: Promise<number> = connection.doGetHeight()
+const result: number = connection.doGetHeight()
 ```
 
 ## method *connection.doInstantiate*
 ```typescript
-const result: Promise<Partial> = connection.doInstantiate(
+const result: Partial<ContractInstance> = await connection.doInstantiate(
   codeId,
   options,
 )
@@ -233,7 +233,7 @@ const result: Promise<Partial> = connection.doInstantiate(
 
 ## method *connection.doQuery*
 ```typescript
-const result: Promise<unknown> = connection.doQuery(
+const result: unknown = connection.doQuery(
   contract,
   message,
 )
@@ -241,7 +241,7 @@ const result: Promise<unknown> = connection.doQuery(
 
 ## method *connection.doSend*
 ```typescript
-const result: Promise<unknown> = connection.doSend(
+const result: unknown = connection.doSend(
   recipient,
   amounts,
   options,
@@ -250,7 +250,7 @@ const result: Promise<unknown> = connection.doSend(
 
 ## method *connection.doSendMany*
 ```typescript
-const result: Promise<unknown> = connection.doSendMany(
+const result: unknown = connection.doSendMany(
   outputs,
   options,
 )
@@ -258,7 +258,7 @@ const result: Promise<unknown> = connection.doSendMany(
 
 ## method *connection.doUpload*
 ```typescript
-const result: Promise<Partial> = connection.doUpload(
+const result: Partial<UploadedCode> = await connection.doUpload(
   data,
   options,
 )
@@ -267,7 +267,7 @@ const result: Promise<Partial> = connection.doUpload(
 ## method *connection.execute*
 Call a given program's transaction method.
 ```typescript
-const result: Promise<unknown> = connection.execute(
+const result: unknown = connection.execute(
   contract,
   message,
   options,
@@ -279,7 +279,7 @@ Get the balance in a given native token, of
 either this connection's identity's address,
 or of another given address.
 ```typescript
-const result: Promise<unknown> = connection.getBalanceIn(
+const result: unknown = connection.getBalanceIn(
   token,
   address,
 )
@@ -290,7 +290,7 @@ Get the balance in a native token of a given address,
 either in this connection's gas token,
 or in another given token.
 ```typescript
-const result: Promise<unknown> = connection.getBalanceOf(
+const result: unknown = connection.getBalanceOf(
   address,
   token,
 )
@@ -300,7 +300,7 @@ const result: Promise<unknown> = connection.getBalanceOf(
 Get info about a specific block.
 If no height is passed, gets info about the latest block.
 ```typescript
-const result: Promise<Block> = connection.getBlock(
+const result: Block = await connection.getBlock(
   height,
 )
 ```
@@ -308,7 +308,7 @@ const result: Promise<Block> = connection.getBlock(
 ## method *connection.getCodeHashOfAddress*
 Get the code hash of a given address.
 ```typescript
-const result: Promise<string> = connection.getCodeHashOfAddress(
+const result: string = connection.getCodeHashOfAddress(
   contract,
 )
 ```
@@ -316,7 +316,7 @@ const result: Promise<string> = connection.getCodeHashOfAddress(
 ## method *connection.getCodeHashOfCodeId*
 Get the code hash of a given code id.
 ```typescript
-const result: Promise<string> = connection.getCodeHashOfCodeId(
+const result: string = connection.getCodeHashOfCodeId(
   contract,
 )
 ```
@@ -324,14 +324,14 @@ const result: Promise<string> = connection.getCodeHashOfCodeId(
 ## method *connection.getCodeId*
 Get the code id of a given address.
 ```typescript
-const result: Promise<string> = connection.getCodeId(
+const result: string = connection.getCodeId(
   contract,
 )
 ```
 
 ## method *connection.getCodes*
 ```typescript
-const result: Promise<Record> = connection.getCodes()
+const result: Record<string, UploadedCode> = await connection.getCodes()
 ```
 
 ## method *connection.getContract*
@@ -345,12 +345,12 @@ const result: Contract = connection.getContract(
 ## method *connection.getContractsByCodeId*
 Get client handles for all contracts that match a code ID
 ```typescript
-const result: Promise<Record> = connection.getContractsByCodeId(
+const result: Record<string, Contract> = await connection.getContractsByCodeId(
   id,
 )
 ```
 ```typescript
-const result: Promise<Record> = connection.getContractsByCodeId(
+const result: Record<string, InstanceType> = await connection.getContractsByCodeId(
   id,
   $C,
 )
@@ -359,18 +359,18 @@ const result: Promise<Record> = connection.getContractsByCodeId(
 ## method *connection.getContractsByCodeIds*
 Get client handles for all contracts that match multiple code IDs
 ```typescript
-const result: Promise<Record> = connection.getContractsByCodeIds(
+const result: Record<string, Record> = await connection.getContractsByCodeIds(
   ids,
 )
 ```
 ```typescript
-const result: Promise<Record> = connection.getContractsByCodeIds(
+const result: Record<string, Record> = await connection.getContractsByCodeIds(
   ids,
   $C,
 )
 ```
 ```typescript
-const result: Promise<Record> = connection.getContractsByCodeIds(
+const result: Record<string, Record> = await connection.getContractsByCodeIds(
   ids,
 )
 ```
@@ -378,7 +378,7 @@ const result: Promise<Record> = connection.getContractsByCodeIds(
 ## method *connection.instantiate*
 Instantiate a new program from a code id, label and init message.
 ```typescript
-const result: Promise<> = connection.instantiate(
+connection.instantiate(
   contract,
   options,
 )
@@ -387,7 +387,7 @@ const result: Promise<> = connection.instantiate(
 ## method *connection.query*
 Query a contract.
 ```typescript
-const result: Promise<Q> = connection.query(
+const result: Q = await connection.query(
   contract,
   message,
 )
@@ -396,7 +396,7 @@ const result: Promise<Q> = connection.query(
 ## method *connection.send*
 Send native tokens to 1 recipient.
 ```typescript
-const result: Promise<unknown> = connection.send(
+const result: unknown = connection.send(
   recipient,
   amounts,
   options,
@@ -406,7 +406,7 @@ const result: Promise<unknown> = connection.send(
 ## method *connection.upload*
 Upload a contract's code, generating a new code id/hash pair.
 ```typescript
-const result: Promise<> = connection.upload(
+connection.upload(
   code,
   options,
 )
@@ -444,7 +444,7 @@ const contract = new Contract(
 ## method *contract.execute*
 Execute a transaction on the specified instance as the specified Connection.
 ```typescript
-const result: Promise<unknown> = contract.execute(
+const result: unknown = contract.execute(
   message,
   options,
 )
@@ -453,7 +453,7 @@ const result: Promise<unknown> = contract.execute(
 ## method *contract.query*
 Execute a query on the specified instance as the specified Connection.
 ```typescript
-const result: Promise<Q> = contract.query(
+const result: Q = await contract.query(
   message,
 )
 ```

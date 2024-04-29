@@ -53,42 +53,42 @@ const stubBackend = new StubBackend(
 
 ## method *stubBackend.connect*
 ```typescript
-const result: Promise<Connection> = stubBackend.connect(
+const result: Connection = await stubBackend.connect(
   parameter,
 )
 ```
 
 ## method *stubBackend.execute*
 ```typescript
-const result: Promise<unknown> = stubBackend.execute(
+const result: unknown = stubBackend.execute(
   args,
 )
 ```
 
 ## method *stubBackend.export*
 ```typescript
-const result: Promise<unknown> = stubBackend.export(
+const result: unknown = stubBackend.export(
   args,
 )
 ```
 
 ## method *stubBackend.getIdentity*
 ```typescript
-const result: Promise<Identity> = stubBackend.getIdentity(
+const result: Identity = await stubBackend.getIdentity(
   name,
 )
 ```
 
 ## method *stubBackend.import*
 ```typescript
-const result: Promise<unknown> = stubBackend.import(
+const result: unknown = stubBackend.import(
   args,
 )
 ```
 
 ## method *stubBackend.instantiate*
 ```typescript
-const result: Promise<> = stubBackend.instantiate(
+stubBackend.instantiate(
   creator,
   codeId,
   options,
@@ -97,17 +97,17 @@ const result: Promise<> = stubBackend.instantiate(
 
 ## method *stubBackend.pause*
 ```typescript
-const result: Promise<StubBackend> = stubBackend.pause()
+const result: StubBackend = await stubBackend.pause()
 ```
 
 ## method *stubBackend.start*
 ```typescript
-const result: Promise<StubBackend> = stubBackend.start()
+const result: StubBackend = await stubBackend.start()
 ```
 
 ## method *stubBackend.upload*
 ```typescript
-const result: Promise<> = stubBackend.upload(
+stubBackend.upload(
   codeData,
 )
 ```
@@ -151,7 +151,7 @@ const result: StubBatch = stubBatch.instantiate(
 ## method *stubBatch.submit*
 Submit the batch.
 ```typescript
-const result: Promise<> = stubBatch.submit()
+stubBatch.submit()
 ```
 
 ## method *stubBatch.upload*
@@ -186,12 +186,12 @@ const stubBlock = new StubBlock(
 
 ## method *stubBlock.getTransactionsById*
 ```typescript
-const result: Promise<Record> = stubBlock.getTransactionsById()
+const result: Record<string, Transaction> = await stubBlock.getTransactionsById()
 ```
 
 ## method *stubBlock.getTransactionsInOrder*
 ```typescript
-const result: Promise<> = stubBlock.getTransactionsInOrder()
+stubBlock.getTransactionsInOrder()
 ```
 
 # class *StubCompiler*
@@ -221,7 +221,7 @@ Compile a source.
 `@hackbg/fadroma` implements dockerized and non-dockerized
 variants using its `build.impl.mjs` script.
 ```typescript
-const result: Promise<CompiledCode> = stubCompiler.build(
+const result: CompiledCode = await stubCompiler.build(
   source,
   args,
 )
@@ -232,7 +232,7 @@ Build multiple sources.
 Default implementation of buildMany is sequential.
 Compiler classes may override this to optimize.
 ```typescript
-const result: Promise<> = stubCompiler.buildMany(
+stubCompiler.buildMany(
   inputs,
 )
 ```
@@ -323,7 +323,7 @@ const result: Batch<StubConnection> = stubConnection.batch()
 
 ## method *stubConnection.doExecute*
 ```typescript
-const result: Promise<unknown> = stubConnection.doExecute(
+const result: unknown = stubConnection.doExecute(
   contract,
   message,
   options,
@@ -332,7 +332,7 @@ const result: Promise<unknown> = stubConnection.doExecute(
 
 ## method *stubConnection.doGetBalance*
 ```typescript
-const result: Promise<string> = stubConnection.doGetBalance(
+const result: string = stubConnection.doGetBalance(
   token,
   address,
 )
@@ -340,50 +340,50 @@ const result: Promise<string> = stubConnection.doGetBalance(
 
 ## method *stubConnection.doGetBlockInfo*
 ```typescript
-const result: Promise<StubBlock> = stubConnection.doGetBlockInfo()
+const result: StubBlock = await stubConnection.doGetBlockInfo()
 ```
 
 ## method *stubConnection.doGetCodeHashOfAddress*
 ```typescript
-const result: Promise<string> = stubConnection.doGetCodeHashOfAddress(
+const result: string = stubConnection.doGetCodeHashOfAddress(
   address,
 )
 ```
 
 ## method *stubConnection.doGetCodeHashOfCodeId*
 ```typescript
-const result: Promise<string> = stubConnection.doGetCodeHashOfCodeId(
+const result: string = stubConnection.doGetCodeHashOfCodeId(
   id,
 )
 ```
 
 ## method *stubConnection.doGetCodeId*
 ```typescript
-const result: Promise<string> = stubConnection.doGetCodeId(
+const result: string = stubConnection.doGetCodeId(
   address,
 )
 ```
 
 ## method *stubConnection.doGetCodes*
 ```typescript
-const result: Promise<> = stubConnection.doGetCodes()
+stubConnection.doGetCodes()
 ```
 
 ## method *stubConnection.doGetContractsByCodeId*
 ```typescript
-const result: Promise<> = stubConnection.doGetContractsByCodeId(
+stubConnection.doGetContractsByCodeId(
   id,
 )
 ```
 
 ## method *stubConnection.doGetHeight*
 ```typescript
-const result: Promise<number> = stubConnection.doGetHeight()
+const result: number = stubConnection.doGetHeight()
 ```
 
 ## method *stubConnection.doInstantiate*
 ```typescript
-const result: Promise<> = stubConnection.doInstantiate(
+stubConnection.doInstantiate(
   codeId,
   options,
 )
@@ -391,7 +391,7 @@ const result: Promise<> = stubConnection.doInstantiate(
 
 ## method *stubConnection.doQuery*
 ```typescript
-const result: Promise<Q> = stubConnection.doQuery(
+const result: Q = await stubConnection.doQuery(
   contract,
   message,
 )
@@ -399,7 +399,7 @@ const result: Promise<Q> = stubConnection.doQuery(
 
 ## method *stubConnection.doSend*
 ```typescript
-const result: Promise<void> = stubConnection.doSend(
+const result: void = stubConnection.doSend(
   recipient,
   sums,
   opts,
@@ -408,7 +408,7 @@ const result: Promise<void> = stubConnection.doSend(
 
 ## method *stubConnection.doSendMany*
 ```typescript
-const result: Promise<void> = stubConnection.doSendMany(
+const result: void = stubConnection.doSendMany(
   outputs,
   opts,
 )
@@ -416,7 +416,7 @@ const result: Promise<void> = stubConnection.doSendMany(
 
 ## method *stubConnection.doUpload*
 ```typescript
-const result: Promise<UploadedCode> = stubConnection.doUpload(
+const result: UploadedCode = await stubConnection.doUpload(
   codeData,
 )
 ```
@@ -424,7 +424,7 @@ const result: Promise<UploadedCode> = stubConnection.doUpload(
 ## method *stubConnection.execute*
 Call a given program's transaction method.
 ```typescript
-const result: Promise<unknown> = stubConnection.execute(
+const result: unknown = stubConnection.execute(
   contract,
   message,
   options,
@@ -436,7 +436,7 @@ Get the balance in a given native token, of
 either this connection's identity's address,
 or of another given address.
 ```typescript
-const result: Promise<unknown> = stubConnection.getBalanceIn(
+const result: unknown = stubConnection.getBalanceIn(
   token,
   address,
 )
@@ -447,7 +447,7 @@ Get the balance in a native token of a given address,
 either in this connection's gas token,
 or in another given token.
 ```typescript
-const result: Promise<unknown> = stubConnection.getBalanceOf(
+const result: unknown = stubConnection.getBalanceOf(
   address,
   token,
 )
@@ -457,7 +457,7 @@ const result: Promise<unknown> = stubConnection.getBalanceOf(
 Get info about a specific block.
 If no height is passed, gets info about the latest block.
 ```typescript
-const result: Promise<StubBlock> = stubConnection.getBlock(
+const result: StubBlock = await stubConnection.getBlock(
   height,
 )
 ```
@@ -465,7 +465,7 @@ const result: Promise<StubBlock> = stubConnection.getBlock(
 ## method *stubConnection.getCodeHashOfAddress*
 Get the code hash of a given address.
 ```typescript
-const result: Promise<string> = stubConnection.getCodeHashOfAddress(
+const result: string = stubConnection.getCodeHashOfAddress(
   contract,
 )
 ```
@@ -473,7 +473,7 @@ const result: Promise<string> = stubConnection.getCodeHashOfAddress(
 ## method *stubConnection.getCodeHashOfCodeId*
 Get the code hash of a given code id.
 ```typescript
-const result: Promise<string> = stubConnection.getCodeHashOfCodeId(
+const result: string = stubConnection.getCodeHashOfCodeId(
   contract,
 )
 ```
@@ -481,14 +481,14 @@ const result: Promise<string> = stubConnection.getCodeHashOfCodeId(
 ## method *stubConnection.getCodeId*
 Get the code id of a given address.
 ```typescript
-const result: Promise<string> = stubConnection.getCodeId(
+const result: string = stubConnection.getCodeId(
   contract,
 )
 ```
 
 ## method *stubConnection.getCodes*
 ```typescript
-const result: Promise<Record> = stubConnection.getCodes()
+const result: Record<string, UploadedCode> = await stubConnection.getCodes()
 ```
 
 ## method *stubConnection.getContract*
@@ -502,12 +502,12 @@ const result: Contract = stubConnection.getContract(
 ## method *stubConnection.getContractsByCodeId*
 Get client handles for all contracts that match a code ID
 ```typescript
-const result: Promise<Record> = stubConnection.getContractsByCodeId(
+const result: Record<string, Contract> = await stubConnection.getContractsByCodeId(
   id,
 )
 ```
 ```typescript
-const result: Promise<Record> = stubConnection.getContractsByCodeId(
+const result: Record<string, InstanceType> = await stubConnection.getContractsByCodeId(
   id,
   $C,
 )
@@ -516,18 +516,18 @@ const result: Promise<Record> = stubConnection.getContractsByCodeId(
 ## method *stubConnection.getContractsByCodeIds*
 Get client handles for all contracts that match multiple code IDs
 ```typescript
-const result: Promise<Record> = stubConnection.getContractsByCodeIds(
+const result: Record<string, Record> = await stubConnection.getContractsByCodeIds(
   ids,
 )
 ```
 ```typescript
-const result: Promise<Record> = stubConnection.getContractsByCodeIds(
+const result: Record<string, Record> = await stubConnection.getContractsByCodeIds(
   ids,
   $C,
 )
 ```
 ```typescript
-const result: Promise<Record> = stubConnection.getContractsByCodeIds(
+const result: Record<string, Record> = await stubConnection.getContractsByCodeIds(
   ids,
 )
 ```
@@ -535,7 +535,7 @@ const result: Promise<Record> = stubConnection.getContractsByCodeIds(
 ## method *stubConnection.instantiate*
 Instantiate a new program from a code id, label and init message.
 ```typescript
-const result: Promise<> = stubConnection.instantiate(
+stubConnection.instantiate(
   contract,
   options,
 )
@@ -544,7 +544,7 @@ const result: Promise<> = stubConnection.instantiate(
 ## method *stubConnection.query*
 Query a contract.
 ```typescript
-const result: Promise<Q> = stubConnection.query(
+const result: Q = await stubConnection.query(
   contract,
   message,
 )
@@ -553,7 +553,7 @@ const result: Promise<Q> = stubConnection.query(
 ## method *stubConnection.send*
 Send native tokens to 1 recipient.
 ```typescript
-const result: Promise<unknown> = stubConnection.send(
+const result: unknown = stubConnection.send(
   recipient,
   amounts,
   options,
@@ -563,7 +563,7 @@ const result: Promise<unknown> = stubConnection.send(
 ## method *stubConnection.upload*
 Upload a contract's code, generating a new code id/hash pair.
 ```typescript
-const result: Promise<> = stubConnection.upload(
+stubConnection.upload(
   code,
   options,
 )

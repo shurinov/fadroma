@@ -325,7 +325,7 @@ const contractCode = new ContractCode(
 ## method *contractCode.compile*
 Compile this contract, unless a valid binary is present and a rebuild is not requested.
 ```typescript
-const result: Promise<> = contractCode.compile(
+contractCode.compile(
   __namedParameters,
 )
 ```
@@ -333,7 +333,7 @@ const result: Promise<> = contractCode.compile(
 ## method *contractCode.upload*
 Upload this contract, unless a valid upload is present and a rebuild is not requested.
 ```typescript
-const result: Promise<> = contractCode.upload(
+contractCode.upload(
   __namedParameters,
 )
 ```
@@ -420,7 +420,7 @@ const contractInstance = new ContractInstance(
 ## method *contractInstance.compile*
 Compile this contract, unless a valid binary is present and a rebuild is not requested.
 ```typescript
-const result: Promise<> = contractInstance.compile(
+contractInstance.compile(
   __namedParameters,
 )
 ```
@@ -435,7 +435,7 @@ const result: Contract = contractInstance.connect(
 
 ## method *contractInstance.deploy*
 ```typescript
-const result: Promise<> = contractInstance.deploy(
+contractInstance.deploy(
   __namedParameters,
 )
 ```
@@ -453,7 +453,7 @@ contractInstance.serialize()
 ## method *contractInstance.upload*
 Upload this contract, unless a valid upload is present and a rebuild is not requested.
 ```typescript
-const result: Promise<> = contractInstance.upload(
+contractInstance.upload(
   __namedParameters,
 )
 ```
@@ -513,7 +513,7 @@ const contractTemplate = new ContractTemplate(
 ## method *contractTemplate.compile*
 Compile this contract, unless a valid binary is present and a rebuild is not requested.
 ```typescript
-const result: Promise<> = contractTemplate.compile(
+contractTemplate.compile(
   __namedParameters,
 )
 ```
@@ -543,7 +543,7 @@ contractTemplate.serialize()
 ## method *contractTemplate.upload*
 Upload this contract, unless a valid upload is present and a rebuild is not requested.
 ```typescript
-const result: Promise<> = contractTemplate.upload(
+contractTemplate.upload(
   __namedParameters,
 )
 ```
@@ -593,7 +593,7 @@ const result: Deployment = deployment.addContracts(
 
 ## method *deployment.build*
 ```typescript
-const result: Promise<Record> = deployment.build(
+const result: Record<string, > = await deployment.build(
   __namedParameters,
 )
 ```
@@ -623,7 +623,7 @@ const result: boolean = deployment.delete(
 
 ## method *deployment.deploy*
 ```typescript
-const result: Promise<Record> = deployment.deploy(
+const result: Record<string, > = await deployment.deploy(
   __namedParameters,
 )
 ```
@@ -692,7 +692,7 @@ const result: ContractTemplate = deployment.template(
 
 ## method *deployment.upload*
 ```typescript
-const result: Promise<Record> = deployment.upload(
+const result: Record<string, > = await deployment.upload(
   __namedParameters,
 )
 ```
@@ -762,7 +762,7 @@ const deploymentUnit = new DeploymentUnit(
 ## method *deploymentUnit.compile*
 Compile this contract, unless a valid binary is present and a rebuild is not requested.
 ```typescript
-const result: Promise<> = deploymentUnit.compile(
+deploymentUnit.compile(
   __namedParameters,
 )
 ```
@@ -775,7 +775,7 @@ deploymentUnit.serialize()
 ## method *deploymentUnit.upload*
 Upload this contract, unless a valid upload is present and a rebuild is not requested.
 ```typescript
-const result: Promise<> = deploymentUnit.upload(
+deploymentUnit.upload(
   __namedParameters,
 )
 ```

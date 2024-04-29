@@ -90,7 +90,7 @@ batch.instantiate(
 ## method *batch.submit*
 Submit the batch.
 ```typescript
-const result: Promise<unknown> = batch.submit(
+const result: unknown = batch.submit(
   args,
 )
 ```
