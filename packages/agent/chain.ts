@@ -344,6 +344,7 @@ export abstract class Connection extends Endpoint {
     return {}
   }
 
+  /** Get balance of current identity in main token. */
   get balance () {
     if (!this.identity?.address) {
       throw new Error('not authenticated, use .getBalance(token, address)')
