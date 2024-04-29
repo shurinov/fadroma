@@ -23,6 +23,7 @@ new DeployStore()
 <td><strong>MapConstructor</strong>. </td></tr></tbody></table>
 
 ## method *deployStore.[iterator]*
+Returns an iterable of entries in the map.
 ```typescript
 deployStore.[iterator]()
 ```
@@ -33,6 +34,7 @@ deployStore.clear()
 ```
 
 ## method *deployStore.delete*
+
 ```typescript
 deployStore.delete(
   key,
@@ -40,11 +42,13 @@ deployStore.delete(
 ```
 
 ## method *deployStore.entries*
+Returns an iterable of key, value pairs for every entry in the map.
 ```typescript
 deployStore.entries()
 ```
 
 ## method *deployStore.forEach*
+Executes a provided function once per each key/value pair in the Map, in insertion order.
 ```typescript
 deployStore.forEach(
   callbackfn,
@@ -60,6 +64,7 @@ deployStore.get(
 ```
 
 ## method *deployStore.has*
+
 ```typescript
 deployStore.has(
   key,
@@ -67,6 +72,7 @@ deployStore.has(
 ```
 
 ## method *deployStore.keys*
+Returns an iterable of keys in the map
 ```typescript
 deployStore.keys()
 ```
@@ -80,6 +86,7 @@ deployStore.set(
 ```
 
 ## method *deployStore.values*
+Returns an iterable of values in the map
 ```typescript
 deployStore.values()
 ```
@@ -101,6 +108,7 @@ new UploadStore()
 <td><strong>MapConstructor</strong>. </td></tr></tbody></table>
 
 ## method *uploadStore.[iterator]*
+Returns an iterable of entries in the map.
 ```typescript
 uploadStore.[iterator]()
 ```
@@ -111,6 +119,7 @@ uploadStore.clear()
 ```
 
 ## method *uploadStore.delete*
+
 ```typescript
 uploadStore.delete(
   key,
@@ -118,11 +127,13 @@ uploadStore.delete(
 ```
 
 ## method *uploadStore.entries*
+Returns an iterable of key, value pairs for every entry in the map.
 ```typescript
 uploadStore.entries()
 ```
 
 ## method *uploadStore.forEach*
+Executes a provided function once per each key/value pair in the Map, in insertion order.
 ```typescript
 uploadStore.forEach(
   callbackfn,
@@ -138,6 +149,7 @@ uploadStore.get(
 ```
 
 ## method *uploadStore.has*
+
 ```typescript
 uploadStore.has(
   key,
@@ -145,6 +157,7 @@ uploadStore.has(
 ```
 
 ## method *uploadStore.keys*
+Returns an iterable of keys in the map
 ```typescript
 uploadStore.keys()
 ```
@@ -158,6 +171,7 @@ uploadStore.set(
 ```
 
 ## method *uploadStore.values*
+Returns an iterable of values in the map
 ```typescript
 uploadStore.values()
 ```

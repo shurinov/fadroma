@@ -182,6 +182,7 @@ let compiledCode = new CompiledCode(
 <td></td></tr></tbody></table>
 
 ## method *compiledCode.computeHash*
+Compute the code hash if missing; throw if different.
 ```typescript
 compiledCode.computeHash()
 ```
@@ -229,6 +230,9 @@ binary and checksum are both present in wasm/ directory</td></tr>
 <td><strong>Console</strong>. </td></tr></tbody></table>
 
 ## method *compiler.build*
+Compile a source.
+`@hackbg/fadroma` implements dockerized and non-dockerized
+variants using its `build.impl.mjs` script.
 ```typescript
 compiler.build(
   source,
@@ -237,6 +241,9 @@ compiler.build(
 ```
 
 ## method *compiler.buildMany*
+Build multiple sources.
+Default implementation of buildMany is sequential.
+Compiler classes may override this to optimize.
 ```typescript
 compiler.buildMany(
   inputs,
@@ -276,6 +283,7 @@ let localCompiledCode = new LocalCompiledCode(
 <td></td></tr></tbody></table>
 
 ## method *localCompiledCode.computeHash*
+Compute the code hash if missing; throw if different.
 ```typescript
 localCompiledCode.computeHash()
 ```

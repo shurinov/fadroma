@@ -133,6 +133,7 @@ let stubBatch = new StubBatch(
 <td><strong>undefined</strong>. </td></tr></tbody></table>
 
 ## method *stubBatch.execute*
+Add an execute message to the batch.
 ```typescript
 stubBatch.execute(
   args,
@@ -140,6 +141,7 @@ stubBatch.execute(
 ```
 
 ## method *stubBatch.instantiate*
+Add an instantiate message to the batch.
 ```typescript
 stubBatch.instantiate(
   args,
@@ -147,11 +149,13 @@ stubBatch.instantiate(
 ```
 
 ## method *stubBatch.submit*
+Submit the batch.
 ```typescript
 stubBatch.submit()
 ```
 
 ## method *stubBatch.upload*
+Add an upload message to the batch.
 ```typescript
 stubBatch.upload(
   args,
@@ -213,6 +217,9 @@ binary and checksum are both present in wasm/ directory</td></tr>
 <td><strong>Console</strong>. </td></tr></tbody></table>
 
 ## method *stubCompiler.build*
+Compile a source.
+`@hackbg/fadroma` implements dockerized and non-dockerized
+variants using its `build.impl.mjs` script.
 ```typescript
 stubCompiler.build(
   source,
@@ -221,6 +228,9 @@ stubCompiler.build(
 ```
 
 ## method *stubCompiler.buildMany*
+Build multiple sources.
+Default implementation of buildMany is sequential.
+Compiler classes may override this to optimize.
 ```typescript
 stubCompiler.buildMany(
   inputs,
@@ -306,6 +316,7 @@ this property contains the URL to which requests are sent.</td></tr>
 <td></td></tr></tbody></table>
 
 ## method *stubConnection.batch*
+Construct a transaction batch.
 ```typescript
 stubConnection.batch()
 ```
@@ -411,6 +422,7 @@ stubConnection.doUpload(
 ```
 
 ## method *stubConnection.execute*
+Call a given program's transaction method.
 ```typescript
 stubConnection.execute(
   contract,
@@ -420,6 +432,9 @@ stubConnection.execute(
 ```
 
 ## method *stubConnection.getBalanceIn*
+Get the balance in a given native token, of
+either this connection's identity's address,
+or of another given address.
 ```typescript
 stubConnection.getBalanceIn(
   token,
@@ -428,6 +443,9 @@ stubConnection.getBalanceIn(
 ```
 
 ## method *stubConnection.getBalanceOf*
+Get the balance in a native token of a given address,
+either in this connection's gas token,
+or in another given token.
 ```typescript
 stubConnection.getBalanceOf(
   address,
@@ -436,6 +454,8 @@ stubConnection.getBalanceOf(
 ```
 
 ## method *stubConnection.getBlock*
+Get info about a specific block.
+If no height is passed, gets info about the latest block.
 ```typescript
 stubConnection.getBlock(
   height,
@@ -443,6 +463,7 @@ stubConnection.getBlock(
 ```
 
 ## method *stubConnection.getCodeHashOfAddress*
+Get the code hash of a given address.
 ```typescript
 stubConnection.getCodeHashOfAddress(
   contract,
@@ -450,6 +471,7 @@ stubConnection.getCodeHashOfAddress(
 ```
 
 ## method *stubConnection.getCodeHashOfCodeId*
+Get the code hash of a given code id.
 ```typescript
 stubConnection.getCodeHashOfCodeId(
   contract,
@@ -457,6 +479,7 @@ stubConnection.getCodeHashOfCodeId(
 ```
 
 ## method *stubConnection.getCodeId*
+Get the code id of a given address.
 ```typescript
 stubConnection.getCodeId(
   contract,
@@ -469,6 +492,7 @@ stubConnection.getCodes()
 ```
 
 ## method *stubConnection.getContract*
+Get a client handle for a specific smart contract, authenticated as as this agent.
 ```typescript
 stubConnection.getContract(
   options,
@@ -476,6 +500,7 @@ stubConnection.getContract(
 ```
 
 ## method *stubConnection.getContractsByCodeId*
+Get client handles for all contracts that match a code ID
 ```typescript
 stubConnection.getContractsByCodeId(
   id,
@@ -489,6 +514,7 @@ stubConnection.getContractsByCodeId(
 ```
 
 ## method *stubConnection.getContractsByCodeIds*
+Get client handles for all contracts that match multiple code IDs
 ```typescript
 stubConnection.getContractsByCodeIds(
   ids,
@@ -507,6 +533,7 @@ stubConnection.getContractsByCodeIds(
 ```
 
 ## method *stubConnection.instantiate*
+Instantiate a new program from a code id, label and init message.
 ```typescript
 stubConnection.instantiate(
   contract,
@@ -515,6 +542,7 @@ stubConnection.instantiate(
 ```
 
 ## method *stubConnection.query*
+Query a contract.
 ```typescript
 stubConnection.query(
   contract,
@@ -523,6 +551,7 @@ stubConnection.query(
 ```
 
 ## method *stubConnection.send*
+Send native tokens to 1 recipient.
 ```typescript
 stubConnection.send(
   recipient,
@@ -532,6 +561,7 @@ stubConnection.send(
 ```
 
 ## method *stubConnection.upload*
+Upload a contract's code, generating a new code id/hash pair.
 ```typescript
 stubConnection.upload(
   code,
@@ -540,6 +570,7 @@ stubConnection.upload(
 ```
 
 ## method *stubConnection.gas*
+Native token of chain.
 ```typescript
 stubConnection.gas(
   amount,

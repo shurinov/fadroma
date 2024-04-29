@@ -136,16 +136,19 @@ custom.amount(
 ```
 
 ## method *custom.isCustom*
+
 ```typescript
 custom.isCustom()
 ```
 
 ## method *custom.isFungible*
+
 ```typescript
 custom.isFungible()
 ```
 
 ## method *custom.isNative*
+
 ```typescript
 custom.isNative()
 ```
@@ -205,16 +208,19 @@ fungible.amount(
 ```
 
 ## method *fungible.isCustom*
+Whether this token is implemented by a smart contract.
 ```typescript
 fungible.isCustom()
 ```
 
 ## method *fungible.isFungible*
+
 ```typescript
 fungible.isFungible()
 ```
 
 ## method *fungible.isNative*
+Whether this token is natively supported by the chain.
 ```typescript
 fungible.isNative()
 ```
@@ -259,16 +265,19 @@ native.fee(
 ```
 
 ## method *native.isCustom*
+
 ```typescript
 native.isCustom()
 ```
 
 ## method *native.isFungible*
+
 ```typescript
 native.isFungible()
 ```
 
 ## method *native.isNative*
+
 ```typescript
 native.isNative()
 ```
@@ -294,6 +303,7 @@ new NonFungible()
 <td></td></tr></tbody></table>
 
 ## method *nonFungible.isFungible*
+
 ```typescript
 nonFungible.isFungible()
 ```
@@ -353,6 +363,7 @@ new Token()
 <td></td></tr></tbody></table>
 
 ## method *token.isFungible*
+Whether this token is fungible.
 ```typescript
 token.isFungible()
 ```

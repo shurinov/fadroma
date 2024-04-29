@@ -156,6 +156,7 @@ this property contains the URL to which requests are sent.</td></tr>
 <td></td></tr></tbody></table>
 
 ## method *connection.batch*
+Construct a transaction batch.
 ```typescript
 connection.batch()
 ```
@@ -264,6 +265,7 @@ connection.doUpload(
 ```
 
 ## method *connection.execute*
+Call a given program's transaction method.
 ```typescript
 connection.execute(
   contract,
@@ -273,6 +275,9 @@ connection.execute(
 ```
 
 ## method *connection.getBalanceIn*
+Get the balance in a given native token, of
+either this connection's identity's address,
+or of another given address.
 ```typescript
 connection.getBalanceIn(
   token,
@@ -281,6 +286,9 @@ connection.getBalanceIn(
 ```
 
 ## method *connection.getBalanceOf*
+Get the balance in a native token of a given address,
+either in this connection's gas token,
+or in another given token.
 ```typescript
 connection.getBalanceOf(
   address,
@@ -289,6 +297,8 @@ connection.getBalanceOf(
 ```
 
 ## method *connection.getBlock*
+Get info about a specific block.
+If no height is passed, gets info about the latest block.
 ```typescript
 connection.getBlock(
   height,
@@ -296,6 +306,7 @@ connection.getBlock(
 ```
 
 ## method *connection.getCodeHashOfAddress*
+Get the code hash of a given address.
 ```typescript
 connection.getCodeHashOfAddress(
   contract,
@@ -303,6 +314,7 @@ connection.getCodeHashOfAddress(
 ```
 
 ## method *connection.getCodeHashOfCodeId*
+Get the code hash of a given code id.
 ```typescript
 connection.getCodeHashOfCodeId(
   contract,
@@ -310,6 +322,7 @@ connection.getCodeHashOfCodeId(
 ```
 
 ## method *connection.getCodeId*
+Get the code id of a given address.
 ```typescript
 connection.getCodeId(
   contract,
@@ -322,6 +335,7 @@ connection.getCodes()
 ```
 
 ## method *connection.getContract*
+Get a client handle for a specific smart contract, authenticated as as this agent.
 ```typescript
 connection.getContract(
   options,
@@ -329,6 +343,7 @@ connection.getContract(
 ```
 
 ## method *connection.getContractsByCodeId*
+Get client handles for all contracts that match a code ID
 ```typescript
 connection.getContractsByCodeId(
   id,
@@ -342,6 +357,7 @@ connection.getContractsByCodeId(
 ```
 
 ## method *connection.getContractsByCodeIds*
+Get client handles for all contracts that match multiple code IDs
 ```typescript
 connection.getContractsByCodeIds(
   ids,
@@ -360,6 +376,7 @@ connection.getContractsByCodeIds(
 ```
 
 ## method *connection.instantiate*
+Instantiate a new program from a code id, label and init message.
 ```typescript
 connection.instantiate(
   contract,
@@ -368,6 +385,7 @@ connection.instantiate(
 ```
 
 ## method *connection.query*
+Query a contract.
 ```typescript
 connection.query(
   contract,
@@ -376,6 +394,7 @@ connection.query(
 ```
 
 ## method *connection.send*
+Send native tokens to 1 recipient.
 ```typescript
 connection.send(
   recipient,
@@ -385,6 +404,7 @@ connection.send(
 ```
 
 ## method *connection.upload*
+Upload a contract's code, generating a new code id/hash pair.
 ```typescript
 connection.upload(
   code,
@@ -393,6 +413,7 @@ connection.upload(
 ```
 
 ## method *connection.gas*
+Native token of chain.
 ```typescript
 connection.gas(
   amount,
@@ -421,6 +442,7 @@ let contract = new Contract(
 <td><strong>Console</strong>. </td></tr></tbody></table>
 
 ## method *contract.execute*
+Execute a transaction on the specified instance as the specified Connection.
 ```typescript
 contract.execute(
   message,
@@ -429,6 +451,7 @@ contract.execute(
 ```
 
 ## method *contract.query*
+Execute a query on the specified instance as the specified Connection.
 ```typescript
 contract.query(
   message,

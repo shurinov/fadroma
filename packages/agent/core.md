@@ -31,6 +31,7 @@ let error = new Error(
 <td><strong>number</strong>. </td></tr></tbody></table>
 
 ## method *error.captureStackTrace*
+Create .stack property on a target object
 ```typescript
 error.captureStackTrace(
   targetObject,
@@ -39,6 +40,7 @@ error.captureStackTrace(
 ```
 
 ## method *error.define*
+Define an error subclass.
 ```typescript
 error.define(
   name,

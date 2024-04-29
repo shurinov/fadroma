@@ -72,6 +72,7 @@ let batch = new Batch(
 <td><strong>Console</strong>. </td></tr></tbody></table>
 
 ## method *batch.execute*
+Add an execute message to the batch.
 ```typescript
 batch.execute(
   args,
@@ -79,6 +80,7 @@ batch.execute(
 ```
 
 ## method *batch.instantiate*
+Add an instantiate message to the batch.
 ```typescript
 batch.instantiate(
   args,
@@ -86,6 +88,7 @@ batch.instantiate(
 ```
 
 ## method *batch.submit*
+Submit the batch.
 ```typescript
 batch.submit(
   args,
@@ -93,6 +96,7 @@ batch.submit(
 ```
 
 ## method *batch.upload*
+Add an upload message to the batch.
 ```typescript
 batch.upload(
   args,

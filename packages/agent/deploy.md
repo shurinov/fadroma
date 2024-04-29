@@ -323,6 +323,7 @@ let contractCode = new ContractCode(
 <td><strong>undefined</strong>. </td></tr></tbody></table>
 
 ## method *contractCode.compile*
+Compile this contract, unless a valid binary is present and a rebuild is not requested.
 ```typescript
 contractCode.compile(
   __namedParameters,
@@ -330,6 +331,7 @@ contractCode.compile(
 ```
 
 ## method *contractCode.upload*
+Upload this contract, unless a valid upload is present and a rebuild is not requested.
 ```typescript
 contractCode.upload(
   __namedParameters,
@@ -416,6 +418,7 @@ let contractInstance = new ContractInstance(
 <td><strong>undefined</strong>. </td></tr></tbody></table>
 
 ## method *contractInstance.compile*
+Compile this contract, unless a valid binary is present and a rebuild is not requested.
 ```typescript
 contractInstance.compile(
   __namedParameters,
@@ -423,6 +426,7 @@ contractInstance.compile(
 ```
 
 ## method *contractInstance.connect*
+Returns a client to this contract instance.
 ```typescript
 contractInstance.connect(
   agent,
@@ -447,6 +451,7 @@ contractInstance.serialize()
 ```
 
 ## method *contractInstance.upload*
+Upload this contract, unless a valid upload is present and a rebuild is not requested.
 ```typescript
 contractInstance.upload(
   __namedParameters,
@@ -506,6 +511,7 @@ let contractTemplate = new ContractTemplate(
 <td><strong>undefined</strong>. </td></tr></tbody></table>
 
 ## method *contractTemplate.compile*
+Compile this contract, unless a valid binary is present and a rebuild is not requested.
 ```typescript
 contractTemplate.compile(
   __namedParameters,
@@ -513,6 +519,7 @@ contractTemplate.compile(
 ```
 
 ## method *contractTemplate.contract*
+Create a new instance of this contract.
 ```typescript
 contractTemplate.contract(
   name,
@@ -521,6 +528,7 @@ contractTemplate.contract(
 ```
 
 ## method *contractTemplate.contracts*
+Create multiple instances of this contract.
 ```typescript
 contractTemplate.contracts(
   instanceParameters,
@@ -533,6 +541,7 @@ contractTemplate.serialize()
 ```
 
 ## method *contractTemplate.upload*
+Upload this contract, unless a valid upload is present and a rebuild is not requested.
 ```typescript
 contractTemplate.upload(
   __namedParameters,
@@ -563,6 +572,7 @@ let deployment = new Deployment(
 <td><strong>MapConstructor</strong>. </td></tr></tbody></table>
 
 ## method *deployment.[iterator]*
+Returns an iterable of entries in the map.
 ```typescript
 deployment.[iterator]()
 ```
@@ -594,6 +604,8 @@ deployment.clear()
 ```
 
 ## method *deployment.contract*
+Define a contract that will be automatically compiled, uploaded,
+and instantiated as part of this deployment.
 ```typescript
 deployment.contract(
   name,
@@ -602,6 +614,7 @@ deployment.contract(
 ```
 
 ## method *deployment.delete*
+
 ```typescript
 deployment.delete(
   key,
@@ -616,11 +629,13 @@ deployment.deploy(
 ```
 
 ## method *deployment.entries*
+Returns an iterable of key, value pairs for every entry in the map.
 ```typescript
 deployment.entries()
 ```
 
 ## method *deployment.forEach*
+Executes a provided function once per each key/value pair in the Map, in insertion order.
 ```typescript
 deployment.forEach(
   callbackfn,
@@ -629,6 +644,7 @@ deployment.forEach(
 ```
 
 ## method *deployment.get*
+Returns a specified element from the Map object. If the value that is associated to the provided key is an object, then you will get a reference to that object and any change made to that object will effectively modify it inside the Map.
 ```typescript
 deployment.get(
   key,
@@ -636,6 +652,7 @@ deployment.get(
 ```
 
 ## method *deployment.has*
+
 ```typescript
 deployment.has(
   key,
@@ -643,6 +660,7 @@ deployment.has(
 ```
 
 ## method *deployment.keys*
+Returns an iterable of keys in the map
 ```typescript
 deployment.keys()
 ```
@@ -661,6 +679,10 @@ deployment.set(
 ```
 
 ## method *deployment.template*
+Define a template, representing code that can be compiled
+and uploaded, but will not be automatically instantiated.
+This can then be used to define multiple instances of
+the same code.
 ```typescript
 deployment.template(
   name,
@@ -676,6 +698,7 @@ deployment.upload(
 ```
 
 ## method *deployment.values*
+Returns an iterable of values in the map
 ```typescript
 deployment.values()
 ```
@@ -737,6 +760,7 @@ let deploymentUnit = new DeploymentUnit(
 <td><strong>undefined</strong>. </td></tr></tbody></table>
 
 ## method *deploymentUnit.compile*
+Compile this contract, unless a valid binary is present and a rebuild is not requested.
 ```typescript
 deploymentUnit.compile(
   __namedParameters,
@@ -749,6 +773,7 @@ deploymentUnit.serialize()
 ```
 
 ## method *deploymentUnit.upload*
+Upload this contract, unless a valid upload is present and a rebuild is not requested.
 ```typescript
 deploymentUnit.upload(
   __namedParameters,
