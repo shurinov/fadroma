@@ -1,11 +1,11 @@
 <!-- @hackbg/docs: begin -->
 
 # class *Validator*
-```typescript
-const validator = new Validator(
+<pre>
+<strong>const</strong> validator = new Validator(
   properties: <em>Partial&lt;Validator&gt;</em>,
 )
-```
+</pre>
 
 <table><tbody>
 <tr><td valign="top">

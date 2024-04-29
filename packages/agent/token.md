@@ -12,12 +12,12 @@ using various tokens:
 # class *Amount*
 An amount of a fungible token.
 
-```typescript
-const amount = new Amount(
+<pre>
+<strong>const</strong> amount = new Amount(
   amount: <em>string | number | bigint</em>,
   token: <em>FungibleToken</em>,
 )
-```
+</pre>
 
 <table><tbody>
 <tr><td valign="top">
@@ -53,12 +53,12 @@ const amount = new Amount(
 # class *Coin*
 Represents some amount of native token.
 
-```typescript
-const coin = new Coin(
+<pre>
+<strong>const</strong> coin = new Coin(
   amount: <em>string | number</em>,
   denom: <em>string</em>,
 )
-```
+</pre>
 
 <table><tbody>
 <tr><td valign="top">
@@ -71,12 +71,12 @@ const coin = new Coin(
 # class *Custom*
 A contract-based token.
 
-```typescript
-const custom = new Custom(
+<pre>
+<strong>const</strong> custom = new Custom(
   address: <em>string</em>,
   codeHash: <em>string</em>,
 )
-```
+</pre>
 
 <table><tbody>
 <tr><td valign="top">
@@ -125,13 +125,13 @@ const custom = new Custom(
 # class *Fee*
 A constructable gas fee in native tokens.
 
-```typescript
-const fee = new Fee(
+<pre>
+<strong>const</strong> fee = new Fee(
   amount: <em>string | number | bigint</em>,
   denom: <em>string</em>,
   gas: <em>string</em>,
 )
-```
+</pre>
 
 <table><tbody>
 <tr><td valign="top">
@@ -152,9 +152,9 @@ const fee = new Fee(
 # class *Fungible*
 An abstract fungible token.
 
-```typescript
-const fungible = new Fungible()
-```
+<pre>
+<strong>const</strong> fungible = new Fungible()
+</pre>
 
 <table><tbody>
 <tr><td valign="top">
@@ -197,11 +197,11 @@ fungible.isNative()
 # class *Native*
 The chain's natively implemented token (such as SCRT on Secret Network).
 
-```typescript
-const native = new Native(
+<pre>
+<strong>const</strong> native = new Native(
   denom: <em>string</em>,
 )
-```
+</pre>
 
 <table><tbody>
 <tr><td valign="top">
@@ -254,9 +254,9 @@ const native = new Native(
 # class *NonFungible*
 An abstract non-fungible token.
 
-```typescript
-const nonFungible = new NonFungible()
-```
+<pre>
+<strong>const</strong> nonFungible = new NonFungible()
+</pre>
 
 <table><tbody>
 <tr><td valign="top">
@@ -272,12 +272,12 @@ const nonFungible = new NonFungible()
 # class *Pair*
 A pair of tokens.
 
-```typescript
-const pair = new Pair(
+<pre>
+<strong>const</strong> pair = new Pair(
   a: <em>Token</em>,
   b: <em>Token</em>,
 )
-```
+</pre>
 
 <table><tbody>
 <tr><td valign="top">
@@ -293,12 +293,12 @@ const pair = new Pair(
 # class *Swap*
 A pair of token amounts.
 
-```typescript
-const swap = new Swap(
+<pre>
+<strong>const</strong> swap = new Swap(
   a: <em>NonFungibleToken | TokenAmount</em>,
   b: <em>NonFungibleToken | TokenAmount</em>,
 )
-```
+</pre>
 
 <table><tbody>
 <tr><td valign="top">
@@ -314,9 +314,9 @@ const swap = new Swap(
 # class *Token*
 An identifiable token on a network.
 
-```typescript
-const token = new Token()
-```
+<pre>
+<strong>const</strong> token = new Token()
+</pre>
 
 <table><tbody>
 <tr><td valign="top">

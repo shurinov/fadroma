@@ -4,9 +4,9 @@
 A deploy store collects receipts corresponding to individual instances of Deployment,
 and can create Deployment objects with the data from the receipts.
 
-```typescript
-const deployStore = new DeployStore()
-```
+<pre>
+<strong>const</strong> deployStore = new DeployStore()
+</pre>
 
 <table><tbody>
 <tr><td valign="top">
@@ -92,9 +92,9 @@ Returns an iterable of values in the map
 </pre>
 
 # class *UploadStore*
-```typescript
-const uploadStore = new UploadStore()
-```
+<pre>
+<strong>const</strong> uploadStore = new UploadStore()
+</pre>
 
 <table><tbody>
 <tr><td valign="top">

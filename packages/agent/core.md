@@ -1,14 +1,14 @@
 <!-- @hackbg/docs: begin -->
 
 # class *Error*
-```typescript
-const error = new Error(
+<pre>
+<strong>const</strong> error = new Error(
   message: <em>string</em>,
-)const error = new Error(
+)<strong>const</strong> error = new Error(
   message: <em>string</em>,
   options: <em>ErrorOptions</em>,
 )
-```
+</pre>
 
 <table><tbody>
 <tr><td valign="top">

@@ -10,11 +10,11 @@ This is the base class for any connection backend, such as:
 You shouldn't need to instantiate this class directly.
 Instead, see `Connection`, `Devnet`, and their subclasses.
 
-```typescript
-const stubBackend = new StubBackend(
+<pre>
+<strong>const</strong> stubBackend = new StubBackend(
   properties: <em>Partial&lt;&gt;</em>,
 )
-```
+</pre>
 
 <table><tbody>
 <tr><td valign="top">
@@ -115,11 +115,11 @@ stubBackend.upload(
 # class *StubBatch*
 Builder object for batched transactions.
 
-```typescript
-const stubBatch = new StubBatch(
+<pre>
+<strong>const</strong> stubBatch = new StubBatch(
   properties: <em>Partial&lt;Batch&gt;</em>,
 )
-```
+</pre>
 
 <table><tbody>
 <tr><td valign="top">
@@ -176,11 +176,11 @@ The building block of a blockchain.
 Each block contains collection of transactions that are
 appended to the blockchain at a given point in time.
 
-```typescript
-const stubBlock = new StubBlock(
+<pre>
+<strong>const</strong> stubBlock = new StubBlock(
   properties: <em>Partial&lt;Block&gt;</em>,
 )
-```
+</pre>
 
 <table><tbody>
 <tr><td valign="top">
@@ -206,11 +206,11 @@ const stubBlock = new StubBlock(
 # class *StubCompiler*
 A compiler that does nothing. Used for testing.
 
-```typescript
-const stubCompiler = new StubCompiler(
+<pre>
+<strong>const</strong> stubCompiler = new StubCompiler(
   properties: <em>Partial&lt;Logged&gt;</em>,
 )
-```
+</pre>
 
 <table><tbody>
 <tr><td valign="top">
@@ -253,11 +253,11 @@ Use one of its subclasses in `@fadroma/scrt`, `@fadroma/cw`, `@fadroma/namada`
 to connect to the corresponding chain. Or, extend this class to implement
 support for new kinds of blockchains.
 
-```typescript
-const stubConnection = new StubConnection(
+<pre>
+<strong>const</strong> stubConnection = new StubConnection(
   properties: <em>Partial&lt;StubConnection&gt;</em>,
 )
-```
+</pre>
 
 <table><tbody>
 <tr><td valign="top">

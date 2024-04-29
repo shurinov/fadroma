@@ -17,11 +17,11 @@ This is the base class for any connection backend, such as:
 You shouldn't need to instantiate this class directly.
 Instead, see `Connection`, `Devnet`, and their subclasses.
 
-```typescript
-const backend = new Backend(
+<pre>
+<strong>const</strong> backend = new Backend(
   properties: <em>Partial&lt;Backend&gt;</em>,
 )
-```
+</pre>
 
 <table><tbody>
 <tr><td valign="top">
@@ -53,11 +53,11 @@ The building block of a blockchain.
 Each block contains collection of transactions that are
 appended to the blockchain at a given point in time.
 
-```typescript
-const block = new Block(
+<pre>
+<strong>const</strong> block = new Block(
   properties: <em>Partial&lt;Block&gt;</em>,
 )
-```
+</pre>
 
 <table><tbody>
 <tr><td valign="top">
@@ -87,11 +87,11 @@ Use one of its subclasses in `@fadroma/scrt`, `@fadroma/cw`, `@fadroma/namada`
 to connect to the corresponding chain. Or, extend this class to implement
 support for new kinds of blockchains.
 
-```typescript
-const connection = new Connection(
+<pre>
+<strong>const</strong> connection = new Connection(
   properties: <em>Partial&lt;Connection&gt;</em>,
 )
-```
+</pre>
 
 <table><tbody>
 <tr><td valign="top">
@@ -349,11 +349,11 @@ Native token of chain.
 Base class representing the API of a particular instance of a smart contract.
 Subclass this to add custom query and transaction methods.
 
-```typescript
-const contract = new Contract(
+<pre>
+<strong>const</strong> contract = new Contract(
   properties: <em>string | Partial&lt;Contract&gt;</em>,
 )
-```
+</pre>
 
 <table><tbody>
 <tr><td valign="top">
@@ -393,11 +393,11 @@ This is the base class for a remote endpoint.
 You shouldn't need to instantiate this class directly.
 Instead, see `Connection` and its subclasses.
 
-```typescript
-const endpoint = new Endpoint(
+<pre>
+<strong>const</strong> endpoint = new Endpoint(
   properties: <em>Partial&lt;Endpoint&gt;</em>,
 )
-```
+</pre>
 
 <table><tbody>
 <tr><td valign="top">

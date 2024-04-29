@@ -152,11 +152,11 @@ new LocalCompiledCode(
 # class *CompiledCode*
 An object representing a given compiled binary.
 
-```typescript
-const compiledCode = new CompiledCode(
+<pre>
+<strong>const</strong> compiledCode = new CompiledCode(
   properties: <em>Partial&lt;CompiledCode&gt;</em>,
 )
-```
+</pre>
 
 <table><tbody>
 <tr><td valign="top">
@@ -205,11 +205,11 @@ compiledCode.serialize()
 </pre>
 
 # class *Compiler*
-```typescript
-const compiler = new Compiler(
+<pre>
+<strong>const</strong> compiler = new Compiler(
   properties: <em>Partial&lt;Logged&gt;</em>,
 )
-```
+</pre>
 
 <table><tbody>
 <tr><td valign="top">
@@ -248,11 +248,11 @@ Compiler classes may override this to optimize.
 # class *LocalCompiledCode*
 An object representing a given compiled binary on the local filesystem.
 
-```typescript
-const localCompiledCode = new LocalCompiledCode(
+<pre>
+<strong>const</strong> localCompiledCode = new LocalCompiledCode(
   properties: <em>Partial&lt;CompiledCode&gt;</em>,
 )
-```
+</pre>
 
 <table><tbody>
 <tr><td valign="top">
@@ -303,11 +303,11 @@ localCompiledCode.serialize()
 # class *RustSourceCode*
 An object representing a given source code.
 
-```typescript
-const rustSourceCode = new RustSourceCode(
+<pre>
+<strong>const</strong> rustSourceCode = new RustSourceCode(
   properties: <em>Partial&lt;RustSourceCode&gt;</em>,
 )
-```
+</pre>
 
 <table><tbody>
 <tr><td valign="top">
@@ -358,11 +358,11 @@ rustSourceCode.serialize()
 # class *SourceCode*
 An object representing a given source code.
 
-```typescript
-const sourceCode = new SourceCode(
+<pre>
+<strong>const</strong> sourceCode = new SourceCode(
   properties: <em>Partial&lt;SourceCode&gt;</em>,
 )
-```
+</pre>
 
 <table><tbody>
 <tr><td valign="top">

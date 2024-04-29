@@ -57,11 +57,11 @@ assert.deepEqual(await client.withFee(fee2).getFee('my_method'), fee2)
 # class *Batch*
 Builder object for batched transactions.
 
-```typescript
-const batch = new Batch(
+<pre>
+<strong>const</strong> batch = new Batch(
   properties: <em>Partial&lt;Batch&gt;</em>,
 )
-```
+</pre>
 
 <table><tbody>
 <tr><td valign="top">
@@ -106,9 +106,9 @@ batch.upload(
 # class *Transaction*
 A transaction in a block on a chain.
 
-```typescript
-const transaction = new Transaction()
-```
+<pre>
+<strong>const</strong> transaction = new Transaction()
+</pre>
 
 <table><tbody>
 <tr><td valign="top">

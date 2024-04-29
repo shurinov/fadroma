@@ -1,11 +1,11 @@
 <!-- @hackbg/docs: begin -->
 
 # class *Proposal*
-```typescript
-const proposal = new Proposal(
+<pre>
+<strong>const</strong> proposal = new Proposal(
   properties: <em>Partial&lt;Proposal&gt;</em>,
 )
-```
+</pre>
 
 <table><tbody>
 <tr><td valign="top">
@@ -22,11 +22,11 @@ const proposal = new Proposal(
 <td><strong>undefined</strong>. </td></tr></tbody></table>
 
 # class *Vote*
-```typescript
-const vote = new Vote(
+<pre>
+<strong>const</strong> vote = new Vote(
   properties: <em>Partial&lt;Vote&gt;</em>,
 )
-```
+</pre>
 
 <table><tbody>
 <tr><td valign="top">

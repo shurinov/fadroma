@@ -6,11 +6,11 @@
 Represents a contract's code in all its forms, and the contract's lifecycle
 up to and including uploading it, but not instantiating it.
 
-```typescript
-const contractCode = new ContractCode(
+<pre>
+<strong>const</strong> contractCode = new ContractCode(
   properties: <em>Partial&lt;ContractCode&gt;</em>,
 )
-```
+</pre>
 
 <table><tbody>
 <tr><td valign="top">
@@ -81,11 +81,11 @@ A contract that is part of a deploment.
 - needed for deployment-wide deduplication
 - generates structured label
 
-```typescript
-const contractInstance = new ContractInstance(
+<pre>
+<strong>const</strong> contractInstance = new ContractInstance(
   properties: <em>Partial&lt;ContractCode&gt; & Partial&lt;DeploymentUnit&gt; & Partial&lt;ContractInstance&gt;</em>,
 )
-```
+</pre>
 
 <table><tbody>
 <tr><td valign="top">
@@ -240,11 +240,11 @@ A contract that is part of a deploment.
 - needed for deployment-wide deduplication
 - generates structured label
 
-```typescript
-const contractTemplate = new ContractTemplate(
+<pre>
+<strong>const</strong> contractTemplate = new ContractTemplate(
   properties: <em>Partial&lt;ContractCode&gt; & Partial&lt;DeploymentUnit&gt;</em>,
 )
-```
+</pre>
 
 <table><tbody>
 <tr><td valign="top">
@@ -353,11 +353,11 @@ contractTemplate.upload(
 # class *Deployment*
 A collection of contracts.
 
-```typescript
-const deployment = new Deployment(
+<pre>
+<strong>const</strong> deployment = new Deployment(
   properties: <em>Partial&lt;Deployment&gt;</em>,
 )
-```
+</pre>
 
 <table><tbody>
 <tr><td valign="top">
@@ -569,11 +569,11 @@ A contract that is part of a deploment.
 - needed for deployment-wide deduplication
 - generates structured label
 
-```typescript
-const deploymentUnit = new DeploymentUnit(
+<pre>
+<strong>const</strong> deploymentUnit = new DeploymentUnit(
   properties: <em>Partial&lt;ContractCode&gt; & Partial&lt;DeploymentUnit&gt;</em>,
 )
-```
+</pre>
 
 <table><tbody>
 <tr><td valign="top">
@@ -662,11 +662,11 @@ deploymentUnit.upload(
 # class *UploadedCode*
 Represents a contract's code, in binary form, uploaded to a given chain.
 
-```typescript
-const uploadedCode = new UploadedCode(
+<pre>
+<strong>const</strong> uploadedCode = new UploadedCode(
   properties: <em>Partial&lt;UploadedCode&gt;</em>,
 )
-```
+</pre>
 
 <table><tbody>
 <tr><td valign="top">
