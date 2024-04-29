@@ -53,35 +53,35 @@ const stubBackend = new StubBackend(
 
 ## method *stubBackend.connect*
 <pre>
-const result: <a href="https://example.com">Connection</a> = await stubBackend.connect(
+<strong>const</strong> result: <em><a href="#">Connection</a></em> = <strong>await</strong> stubBackend.connect(
   parameter,
 )
 </pre>
 
 ## method *stubBackend.execute*
 <pre>
-const result: unknown = stubBackend.execute(
+<strong>const</strong> result: <em>unknown</em> = stubBackend.execute(
   ...args,
 )
 </pre>
 
 ## method *stubBackend.export*
 <pre>
-const result: unknown = stubBackend.export(
+<strong>const</strong> result: <em>unknown</em> = stubBackend.export(
   ...args,
 )
 </pre>
 
 ## method *stubBackend.getIdentity*
 <pre>
-const result: <a href="https://example.com">Identity</a> = await stubBackend.getIdentity(
+<strong>const</strong> result: <em><a href="#">Identity</a></em> = <strong>await</strong> stubBackend.getIdentity(
   name,
 )
 </pre>
 
 ## method *stubBackend.import*
 <pre>
-const result: unknown = stubBackend.import(
+<strong>const</strong> result: <em>unknown</em> = stubBackend.import(
   ...args,
 )
 </pre>
@@ -97,18 +97,18 @@ stubBackend.instantiate(
 
 ## method *stubBackend.pause*
 <pre>
-const result: <a href="https://example.com">StubBackend</a> = await stubBackend.pause()
+<strong>const</strong> result: <em><a href="#">StubBackend</a></em> = <strong>await</strong> stubBackend.pause()
 </pre>
 
 ## method *stubBackend.start*
 <pre>
-const result: <a href="https://example.com">StubBackend</a> = await stubBackend.start()
+<strong>const</strong> result: <em><a href="#">StubBackend</a></em> = <strong>await</strong> stubBackend.start()
 </pre>
 
 ## method *stubBackend.upload*
 <pre>
 stubBackend.upload(
-  codeData: Uint8Array,
+  codeData: <em>Uint8Array</em>,
 )
 </pre>
 
@@ -135,7 +135,7 @@ const stubBatch = new StubBatch(
 ## method *stubBatch.execute*
 Add an execute message to the batch.
 <pre>
-const result: <a href="https://example.com">StubBatch</a> = stubBatch.execute(
+<strong>const</strong> result: <em><a href="#">StubBatch</a></em> = stubBatch.execute(
   ...args,
 )
 </pre>
@@ -143,7 +143,7 @@ const result: <a href="https://example.com">StubBatch</a> = stubBatch.execute(
 ## method *stubBatch.instantiate*
 Add an instantiate message to the batch.
 <pre>
-const result: <a href="https://example.com">StubBatch</a> = stubBatch.instantiate(
+<strong>const</strong> result: <em><a href="#">StubBatch</a></em> = stubBatch.instantiate(
   ...args,
 )
 </pre>
@@ -157,7 +157,7 @@ stubBatch.submit()
 ## method *stubBatch.upload*
 Add an upload message to the batch.
 <pre>
-const result: <a href="https://example.com">StubBatch</a> = stubBatch.upload(
+<strong>const</strong> result: <em><a href="#">StubBatch</a></em> = stubBatch.upload(
   ...args,
 )
 </pre>
@@ -186,7 +186,7 @@ const stubBlock = new StubBlock(
 
 ## method *stubBlock.getTransactionsById*
 <pre>
-const result: <a href="https://example.com">Record<string, Transaction></a> = await stubBlock.getTransactionsById()
+<strong>const</strong> result: <em><a href="#">Record<string, Transaction></a></em> = <strong>await</strong> stubBlock.getTransactionsById()
 </pre>
 
 ## method *stubBlock.getTransactionsInOrder*
@@ -221,7 +221,7 @@ Compile a source.
 `@hackbg/fadroma` implements dockerized and non-dockerized
 variants using its `build.impl.mjs` script.
 <pre>
-const result: <a href="https://example.com">CompiledCode</a> = await stubCompiler.build(
+<strong>const</strong> result: <em><a href="#">CompiledCode</a></em> = <strong>await</strong> stubCompiler.build(
   source,
   ...args,
 )
@@ -318,21 +318,21 @@ this property contains the URL to which requests are sent.</td></tr>
 ## method *stubConnection.batch*
 Construct a transaction batch.
 <pre>
-const result: <a href="https://example.com">Batch<StubConnection></a> = stubConnection.batch()
+<strong>const</strong> result: <em><a href="#">Batch<StubConnection></a></em> = stubConnection.batch()
 </pre>
 
 ## method *stubConnection.doExecute*
 <pre>
-const result: unknown = stubConnection.doExecute(
+<strong>const</strong> result: <em>unknown</em> = stubConnection.doExecute(
   contract,
-  message: Message,
+  message: <em>Message</em>,
   options,
 )
 </pre>
 
 ## method *stubConnection.doGetBalance*
 <pre>
-const result: string = stubConnection.doGetBalance(
+<strong>const</strong> result: <em>string</em> = stubConnection.doGetBalance(
   token,
   address,
 )
@@ -340,26 +340,26 @@ const result: string = stubConnection.doGetBalance(
 
 ## method *stubConnection.doGetBlockInfo*
 <pre>
-const result: <a href="https://example.com">StubBlock</a> = await stubConnection.doGetBlockInfo()
+<strong>const</strong> result: <em><a href="#">StubBlock</a></em> = <strong>await</strong> stubConnection.doGetBlockInfo()
 </pre>
 
 ## method *stubConnection.doGetCodeHashOfAddress*
 <pre>
-const result: string = stubConnection.doGetCodeHashOfAddress(
+<strong>const</strong> result: <em>string</em> = stubConnection.doGetCodeHashOfAddress(
   address,
 )
 </pre>
 
 ## method *stubConnection.doGetCodeHashOfCodeId*
 <pre>
-const result: string = stubConnection.doGetCodeHashOfCodeId(
+<strong>const</strong> result: <em>string</em> = stubConnection.doGetCodeHashOfCodeId(
   id,
 )
 </pre>
 
 ## method *stubConnection.doGetCodeId*
 <pre>
-const result: string = stubConnection.doGetCodeId(
+<strong>const</strong> result: <em>string</em> = stubConnection.doGetCodeId(
   address,
 )
 </pre>
@@ -378,28 +378,28 @@ stubConnection.doGetContractsByCodeId(
 
 ## method *stubConnection.doGetHeight*
 <pre>
-const result: number = stubConnection.doGetHeight()
+<strong>const</strong> result: <em>number</em> = stubConnection.doGetHeight()
 </pre>
 
 ## method *stubConnection.doInstantiate*
 <pre>
 stubConnection.doInstantiate(
   codeId,
-  options: Partial<ContractInstance>,
+  options: <em>Partial<ContractInstance></em>,
 )
 </pre>
 
 ## method *stubConnection.doQuery*
 <pre>
-const result: <a href="https://example.com">Q</a> = await stubConnection.doQuery(
+<strong>const</strong> result: <em><a href="#">Q</a></em> = <strong>await</strong> stubConnection.doQuery(
   contract,
-  message: Message,
+  message: <em>Message</em>,
 )
 </pre>
 
 ## method *stubConnection.doSend*
 <pre>
-const result: void = stubConnection.doSend(
+<strong>const</strong> result: <em>void</em> = stubConnection.doSend(
   recipient,
   sums,
   opts,
@@ -408,7 +408,7 @@ const result: void = stubConnection.doSend(
 
 ## method *stubConnection.doSendMany*
 <pre>
-const result: void = stubConnection.doSendMany(
+<strong>const</strong> result: <em>void</em> = stubConnection.doSendMany(
   outputs,
   opts,
 )
@@ -416,17 +416,17 @@ const result: void = stubConnection.doSendMany(
 
 ## method *stubConnection.doUpload*
 <pre>
-const result: <a href="https://example.com">UploadedCode</a> = await stubConnection.doUpload(
-  codeData: Uint8Array,
+<strong>const</strong> result: <em><a href="#">UploadedCode</a></em> = <strong>await</strong> stubConnection.doUpload(
+  codeData: <em>Uint8Array</em>,
 )
 </pre>
 
 ## method *stubConnection.execute*
 Call a given program's transaction method.
 <pre>
-const result: unknown = stubConnection.execute(
+<strong>const</strong> result: <em>unknown</em> = stubConnection.execute(
   contract,
-  message: Message,
+  message: <em>Message</em>,
   options,
 )
 </pre>
@@ -436,7 +436,7 @@ Get the balance in a given native token, of
 either this connection's identity's address,
 or of another given address.
 <pre>
-const result: unknown = stubConnection.getBalanceIn(
+<strong>const</strong> result: <em>unknown</em> = stubConnection.getBalanceIn(
   token,
   address,
 )
@@ -447,7 +447,7 @@ Get the balance in a native token of a given address,
 either in this connection's gas token,
 or in another given token.
 <pre>
-const result: unknown = stubConnection.getBalanceOf(
+<strong>const</strong> result: <em>unknown</em> = stubConnection.getBalanceOf(
   address,
   token,
 )
@@ -457,7 +457,7 @@ const result: unknown = stubConnection.getBalanceOf(
 Get info about a specific block.
 If no height is passed, gets info about the latest block.
 <pre>
-const result: <a href="https://example.com">StubBlock</a> = await stubConnection.getBlock(
+<strong>const</strong> result: <em><a href="#">StubBlock</a></em> = <strong>await</strong> stubConnection.getBlock(
   height,
 )
 </pre>
@@ -465,7 +465,7 @@ const result: <a href="https://example.com">StubBlock</a> = await stubConnection
 ## method *stubConnection.getCodeHashOfAddress*
 Get the code hash of a given address.
 <pre>
-const result: string = stubConnection.getCodeHashOfAddress(
+<strong>const</strong> result: <em>string</em> = stubConnection.getCodeHashOfAddress(
   contract,
 )
 </pre>
@@ -473,7 +473,7 @@ const result: string = stubConnection.getCodeHashOfAddress(
 ## method *stubConnection.getCodeHashOfCodeId*
 Get the code hash of a given code id.
 <pre>
-const result: string = stubConnection.getCodeHashOfCodeId(
+<strong>const</strong> result: <em>string</em> = stubConnection.getCodeHashOfCodeId(
   contract,
 )
 </pre>
@@ -481,20 +481,20 @@ const result: string = stubConnection.getCodeHashOfCodeId(
 ## method *stubConnection.getCodeId*
 Get the code id of a given address.
 <pre>
-const result: string = stubConnection.getCodeId(
+<strong>const</strong> result: <em>string</em> = stubConnection.getCodeId(
   contract,
 )
 </pre>
 
 ## method *stubConnection.getCodes*
 <pre>
-const result: <a href="https://example.com">Record<string, UploadedCode></a> = await stubConnection.getCodes()
+<strong>const</strong> result: <em><a href="#">Record<string, UploadedCode></a></em> = <strong>await</strong> stubConnection.getCodes()
 </pre>
 
 ## method *stubConnection.getContract*
 Get a client handle for a specific smart contract, authenticated as as this agent.
 <pre>
-const result: <a href="https://example.com">Contract</a> = stubConnection.getContract(
+<strong>const</strong> result: <em><a href="#">Contract</a></em> = stubConnection.getContract(
   options,
 )
 </pre>
@@ -502,33 +502,33 @@ const result: <a href="https://example.com">Contract</a> = stubConnection.getCon
 ## method *stubConnection.getContractsByCodeId*
 Get client handles for all contracts that match a code ID
 <pre>
-const result: <a href="https://example.com">Record<string, Contract></a> = await stubConnection.getContractsByCodeId(
+<strong>const</strong> result: <em><a href="#">Record<string, Contract></a></em> = <strong>await</strong> stubConnection.getContractsByCodeId(
   id,
 )
 </pre>
 <pre>
-const result: <a href="https://example.com">Record<string, InstanceType></a> = await stubConnection.getContractsByCodeId(
+<strong>const</strong> result: <em><a href="#">Record<string, InstanceType></a></em> = <strong>await</strong> stubConnection.getContractsByCodeId(
   id,
-  $C: C,
+  $C: <em>C</em>,
 )
 </pre>
 
 ## method *stubConnection.getContractsByCodeIds*
 Get client handles for all contracts that match multiple code IDs
 <pre>
-const result: <a href="https://example.com">Record<string, Record></a> = await stubConnection.getContractsByCodeIds(
-  ids: Iterable<string>,
+<strong>const</strong> result: <em><a href="#">Record<string, Record></a></em> = <strong>await</strong> stubConnection.getContractsByCodeIds(
+  ids: <em>Iterable<string></em>,
 )
 </pre>
 <pre>
-const result: <a href="https://example.com">Record<string, Record></a> = await stubConnection.getContractsByCodeIds(
-  ids: Iterable<string>,
-  $C: C,
+<strong>const</strong> result: <em><a href="#">Record<string, Record></a></em> = <strong>await</strong> stubConnection.getContractsByCodeIds(
+  ids: <em>Iterable<string></em>,
+  $C: <em>C</em>,
 )
 </pre>
 <pre>
-const result: <a href="https://example.com">Record<string, Record></a> = await stubConnection.getContractsByCodeIds(
-  ids: Record<string, C>,
+<strong>const</strong> result: <em><a href="#">Record<string, Record></a></em> = <strong>await</strong> stubConnection.getContractsByCodeIds(
+  ids: <em>Record<string, C></em>,
 )
 </pre>
 
@@ -537,23 +537,23 @@ Instantiate a new program from a code id, label and init message.
 <pre>
 stubConnection.instantiate(
   contract,
-  options: Partial<ContractInstance>,
+  options: <em>Partial<ContractInstance></em>,
 )
 </pre>
 
 ## method *stubConnection.query*
 Query a contract.
 <pre>
-const result: <a href="https://example.com">Q</a> = await stubConnection.query(
+<strong>const</strong> result: <em><a href="#">Q</a></em> = <strong>await</strong> stubConnection.query(
   contract,
-  message: Message,
+  message: <em>Message</em>,
 )
 </pre>
 
 ## method *stubConnection.send*
 Send native tokens to 1 recipient.
 <pre>
-const result: unknown = stubConnection.send(
+<strong>const</strong> result: <em>unknown</em> = stubConnection.send(
   recipient,
   amounts,
   options,
@@ -572,7 +572,7 @@ stubConnection.upload(
 ## method *stubConnection.gas*
 Native token of chain.
 <pre>
-const result: <a href="https://example.com">TokenAmount</a> = stubConnection.gas(
+<strong>const</strong> result: <em><a href="#">TokenAmount</a></em> = stubConnection.gas(
   amount,
 )
 </pre>

@@ -74,19 +74,19 @@ const amount = new Amount(
 
 ## method *amount.asCoin*
 <pre>
-const result: <a href="https://example.com">ICoin</a> = amount.asCoin()
+<strong>const</strong> result: <em><a href="#">ICoin</a></em> = amount.asCoin()
 </pre>
 
 ## method *amount.asFee*
 <pre>
-const result: <a href="https://example.com">IFee</a> = amount.asFee(
+<strong>const</strong> result: <em><a href="#">IFee</a></em> = amount.asFee(
   gas,
 )
 </pre>
 
 ## method *amount.toString*
 <pre>
-const result: string = amount.toString()
+<strong>const</strong> result: <em>string</em> = amount.toString()
 </pre>
 
 # class *Coin*
@@ -130,7 +130,7 @@ const custom = new Custom(
 
 ## method *custom.amount*
 <pre>
-const result: <a href="https://example.com">TokenAmount</a> = custom.amount(
+<strong>const</strong> result: <em><a href="#">TokenAmount</a></em> = custom.amount(
   amount,
 )
 </pre>
@@ -138,24 +138,24 @@ const result: <a href="https://example.com">TokenAmount</a> = custom.amount(
 ## method *custom.isCustom*
 
 <pre>
-const result: boolean = custom.isCustom()
+<strong>const</strong> result: <em>boolean</em> = custom.isCustom()
 </pre>
 
 ## method *custom.isFungible*
 
 <pre>
-const result: boolean = custom.isFungible()
+<strong>const</strong> result: <em>boolean</em> = custom.isFungible()
 </pre>
 
 ## method *custom.isNative*
 
 <pre>
-const result: boolean = custom.isNative()
+<strong>const</strong> result: <em>boolean</em> = custom.isNative()
 </pre>
 
 ## method *custom.addZeros*
 <pre>
-const result: string = custom.addZeros(
+<strong>const</strong> result: <em>string</em> = custom.addZeros(
   n,
   z,
 )
@@ -182,7 +182,7 @@ const fee = new Fee(
 
 ## method *fee.add*
 <pre>
-const result: void = fee.add(
+<strong>const</strong> result: <em>void</em> = fee.add(
   amount,
   denom,
 )
@@ -202,7 +202,7 @@ new Fungible()
 
 ## method *fungible.amount*
 <pre>
-const result: <a href="https://example.com">TokenAmount</a> = fungible.amount(
+<strong>const</strong> result: <em><a href="#">TokenAmount</a></em> = fungible.amount(
   amount,
 )
 </pre>
@@ -216,7 +216,7 @@ fungible.isCustom()
 ## method *fungible.isFungible*
 
 <pre>
-const result: boolean = fungible.isFungible()
+<strong>const</strong> result: <em>boolean</em> = fungible.isFungible()
 </pre>
 
 ## method *fungible.isNative*
@@ -227,7 +227,7 @@ fungible.isNative()
 
 ## method *fungible.addZeros*
 <pre>
-const result: string = fungible.addZeros(
+<strong>const</strong> result: <em>string</em> = fungible.addZeros(
   n,
   z,
 )
@@ -252,14 +252,14 @@ const native = new Native(
 
 ## method *native.amount*
 <pre>
-const result: <a href="https://example.com">TokenAmount</a> = native.amount(
+<strong>const</strong> result: <em><a href="#">TokenAmount</a></em> = native.amount(
   amount,
 )
 </pre>
 
 ## method *native.fee*
 <pre>
-const result: <a href="https://example.com">IFee</a> = native.fee(
+<strong>const</strong> result: <em><a href="#">IFee</a></em> = native.fee(
   amount,
 )
 </pre>
@@ -267,24 +267,24 @@ const result: <a href="https://example.com">IFee</a> = native.fee(
 ## method *native.isCustom*
 
 <pre>
-const result: boolean = native.isCustom()
+<strong>const</strong> result: <em>boolean</em> = native.isCustom()
 </pre>
 
 ## method *native.isFungible*
 
 <pre>
-const result: boolean = native.isFungible()
+<strong>const</strong> result: <em>boolean</em> = native.isFungible()
 </pre>
 
 ## method *native.isNative*
 
 <pre>
-const result: boolean = native.isNative()
+<strong>const</strong> result: <em>boolean</em> = native.isNative()
 </pre>
 
 ## method *native.addZeros*
 <pre>
-const result: string = native.addZeros(
+<strong>const</strong> result: <em>string</em> = native.addZeros(
   n,
   z,
 )
@@ -305,7 +305,7 @@ new NonFungible()
 ## method *nonFungible.isFungible*
 
 <pre>
-const result: boolean = nonFungible.isFungible()
+<strong>const</strong> result: <em>boolean</em> = nonFungible.isFungible()
 </pre>
 
 # class *Pair*

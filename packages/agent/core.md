@@ -33,9 +33,9 @@ const error = new Error(
 ## method *error.captureStackTrace*
 Create .stack property on a target object
 <pre>
-const result: void = error.captureStackTrace(
+<strong>const</strong> result: <em>void</em> = error.captureStackTrace(
   targetObject,
-  constructorOpt: Function,
+  constructorOpt: <em>Function</em>,
 )
 </pre>
 

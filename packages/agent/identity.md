@@ -58,7 +58,7 @@ const identity = new Identity(
 
 ## method *identity.sign*
 <pre>
-const result: unknown = identity.sign(
+<strong>const</strong> result: <em>unknown</em> = identity.sign(
   doc,
 )
 </pre>

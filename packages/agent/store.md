@@ -25,18 +25,18 @@ new DeployStore()
 ## method *deployStore.[iterator]*
 Returns an iterable of entries in the map.
 <pre>
-const result: <a href="https://example.com">IterableIterator<></a> = deployStore.[iterator]()
+<strong>const</strong> result: <em><a href="#">IterableIterator<></a></em> = deployStore.[iterator]()
 </pre>
 
 ## method *deployStore.clear*
 <pre>
-const result: void = deployStore.clear()
+<strong>const</strong> result: <em>void</em> = deployStore.clear()
 </pre>
 
 ## method *deployStore.delete*
 
 <pre>
-const result: boolean = deployStore.delete(
+<strong>const</strong> result: <em>boolean</em> = deployStore.delete(
   key,
 )
 </pre>
@@ -44,13 +44,13 @@ const result: boolean = deployStore.delete(
 ## method *deployStore.entries*
 Returns an iterable of key, value pairs for every entry in the map.
 <pre>
-const result: <a href="https://example.com">IterableIterator<></a> = deployStore.entries()
+<strong>const</strong> result: <em><a href="#">IterableIterator<></a></em> = deployStore.entries()
 </pre>
 
 ## method *deployStore.forEach*
 Executes a provided function once per each key/value pair in the Map, in insertion order.
 <pre>
-const result: void = deployStore.forEach(
+<strong>const</strong> result: <em>void</em> = deployStore.forEach(
   callbackfn,
   thisArg,
 )
@@ -58,7 +58,7 @@ const result: void = deployStore.forEach(
 
 ## method *deployStore.get*
 <pre>
-const result: <a href="https://example.com">Partial<></a> = deployStore.get(
+<strong>const</strong> result: <em><a href="#">Partial<></a></em> = deployStore.get(
   name,
 )
 </pre>
@@ -66,7 +66,7 @@ const result: <a href="https://example.com">Partial<></a> = deployStore.get(
 ## method *deployStore.has*
 
 <pre>
-const result: boolean = deployStore.has(
+<strong>const</strong> result: <em>boolean</em> = deployStore.has(
   key,
 )
 </pre>
@@ -74,7 +74,7 @@ const result: boolean = deployStore.has(
 ## method *deployStore.keys*
 Returns an iterable of keys in the map
 <pre>
-const result: <a href="https://example.com">IterableIterator<string></a> = deployStore.keys()
+<strong>const</strong> result: <em><a href="#">IterableIterator<string></a></em> = deployStore.keys()
 </pre>
 
 ## method *deployStore.set*
@@ -88,7 +88,7 @@ deployStore.set(
 ## method *deployStore.values*
 Returns an iterable of values in the map
 <pre>
-const result: <a href="https://example.com">IterableIterator<Partial></a> = deployStore.values()
+<strong>const</strong> result: <em><a href="#">IterableIterator<Partial></a></em> = deployStore.values()
 </pre>
 
 # class *UploadStore*
@@ -110,18 +110,18 @@ new UploadStore()
 ## method *uploadStore.[iterator]*
 Returns an iterable of entries in the map.
 <pre>
-const result: <a href="https://example.com">IterableIterator<></a> = uploadStore.[iterator]()
+<strong>const</strong> result: <em><a href="#">IterableIterator<></a></em> = uploadStore.[iterator]()
 </pre>
 
 ## method *uploadStore.clear*
 <pre>
-const result: void = uploadStore.clear()
+<strong>const</strong> result: <em>void</em> = uploadStore.clear()
 </pre>
 
 ## method *uploadStore.delete*
 
 <pre>
-const result: boolean = uploadStore.delete(
+<strong>const</strong> result: <em>boolean</em> = uploadStore.delete(
   key,
 )
 </pre>
@@ -129,13 +129,13 @@ const result: boolean = uploadStore.delete(
 ## method *uploadStore.entries*
 Returns an iterable of key, value pairs for every entry in the map.
 <pre>
-const result: <a href="https://example.com">IterableIterator<></a> = uploadStore.entries()
+<strong>const</strong> result: <em><a href="#">IterableIterator<></a></em> = uploadStore.entries()
 </pre>
 
 ## method *uploadStore.forEach*
 Executes a provided function once per each key/value pair in the Map, in insertion order.
 <pre>
-const result: void = uploadStore.forEach(
+<strong>const</strong> result: <em>void</em> = uploadStore.forEach(
   callbackfn,
   thisArg,
 )
@@ -143,7 +143,7 @@ const result: void = uploadStore.forEach(
 
 ## method *uploadStore.get*
 <pre>
-const result: <a href="https://example.com">UploadedCode</a> = uploadStore.get(
+<strong>const</strong> result: <em><a href="#">UploadedCode</a></em> = uploadStore.get(
   codeHash,
 )
 </pre>
@@ -151,7 +151,7 @@ const result: <a href="https://example.com">UploadedCode</a> = uploadStore.get(
 ## method *uploadStore.has*
 
 <pre>
-const result: boolean = uploadStore.has(
+<strong>const</strong> result: <em>boolean</em> = uploadStore.has(
   key,
 )
 </pre>
@@ -159,20 +159,20 @@ const result: boolean = uploadStore.has(
 ## method *uploadStore.keys*
 Returns an iterable of keys in the map
 <pre>
-const result: <a href="https://example.com">IterableIterator<string></a> = uploadStore.keys()
+<strong>const</strong> result: <em><a href="#">IterableIterator<string></a></em> = uploadStore.keys()
 </pre>
 
 ## method *uploadStore.set*
 <pre>
 uploadStore.set(
   codeHash,
-  value: Partial<UploadedCode>,
+  value: <em>Partial<UploadedCode></em>,
 )
 </pre>
 
 ## method *uploadStore.values*
 Returns an iterable of values in the map
 <pre>
-const result: <a href="https://example.com">IterableIterator<UploadedCode></a> = uploadStore.values()
+<strong>const</strong> result: <em><a href="#">IterableIterator<UploadedCode></a></em> = uploadStore.values()
 </pre>
 <!-- @hackbg/docs: end -->

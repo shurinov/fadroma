@@ -36,7 +36,7 @@ const backend = new Backend(
 
 ## method *backend.connect*
 <pre>
-const result: <a href="https://example.com">Connection</a> = await backend.connect(
+<strong>const</strong> result: <em><a href="#">Connection</a></em> = <strong>await</strong> backend.connect(
   parameter,
 )
 </pre>
@@ -72,7 +72,7 @@ const block = new Block(
 
 ## method *block.getTransactionsById*
 <pre>
-const result: <a href="https://example.com">Record<string, Transaction></a> = await block.getTransactionsById()
+<strong>const</strong> result: <em><a href="#">Record<string, Transaction></a></em> = <strong>await</strong> block.getTransactionsById()
 </pre>
 
 ## method *block.getTransactionsInOrder*
@@ -158,14 +158,14 @@ this property contains the URL to which requests are sent.</td></tr>
 ## method *connection.batch*
 Construct a transaction batch.
 <pre>
-const result: <a href="https://example.com">Batch<Connection></a> = connection.batch()
+<strong>const</strong> result: <em><a href="#">Batch<Connection></a></em> = connection.batch()
 </pre>
 
 ## method *connection.doExecute*
 <pre>
-const result: unknown = connection.doExecute(
+<strong>const</strong> result: <em>unknown</em> = connection.doExecute(
   contract,
-  message: Message,
+  message: <em>Message</em>,
   options,
 )
 </pre>
@@ -180,68 +180,68 @@ connection.doGetBalance(
 
 ## method *connection.doGetBlockInfo*
 <pre>
-const result: <a href="https://example.com">Block</a> = await connection.doGetBlockInfo(
+<strong>const</strong> result: <em><a href="#">Block</a></em> = <strong>await</strong> connection.doGetBlockInfo(
   height,
 )
 </pre>
 
 ## method *connection.doGetCodeHashOfAddress*
 <pre>
-const result: string = connection.doGetCodeHashOfAddress(
+<strong>const</strong> result: <em>string</em> = connection.doGetCodeHashOfAddress(
   contract,
 )
 </pre>
 
 ## method *connection.doGetCodeHashOfCodeId*
 <pre>
-const result: string = connection.doGetCodeHashOfCodeId(
+<strong>const</strong> result: <em>string</em> = connection.doGetCodeHashOfCodeId(
   codeId,
 )
 </pre>
 
 ## method *connection.doGetCodeId*
 <pre>
-const result: string = connection.doGetCodeId(
+<strong>const</strong> result: <em>string</em> = connection.doGetCodeId(
   contract,
 )
 </pre>
 
 ## method *connection.doGetCodes*
 <pre>
-const result: <a href="https://example.com">Record<string, UploadedCode></a> = await connection.doGetCodes()
+<strong>const</strong> result: <em><a href="#">Record<string, UploadedCode></a></em> = <strong>await</strong> connection.doGetCodes()
 </pre>
 
 ## method *connection.doGetContractsByCodeId*
 <pre>
-const result: <a href="https://example.com">Iterable<></a> = await connection.doGetContractsByCodeId(
+<strong>const</strong> result: <em><a href="#">Iterable<></a></em> = <strong>await</strong> connection.doGetContractsByCodeId(
   id,
 )
 </pre>
 
 ## method *connection.doGetHeight*
 <pre>
-const result: number = connection.doGetHeight()
+<strong>const</strong> result: <em>number</em> = connection.doGetHeight()
 </pre>
 
 ## method *connection.doInstantiate*
 <pre>
-const result: <a href="https://example.com">Partial<ContractInstance></a> = await connection.doInstantiate(
+<strong>const</strong> result: <em><a href="#">Partial<ContractInstance></a></em> = <strong>await</strong> connection.doInstantiate(
   codeId,
-  options: Partial<ContractInstance>,
+  options: <em>Partial<ContractInstance></em>,
 )
 </pre>
 
 ## method *connection.doQuery*
 <pre>
-const result: unknown = connection.doQuery(
+<strong>const</strong> result: <em>unknown</em> = connection.doQuery(
   contract,
-  message: Message,
+  message: <em>Message</em>,
 )
 </pre>
 
 ## method *connection.doSend*
 <pre>
-const result: unknown = connection.doSend(
+<strong>const</strong> result: <em>unknown</em> = connection.doSend(
   recipient,
   amounts,
   options,
@@ -250,7 +250,7 @@ const result: unknown = connection.doSend(
 
 ## method *connection.doSendMany*
 <pre>
-const result: unknown = connection.doSendMany(
+<strong>const</strong> result: <em>unknown</em> = connection.doSendMany(
   outputs,
   options,
 )
@@ -258,8 +258,8 @@ const result: unknown = connection.doSendMany(
 
 ## method *connection.doUpload*
 <pre>
-const result: <a href="https://example.com">Partial<UploadedCode></a> = await connection.doUpload(
-  data: Uint8Array,
+<strong>const</strong> result: <em><a href="#">Partial<UploadedCode></a></em> = <strong>await</strong> connection.doUpload(
+  data: <em>Uint8Array</em>,
   options,
 )
 </pre>
@@ -267,9 +267,9 @@ const result: <a href="https://example.com">Partial<UploadedCode></a> = await co
 ## method *connection.execute*
 Call a given program's transaction method.
 <pre>
-const result: unknown = connection.execute(
+<strong>const</strong> result: <em>unknown</em> = connection.execute(
   contract,
-  message: Message,
+  message: <em>Message</em>,
   options,
 )
 </pre>
@@ -279,7 +279,7 @@ Get the balance in a given native token, of
 either this connection's identity's address,
 or of another given address.
 <pre>
-const result: unknown = connection.getBalanceIn(
+<strong>const</strong> result: <em>unknown</em> = connection.getBalanceIn(
   token,
   address,
 )
@@ -290,7 +290,7 @@ Get the balance in a native token of a given address,
 either in this connection's gas token,
 or in another given token.
 <pre>
-const result: unknown = connection.getBalanceOf(
+<strong>const</strong> result: <em>unknown</em> = connection.getBalanceOf(
   address,
   token,
 )
@@ -300,7 +300,7 @@ const result: unknown = connection.getBalanceOf(
 Get info about a specific block.
 If no height is passed, gets info about the latest block.
 <pre>
-const result: <a href="https://example.com">Block</a> = await connection.getBlock(
+<strong>const</strong> result: <em><a href="#">Block</a></em> = <strong>await</strong> connection.getBlock(
   height,
 )
 </pre>
@@ -308,7 +308,7 @@ const result: <a href="https://example.com">Block</a> = await connection.getBloc
 ## method *connection.getCodeHashOfAddress*
 Get the code hash of a given address.
 <pre>
-const result: string = connection.getCodeHashOfAddress(
+<strong>const</strong> result: <em>string</em> = connection.getCodeHashOfAddress(
   contract,
 )
 </pre>
@@ -316,7 +316,7 @@ const result: string = connection.getCodeHashOfAddress(
 ## method *connection.getCodeHashOfCodeId*
 Get the code hash of a given code id.
 <pre>
-const result: string = connection.getCodeHashOfCodeId(
+<strong>const</strong> result: <em>string</em> = connection.getCodeHashOfCodeId(
   contract,
 )
 </pre>
@@ -324,20 +324,20 @@ const result: string = connection.getCodeHashOfCodeId(
 ## method *connection.getCodeId*
 Get the code id of a given address.
 <pre>
-const result: string = connection.getCodeId(
+<strong>const</strong> result: <em>string</em> = connection.getCodeId(
   contract,
 )
 </pre>
 
 ## method *connection.getCodes*
 <pre>
-const result: <a href="https://example.com">Record<string, UploadedCode></a> = await connection.getCodes()
+<strong>const</strong> result: <em><a href="#">Record<string, UploadedCode></a></em> = <strong>await</strong> connection.getCodes()
 </pre>
 
 ## method *connection.getContract*
 Get a client handle for a specific smart contract, authenticated as as this agent.
 <pre>
-const result: <a href="https://example.com">Contract</a> = connection.getContract(
+<strong>const</strong> result: <em><a href="#">Contract</a></em> = connection.getContract(
   options,
 )
 </pre>
@@ -345,33 +345,33 @@ const result: <a href="https://example.com">Contract</a> = connection.getContrac
 ## method *connection.getContractsByCodeId*
 Get client handles for all contracts that match a code ID
 <pre>
-const result: <a href="https://example.com">Record<string, Contract></a> = await connection.getContractsByCodeId(
+<strong>const</strong> result: <em><a href="#">Record<string, Contract></a></em> = <strong>await</strong> connection.getContractsByCodeId(
   id,
 )
 </pre>
 <pre>
-const result: <a href="https://example.com">Record<string, InstanceType></a> = await connection.getContractsByCodeId(
+<strong>const</strong> result: <em><a href="#">Record<string, InstanceType></a></em> = <strong>await</strong> connection.getContractsByCodeId(
   id,
-  $C: C,
+  $C: <em>C</em>,
 )
 </pre>
 
 ## method *connection.getContractsByCodeIds*
 Get client handles for all contracts that match multiple code IDs
 <pre>
-const result: <a href="https://example.com">Record<string, Record></a> = await connection.getContractsByCodeIds(
-  ids: Iterable<string>,
+<strong>const</strong> result: <em><a href="#">Record<string, Record></a></em> = <strong>await</strong> connection.getContractsByCodeIds(
+  ids: <em>Iterable<string></em>,
 )
 </pre>
 <pre>
-const result: <a href="https://example.com">Record<string, Record></a> = await connection.getContractsByCodeIds(
-  ids: Iterable<string>,
-  $C: C,
+<strong>const</strong> result: <em><a href="#">Record<string, Record></a></em> = <strong>await</strong> connection.getContractsByCodeIds(
+  ids: <em>Iterable<string></em>,
+  $C: <em>C</em>,
 )
 </pre>
 <pre>
-const result: <a href="https://example.com">Record<string, Record></a> = await connection.getContractsByCodeIds(
-  ids: Record<string, C>,
+<strong>const</strong> result: <em><a href="#">Record<string, Record></a></em> = <strong>await</strong> connection.getContractsByCodeIds(
+  ids: <em>Record<string, C></em>,
 )
 </pre>
 
@@ -380,23 +380,23 @@ Instantiate a new program from a code id, label and init message.
 <pre>
 connection.instantiate(
   contract,
-  options: Partial<ContractInstance>,
+  options: <em>Partial<ContractInstance></em>,
 )
 </pre>
 
 ## method *connection.query*
 Query a contract.
 <pre>
-const result: <a href="https://example.com">Q</a> = await connection.query(
+<strong>const</strong> result: <em><a href="#">Q</a></em> = <strong>await</strong> connection.query(
   contract,
-  message: Message,
+  message: <em>Message</em>,
 )
 </pre>
 
 ## method *connection.send*
 Send native tokens to 1 recipient.
 <pre>
-const result: unknown = connection.send(
+<strong>const</strong> result: <em>unknown</em> = connection.send(
   recipient,
   amounts,
   options,
@@ -415,7 +415,7 @@ connection.upload(
 ## method *connection.gas*
 Native token of chain.
 <pre>
-const result: <a href="https://example.com">TokenAmount</a> = connection.gas(
+<strong>const</strong> result: <em><a href="#">TokenAmount</a></em> = connection.gas(
   amount,
 )
 </pre>
@@ -444,8 +444,8 @@ const contract = new Contract(
 ## method *contract.execute*
 Execute a transaction on the specified instance as the specified Connection.
 <pre>
-const result: unknown = contract.execute(
-  message: Message,
+<strong>const</strong> result: <em>unknown</em> = contract.execute(
+  message: <em>Message</em>,
   options,
 )
 </pre>
@@ -453,8 +453,8 @@ const result: unknown = contract.execute(
 ## method *contract.query*
 Execute a query on the specified instance as the specified Connection.
 <pre>
-const result: <a href="https://example.com">Q</a> = await contract.query(
-  message: Message,
+<strong>const</strong> result: <em><a href="#">Q</a></em> = <strong>await</strong> contract.query(
+  message: <em>Message</em>,
 )
 </pre>
 
