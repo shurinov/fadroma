@@ -165,7 +165,7 @@ const result: Batch<Connection> = connection.batch()
 ```typescript
 const result: unknown = connection.doExecute(
   contract,
-  message,
+  message: Message,
   options,
 )
 ```
@@ -227,7 +227,7 @@ const result: number = connection.doGetHeight()
 ```typescript
 const result: Partial<ContractInstance> = await connection.doInstantiate(
   codeId,
-  options,
+  options: Partial<ContractInstance>,
 )
 ```
 
@@ -235,7 +235,7 @@ const result: Partial<ContractInstance> = await connection.doInstantiate(
 ```typescript
 const result: unknown = connection.doQuery(
   contract,
-  message,
+  message: Message,
 )
 ```
 
@@ -259,7 +259,7 @@ const result: unknown = connection.doSendMany(
 ## method *connection.doUpload*
 ```typescript
 const result: Partial<UploadedCode> = await connection.doUpload(
-  data,
+  data: Uint8Array,
   options,
 )
 ```
@@ -269,7 +269,7 @@ Call a given program's transaction method.
 ```typescript
 const result: unknown = connection.execute(
   contract,
-  message,
+  message: Message,
   options,
 )
 ```
@@ -352,7 +352,7 @@ const result: Record<string, Contract> = await connection.getContractsByCodeId(
 ```typescript
 const result: Record<string, InstanceType> = await connection.getContractsByCodeId(
   id,
-  $C,
+  $C: C,
 )
 ```
 
@@ -360,18 +360,18 @@ const result: Record<string, InstanceType> = await connection.getContractsByCode
 Get client handles for all contracts that match multiple code IDs
 ```typescript
 const result: Record<string, Record> = await connection.getContractsByCodeIds(
-  ids,
+  ids: Iterable<string>,
 )
 ```
 ```typescript
 const result: Record<string, Record> = await connection.getContractsByCodeIds(
-  ids,
-  $C,
+  ids: Iterable<string>,
+  $C: C,
 )
 ```
 ```typescript
 const result: Record<string, Record> = await connection.getContractsByCodeIds(
-  ids,
+  ids: Record<string, C>,
 )
 ```
 
@@ -380,7 +380,7 @@ Instantiate a new program from a code id, label and init message.
 ```typescript
 connection.instantiate(
   contract,
-  options,
+  options: Partial<ContractInstance>,
 )
 ```
 
@@ -389,7 +389,7 @@ Query a contract.
 ```typescript
 const result: Q = await connection.query(
   contract,
-  message,
+  message: Message,
 )
 ```
 
@@ -445,7 +445,7 @@ const contract = new Contract(
 Execute a transaction on the specified instance as the specified Connection.
 ```typescript
 const result: unknown = contract.execute(
-  message,
+  message: Message,
   options,
 )
 ```
@@ -454,7 +454,7 @@ const result: unknown = contract.execute(
 Execute a query on the specified instance as the specified Connection.
 ```typescript
 const result: Q = await contract.query(
-  message,
+  message: Message,
 )
 ```
 

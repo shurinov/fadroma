@@ -35,7 +35,7 @@ Create .stack property on a target object
 ```typescript
 const result: void = error.captureStackTrace(
   targetObject,
-  constructorOpt,
+  constructorOpt: Function,
 )
 ```
 

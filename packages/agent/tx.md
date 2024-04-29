@@ -75,7 +75,7 @@ const batch = new Batch(
 Add an execute message to the batch.
 ```typescript
 batch.execute(
-  ...args,
+  ...args: Parameters<>,
 )
 ```
 
@@ -83,7 +83,7 @@ batch.execute(
 Add an instantiate message to the batch.
 ```typescript
 batch.instantiate(
-  ...args,
+  ...args: Parameters<>,
 )
 ```
 
@@ -99,7 +99,7 @@ const result: unknown = batch.submit(
 Add an upload message to the batch.
 ```typescript
 batch.upload(
-  ...args,
+  ...args: Parameters<>,
 )
 ```
 

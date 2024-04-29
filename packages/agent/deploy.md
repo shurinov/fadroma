@@ -429,7 +429,7 @@ contractInstance.compile(
 Returns a client to this contract instance.
 ```typescript
 const result: Contract = contractInstance.connect(
-  agent,
+  agent: Connection,
 )
 ```
 
@@ -523,7 +523,7 @@ Create a new instance of this contract.
 ```typescript
 const result: ContractInstance = contractTemplate.contract(
   name,
-  parameters,
+  parameters: Partial<ContractInstance>,
 )
 ```
 
@@ -531,7 +531,7 @@ const result: ContractInstance = contractTemplate.contract(
 Create multiple instances of this contract.
 ```typescript
 const result: Record<string, ContractInstance> = contractTemplate.contracts(
-  instanceParameters,
+  instanceParameters: Record<string, Partial>,
 )
 ```
 
@@ -674,7 +674,7 @@ deployment.serialize()
 ```typescript
 deployment.set(
   name,
-  unit,
+  unit: DeploymentUnit,
 )
 ```
 
@@ -706,7 +706,7 @@ const result: IterableIterator<DeploymentUnit> = deployment.values()
 ## method *deployment.fromSnapshot*
 ```typescript
 const result: Deployment = deployment.fromSnapshot(
-  __namedParameters,
+  __namedParameters: Partial<>,
 )
 ```
 

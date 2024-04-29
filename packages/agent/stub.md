@@ -108,7 +108,7 @@ const result: StubBackend = await stubBackend.start()
 ## method *stubBackend.upload*
 ```typescript
 stubBackend.upload(
-  codeData,
+  codeData: Uint8Array,
 )
 ```
 
@@ -325,7 +325,7 @@ const result: Batch<StubConnection> = stubConnection.batch()
 ```typescript
 const result: unknown = stubConnection.doExecute(
   contract,
-  message,
+  message: Message,
   options,
 )
 ```
@@ -385,7 +385,7 @@ const result: number = stubConnection.doGetHeight()
 ```typescript
 stubConnection.doInstantiate(
   codeId,
-  options,
+  options: Partial<ContractInstance>,
 )
 ```
 
@@ -393,7 +393,7 @@ stubConnection.doInstantiate(
 ```typescript
 const result: Q = await stubConnection.doQuery(
   contract,
-  message,
+  message: Message,
 )
 ```
 
@@ -417,7 +417,7 @@ const result: void = stubConnection.doSendMany(
 ## method *stubConnection.doUpload*
 ```typescript
 const result: UploadedCode = await stubConnection.doUpload(
-  codeData,
+  codeData: Uint8Array,
 )
 ```
 
@@ -426,7 +426,7 @@ Call a given program's transaction method.
 ```typescript
 const result: unknown = stubConnection.execute(
   contract,
-  message,
+  message: Message,
   options,
 )
 ```
@@ -509,7 +509,7 @@ const result: Record<string, Contract> = await stubConnection.getContractsByCode
 ```typescript
 const result: Record<string, InstanceType> = await stubConnection.getContractsByCodeId(
   id,
-  $C,
+  $C: C,
 )
 ```
 
@@ -517,18 +517,18 @@ const result: Record<string, InstanceType> = await stubConnection.getContractsBy
 Get client handles for all contracts that match multiple code IDs
 ```typescript
 const result: Record<string, Record> = await stubConnection.getContractsByCodeIds(
-  ids,
+  ids: Iterable<string>,
 )
 ```
 ```typescript
 const result: Record<string, Record> = await stubConnection.getContractsByCodeIds(
-  ids,
-  $C,
+  ids: Iterable<string>,
+  $C: C,
 )
 ```
 ```typescript
 const result: Record<string, Record> = await stubConnection.getContractsByCodeIds(
-  ids,
+  ids: Record<string, C>,
 )
 ```
 
@@ -537,7 +537,7 @@ Instantiate a new program from a code id, label and init message.
 ```typescript
 stubConnection.instantiate(
   contract,
-  options,
+  options: Partial<ContractInstance>,
 )
 ```
 
@@ -546,7 +546,7 @@ Query a contract.
 ```typescript
 const result: Q = await stubConnection.query(
   contract,
-  message,
+  message: Message,
 )
 ```
 

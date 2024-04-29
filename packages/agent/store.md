@@ -166,7 +166,7 @@ const result: IterableIterator<string> = uploadStore.keys()
 ```typescript
 uploadStore.set(
   codeHash,
-  value,
+  value: Partial<UploadedCode>,
 )
 ```
 

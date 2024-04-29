@@ -205,7 +205,7 @@ compiledCode.serialize()
 ## method *compiledCode.toCodeHash*
 ```typescript
 const result: string = compiledCode.toCodeHash(
-  data,
+  data: Uint8Array,
 )
 ```
 
@@ -306,7 +306,7 @@ localCompiledCode.serialize()
 ## method *localCompiledCode.toCodeHash*
 ```typescript
 const result: string = localCompiledCode.toCodeHash(
-  data,
+  data: Uint8Array,
 )
 ```
 
