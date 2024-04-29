@@ -236,7 +236,7 @@ variants using its `build.impl.mjs` script.
 ```typescript
 const result: CompiledCode = await compiler.build(
   source,
-  args,
+  ...args,
 )
 ```
 

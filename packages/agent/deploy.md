@@ -580,14 +580,14 @@ const result: IterableIterator<> = deployment.[iterator]()
 ## method *deployment.addContract*
 ```typescript
 const result: Deployment = deployment.addContract(
-  args,
+  ...args,
 )
 ```
 
 ## method *deployment.addContracts*
 ```typescript
 const result: Deployment = deployment.addContracts(
-  args,
+  ...args,
 )
 ```
 

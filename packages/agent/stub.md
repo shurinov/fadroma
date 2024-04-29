@@ -61,14 +61,14 @@ const result: Connection = await stubBackend.connect(
 ## method *stubBackend.execute*
 ```typescript
 const result: unknown = stubBackend.execute(
-  args,
+  ...args,
 )
 ```
 
 ## method *stubBackend.export*
 ```typescript
 const result: unknown = stubBackend.export(
-  args,
+  ...args,
 )
 ```
 
@@ -82,7 +82,7 @@ const result: Identity = await stubBackend.getIdentity(
 ## method *stubBackend.import*
 ```typescript
 const result: unknown = stubBackend.import(
-  args,
+  ...args,
 )
 ```
 
@@ -136,7 +136,7 @@ const stubBatch = new StubBatch(
 Add an execute message to the batch.
 ```typescript
 const result: StubBatch = stubBatch.execute(
-  args,
+  ...args,
 )
 ```
 
@@ -144,7 +144,7 @@ const result: StubBatch = stubBatch.execute(
 Add an instantiate message to the batch.
 ```typescript
 const result: StubBatch = stubBatch.instantiate(
-  args,
+  ...args,
 )
 ```
 
@@ -158,7 +158,7 @@ stubBatch.submit()
 Add an upload message to the batch.
 ```typescript
 const result: StubBatch = stubBatch.upload(
-  args,
+  ...args,
 )
 ```
 
@@ -223,7 +223,7 @@ variants using its `build.impl.mjs` script.
 ```typescript
 const result: CompiledCode = await stubCompiler.build(
   source,
-  args,
+  ...args,
 )
 ```
 
