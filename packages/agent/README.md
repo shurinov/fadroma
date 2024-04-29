@@ -7,8 +7,7 @@ that are based on Tendermint and CosmWasm**.
 
 The Fadroma Agent API provides the following features:
 
-* [Connecting to a blockchain's RPC endpoint](./chain.md)
-* [Authenticating using cryptographic keys](./identity.md)
+* [Connecting and authenticating to blockchain RPC endpoints](./chain.md)
 * Transacting and [staking](./staking.md) with native and custom tokens
 * [Submitting and voting on governance proposals](./governance.md)
 * [Interacting with smart contracts](./program.md)
