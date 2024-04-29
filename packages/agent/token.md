@@ -79,7 +79,9 @@ amount.asCoin()
 
 ## method *amount.asFee*
 ```typescript
-amount.asFee(gas )
+amount.asFee(
+  gas,
+)
 ```
 
 ## method *amount.toString*
@@ -128,7 +130,9 @@ let custom = new Custom(
 
 ## method *custom.amount*
 ```typescript
-custom.amount(amount )
+custom.amount(
+  amount,
+)
 ```
 
 ## method *custom.isCustom*
@@ -148,7 +152,10 @@ custom.isNative()
 
 ## method *custom.addZeros*
 ```typescript
-custom.addZeros(n z )
+custom.addZeros(
+  n,
+  z,
+)
 ```
 
 # class *Fee*
@@ -172,7 +179,10 @@ let fee = new Fee(
 
 ## method *fee.add*
 ```typescript
-fee.add(amount denom )
+fee.add(
+  amount,
+  denom,
+)
 ```
 
 # class *Fungible*
@@ -189,7 +199,9 @@ new Fungible()
 
 ## method *fungible.amount*
 ```typescript
-fungible.amount(amount )
+fungible.amount(
+  amount,
+)
 ```
 
 ## method *fungible.isCustom*
@@ -209,7 +221,10 @@ fungible.isNative()
 
 ## method *fungible.addZeros*
 ```typescript
-fungible.addZeros(n z )
+fungible.addZeros(
+  n,
+  z,
+)
 ```
 
 # class *Native*
@@ -231,12 +246,16 @@ let native = new Native(
 
 ## method *native.amount*
 ```typescript
-native.amount(amount )
+native.amount(
+  amount,
+)
 ```
 
 ## method *native.fee*
 ```typescript
-native.fee(amount )
+native.fee(
+  amount,
+)
 ```
 
 ## method *native.isCustom*
@@ -256,7 +275,10 @@ native.isNative()
 
 ## method *native.addZeros*
 ```typescript
-native.addZeros(n z )
+native.addZeros(
+  n,
+  z,
+)
 ```
 
 # class *NonFungible*
@@ -333,4 +355,5 @@ new Token()
 ## method *token.isFungible*
 ```typescript
 token.isFungible()
-```<!-- @hackbg/docs: end -->
+```
+<!-- @hackbg/docs: end -->

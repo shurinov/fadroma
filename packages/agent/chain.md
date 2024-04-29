@@ -36,12 +36,16 @@ let backend = new Backend(
 
 ## method *backend.connect*
 ```typescript
-backend.connect(parameter )
+backend.connect(
+  parameter,
+)
 ```
 
 ## method *backend.getIdentity*
 ```typescript
-backend.getIdentity(name )
+backend.getIdentity(
+  name,
+)
 ```
 
 # class *Block*
@@ -158,32 +162,47 @@ connection.batch()
 
 ## method *connection.doExecute*
 ```typescript
-connection.doExecute(contract message options )
+connection.doExecute(
+  contract,
+  message,
+  options,
+)
 ```
 
 ## method *connection.doGetBalance*
 ```typescript
-connection.doGetBalance(token address )
+connection.doGetBalance(
+  token,
+  address,
+)
 ```
 
 ## method *connection.doGetBlockInfo*
 ```typescript
-connection.doGetBlockInfo(height )
+connection.doGetBlockInfo(
+  height,
+)
 ```
 
 ## method *connection.doGetCodeHashOfAddress*
 ```typescript
-connection.doGetCodeHashOfAddress(contract )
+connection.doGetCodeHashOfAddress(
+  contract,
+)
 ```
 
 ## method *connection.doGetCodeHashOfCodeId*
 ```typescript
-connection.doGetCodeHashOfCodeId(codeId )
+connection.doGetCodeHashOfCodeId(
+  codeId,
+)
 ```
 
 ## method *connection.doGetCodeId*
 ```typescript
-connection.doGetCodeId(contract )
+connection.doGetCodeId(
+  contract,
+)
 ```
 
 ## method *connection.doGetCodes*
@@ -193,7 +212,9 @@ connection.doGetCodes()
 
 ## method *connection.doGetContractsByCodeId*
 ```typescript
-connection.doGetContractsByCodeId(id )
+connection.doGetContractsByCodeId(
+  id,
+)
 ```
 
 ## method *connection.doGetHeight*
@@ -203,62 +224,96 @@ connection.doGetHeight()
 
 ## method *connection.doInstantiate*
 ```typescript
-connection.doInstantiate(codeId options )
+connection.doInstantiate(
+  codeId,
+  options,
+)
 ```
 
 ## method *connection.doQuery*
 ```typescript
-connection.doQuery(contract message )
+connection.doQuery(
+  contract,
+  message,
+)
 ```
 
 ## method *connection.doSend*
 ```typescript
-connection.doSend(recipient amounts options )
+connection.doSend(
+  recipient,
+  amounts,
+  options,
+)
 ```
 
 ## method *connection.doSendMany*
 ```typescript
-connection.doSendMany(outputs options )
+connection.doSendMany(
+  outputs,
+  options,
+)
 ```
 
 ## method *connection.doUpload*
 ```typescript
-connection.doUpload(data options )
+connection.doUpload(
+  data,
+  options,
+)
 ```
 
 ## method *connection.execute*
 ```typescript
-connection.execute(contract message options )
+connection.execute(
+  contract,
+  message,
+  options,
+)
 ```
 
 ## method *connection.getBalanceIn*
 ```typescript
-connection.getBalanceIn(token address )
+connection.getBalanceIn(
+  token,
+  address,
+)
 ```
 
 ## method *connection.getBalanceOf*
 ```typescript
-connection.getBalanceOf(address token )
+connection.getBalanceOf(
+  address,
+  token,
+)
 ```
 
 ## method *connection.getBlock*
 ```typescript
-connection.getBlock(height )
+connection.getBlock(
+  height,
+)
 ```
 
 ## method *connection.getCodeHashOfAddress*
 ```typescript
-connection.getCodeHashOfAddress(contract )
+connection.getCodeHashOfAddress(
+  contract,
+)
 ```
 
 ## method *connection.getCodeHashOfCodeId*
 ```typescript
-connection.getCodeHashOfCodeId(contract )
+connection.getCodeHashOfCodeId(
+  contract,
+)
 ```
 
 ## method *connection.getCodeId*
 ```typescript
-connection.getCodeId(contract )
+connection.getCodeId(
+  contract,
+)
 ```
 
 ## method *connection.getCodes*
@@ -268,51 +323,80 @@ connection.getCodes()
 
 ## method *connection.getContract*
 ```typescript
-connection.getContract(options )
+connection.getContract(
+  options,
+)
 ```
 
 ## method *connection.getContractsByCodeId*
 ```typescript
-connection.getContractsByCodeId(id )
+connection.getContractsByCodeId(
+  id,
+)
 ```
 ```typescript
-connection.getContractsByCodeId(id $C )
+connection.getContractsByCodeId(
+  id,
+  $C,
+)
 ```
 
 ## method *connection.getContractsByCodeIds*
 ```typescript
-connection.getContractsByCodeIds(ids )
+connection.getContractsByCodeIds(
+  ids,
+)
 ```
 ```typescript
-connection.getContractsByCodeIds(ids $C )
+connection.getContractsByCodeIds(
+  ids,
+  $C,
+)
 ```
 ```typescript
-connection.getContractsByCodeIds(ids )
+connection.getContractsByCodeIds(
+  ids,
+)
 ```
 
 ## method *connection.instantiate*
 ```typescript
-connection.instantiate(contract options )
+connection.instantiate(
+  contract,
+  options,
+)
 ```
 
 ## method *connection.query*
 ```typescript
-connection.query(contract message )
+connection.query(
+  contract,
+  message,
+)
 ```
 
 ## method *connection.send*
 ```typescript
-connection.send(recipient amounts options )
+connection.send(
+  recipient,
+  amounts,
+  options,
+)
 ```
 
 ## method *connection.upload*
 ```typescript
-connection.upload(code options )
+connection.upload(
+  code,
+  options,
+)
 ```
 
 ## method *connection.gas*
 ```typescript
-connection.gas(amount )
+connection.gas(
+  amount,
+)
 ```
 
 # class *Contract*
@@ -338,12 +422,17 @@ let contract = new Contract(
 
 ## method *contract.execute*
 ```typescript
-contract.execute(message options )
+contract.execute(
+  message,
+  options,
+)
 ```
 
 ## method *contract.query*
 ```typescript
-contract.query(message )
+contract.query(
+  message,
+)
 ```
 
 # class *Endpoint*
@@ -385,4 +474,5 @@ A project's mainnet and testnet have different chain IDs.</td></tr>
 <td><strong>string</strong>. Connection URL.
 
 The same chain may be accessible via different endpoints, so
-this property contains the URL to which requests are sent.</td></tr></tbody></table><!-- @hackbg/docs: end -->
+this property contains the URL to which requests are sent.</td></tr></tbody></table>
+<!-- @hackbg/docs: end -->

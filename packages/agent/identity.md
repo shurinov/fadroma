@@ -58,5 +58,8 @@ let identity = new Identity(
 
 ## method *identity.sign*
 ```typescript
-identity.sign(doc )
-```<!-- @hackbg/docs: end -->
+identity.sign(
+  doc,
+)
+```
+<!-- @hackbg/docs: end -->

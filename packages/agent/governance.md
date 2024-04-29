@@ -40,4 +40,5 @@ let vote = new Vote(
 <td><strong>VoteValue</strong>. </td></tr>
 <tr><td valign="top">
 <strong>voter</strong></td>
-<td><strong>string</strong>. </td></tr></tbody></table><!-- @hackbg/docs: end -->
+<td><strong>string</strong>. </td></tr></tbody></table>
+<!-- @hackbg/docs: end -->

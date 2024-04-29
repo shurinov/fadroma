@@ -34,7 +34,9 @@ deployStore.clear()
 
 ## method *deployStore.delete*
 ```typescript
-deployStore.delete(key )
+deployStore.delete(
+  key,
+)
 ```
 
 ## method *deployStore.entries*
@@ -44,17 +46,24 @@ deployStore.entries()
 
 ## method *deployStore.forEach*
 ```typescript
-deployStore.forEach(callbackfn thisArg )
+deployStore.forEach(
+  callbackfn,
+  thisArg,
+)
 ```
 
 ## method *deployStore.get*
 ```typescript
-deployStore.get(name )
+deployStore.get(
+  name,
+)
 ```
 
 ## method *deployStore.has*
 ```typescript
-deployStore.has(key )
+deployStore.has(
+  key,
+)
 ```
 
 ## method *deployStore.keys*
@@ -64,7 +73,10 @@ deployStore.keys()
 
 ## method *deployStore.set*
 ```typescript
-deployStore.set(name state )
+deployStore.set(
+  name,
+  state,
+)
 ```
 
 ## method *deployStore.values*
@@ -100,7 +112,9 @@ uploadStore.clear()
 
 ## method *uploadStore.delete*
 ```typescript
-uploadStore.delete(key )
+uploadStore.delete(
+  key,
+)
 ```
 
 ## method *uploadStore.entries*
@@ -110,17 +124,24 @@ uploadStore.entries()
 
 ## method *uploadStore.forEach*
 ```typescript
-uploadStore.forEach(callbackfn thisArg )
+uploadStore.forEach(
+  callbackfn,
+  thisArg,
+)
 ```
 
 ## method *uploadStore.get*
 ```typescript
-uploadStore.get(codeHash )
+uploadStore.get(
+  codeHash,
+)
 ```
 
 ## method *uploadStore.has*
 ```typescript
-uploadStore.has(key )
+uploadStore.has(
+  key,
+)
 ```
 
 ## method *uploadStore.keys*
@@ -130,10 +151,14 @@ uploadStore.keys()
 
 ## method *uploadStore.set*
 ```typescript
-uploadStore.set(codeHash value )
+uploadStore.set(
+  codeHash,
+  value,
+)
 ```
 
 ## method *uploadStore.values*
 ```typescript
 uploadStore.values()
-```<!-- @hackbg/docs: end -->
+```
+<!-- @hackbg/docs: end -->

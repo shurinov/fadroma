@@ -203,7 +203,9 @@ compiledCode.serialize()
 
 ## method *compiledCode.toCodeHash*
 ```typescript
-compiledCode.toCodeHash(data )
+compiledCode.toCodeHash(
+  data,
+)
 ```
 
 # class *Compiler*
@@ -228,12 +230,17 @@ binary and checksum are both present in wasm/ directory</td></tr>
 
 ## method *compiler.build*
 ```typescript
-compiler.build(source args )
+compiler.build(
+  source,
+  args,
+)
 ```
 
 ## method *compiler.buildMany*
 ```typescript
-compiler.buildMany(inputs )
+compiler.buildMany(
+  inputs,
+)
 ```
 
 # class *LocalCompiledCode*
@@ -290,7 +297,9 @@ localCompiledCode.serialize()
 
 ## method *localCompiledCode.toCodeHash*
 ```typescript
-localCompiledCode.toCodeHash(data )
+localCompiledCode.toCodeHash(
+  data,
+)
 ```
 
 # class *RustSourceCode*
@@ -389,4 +398,5 @@ let sourceCode = new SourceCode(
 ## method *sourceCode.serialize*
 ```typescript
 sourceCode.serialize()
-```<!-- @hackbg/docs: end -->
+```
+<!-- @hackbg/docs: end -->

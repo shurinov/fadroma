@@ -13,4 +13,5 @@ let validator = new Validator(
 <td><strong>string</strong>. </td></tr>
 <tr><td valign="top">
 <strong>chain</strong></td>
-<td><strong>Connection</strong>. </td></tr></tbody></table><!-- @hackbg/docs: end -->
+<td><strong>Connection</strong>. </td></tr></tbody></table>
+<!-- @hackbg/docs: end -->

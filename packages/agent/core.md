@@ -32,12 +32,18 @@ let error = new Error(
 
 ## method *error.captureStackTrace*
 ```typescript
-error.captureStackTrace(targetObject constructorOpt )
+error.captureStackTrace(
+  targetObject,
+  constructorOpt,
+)
 ```
 
 ## method *error.define*
 ```typescript
-error.define(name getMessage construct )
+error.define(
+  name,
+  getMessage,
+  construct,
+)
 ```
-
 <!-- @hackbg/docs: end -->

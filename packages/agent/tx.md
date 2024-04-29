@@ -73,22 +73,30 @@ let batch = new Batch(
 
 ## method *batch.execute*
 ```typescript
-batch.execute(args )
+batch.execute(
+  args,
+)
 ```
 
 ## method *batch.instantiate*
 ```typescript
-batch.instantiate(args )
+batch.instantiate(
+  args,
+)
 ```
 
 ## method *batch.submit*
 ```typescript
-batch.submit(args )
+batch.submit(
+  args,
+)
 ```
 
 ## method *batch.upload*
 ```typescript
-batch.upload(args )
+batch.upload(
+  args,
+)
 ```
 
 # class *Transaction*
@@ -119,4 +127,5 @@ new Transaction()
 <td><strong>undefined</strong>. </td></tr>
 <tr><td valign="top">
 <strong>type</strong></td>
-<td><strong>unknown</strong>. </td></tr></tbody></table><!-- @hackbg/docs: end -->
+<td><strong>unknown</strong>. </td></tr></tbody></table>
+<!-- @hackbg/docs: end -->

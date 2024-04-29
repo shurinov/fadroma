@@ -324,12 +324,16 @@ let contractCode = new ContractCode(
 
 ## method *contractCode.compile*
 ```typescript
-contractCode.compile(__namedParameters )
+contractCode.compile(
+  __namedParameters,
+)
 ```
 
 ## method *contractCode.upload*
 ```typescript
-contractCode.upload(__namedParameters )
+contractCode.upload(
+  __namedParameters,
+)
 ```
 
 # class *ContractInstance*
@@ -413,17 +417,23 @@ let contractInstance = new ContractInstance(
 
 ## method *contractInstance.compile*
 ```typescript
-contractInstance.compile(__namedParameters )
+contractInstance.compile(
+  __namedParameters,
+)
 ```
 
 ## method *contractInstance.connect*
 ```typescript
-contractInstance.connect(agent )
+contractInstance.connect(
+  agent,
+)
 ```
 
 ## method *contractInstance.deploy*
 ```typescript
-contractInstance.deploy(__namedParameters )
+contractInstance.deploy(
+  __namedParameters,
+)
 ```
 
 ## method *contractInstance.isValid*
@@ -438,7 +448,9 @@ contractInstance.serialize()
 
 ## method *contractInstance.upload*
 ```typescript
-contractInstance.upload(__namedParameters )
+contractInstance.upload(
+  __namedParameters,
+)
 ```
 
 # class *ContractTemplate*
@@ -495,17 +507,24 @@ let contractTemplate = new ContractTemplate(
 
 ## method *contractTemplate.compile*
 ```typescript
-contractTemplate.compile(__namedParameters )
+contractTemplate.compile(
+  __namedParameters,
+)
 ```
 
 ## method *contractTemplate.contract*
 ```typescript
-contractTemplate.contract(name parameters )
+contractTemplate.contract(
+  name,
+  parameters,
+)
 ```
 
 ## method *contractTemplate.contracts*
 ```typescript
-contractTemplate.contracts(instanceParameters )
+contractTemplate.contracts(
+  instanceParameters,
+)
 ```
 
 ## method *contractTemplate.serialize*
@@ -515,7 +534,9 @@ contractTemplate.serialize()
 
 ## method *contractTemplate.upload*
 ```typescript
-contractTemplate.upload(__namedParameters )
+contractTemplate.upload(
+  __namedParameters,
+)
 ```
 
 # class *Deployment*
@@ -548,17 +569,23 @@ deployment.[iterator]()
 
 ## method *deployment.addContract*
 ```typescript
-deployment.addContract(args )
+deployment.addContract(
+  args,
+)
 ```
 
 ## method *deployment.addContracts*
 ```typescript
-deployment.addContracts(args )
+deployment.addContracts(
+  args,
+)
 ```
 
 ## method *deployment.build*
 ```typescript
-deployment.build(__namedParameters )
+deployment.build(
+  __namedParameters,
+)
 ```
 
 ## method *deployment.clear*
@@ -568,17 +595,24 @@ deployment.clear()
 
 ## method *deployment.contract*
 ```typescript
-deployment.contract(name properties )
+deployment.contract(
+  name,
+  properties,
+)
 ```
 
 ## method *deployment.delete*
 ```typescript
-deployment.delete(key )
+deployment.delete(
+  key,
+)
 ```
 
 ## method *deployment.deploy*
 ```typescript
-deployment.deploy(__namedParameters )
+deployment.deploy(
+  __namedParameters,
+)
 ```
 
 ## method *deployment.entries*
@@ -588,17 +622,24 @@ deployment.entries()
 
 ## method *deployment.forEach*
 ```typescript
-deployment.forEach(callbackfn thisArg )
+deployment.forEach(
+  callbackfn,
+  thisArg,
+)
 ```
 
 ## method *deployment.get*
 ```typescript
-deployment.get(key )
+deployment.get(
+  key,
+)
 ```
 
 ## method *deployment.has*
 ```typescript
-deployment.has(key )
+deployment.has(
+  key,
+)
 ```
 
 ## method *deployment.keys*
@@ -613,17 +654,25 @@ deployment.serialize()
 
 ## method *deployment.set*
 ```typescript
-deployment.set(name unit )
+deployment.set(
+  name,
+  unit,
+)
 ```
 
 ## method *deployment.template*
 ```typescript
-deployment.template(name properties )
+deployment.template(
+  name,
+  properties,
+)
 ```
 
 ## method *deployment.upload*
 ```typescript
-deployment.upload(__namedParameters )
+deployment.upload(
+  __namedParameters,
+)
 ```
 
 ## method *deployment.values*
@@ -633,7 +682,9 @@ deployment.values()
 
 ## method *deployment.fromSnapshot*
 ```typescript
-deployment.fromSnapshot(__namedParameters )
+deployment.fromSnapshot(
+  __namedParameters,
+)
 ```
 
 # class *DeploymentUnit*
@@ -687,7 +738,9 @@ let deploymentUnit = new DeploymentUnit(
 
 ## method *deploymentUnit.compile*
 ```typescript
-deploymentUnit.compile(__namedParameters )
+deploymentUnit.compile(
+  __namedParameters,
+)
 ```
 
 ## method *deploymentUnit.serialize*
@@ -697,7 +750,9 @@ deploymentUnit.serialize()
 
 ## method *deploymentUnit.upload*
 ```typescript
-deploymentUnit.upload(__namedParameters )
+deploymentUnit.upload(
+  __namedParameters,
+)
 ```
 
 # class *UploadedCode*
@@ -738,4 +793,5 @@ let uploadedCode = new UploadedCode(
 ## method *uploadedCode.serialize*
 ```typescript
 uploadedCode.serialize()
-```<!-- @hackbg/docs: end -->
+```
+<!-- @hackbg/docs: end -->

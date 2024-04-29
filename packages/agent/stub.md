@@ -53,32 +53,46 @@ let stubBackend = new StubBackend(
 
 ## method *stubBackend.connect*
 ```typescript
-stubBackend.connect(parameter )
+stubBackend.connect(
+  parameter,
+)
 ```
 
 ## method *stubBackend.execute*
 ```typescript
-stubBackend.execute(args )
+stubBackend.execute(
+  args,
+)
 ```
 
 ## method *stubBackend.export*
 ```typescript
-stubBackend.export(args )
+stubBackend.export(
+  args,
+)
 ```
 
 ## method *stubBackend.getIdentity*
 ```typescript
-stubBackend.getIdentity(name )
+stubBackend.getIdentity(
+  name,
+)
 ```
 
 ## method *stubBackend.import*
 ```typescript
-stubBackend.import(args )
+stubBackend.import(
+  args,
+)
 ```
 
 ## method *stubBackend.instantiate*
 ```typescript
-stubBackend.instantiate(creator codeId options )
+stubBackend.instantiate(
+  creator,
+  codeId,
+  options,
+)
 ```
 
 ## method *stubBackend.pause*
@@ -93,7 +107,9 @@ stubBackend.start()
 
 ## method *stubBackend.upload*
 ```typescript
-stubBackend.upload(codeData )
+stubBackend.upload(
+  codeData,
+)
 ```
 
 # class *StubBatch*
@@ -118,12 +134,16 @@ let stubBatch = new StubBatch(
 
 ## method *stubBatch.execute*
 ```typescript
-stubBatch.execute(args )
+stubBatch.execute(
+  args,
+)
 ```
 
 ## method *stubBatch.instantiate*
 ```typescript
-stubBatch.instantiate(args )
+stubBatch.instantiate(
+  args,
+)
 ```
 
 ## method *stubBatch.submit*
@@ -133,7 +153,9 @@ stubBatch.submit()
 
 ## method *stubBatch.upload*
 ```typescript
-stubBatch.upload(args )
+stubBatch.upload(
+  args,
+)
 ```
 
 # class *StubBlock*
@@ -192,12 +214,17 @@ binary and checksum are both present in wasm/ directory</td></tr>
 
 ## method *stubCompiler.build*
 ```typescript
-stubCompiler.build(source args )
+stubCompiler.build(
+  source,
+  args,
+)
 ```
 
 ## method *stubCompiler.buildMany*
 ```typescript
-stubCompiler.buildMany(inputs )
+stubCompiler.buildMany(
+  inputs,
+)
 ```
 
 # class *StubConnection*
@@ -285,12 +312,19 @@ stubConnection.batch()
 
 ## method *stubConnection.doExecute*
 ```typescript
-stubConnection.doExecute(contract message options )
+stubConnection.doExecute(
+  contract,
+  message,
+  options,
+)
 ```
 
 ## method *stubConnection.doGetBalance*
 ```typescript
-stubConnection.doGetBalance(token address )
+stubConnection.doGetBalance(
+  token,
+  address,
+)
 ```
 
 ## method *stubConnection.doGetBlockInfo*
@@ -300,17 +334,23 @@ stubConnection.doGetBlockInfo()
 
 ## method *stubConnection.doGetCodeHashOfAddress*
 ```typescript
-stubConnection.doGetCodeHashOfAddress(address )
+stubConnection.doGetCodeHashOfAddress(
+  address,
+)
 ```
 
 ## method *stubConnection.doGetCodeHashOfCodeId*
 ```typescript
-stubConnection.doGetCodeHashOfCodeId(id )
+stubConnection.doGetCodeHashOfCodeId(
+  id,
+)
 ```
 
 ## method *stubConnection.doGetCodeId*
 ```typescript
-stubConnection.doGetCodeId(address )
+stubConnection.doGetCodeId(
+  address,
+)
 ```
 
 ## method *stubConnection.doGetCodes*
@@ -320,7 +360,9 @@ stubConnection.doGetCodes()
 
 ## method *stubConnection.doGetContractsByCodeId*
 ```typescript
-stubConnection.doGetContractsByCodeId(id )
+stubConnection.doGetContractsByCodeId(
+  id,
+)
 ```
 
 ## method *stubConnection.doGetHeight*
@@ -330,62 +372,95 @@ stubConnection.doGetHeight()
 
 ## method *stubConnection.doInstantiate*
 ```typescript
-stubConnection.doInstantiate(codeId options )
+stubConnection.doInstantiate(
+  codeId,
+  options,
+)
 ```
 
 ## method *stubConnection.doQuery*
 ```typescript
-stubConnection.doQuery(contract message )
+stubConnection.doQuery(
+  contract,
+  message,
+)
 ```
 
 ## method *stubConnection.doSend*
 ```typescript
-stubConnection.doSend(recipient sums opts )
+stubConnection.doSend(
+  recipient,
+  sums,
+  opts,
+)
 ```
 
 ## method *stubConnection.doSendMany*
 ```typescript
-stubConnection.doSendMany(outputs opts )
+stubConnection.doSendMany(
+  outputs,
+  opts,
+)
 ```
 
 ## method *stubConnection.doUpload*
 ```typescript
-stubConnection.doUpload(codeData )
+stubConnection.doUpload(
+  codeData,
+)
 ```
 
 ## method *stubConnection.execute*
 ```typescript
-stubConnection.execute(contract message options )
+stubConnection.execute(
+  contract,
+  message,
+  options,
+)
 ```
 
 ## method *stubConnection.getBalanceIn*
 ```typescript
-stubConnection.getBalanceIn(token address )
+stubConnection.getBalanceIn(
+  token,
+  address,
+)
 ```
 
 ## method *stubConnection.getBalanceOf*
 ```typescript
-stubConnection.getBalanceOf(address token )
+stubConnection.getBalanceOf(
+  address,
+  token,
+)
 ```
 
 ## method *stubConnection.getBlock*
 ```typescript
-stubConnection.getBlock(height )
+stubConnection.getBlock(
+  height,
+)
 ```
 
 ## method *stubConnection.getCodeHashOfAddress*
 ```typescript
-stubConnection.getCodeHashOfAddress(contract )
+stubConnection.getCodeHashOfAddress(
+  contract,
+)
 ```
 
 ## method *stubConnection.getCodeHashOfCodeId*
 ```typescript
-stubConnection.getCodeHashOfCodeId(contract )
+stubConnection.getCodeHashOfCodeId(
+  contract,
+)
 ```
 
 ## method *stubConnection.getCodeId*
 ```typescript
-stubConnection.getCodeId(contract )
+stubConnection.getCodeId(
+  contract,
+)
 ```
 
 ## method *stubConnection.getCodes*
@@ -395,49 +470,79 @@ stubConnection.getCodes()
 
 ## method *stubConnection.getContract*
 ```typescript
-stubConnection.getContract(options )
+stubConnection.getContract(
+  options,
+)
 ```
 
 ## method *stubConnection.getContractsByCodeId*
 ```typescript
-stubConnection.getContractsByCodeId(id )
+stubConnection.getContractsByCodeId(
+  id,
+)
 ```
 ```typescript
-stubConnection.getContractsByCodeId(id $C )
+stubConnection.getContractsByCodeId(
+  id,
+  $C,
+)
 ```
 
 ## method *stubConnection.getContractsByCodeIds*
 ```typescript
-stubConnection.getContractsByCodeIds(ids )
+stubConnection.getContractsByCodeIds(
+  ids,
+)
 ```
 ```typescript
-stubConnection.getContractsByCodeIds(ids $C )
+stubConnection.getContractsByCodeIds(
+  ids,
+  $C,
+)
 ```
 ```typescript
-stubConnection.getContractsByCodeIds(ids )
+stubConnection.getContractsByCodeIds(
+  ids,
+)
 ```
 
 ## method *stubConnection.instantiate*
 ```typescript
-stubConnection.instantiate(contract options )
+stubConnection.instantiate(
+  contract,
+  options,
+)
 ```
 
 ## method *stubConnection.query*
 ```typescript
-stubConnection.query(contract message )
+stubConnection.query(
+  contract,
+  message,
+)
 ```
 
 ## method *stubConnection.send*
 ```typescript
-stubConnection.send(recipient amounts options )
+stubConnection.send(
+  recipient,
+  amounts,
+  options,
+)
 ```
 
 ## method *stubConnection.upload*
 ```typescript
-stubConnection.upload(code options )
+stubConnection.upload(
+  code,
+  options,
+)
 ```
 
 ## method *stubConnection.gas*
 ```typescript
-stubConnection.gas(amount )
-```<!-- @hackbg/docs: end -->
+stubConnection.gas(
+  amount,
+)
+```
+<!-- @hackbg/docs: end -->
