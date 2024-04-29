@@ -189,12 +189,12 @@ compiledCode.computeHash()
 
 ## method *compiledCode.doFetch*
 <pre>
-<strong>const</strong> result: <em><a href="#">Uint8Array</a></em> = <strong>await</strong> compiledCode.doFetch()
+<strong>const</strong> result: <em>Uint8Array</em> = <strong>await</strong> compiledCode.doFetch()
 </pre>
 
 ## method *compiledCode.fetch*
 <pre>
-<strong>const</strong> result: <em><a href="#">Uint8Array</a></em> = <strong>await</strong> compiledCode.fetch()
+<strong>const</strong> result: <em>Uint8Array</em> = <strong>await</strong> compiledCode.fetch()
 </pre>
 
 ## method *compiledCode.serialize*
@@ -295,7 +295,7 @@ localCompiledCode.doFetch()
 
 ## method *localCompiledCode.fetch*
 <pre>
-<strong>const</strong> result: <em><a href="#">Uint8Array</a></em> = <strong>await</strong> localCompiledCode.fetch()
+<strong>const</strong> result: <em>Uint8Array</em> = <strong>await</strong> localCompiledCode.fetch()
 </pre>
 
 ## method *localCompiledCode.serialize*

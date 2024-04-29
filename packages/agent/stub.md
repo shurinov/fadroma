@@ -186,7 +186,7 @@ const stubBlock = new StubBlock(
 
 ## method *stubBlock.getTransactionsById*
 <pre>
-<strong>const</strong> result: <em><a href="#">Record&lt;string, Transaction&gt;</a></em> = <strong>await</strong> stubBlock.getTransactionsById()
+<strong>const</strong> result: <em>Record&lt;string, Transaction&gt;</em> = <strong>await</strong> stubBlock.getTransactionsById()
 </pre>
 
 ## method *stubBlock.getTransactionsInOrder*
@@ -488,7 +488,7 @@ Get the code id of a given address.
 
 ## method *stubConnection.getCodes*
 <pre>
-<strong>const</strong> result: <em><a href="#">Record&lt;string, UploadedCode&gt;</a></em> = <strong>await</strong> stubConnection.getCodes()
+<strong>const</strong> result: <em>Record&lt;string, UploadedCode&gt;</em> = <strong>await</strong> stubConnection.getCodes()
 </pre>
 
 ## method *stubConnection.getContract*
@@ -502,12 +502,12 @@ Get a client handle for a specific smart contract, authenticated as as this agen
 ## method *stubConnection.getContractsByCodeId*
 Get client handles for all contracts that match a code ID
 <pre>
-<strong>const</strong> result: <em><a href="#">Record&lt;string, Contract&gt;</a></em> = <strong>await</strong> stubConnection.getContractsByCodeId(
+<strong>const</strong> result: <em>Record&lt;string, Contract&gt;</em> = <strong>await</strong> stubConnection.getContractsByCodeId(
   id,
 )
 </pre>
 <pre>
-<strong>const</strong> result: <em><a href="#">Record&lt;string, InstanceType&gt;</a></em> = <strong>await</strong> stubConnection.getContractsByCodeId(
+<strong>const</strong> result: <em>Record&lt;string, InstanceType&gt;</em> = <strong>await</strong> stubConnection.getContractsByCodeId(
   id,
   $C: <em>C</em>,
 )
@@ -516,18 +516,18 @@ Get client handles for all contracts that match a code ID
 ## method *stubConnection.getContractsByCodeIds*
 Get client handles for all contracts that match multiple code IDs
 <pre>
-<strong>const</strong> result: <em><a href="#">Record&lt;string, Record&gt;</a></em> = <strong>await</strong> stubConnection.getContractsByCodeIds(
+<strong>const</strong> result: <em>Record&lt;string, Record&gt;</em> = <strong>await</strong> stubConnection.getContractsByCodeIds(
   ids: <em>Iterable&lt;string&gt;</em>,
 )
 </pre>
 <pre>
-<strong>const</strong> result: <em><a href="#">Record&lt;string, Record&gt;</a></em> = <strong>await</strong> stubConnection.getContractsByCodeIds(
+<strong>const</strong> result: <em>Record&lt;string, Record&gt;</em> = <strong>await</strong> stubConnection.getContractsByCodeIds(
   ids: <em>Iterable&lt;string&gt;</em>,
   $C: <em>C</em>,
 )
 </pre>
 <pre>
-<strong>const</strong> result: <em><a href="#">Record&lt;string, Record&gt;</a></em> = <strong>await</strong> stubConnection.getContractsByCodeIds(
+<strong>const</strong> result: <em>Record&lt;string, Record&gt;</em> = <strong>await</strong> stubConnection.getContractsByCodeIds(
   ids: <em>Record&lt;string, C&gt;</em>,
 )
 </pre>
