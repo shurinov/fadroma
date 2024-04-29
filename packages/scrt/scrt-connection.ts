@@ -8,7 +8,7 @@ import { ScrtIdentity, ScrtSignerIdentity, ScrtMnemonicIdentity } from './scrt-i
 import faucets from './scrt-faucets'
 //import * as Mocknet from './scrt-mocknet'
 import type { Uint128, Message, Address, TxHash, ChainId, CodeId, CodeHash } from '@fadroma/agent'
-import { Core, Chain, Token, Deploy } from '@fadroma/agent'
+import { Core, Chain, Token, Deploy, Batch } from '@fadroma/agent'
 
 const { MsgStoreCode, MsgExecuteContract, MsgInstantiateContract } = Tx
 
@@ -59,19 +59,19 @@ export class ScrtConnection extends Chain.Connection {
     }
   }
 
-  async doGetBlockInfo () {
+  protected async doGetBlockInfo () {
     const {
       block_id: { hash, part_set_header } = {},
       block: { header, data, evidence, last_commit } = {}
     } = await this.api.query.tendermint.getLatestBlock({})
   }
 
-  doGetHeight () {
+  protected doGetHeight () {
     return this.doGetBlockInfo().then((block: any)=>
       Number(block.block?.header?.height))
   }
 
-  doGetCodes () {
+  protected doGetCodes () {
     const codes: Record<CodeId, Deploy.UploadedCode> = {}
     return withIntoError(this.api.query.compute.codes({}))
       .then(({code_infos})=>{
@@ -87,14 +87,14 @@ export class ScrtConnection extends Chain.Connection {
       })
   }
 
-  async doGetCodeId (contract_address: Address): Promise<CodeId> {
+  protected async doGetCodeId (contract_address: Address): Promise<CodeId> {
     return (await withIntoError(this.api.query.compute.contractInfo({
       contract_address
     })))
       .ContractInfo!.code_id!
   }
 
-  async doGetContractsByCodeId (code_id: CodeId): Promise<Iterable<{address: Address}>> {
+  protected async doGetContractsByCodeId (code_id: CodeId): Promise<Iterable<{address: Address}>> {
     return (await withIntoError(this.api.query.compute.contractsByCodeId({ code_id })))
       .contract_infos!
       .map(({ contract_address, contract_info: { label, creator } }: any)=>({
@@ -104,21 +104,21 @@ export class ScrtConnection extends Chain.Connection {
       }))
   }
 
-  async doGetCodeHashOfAddress (contract_address: Address): Promise<CodeHash> {
+  protected async doGetCodeHashOfAddress (contract_address: Address): Promise<CodeHash> {
     return (await withIntoError(this.api.query.compute.codeHashByContractAddress({
       contract_address
     })))
       .code_hash!
   }
 
-  async doGetCodeHashOfCodeId (code_id: CodeId): Promise<CodeHash> {
+  protected async doGetCodeHashOfCodeId (code_id: CodeId): Promise<CodeHash> {
     return (await withIntoError(this.api.query.compute.codeHashByCodeId({
       code_id
     })))
       .code_hash!
   }
 
-  async doGetBalance (denom: string = this.defaultDenom, address: string|undefined = this.address) {
+  protected async doGetBalance (denom: string = this.defaultDenom, address: string|undefined = this.address) {
     return (await withIntoError(this.api.query.bank.balance({
       address,
       denom
@@ -135,7 +135,7 @@ export class ScrtConnection extends Chain.Connection {
 
   /** Query a contract.
     * @returns the result of the query */
-  doQuery <U> (contract: { address: Address, codeHash: CodeHash }, message: Message): Promise<U> {
+  protected doQuery <U> (contract: { address: Address, codeHash: CodeHash }, message: Message): Promise<U> {
     return withIntoError(this.api.query.compute.queryContract({
       contract_address: contract.address,
       code_hash: contract.codeHash,
@@ -147,7 +147,7 @@ export class ScrtConnection extends Chain.Connection {
     return this.api.query.auth.account({ address: this.address })
   }
 
-  async doSend (
+  protected async doSend (
     recipient: Address,
     amounts:   Token.ICoin[],
     options?:  Parameters<Chain.Connection["doSend"]>[2]
@@ -158,7 +158,7 @@ export class ScrtConnection extends Chain.Connection {
     ))
   }
 
-  doSendMany (
+  protected doSendMany (
     outputs: [Address, Token.ICoin[]][], options?: unknown
   ): Promise<unknown> {
     throw new Error('unimplemented')
@@ -169,7 +169,7 @@ export class ScrtConnection extends Chain.Connection {
   }
 
   /** Upload a WASM binary. */
-  async doUpload (data: Uint8Array): Promise<Partial<Deploy.UploadedCode>> {
+  protected async doUpload (data: Uint8Array): Promise<Partial<Deploy.UploadedCode>> {
     const request = { sender: this.address!, wasm_byte_code: data, source: "", builder: "" }
     const gasLimit = Number(this.fees.upload?.amount[0].amount) || undefined
     const result = await withIntoError(this.api!.tx.compute.storeCode(request, { gasLimit }))
@@ -208,7 +208,7 @@ export class ScrtConnection extends Chain.Connection {
     }
   }
 
-  async doInstantiate (
+  protected async doInstantiate (
     codeId: CodeId,
     options: Parameters<Chain.Connection["doInstantiate"]>[1]
   ): Promise<Partial<Deploy.ContractInstance>> {
@@ -246,7 +246,7 @@ export class ScrtConnection extends Chain.Connection {
     }
   }
 
-  async doExecute (
+  protected async doExecute (
     contract: { address: Address, codeHash: CodeHash },
     message:  Message,
     options?: Parameters<Chain.Connection["doExecute"]>[2] & {
@@ -324,8 +324,8 @@ export class ScrtConnection extends Chain.Connection {
     return base64.encode(encrypted)
   }
 
-  batch (): Chain.Batch<this> {
-    return new ScrtBatch({ connection: this }) as unknown as Chain.Batch<this>
+  batch (): Batch<this> {
+    return new ScrtBatch({ connection: this }) as unknown as Batch<this>
   }
 
 }
@@ -386,7 +386,7 @@ function removeTrailingSlash (url: string) {
   return url
 }
 
-export class ScrtBatch extends Chain.Batch<ScrtConnection> {
+export class ScrtBatch extends Batch<ScrtConnection> {
   /** Messages to encrypt. */
   messages: Array<
     |InstanceType<typeof MsgStoreCode>
@@ -396,16 +396,16 @@ export class ScrtBatch extends Chain.Batch<ScrtConnection> {
 
   /** TODO: Upload in batch. */
   upload (
-    code:    Parameters<Chain.Batch<ScrtConnection>["upload"]>[0],
-    options: Parameters<Chain.Batch<ScrtConnection>["upload"]>[1]
+    code:    Parameters<Batch<ScrtConnection>["upload"]>[0],
+    options: Parameters<Batch<ScrtConnection>["upload"]>[1]
   ) {
     throw new Error('ScrtBatch#upload: not implemented')
     return this
   }
 
   instantiate (
-    code:    Parameters<Chain.Batch<ScrtConnection>["instantiate"]>[0],
-    options: Parameters<Chain.Batch<ScrtConnection>["instantiate"]>[1]
+    code:    Parameters<Batch<ScrtConnection>["instantiate"]>[0],
+    options: Parameters<Batch<ScrtConnection>["instantiate"]>[1]
   ) {
     this.messages.push(new MsgInstantiateContract({
       //callback_code_hash: '',
@@ -420,9 +420,9 @@ export class ScrtBatch extends Chain.Batch<ScrtConnection> {
   }
 
   execute (
-    contract: Parameters<Chain.Batch<ScrtConnection>["execute"]>[0],
-    message:  Parameters<Chain.Batch<ScrtConnection>["execute"]>[1],
-    options:  Parameters<Chain.Batch<ScrtConnection>["execute"]>[2],
+    contract: Parameters<Batch<ScrtConnection>["execute"]>[0],
+    message:  Parameters<Batch<ScrtConnection>["execute"]>[1],
+    options:  Parameters<Batch<ScrtConnection>["execute"]>[2],
   ) {
     if (typeof contract === 'object') contract = contract.address!
     this.messages.push(new MsgExecuteContract({
