@@ -17,6 +17,8 @@ export type CodeId = string
 /** The name of a deployment unit. Used to generate contract label. */
 export type Name = string
 
+/** Represents a contract's code in all its forms, and the contract's lifecycle
+  * up to and including uploading it, but not instantiating it. */
 export class ContractCode extends Logged {
   source?:   SourceCode
   compiler?: Compiler
@@ -32,7 +34,10 @@ export class ContractCode extends Logged {
     ])
   }
 
-  /** Compile this contract, unless a valid binary is present and a rebuild is not requested. */
+  /** Compile this contract.
+    *
+    * If a valid binary is present and a rebuild is not requested,
+    * this does not compile it again, but reuses the binary. */
   async compile ({
     compiler = this.compiler,
     rebuild  = false,
@@ -64,7 +69,15 @@ export class ContractCode extends Logged {
     return this.compiled = compiled as typeof compiled & { codeHash: CodeHash }
   }
 
-  /** Upload this contract, unless a valid upload is present and a rebuild is not requested. */
+  /** Upload this contract.
+    *
+    * If a valid binary is not present, compile it first.
+    *
+    * If a valid code ID is present and reupload is not requested,
+    * this does not upload it again, but reuses the code ID.
+    *
+    * If a valid binary is not present, but valid source is present,
+    * this compiles the source code first to obtain a binary. */
   async upload ({
     compiler = this.compiler,
     rebuild  = false,
@@ -92,7 +105,7 @@ export class ContractCode extends Logged {
   }
 }
 
-/** An object representing the contract's binary uploaded to a given chain. */
+/** Represents a contract's code, in binary form, uploaded to a given chain. */
 export class UploadedCode {
   /** Code hash uniquely identifying the compiled code. */
   codeHash?:  CodeHash

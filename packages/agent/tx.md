@@ -59,7 +59,7 @@ Builder object for batched transactions.
 
 ```typescript
 const batch = new Batch(
-  properties: Partial<...>,
+  properties: <em>Partial&lt;Batch&gt;</em>,
 )
 ```
 
@@ -71,7 +71,7 @@ const batch = new Batch(
 <strong>log</strong></td>
 <td><strong>Console</strong>. </td></tr></tbody></table>
 
-## method [*batch.execute*](https://github.com/hackbg/fadroma/blob/0dad4acde5441c08749fd7b46d47288231605082/packages/agent/tx.ts#L38)
+## method [*batch.execute*](https://github.com/hackbg/fadroma/blob/8021010d3bd291bbf15b55b54602374c0e5488a2/packages/agent/tx.ts#L38)
 Add an execute message to the batch.
 <pre>
 batch.execute(
@@ -79,7 +79,7 @@ batch.execute(
 )
 </pre>
 
-## method [*batch.instantiate*](https://github.com/hackbg/fadroma/blob/0dad4acde5441c08749fd7b46d47288231605082/packages/agent/tx.ts#L32)
+## method [*batch.instantiate*](https://github.com/hackbg/fadroma/blob/8021010d3bd291bbf15b55b54602374c0e5488a2/packages/agent/tx.ts#L32)
 Add an instantiate message to the batch.
 <pre>
 batch.instantiate(
@@ -87,7 +87,7 @@ batch.instantiate(
 )
 </pre>
 
-## method [*batch.submit*](https://github.com/hackbg/fadroma/blob/0dad4acde5441c08749fd7b46d47288231605082/packages/agent/tx.ts#L44)
+## method [*batch.submit*](https://github.com/hackbg/fadroma/blob/8021010d3bd291bbf15b55b54602374c0e5488a2/packages/agent/tx.ts#L44)
 Submit the batch.
 <pre>
 <strong>const</strong> result: <em>unknown</em> = <strong>await</strong> batch.submit(
@@ -95,7 +95,7 @@ Submit the batch.
 )
 </pre>
 
-## method [*batch.upload*](https://github.com/hackbg/fadroma/blob/0dad4acde5441c08749fd7b46d47288231605082/packages/agent/tx.ts#L26)
+## method [*batch.upload*](https://github.com/hackbg/fadroma/blob/8021010d3bd291bbf15b55b54602374c0e5488a2/packages/agent/tx.ts#L26)
 Add an upload message to the batch.
 <pre>
 batch.upload(
@@ -107,7 +107,7 @@ batch.upload(
 A transaction in a block on a chain.
 
 ```typescript
-new Transaction()
+const transaction = new Transaction()
 ```
 
 <table><tbody>

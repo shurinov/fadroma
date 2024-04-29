@@ -3,7 +3,7 @@
 # class *Proposal*
 ```typescript
 const proposal = new Proposal(
-  properties: Partial<...>,
+  properties: <em>Partial&lt;Proposal&gt;</em>,
 )
 ```
 
@@ -24,7 +24,7 @@ const proposal = new Proposal(
 # class *Vote*
 ```typescript
 const vote = new Vote(
-  properties: Partial<...>,
+  properties: <em>Partial&lt;Vote&gt;</em>,
 )
 ```
 

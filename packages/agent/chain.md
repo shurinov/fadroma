@@ -19,7 +19,7 @@ Instead, see `Connection`, `Devnet`, and their subclasses.
 
 ```typescript
 const backend = new Backend(
-  properties: Partial<...>,
+  properties: <em>Partial&lt;Backend&gt;</em>,
 )
 ```
 
@@ -34,14 +34,14 @@ const backend = new Backend(
 <strong>log</strong></td>
 <td><strong>Console</strong>. </td></tr></tbody></table>
 
-## abstract method [*backend.connect*](https://github.com/hackbg/fadroma/blob/0dad4acde5441c08749fd7b46d47288231605082/packages/agent/chain.ts#L108)
+## abstract method [*backend.connect*](https://github.com/hackbg/fadroma/blob/8021010d3bd291bbf15b55b54602374c0e5488a2/packages/agent/chain.ts#L108)
 <pre>
 <strong>const</strong> result: <em><a href="#">Connection</a></em> = <strong>await</strong> backend.connect(
   parameter: <em>string | Partial&lt;Identity&gt;</em>,
 )
 </pre>
 
-## abstract method [*backend.getIdentity*](https://github.com/hackbg/fadroma/blob/0dad4acde5441c08749fd7b46d47288231605082/packages/agent/chain.ts#L110)
+## abstract method [*backend.getIdentity*](https://github.com/hackbg/fadroma/blob/8021010d3bd291bbf15b55b54602374c0e5488a2/packages/agent/chain.ts#L110)
 <pre>
 backend.getIdentity(
   name: <em>string</em>,
@@ -55,7 +55,7 @@ appended to the blockchain at a given point in time.
 
 ```typescript
 const block = new Block(
-  properties: Partial<...>,
+  properties: <em>Partial&lt;Block&gt;</em>,
 )
 ```
 
@@ -70,12 +70,12 @@ const block = new Block(
 <strong>height</strong></td>
 <td><strong>number</strong>. Monotonically incrementing ID of block.</td></tr></tbody></table>
 
-## abstract method [*block.getTransactionsById*](https://github.com/hackbg/fadroma/blob/0dad4acde5441c08749fd7b46d47288231605082/packages/agent/chain.ts#L616)
+## abstract method [*block.getTransactionsById*](https://github.com/hackbg/fadroma/blob/8021010d3bd291bbf15b55b54602374c0e5488a2/packages/agent/chain.ts#L616)
 <pre>
 <strong>const</strong> result: <em>Record&lt;string, Transaction&gt;</em> = <strong>await</strong> block.getTransactionsById()
 </pre>
 
-## abstract method [*block.getTransactionsInOrder*](https://github.com/hackbg/fadroma/blob/0dad4acde5441c08749fd7b46d47288231605082/packages/agent/chain.ts#L619)
+## abstract method [*block.getTransactionsInOrder*](https://github.com/hackbg/fadroma/blob/8021010d3bd291bbf15b55b54602374c0e5488a2/packages/agent/chain.ts#L619)
 <pre>
 <strong>const</strong> result: <em><a href="#">Transaction</a>[]</em> = <strong>await</strong> block.getTransactionsInOrder()
 </pre>
@@ -89,7 +89,7 @@ support for new kinds of blockchains.
 
 ```typescript
 const connection = new Connection(
-  properties: Partial<...>,
+  properties: <em>Partial&lt;Connection&gt;</em>,
 )
 ```
 
@@ -155,13 +155,13 @@ this property contains the URL to which requests are sent.</td></tr>
 <strong>nextBlock</strong></td>
 <td></td></tr></tbody></table>
 
-## method [*connection.batch*](https://github.com/hackbg/fadroma/blob/0dad4acde5441c08749fd7b46d47288231605082/packages/agent/chain.ts#L595)
+## method [*connection.batch*](https://github.com/hackbg/fadroma/blob/8021010d3bd291bbf15b55b54602374c0e5488a2/packages/agent/chain.ts#L595)
 Construct a transaction batch.
 <pre>
 <strong>const</strong> result: <em><a href="#">Batch&lt;Connection&gt;</a></em> = connection.batch()
 </pre>
 
-## method [*connection.execute*](https://github.com/hackbg/fadroma/blob/0dad4acde5441c08749fd7b46d47288231605082/packages/agent/chain.ts#L568)
+## method [*connection.execute*](https://github.com/hackbg/fadroma/blob/8021010d3bd291bbf15b55b54602374c0e5488a2/packages/agent/chain.ts#L568)
 Call a given program's transaction method.
 <pre>
 <strong>const</strong> result: <em>unknown</em> = <strong>await</strong> connection.execute(
@@ -175,7 +175,7 @@ Call a given program's transaction method.
 )
 </pre>
 
-## method [*connection.getBalanceIn*](https://github.com/hackbg/fadroma/blob/0dad4acde5441c08749fd7b46d47288231605082/packages/agent/chain.ts#L389)
+## method [*connection.getBalanceIn*](https://github.com/hackbg/fadroma/blob/8021010d3bd291bbf15b55b54602374c0e5488a2/packages/agent/chain.ts#L389)
 Get the balance in a given native token, of
 either this connection's identity's address,
 or of another given address.
@@ -188,7 +188,7 @@ or of another given address.
 )
 </pre>
 
-## method [*connection.getBalanceOf*](https://github.com/hackbg/fadroma/blob/0dad4acde5441c08749fd7b46d47288231605082/packages/agent/chain.ts#L364)
+## method [*connection.getBalanceOf*](https://github.com/hackbg/fadroma/blob/8021010d3bd291bbf15b55b54602374c0e5488a2/packages/agent/chain.ts#L364)
 Get the balance in a native token of a given address,
 either in this connection's gas token,
 or in another given token.
@@ -201,7 +201,7 @@ or in another given token.
 )
 </pre>
 
-## method [*connection.getBlock*](https://github.com/hackbg/fadroma/blob/0dad4acde5441c08749fd7b46d47288231605082/packages/agent/chain.ts#L222)
+## method [*connection.getBlock*](https://github.com/hackbg/fadroma/blob/8021010d3bd291bbf15b55b54602374c0e5488a2/packages/agent/chain.ts#L222)
 Get info about a specific block.
 If no height is passed, gets info about the latest block.
 <pre>
@@ -210,7 +210,7 @@ If no height is passed, gets info about the latest block.
 )
 </pre>
 
-## method [*connection.getCodeHashOfAddress*](https://github.com/hackbg/fadroma/blob/0dad4acde5441c08749fd7b46d47288231605082/packages/agent/chain.ts#L264)
+## method [*connection.getCodeHashOfAddress*](https://github.com/hackbg/fadroma/blob/8021010d3bd291bbf15b55b54602374c0e5488a2/packages/agent/chain.ts#L264)
 Get the code hash of a given address.
 <pre>
 <strong>const</strong> result: <em>string</em> = <strong>await</strong> connection.getCodeHashOfAddress(
@@ -220,7 +220,7 @@ Get the code hash of a given address.
 )
 </pre>
 
-## method [*connection.getCodeHashOfCodeId*](https://github.com/hackbg/fadroma/blob/0dad4acde5441c08749fd7b46d47288231605082/packages/agent/chain.ts#L248)
+## method [*connection.getCodeHashOfCodeId*](https://github.com/hackbg/fadroma/blob/8021010d3bd291bbf15b55b54602374c0e5488a2/packages/agent/chain.ts#L248)
 Get the code hash of a given code id.
 <pre>
 <strong>const</strong> result: <em>string</em> = <strong>await</strong> connection.getCodeHashOfCodeId(
@@ -230,7 +230,7 @@ Get the code hash of a given code id.
 )
 </pre>
 
-## method [*connection.getCodeId*](https://github.com/hackbg/fadroma/blob/0dad4acde5441c08749fd7b46d47288231605082/packages/agent/chain.ts#L232)
+## method [*connection.getCodeId*](https://github.com/hackbg/fadroma/blob/8021010d3bd291bbf15b55b54602374c0e5488a2/packages/agent/chain.ts#L232)
 Get the code id of a given address.
 <pre>
 <strong>const</strong> result: <em>string</em> = <strong>await</strong> connection.getCodeId(
@@ -240,12 +240,12 @@ Get the code id of a given address.
 )
 </pre>
 
-## method [*connection.getCodes*](https://github.com/hackbg/fadroma/blob/0dad4acde5441c08749fd7b46d47288231605082/packages/agent/chain.ts#L294)
+## method [*connection.getCodes*](https://github.com/hackbg/fadroma/blob/8021010d3bd291bbf15b55b54602374c0e5488a2/packages/agent/chain.ts#L294)
 <pre>
 <strong>const</strong> result: <em>Record&lt;string, UploadedCode&gt;</em> = <strong>await</strong> connection.getCodes()
 </pre>
 
-## method [*connection.getContract*](https://github.com/hackbg/fadroma/blob/0dad4acde5441c08749fd7b46d47288231605082/packages/agent/chain.ts#L280)
+## method [*connection.getContract*](https://github.com/hackbg/fadroma/blob/8021010d3bd291bbf15b55b54602374c0e5488a2/packages/agent/chain.ts#L280)
 Get a client handle for a specific smart contract, authenticated as as this agent.
 <pre>
 <strong>const</strong> result: <em><a href="#">Contract</a></em> = connection.getContract(
@@ -255,7 +255,7 @@ Get a client handle for a specific smart contract, authenticated as as this agen
 )
 </pre>
 
-## method [*connection.getContractsByCodeId*](https://github.com/hackbg/fadroma/blob/0dad4acde5441c08749fd7b46d47288231605082/packages/agent/chain.ts#L303)
+## method [*connection.getContractsByCodeId*](https://github.com/hackbg/fadroma/blob/8021010d3bd291bbf15b55b54602374c0e5488a2/packages/agent/chain.ts#L303)
 Get client handles for all contracts that match a code ID
 <pre>
 <strong>const</strong> result: <em>Record&lt;string, Contract&gt;</em> = <strong>await</strong> connection.getContractsByCodeId(
@@ -269,7 +269,7 @@ Get client handles for all contracts that match a code ID
 )
 </pre>
 
-## method [*connection.getContractsByCodeIds*](https://github.com/hackbg/fadroma/blob/0dad4acde5441c08749fd7b46d47288231605082/packages/agent/chain.ts#L325)
+## method [*connection.getContractsByCodeIds*](https://github.com/hackbg/fadroma/blob/8021010d3bd291bbf15b55b54602374c0e5488a2/packages/agent/chain.ts#L325)
 Get client handles for all contracts that match multiple code IDs
 <pre>
 <strong>const</strong> result: <em>Record&lt;string, Record&gt;</em> = <strong>await</strong> connection.getContractsByCodeIds(
@@ -288,7 +288,7 @@ Get client handles for all contracts that match multiple code IDs
 )
 </pre>
 
-## method [*connection.instantiate*](https://github.com/hackbg/fadroma/blob/0dad4acde5441c08749fd7b46d47288231605082/packages/agent/chain.ts#L524)
+## method [*connection.instantiate*](https://github.com/hackbg/fadroma/blob/8021010d3bd291bbf15b55b54602374c0e5488a2/packages/agent/chain.ts#L524)
 Instantiate a new program from a code id, label and init message.
 <pre>
 connection.instantiate(
@@ -297,7 +297,7 @@ connection.instantiate(
 )
 </pre>
 
-## method [*connection.query*](https://github.com/hackbg/fadroma/blob/0dad4acde5441c08749fd7b46d47288231605082/packages/agent/chain.ts#L416)
+## method [*connection.query*](https://github.com/hackbg/fadroma/blob/8021010d3bd291bbf15b55b54602374c0e5488a2/packages/agent/chain.ts#L416)
 Query a contract.
 <pre>
 <strong>const</strong> result: <em>Q</em> = <strong>await</strong> connection.query(
@@ -308,7 +308,7 @@ Query a contract.
 )
 </pre>
 
-## method [*connection.send*](https://github.com/hackbg/fadroma/blob/0dad4acde5441c08749fd7b46d47288231605082/packages/agent/chain.ts#L432)
+## method [*connection.send*](https://github.com/hackbg/fadroma/blob/8021010d3bd291bbf15b55b54602374c0e5488a2/packages/agent/chain.ts#L432)
 Send native tokens to 1 recipient.
 <pre>
 <strong>const</strong> result: <em>unknown</em> = <strong>await</strong> connection.send(
@@ -323,7 +323,7 @@ Send native tokens to 1 recipient.
 )
 </pre>
 
-## method [*connection.upload*](https://github.com/hackbg/fadroma/blob/0dad4acde5441c08749fd7b46d47288231605082/packages/agent/chain.ts#L464)
+## method [*connection.upload*](https://github.com/hackbg/fadroma/blob/8021010d3bd291bbf15b55b54602374c0e5488a2/packages/agent/chain.ts#L464)
 Upload a contract's code, generating a new code id/hash pair.
 <pre>
 connection.upload(
@@ -337,7 +337,7 @@ connection.upload(
 )
 </pre>
 
-## method [*connection.gas*](https://github.com/hackbg/fadroma/blob/0dad4acde5441c08749fd7b46d47288231605082/packages/agent/chain.ts#L122)
+## method [*connection.gas*](https://github.com/hackbg/fadroma/blob/8021010d3bd291bbf15b55b54602374c0e5488a2/packages/agent/chain.ts#L122)
 Native token of chain.
 <pre>
 <strong>const</strong> result: <em><a href="#">TokenAmount</a></em> = connection.gas(
@@ -351,7 +351,7 @@ Subclass this to add custom query and transaction methods.
 
 ```typescript
 const contract = new Contract(
-  properties: undefined
+  properties: <em>string | Partial&lt;Contract&gt;</em>,
 )
 ```
 
@@ -366,7 +366,7 @@ const contract = new Contract(
 <strong>log</strong></td>
 <td><strong>Console</strong>. </td></tr></tbody></table>
 
-## method [*contract.execute*](https://github.com/hackbg/fadroma/blob/0dad4acde5441c08749fd7b46d47288231605082/packages/agent/chain.ts#L657)
+## method [*contract.execute*](https://github.com/hackbg/fadroma/blob/8021010d3bd291bbf15b55b54602374c0e5488a2/packages/agent/chain.ts#L657)
 Execute a transaction on the specified instance as the specified Connection.
 <pre>
 <strong>const</strong> result: <em>unknown</em> = <strong>await</strong> contract.execute(
@@ -379,7 +379,7 @@ Execute a transaction on the specified instance as the specified Connection.
 )
 </pre>
 
-## method [*contract.query*](https://github.com/hackbg/fadroma/blob/0dad4acde5441c08749fd7b46d47288231605082/packages/agent/chain.ts#L644)
+## method [*contract.query*](https://github.com/hackbg/fadroma/blob/8021010d3bd291bbf15b55b54602374c0e5488a2/packages/agent/chain.ts#L644)
 Execute a query on the specified instance as the specified Connection.
 <pre>
 <strong>const</strong> result: <em>Q</em> = <strong>await</strong> contract.query(
@@ -395,7 +395,7 @@ Instead, see `Connection` and its subclasses.
 
 ```typescript
 const endpoint = new Endpoint(
-  properties: Partial<...>,
+  properties: <em>Partial&lt;Endpoint&gt;</em>,
 )
 ```
 

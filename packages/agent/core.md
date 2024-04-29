@@ -3,10 +3,10 @@
 # class *Error*
 ```typescript
 const error = new Error(
-  message: string
+  message: <em>string</em>,
 )const error = new Error(
-  message: string
-  options: ErrorOptions
+  message: <em>string</em>,
+  options: <em>ErrorOptions</em>,
 )
 ```
 
