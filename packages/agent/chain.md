@@ -77,7 +77,7 @@ const block = new Block(
 
 ## abstract method [*block.getTransactionsInOrder*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/chain.ts#L615)
 <pre>
-block.getTransactionsInOrder()
+<strong>const</strong> result: <em><a href="#">Transaction</a>[]</em> = <strong>await</strong> block.getTransactionsInOrder()
 </pre>
 
 # class *Connection*

@@ -151,7 +151,7 @@ Add an instantiate message to the batch.
 ## method [*stubBatch.submit*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/stub.ts#L281)
 Submit the batch.
 <pre>
-stubBatch.submit()
+<strong>const</strong> result: <em>object</em> = <strong>await</strong> stubBatch.submit()
 </pre>
 
 ## method [*stubBatch.upload*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/stub.ts#L266)
@@ -191,7 +191,7 @@ const stubBlock = new StubBlock(
 
 ## method [*stubBlock.getTransactionsInOrder*](https://github.com/hackbg/fadroma/blob/a228431ac8a4c97662d93a7420d030936fdc22f5/packages/agent/stub.ts#L21)
 <pre>
-stubBlock.getTransactionsInOrder()
+<strong>const</strong> result: <em><a href="#">Transaction</a>[]</em> = <strong>await</strong> stubBlock.getTransactionsInOrder()
 </pre>
 
 # class *StubCompiler*
@@ -232,7 +232,7 @@ Build multiple sources.
 Default implementation of buildMany is sequential.
 Compiler classes may override this to optimize.
 <pre>
-stubCompiler.buildMany(
+<strong>const</strong> result: <em><a href="#">CompiledCode</a>[]</em> = <strong>await</strong> stubCompiler.buildMany(
   inputs: <em>Partial&lt;SourceCode&gt;[]</em>,
 )
 </pre>

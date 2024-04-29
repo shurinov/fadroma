@@ -240,7 +240,7 @@ Build multiple sources.
 Default implementation of buildMany is sequential.
 Compiler classes may override this to optimize.
 <pre>
-compiler.buildMany(
+<strong>const</strong> result: <em><a href="#">CompiledCode</a>[]</em> = <strong>await</strong> compiler.buildMany(
   inputs: <em>Partial&lt;SourceCode&gt;[]</em>,
 )
 </pre>
