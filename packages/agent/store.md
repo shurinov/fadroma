@@ -25,7 +25,7 @@ new DeployStore()
 ## method *deployStore.[iterator]*
 Returns an iterable of entries in the map.
 <pre>
-const result: [IterableIterator<>](https://example.com) = deployStore.[iterator]()
+const result: <a href="https://example.com">IterableIterator<></a> = deployStore.[iterator]()
 </pre>
 
 ## method *deployStore.clear*
@@ -44,7 +44,7 @@ const result: boolean = deployStore.delete(
 ## method *deployStore.entries*
 Returns an iterable of key, value pairs for every entry in the map.
 <pre>
-const result: [IterableIterator<>](https://example.com) = deployStore.entries()
+const result: <a href="https://example.com">IterableIterator<></a> = deployStore.entries()
 </pre>
 
 ## method *deployStore.forEach*
@@ -58,7 +58,7 @@ const result: void = deployStore.forEach(
 
 ## method *deployStore.get*
 <pre>
-const result: [Partial<>](https://example.com) = deployStore.get(
+const result: <a href="https://example.com">Partial<></a> = deployStore.get(
   name,
 )
 </pre>
@@ -74,7 +74,7 @@ const result: boolean = deployStore.has(
 ## method *deployStore.keys*
 Returns an iterable of keys in the map
 <pre>
-const result: [IterableIterator<string>](https://example.com) = deployStore.keys()
+const result: <a href="https://example.com">IterableIterator<string></a> = deployStore.keys()
 </pre>
 
 ## method *deployStore.set*
@@ -88,7 +88,7 @@ deployStore.set(
 ## method *deployStore.values*
 Returns an iterable of values in the map
 <pre>
-const result: [IterableIterator<Partial>](https://example.com) = deployStore.values()
+const result: <a href="https://example.com">IterableIterator<Partial></a> = deployStore.values()
 </pre>
 
 # class *UploadStore*
@@ -110,7 +110,7 @@ new UploadStore()
 ## method *uploadStore.[iterator]*
 Returns an iterable of entries in the map.
 <pre>
-const result: [IterableIterator<>](https://example.com) = uploadStore.[iterator]()
+const result: <a href="https://example.com">IterableIterator<></a> = uploadStore.[iterator]()
 </pre>
 
 ## method *uploadStore.clear*
@@ -129,7 +129,7 @@ const result: boolean = uploadStore.delete(
 ## method *uploadStore.entries*
 Returns an iterable of key, value pairs for every entry in the map.
 <pre>
-const result: [IterableIterator<>](https://example.com) = uploadStore.entries()
+const result: <a href="https://example.com">IterableIterator<></a> = uploadStore.entries()
 </pre>
 
 ## method *uploadStore.forEach*
@@ -143,7 +143,7 @@ const result: void = uploadStore.forEach(
 
 ## method *uploadStore.get*
 <pre>
-const result: [UploadedCode](https://example.com) = uploadStore.get(
+const result: <a href="https://example.com">UploadedCode</a> = uploadStore.get(
   codeHash,
 )
 </pre>
@@ -159,7 +159,7 @@ const result: boolean = uploadStore.has(
 ## method *uploadStore.keys*
 Returns an iterable of keys in the map
 <pre>
-const result: [IterableIterator<string>](https://example.com) = uploadStore.keys()
+const result: <a href="https://example.com">IterableIterator<string></a> = uploadStore.keys()
 </pre>
 
 ## method *uploadStore.set*
@@ -173,6 +173,6 @@ uploadStore.set(
 ## method *uploadStore.values*
 Returns an iterable of values in the map
 <pre>
-const result: [IterableIterator<UploadedCode>](https://example.com) = uploadStore.values()
+const result: <a href="https://example.com">IterableIterator<UploadedCode></a> = uploadStore.values()
 </pre>
 <!-- @hackbg/docs: end -->

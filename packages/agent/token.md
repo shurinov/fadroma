@@ -74,12 +74,12 @@ const amount = new Amount(
 
 ## method *amount.asCoin*
 <pre>
-const result: [ICoin](https://example.com) = amount.asCoin()
+const result: <a href="https://example.com">ICoin</a> = amount.asCoin()
 </pre>
 
 ## method *amount.asFee*
 <pre>
-const result: [IFee](https://example.com) = amount.asFee(
+const result: <a href="https://example.com">IFee</a> = amount.asFee(
   gas,
 )
 </pre>
@@ -130,7 +130,7 @@ const custom = new Custom(
 
 ## method *custom.amount*
 <pre>
-const result: [TokenAmount](https://example.com) = custom.amount(
+const result: <a href="https://example.com">TokenAmount</a> = custom.amount(
   amount,
 )
 </pre>
@@ -202,7 +202,7 @@ new Fungible()
 
 ## method *fungible.amount*
 <pre>
-const result: [TokenAmount](https://example.com) = fungible.amount(
+const result: <a href="https://example.com">TokenAmount</a> = fungible.amount(
   amount,
 )
 </pre>
@@ -252,14 +252,14 @@ const native = new Native(
 
 ## method *native.amount*
 <pre>
-const result: [TokenAmount](https://example.com) = native.amount(
+const result: <a href="https://example.com">TokenAmount</a> = native.amount(
   amount,
 )
 </pre>
 
 ## method *native.fee*
 <pre>
-const result: [IFee](https://example.com) = native.fee(
+const result: <a href="https://example.com">IFee</a> = native.fee(
   amount,
 )
 </pre>

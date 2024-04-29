@@ -189,12 +189,12 @@ compiledCode.computeHash()
 
 ## method *compiledCode.doFetch*
 <pre>
-const result: [Uint8Array](https://example.com) = await compiledCode.doFetch()
+const result: <a href="https://example.com">Uint8Array</a> = await compiledCode.doFetch()
 </pre>
 
 ## method *compiledCode.fetch*
 <pre>
-const result: [Uint8Array](https://example.com) = await compiledCode.fetch()
+const result: <a href="https://example.com">Uint8Array</a> = await compiledCode.fetch()
 </pre>
 
 ## method *compiledCode.serialize*
@@ -234,7 +234,7 @@ Compile a source.
 `@hackbg/fadroma` implements dockerized and non-dockerized
 variants using its `build.impl.mjs` script.
 <pre>
-const result: [CompiledCode](https://example.com) = await compiler.build(
+const result: <a href="https://example.com">CompiledCode</a> = await compiler.build(
   source,
   ...args,
 )
@@ -295,7 +295,7 @@ localCompiledCode.doFetch()
 
 ## method *localCompiledCode.fetch*
 <pre>
-const result: [Uint8Array](https://example.com) = await localCompiledCode.fetch()
+const result: <a href="https://example.com">Uint8Array</a> = await localCompiledCode.fetch()
 </pre>
 
 ## method *localCompiledCode.serialize*
