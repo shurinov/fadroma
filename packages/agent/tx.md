@@ -105,24 +105,24 @@ Builder object for batched transactions.
 ## method [*batch.execute*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/tx.ts)
 Add an execute message to the batch.
 <pre>
-batch.execute(args: <em>Parameters&lt;&gt;</em>)
+batch.execute(args: Parameters&lt;&gt;)
 </pre>
 
 ## method [*batch.instantiate*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/tx.ts)
 Add an instantiate message to the batch.
 <pre>
-batch.instantiate(args: <em>Parameters&lt;&gt;</em>)
+batch.instantiate(args: Parameters&lt;&gt;)
 </pre>
 
 ## method [*batch.submit*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/tx.ts)
 Submit the batch.
 <pre>
-<strong>const</strong> result: <em>unknown</em> = <strong>await</strong> batch.submit(args: <em>unknown</em>)
+<strong>const</strong> result: <em>unknown</em> = <strong>await</strong> batch.submit(args: unknown)
 </pre>
 
 ## method [*batch.upload*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/tx.ts)
 Add an upload message to the batch.
 <pre>
-batch.upload(args: <em>Parameters&lt;&gt;</em>)
+batch.upload(args: Parameters&lt;&gt;)
 </pre>
 <!-- @hackbg/docs: end -->

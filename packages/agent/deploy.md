@@ -47,10 +47,10 @@ Compile this contract.
 If a valid binary is present and a rebuild is not requested,
 this does not compile it again, but reuses the binary.
 <pre>
-contractCode.compile(<em>{
+contractCode.compile({
   compiler,
   rebuild,
-}</em>)
+})
 </pre>
 
 ## method [*contractCode.upload*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts)
@@ -64,7 +64,7 @@ this does not upload it again, but reuses the code ID.
 If a valid binary is not present, but valid source is present,
 this compiles the source code first to obtain a binary.
 <pre>
-contractCode.upload(<em>({
+contractCode.upload({
   compiler,
   rebuild,
 } & {
@@ -75,7 +75,7 @@ contractCode.upload(<em>({
 } & {
   reupload,
   uploader,
-})</em>)
+})
 </pre>
 
 # class *UploadedCode*
@@ -129,7 +129,7 @@ A contract that is part of a deploment.
 - generates structured label
 
 <pre>
-<strong>const</strong> deploymentUnit = new DeploymentUnit(properties: <em>(Partial&lt;ContractCode&gt; & Partial&lt;DeploymentUnit&gt;)</em>)
+<strong>const</strong> deploymentUnit = new DeploymentUnit(properties: Partial&lt;ContractCode&gt; & Partial&lt;DeploymentUnit&gt;)
 </pre>
 
 <table><tbody>
@@ -176,10 +176,10 @@ Compile this contract.
 If a valid binary is present and a rebuild is not requested,
 this does not compile it again, but reuses the binary.
 <pre>
-deploymentUnit.compile(<em>{
+deploymentUnit.compile({
   compiler,
   rebuild,
-}</em>)
+})
 </pre>
 
 ## method [*deploymentUnit.serialize*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts)
@@ -198,7 +198,7 @@ this does not upload it again, but reuses the code ID.
 If a valid binary is not present, but valid source is present,
 this compiles the source code first to obtain a binary.
 <pre>
-deploymentUnit.upload(<em>({
+deploymentUnit.upload({
   compiler,
   rebuild,
 } & {
@@ -209,7 +209,7 @@ deploymentUnit.upload(<em>({
 } & {
   reupload,
   uploader,
-})</em>)
+})
 </pre>
 
 # class *ContractTemplate*
@@ -218,7 +218,7 @@ A contract that is part of a deploment.
 - generates structured label
 
 <pre>
-<strong>const</strong> contractTemplate = new ContractTemplate(properties: <em>(Partial&lt;ContractCode&gt; & Partial&lt;DeploymentUnit&gt;)</em>)
+<strong>const</strong> contractTemplate = new ContractTemplate(properties: Partial&lt;ContractCode&gt; & Partial&lt;DeploymentUnit&gt;)
 </pre>
 
 <table><tbody>
@@ -268,10 +268,10 @@ Compile this contract.
 If a valid binary is present and a rebuild is not requested,
 this does not compile it again, but reuses the binary.
 <pre>
-contractTemplate.compile(<em>{
+contractTemplate.compile({
   compiler,
   rebuild,
-}</em>)
+})
 </pre>
 
 ## method [*contractTemplate.contract*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts)
@@ -286,7 +286,7 @@ Create a new instance of this contract.
 ## method [*contractTemplate.contracts*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts)
 Create multiple instances of this contract.
 <pre>
-<strong>const</strong> result: <em>Record&lt;string, ContractInstance&gt;</em> = contractTemplate.contracts(instanceParameters: <em>Record&lt;string, Partial&gt;</em>)
+<strong>const</strong> result: <em>Record&lt;string, ContractInstance&gt;</em> = contractTemplate.contracts(instanceParameters: Record&lt;string, Partial&gt;)
 </pre>
 
 ## method [*contractTemplate.serialize*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts)
@@ -305,7 +305,7 @@ this does not upload it again, but reuses the code ID.
 If a valid binary is not present, but valid source is present,
 this compiles the source code first to obtain a binary.
 <pre>
-contractTemplate.upload(<em>({
+contractTemplate.upload({
   compiler,
   rebuild,
 } & {
@@ -316,7 +316,7 @@ contractTemplate.upload(<em>({
 } & {
   reupload,
   uploader,
-})</em>)
+})
 </pre>
 
 # class *ContractInstance*
@@ -325,7 +325,7 @@ A contract that is part of a deploment.
 - generates structured label
 
 <pre>
-<strong>const</strong> contractInstance = new ContractInstance(properties: <em>(Partial&lt;ContractCode&gt; & Partial&lt;DeploymentUnit&gt; & Partial&lt;ContractInstance&gt;)</em>)
+<strong>const</strong> contractInstance = new ContractInstance(properties: Partial&lt;ContractCode&gt; & Partial&lt;DeploymentUnit&gt; & Partial&lt;ContractInstance&gt;)
 </pre>
 
 <table><tbody>
@@ -402,21 +402,21 @@ Compile this contract.
 If a valid binary is present and a rebuild is not requested,
 this does not compile it again, but reuses the binary.
 <pre>
-contractInstance.compile(<em>{
+contractInstance.compile({
   compiler,
   rebuild,
-}</em>)
+})
 </pre>
 
 ## method [*contractInstance.connect*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts)
 Returns a client to this contract instance.
 <pre>
-<strong>const</strong> result: <em><a href="#">Contract</a></em> = contractInstance.connect(agent: <em>Connection</em>)
+<strong>const</strong> result: <em><a href="#">Contract</a></em> = contractInstance.connect(agent: Connection)
 </pre>
 
 ## method [*contractInstance.deploy*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts)
 <pre>
-contractInstance.deploy(<em>({
+contractInstance.deploy({
   compiler,
   rebuild,
 } & {
@@ -430,7 +430,7 @@ contractInstance.deploy(<em>({
 } & Partial&lt;ContractInstance&gt; & {
   deployer,
   redeploy,
-})</em>)
+})
 </pre>
 
 ## method [*contractInstance.isValid*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts)
@@ -454,7 +454,7 @@ this does not upload it again, but reuses the code ID.
 If a valid binary is not present, but valid source is present,
 this compiles the source code first to obtain a binary.
 <pre>
-contractInstance.upload(<em>({
+contractInstance.upload({
   compiler,
   rebuild,
 } & {
@@ -465,7 +465,7 @@ contractInstance.upload(<em>({
 } & {
   reupload,
   uploader,
-})</em>)
+})
 </pre>
 
 # class *Deployment*
@@ -501,30 +501,30 @@ Returns an iterable of entries in the map.
 
 ## method [*deployment.addContract*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts)
 <pre>
-<strong>const</strong> result: <em><a href="#">Deployment</a></em> = deployment.addContract(args: <em>[string, ((({
+<strong>const</strong> result: <em><a href="#">Deployment</a></em> = deployment.addContract(args: [string, ((({
   language,
 } & Partial&lt;RustSourceCode&gt;) | ({
   language,
-} & Partial&lt;SourceCode&gt;)) & Partial&lt;CompiledCode&gt; & Partial&lt;UploadedCode&gt; & Partial&lt;ContractInstance&gt;)]</em>)
+} & Partial&lt;SourceCode&gt;)) & Partial&lt;CompiledCode&gt; & Partial&lt;UploadedCode&gt; & Partial&lt;ContractInstance&gt;)])
 </pre>
 
 ## method [*deployment.addContracts*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts)
 <pre>
-<strong>const</strong> result: <em><a href="#">Deployment</a></em> = deployment.addContracts(args: <em>[string, ((({
+<strong>const</strong> result: <em><a href="#">Deployment</a></em> = deployment.addContracts(args: [string, ((({
   language,
 } & Partial&lt;RustSourceCode&gt;) | ({
   language,
-} & Partial&lt;SourceCode&gt;)) & Partial&lt;CompiledCode&gt; & Partial&lt;UploadedCode&gt;)]</em>)
+} & Partial&lt;SourceCode&gt;)) & Partial&lt;CompiledCode&gt; & Partial&lt;UploadedCode&gt;)])
 </pre>
 
 ## method [*deployment.build*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts)
 <pre>
-<strong>const</strong> result: <em>Record&lt;string, &gt;</em> = <strong>await</strong> deployment.build(<em>({
+<strong>const</strong> result: <em>Record&lt;string, &gt;</em> = <strong>await</strong> deployment.build({
   compiler,
   rebuild,
 } & {
   units,
-})</em>)
+})
 </pre>
 
 ## method [*deployment.clear*](https://github.com/hackbg/fadroma/tree/v2/node_modules/.pnpm/typescript@5.3.3/node_modules/typescript/lib/lib.es2015.collection.d.ts)
@@ -538,23 +538,23 @@ and instantiated as part of this deployment.
 <pre>
 <strong>const</strong> result: <em><a href="#">ContractInstance</a></em> = deployment.contract(
   name: <em>string</em>,
-  properties: <em>((({
+  properties: <em>(({
     language,
   } & Partial&lt;RustSourceCode&gt;) | ({
     language,
-  } & Partial&lt;SourceCode&gt;)) & Partial&lt;CompiledCode&gt; & Partial&lt;UploadedCode&gt; & Partial&lt;ContractInstance&gt;)</em>,
+  } & Partial&lt;SourceCode&gt;)) & Partial&lt;CompiledCode&gt; & Partial&lt;UploadedCode&gt; & Partial&lt;ContractInstance&gt;</em>,
 )
 </pre>
 
 ## method [*deployment.delete*](https://github.com/hackbg/fadroma/tree/v2/node_modules/.pnpm/typescript@5.3.3/node_modules/typescript/lib/lib.es2015.collection.d.ts)
 
 <pre>
-<strong>const</strong> result: <em>boolean</em> = deployment.delete(key: <em>string</em>)
+<strong>const</strong> result: <em>boolean</em> = deployment.delete(key: string)
 </pre>
 
 ## method [*deployment.deploy*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts)
 <pre>
-<strong>const</strong> result: <em>Record&lt;string, &gt;</em> = <strong>await</strong> deployment.deploy(<em>({
+<strong>const</strong> result: <em>Record&lt;string, &gt;</em> = <strong>await</strong> deployment.deploy({
   compiler,
   rebuild,
 } & {
@@ -571,7 +571,7 @@ and instantiated as part of this deployment.
 } & {
   deployStore,
   units,
-})</em>)
+})
 </pre>
 
 ## method [*deployment.entries*](https://github.com/hackbg/fadroma/tree/v2/node_modules/.pnpm/typescript@5.3.3/node_modules/typescript/lib/lib.es2015.iterable.d.ts)
@@ -592,13 +592,13 @@ Executes a provided function once per each key/value pair in the Map, in inserti
 ## method [*deployment.get*](https://github.com/hackbg/fadroma/tree/v2/node_modules/.pnpm/typescript@5.3.3/node_modules/typescript/lib/lib.es2015.collection.d.ts)
 Returns a specified element from the Map object. If the value that is associated to the provided key is an object, then you will get a reference to that object and any change made to that object will effectively modify it inside the Map.
 <pre>
-<strong>const</strong> result: <em><a href="#">DeploymentUnit</a></em> = deployment.get(key: <em>string</em>)
+<strong>const</strong> result: <em><a href="#">DeploymentUnit</a></em> = deployment.get(key: string)
 </pre>
 
 ## method [*deployment.has*](https://github.com/hackbg/fadroma/tree/v2/node_modules/.pnpm/typescript@5.3.3/node_modules/typescript/lib/lib.es2015.collection.d.ts)
 
 <pre>
-<strong>const</strong> result: <em>boolean</em> = deployment.has(key: <em>string</em>)
+<strong>const</strong> result: <em>boolean</em> = deployment.has(key: string)
 </pre>
 
 ## method [*deployment.keys*](https://github.com/hackbg/fadroma/tree/v2/node_modules/.pnpm/typescript@5.3.3/node_modules/typescript/lib/lib.es2015.iterable.d.ts)
@@ -628,17 +628,17 @@ the same code.
 <pre>
 <strong>const</strong> result: <em><a href="#">ContractTemplate</a></em> = deployment.template(
   name: <em>string</em>,
-  properties: <em>((({
+  properties: <em>(({
     language,
   } & Partial&lt;RustSourceCode&gt;) | ({
     language,
-  } & Partial&lt;SourceCode&gt;)) & Partial&lt;CompiledCode&gt; & Partial&lt;UploadedCode&gt;)</em>,
+  } & Partial&lt;SourceCode&gt;)) & Partial&lt;CompiledCode&gt; & Partial&lt;UploadedCode&gt;</em>,
 )
 </pre>
 
 ## method [*deployment.upload*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts)
 <pre>
-<strong>const</strong> result: <em>Record&lt;string, &gt;</em> = <strong>await</strong> deployment.upload(<em>({
+<strong>const</strong> result: <em>Record&lt;string, &gt;</em> = <strong>await</strong> deployment.upload({
   compiler,
   rebuild,
 } & {
@@ -652,7 +652,7 @@ the same code.
 } & {
   units,
   uploadStore,
-})</em>)
+})
 </pre>
 
 ## method [*deployment.values*](https://github.com/hackbg/fadroma/tree/v2/node_modules/.pnpm/typescript@5.3.3/node_modules/typescript/lib/lib.es2015.iterable.d.ts)
@@ -663,6 +663,6 @@ Returns an iterable of values in the map
 
 ## method [*deployment.fromSnapshot*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts)
 <pre>
-<strong>const</strong> result: <em><a href="#">Deployment</a></em> = deployment.fromSnapshot(<em>Partial&lt;&gt;</em>)
+<strong>const</strong> result: <em><a href="#">Deployment</a></em> = deployment.fromSnapshot(Partial&lt;&gt;)
 </pre>
 <!-- @hackbg/docs: end -->

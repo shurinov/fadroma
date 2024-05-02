@@ -153,7 +153,7 @@ new LocalCompiledCode(
 An object representing a given compiled binary on the local filesystem.
 
 <pre>
-<strong>const</strong> localCompiledCode = new LocalCompiledCode(properties: <em>Partial&lt;CompiledCode&gt;</em>)
+<strong>const</strong> localCompiledCode = new LocalCompiledCode(properties: Partial&lt;CompiledCode&gt;)
 </pre>
 
 <table><tbody>
@@ -197,12 +197,12 @@ localCompiledCode.serialize()
 
 ## method [*localCompiledCode.toCodeHash*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/program.browser.ts)
 <pre>
-<strong>const</strong> result: <em>string</em> = localCompiledCode.toCodeHash(data: <em>Uint8Array</em>)
+<strong>const</strong> result: <em>string</em> = localCompiledCode.toCodeHash(data: Uint8Array)
 </pre>
 
 # class *Compiler*
 <pre>
-<strong>const</strong> compiler = new Compiler(properties: <em>Partial&lt;Logged&gt;</em>)
+<strong>const</strong> compiler = new Compiler(properties: Partial&lt;Logged&gt;)
 </pre>
 
 <table><tbody>
@@ -224,7 +224,7 @@ Compile a source.
 variants using its `build.impl.mjs` script.
 <pre>
 <strong>const</strong> result: <em><a href="#">CompiledCode</a></em> = <strong>await</strong> compiler.build(
-  source: <em>(string | Partial&lt;SourceCode&gt;)</em>,
+  source: <em>string | Partial&lt;SourceCode&gt;</em>,
   ...args: <em>unknown</em>,
 )
 </pre>
@@ -234,7 +234,7 @@ Build multiple sources.
 Default implementation of buildMany is sequential.
 Compiler classes may override this to optimize.
 <pre>
-<strong>const</strong> result: <em><a href="#">CompiledCode</a>[]</em> = <strong>await</strong> compiler.buildMany(inputs: <em>Partial&lt;SourceCode&gt;[]</em>)
+<strong>const</strong> result: <em><a href="#">CompiledCode</a>[]</em> = <strong>await</strong> compiler.buildMany(inputs: Partial&lt;SourceCode&gt;[])
 </pre>
 
 # class *SourceCode*
@@ -399,6 +399,6 @@ compiledCode.serialize()
 
 ## method [*compiledCode.toCodeHash*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/program.browser.ts)
 <pre>
-<strong>const</strong> result: <em>string</em> = compiledCode.toCodeHash(data: <em>Uint8Array</em>)
+<strong>const</strong> result: <em>string</em> = compiledCode.toCodeHash(data: Uint8Array)
 </pre>
 <!-- @hackbg/docs: end -->

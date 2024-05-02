@@ -2,7 +2,7 @@
 
 # class *Error*
 <pre>
-<strong>const</strong> error = new Error(message: <em>string</em>)<strong>const</strong> error = new Error(
+<strong>const</strong> error = new Error(message: string)<strong>const</strong> error = new Error(
   message: <em>string</em>,
   options: <em>ErrorOptions</em>,
 )
@@ -42,7 +42,7 @@ Define an error subclass.
 <pre>
 error.define(
   name: <em>string</em>,
-  getMessage: <em>(string | ???)</em>,
+  getMessage: <em>string | ???</em>,
   construct: <em>???</em>,
 )
 </pre>
