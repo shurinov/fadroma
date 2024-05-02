@@ -2,9 +2,12 @@
 
 # class *Proposal*
 <pre>
-<strong>const</strong> proposal = new Proposal(
-  properties: <em>Partial&lt;Proposal&gt;</em>,
-)
+<strong>const</strong> proposal = new Proposal({
+  chain,
+  id,
+  result,
+  votes,
+})
 </pre>
 
 <table><tbody>
@@ -23,9 +26,12 @@
 
 # class *Vote*
 <pre>
-<strong>const</strong> vote = new Vote(
-  properties: <em>Partial&lt;Vote&gt;</em>,
-)
+<strong>const</strong> vote = new Vote({
+  power,
+  proposal,
+  value,
+  voter,
+})
 </pre>
 
 <table><tbody>

@@ -2,9 +2,10 @@
 
 # class *Validator*
 <pre>
-<strong>const</strong> validator = new Validator(
-  properties: <em>Partial&lt;Validator&gt;</em>,
-)
+<strong>const</strong> validator = new Validator({
+  address,
+  chain,
+})
 </pre>
 
 <table><tbody>

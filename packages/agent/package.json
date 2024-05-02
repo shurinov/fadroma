@@ -10,7 +10,7 @@
   "keywords": [ "cosmwasm", "scrt", "secret network", "interchain" ],
   "description": "Isomorphic base layer for implementing dAPI clients. See @fadroma/scrt for Secret Network support.",
   "scripts": {
-    "doc":   "typedoc --json docs.json",
+    "doc":   "typedoc --disableGit --sourceLinkTemplate 'https://github.com/hackbg/fadroma/tree/v2/{path}' --json docs.json && ./docs.ts",
     "check": "tsc --noEmit",
     "test":  "time ensuite agent.test.ts",
     "cov":   "time ensuite-cov -r text -r lcov -- agent.test.ts",

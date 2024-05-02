@@ -149,102 +149,6 @@ new LocalCompiledCode(
 
 <!-- @hackbg/docs: begin -->
 
-# class *CompiledCode*
-An object representing a given compiled binary.
-
-<pre>
-<strong>const</strong> compiledCode = new CompiledCode(
-  properties: <em>Partial&lt;CompiledCode&gt;</em>,
-)
-</pre>
-
-<table><tbody>
-<tr><td valign="top">
-<strong>codeData</strong></td>
-<td><strong>Uint8Array</strong>. The compiled code.</td></tr>
-<tr><td valign="top">
-<strong>codeHash</strong></td>
-<td><strong>string</strong>. Code hash uniquely identifying the compiled code.</td></tr>
-<tr><td valign="top">
-<strong>codePath</strong></td>
-<td><strong>undefined</strong>. Location of the compiled code.</td></tr>
-<tr><td valign="top">
-<strong>canFetch</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<strong>canFetchInfo</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<strong>canUpload</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<strong>canUploadInfo</strong></td>
-<td></td></tr></tbody></table>
-
-## method [*compiledCode.computeHash*](https://github.com/hackbg/fadroma/blob/8021010d3bd291bbf15b55b54602374c0e5488a2/packages/agent/program.browser.ts#L262)
-Compute the code hash if missing; throw if different.
-<pre>
-compiledCode.computeHash()
-</pre>
-
-## method [*compiledCode.fetch*](https://github.com/hackbg/fadroma/blob/8021010d3bd291bbf15b55b54602374c0e5488a2/packages/agent/program.browser.ts#L226)
-<pre>
-<strong>const</strong> result: <em>Uint8Array</em> = <strong>await</strong> compiledCode.fetch()
-</pre>
-
-## method [*compiledCode.serialize*](https://github.com/hackbg/fadroma/blob/8021010d3bd291bbf15b55b54602374c0e5488a2/packages/agent/program.browser.ts#L194)
-<pre>
-compiledCode.serialize()
-</pre>
-
-## method [*compiledCode.toCodeHash*](https://github.com/hackbg/fadroma/blob/8021010d3bd291bbf15b55b54602374c0e5488a2/packages/agent/program.browser.ts#L274)
-<pre>
-<strong>const</strong> result: <em>string</em> = compiledCode.toCodeHash(
-  data: <em>Uint8Array</em>,
-)
-</pre>
-
-# class *Compiler*
-<pre>
-<strong>const</strong> compiler = new Compiler(
-  properties: <em>Partial&lt;Logged&gt;</em>,
-)
-</pre>
-
-<table><tbody>
-<tr><td valign="top">
-<strong>caching</strong></td>
-<td><strong>boolean</strong>. Whether to enable build caching.
-When set to false, this compiler will rebuild even when
-binary and checksum are both present in wasm/ directory</td></tr>
-<tr><td valign="top">
-<strong>id</strong></td>
-<td><strong>string</strong>. Unique identifier of this compiler implementation.</td></tr>
-<tr><td valign="top">
-<strong>log</strong></td>
-<td><strong>Console</strong>. </td></tr></tbody></table>
-
-## abstract method [*compiler.build*](https://github.com/hackbg/fadroma/blob/8021010d3bd291bbf15b55b54602374c0e5488a2/packages/agent/program.browser.ts#L21)
-Compile a source.
-`@hackbg/fadroma` implements dockerized and non-dockerized
-variants using its `build.impl.mjs` script.
-<pre>
-<strong>const</strong> result: <em><a href="#">CompiledCode</a></em> = <strong>await</strong> compiler.build(
-  source: <em>string | Partial&lt;SourceCode&gt;</em>,
-  ...args: <em>unknown</em>,
-)
-</pre>
-
-## method [*compiler.buildMany*](https://github.com/hackbg/fadroma/blob/8021010d3bd291bbf15b55b54602374c0e5488a2/packages/agent/program.browser.ts#L27)
-Build multiple sources.
-Default implementation of buildMany is sequential.
-Compiler classes may override this to optimize.
-<pre>
-<strong>const</strong> result: <em><a href="#">CompiledCode</a>[]</em> = <strong>await</strong> compiler.buildMany(
-  inputs: <em>Partial&lt;SourceCode&gt;[]</em>,
-)
-</pre>
-
 # class *LocalCompiledCode*
 An object representing a given compiled binary on the local filesystem.
 
@@ -277,36 +181,132 @@ An object representing a given compiled binary on the local filesystem.
 <strong>canUploadInfo</strong></td>
 <td></td></tr></tbody></table>
 
-## method [*localCompiledCode.computeHash*](https://github.com/hackbg/fadroma/blob/8021010d3bd291bbf15b55b54602374c0e5488a2/packages/agent/program.browser.ts#L262)
+## method [*localCompiledCode.computeHash*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/program.browser.ts)
 Compute the code hash if missing; throw if different.
 <pre>
 localCompiledCode.computeHash()
 </pre>
 
-## method [*localCompiledCode.fetch*](https://github.com/hackbg/fadroma/blob/8021010d3bd291bbf15b55b54602374c0e5488a2/packages/agent/program.browser.ts#L226)
+## method [*localCompiledCode.fetch*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/program.browser.ts)
 <pre>
 <strong>const</strong> result: <em>Uint8Array</em> = <strong>await</strong> localCompiledCode.fetch()
 </pre>
 
-## method [*localCompiledCode.serialize*](https://github.com/hackbg/fadroma/blob/8021010d3bd291bbf15b55b54602374c0e5488a2/packages/agent/program.browser.ts#L194)
+## method [*localCompiledCode.serialize*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/program.browser.ts)
 <pre>
 localCompiledCode.serialize()
 </pre>
 
-## method [*localCompiledCode.toCodeHash*](https://github.com/hackbg/fadroma/blob/8021010d3bd291bbf15b55b54602374c0e5488a2/packages/agent/program.browser.ts#L274)
+## method [*localCompiledCode.toCodeHash*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/program.browser.ts)
 <pre>
 <strong>const</strong> result: <em>string</em> = localCompiledCode.toCodeHash(
   data: <em>Uint8Array</em>,
 )
 </pre>
 
+# class *Compiler*
+<pre>
+<strong>const</strong> compiler = new Compiler(
+  properties: <em>Partial&lt;Logged&gt;</em>,
+)
+</pre>
+
+<table><tbody>
+<tr><td valign="top">
+<strong>caching</strong></td>
+<td><strong>boolean</strong>. Whether to enable build caching.
+When set to false, this compiler will rebuild even when
+binary and checksum are both present in wasm/ directory</td></tr>
+<tr><td valign="top">
+<strong>id</strong></td>
+<td><strong>string</strong>. Unique identifier of this compiler implementation.</td></tr>
+<tr><td valign="top">
+<strong>log</strong></td>
+<td><strong>Console</strong>. </td></tr></tbody></table>
+
+## abstract method [*compiler.build*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/program.browser.ts)
+Compile a source.
+`@hackbg/fadroma` implements dockerized and non-dockerized
+variants using its `build.impl.mjs` script.
+<pre>
+<strong>const</strong> result: <em><a href="#">CompiledCode</a></em> = <strong>await</strong> compiler.build(
+  source: <em> | </em>,
+  ...args: <em>unknown</em>,
+)
+</pre>
+
+## method [*compiler.buildMany*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/program.browser.ts)
+Build multiple sources.
+Default implementation of buildMany is sequential.
+Compiler classes may override this to optimize.
+<pre>
+<strong>const</strong> result: <em><a href="#">CompiledCode</a>[]</em> = <strong>await</strong> compiler.buildMany(
+  inputs: <em>Partial&lt;SourceCode&gt;[]</em>,
+)
+</pre>
+
+# class *SourceCode*
+An object representing a given source code.
+
+<pre>
+<strong>const</strong> sourceCode = new SourceCode({
+  log,
+  sourceDirty,
+  sourceOrigin,
+  sourcePath,
+  sourceRef,
+})
+</pre>
+
+<table><tbody>
+<tr><td valign="top">
+<strong>log</strong></td>
+<td><strong>Console</strong>. </td></tr>
+<tr><td valign="top">
+<strong>sourceDirty</strong></td>
+<td><strong>boolean</strong>. Whether the code contains uncommitted changes.</td></tr>
+<tr><td valign="top">
+<strong>sourceOrigin</strong></td>
+<td><strong>undefined</strong>. URL pointing to Git upstream containing the canonical source code.</td></tr>
+<tr><td valign="top">
+<strong>sourcePath</strong></td>
+<td><strong>string</strong>. Path to local checkout of the source code (with .git directory if sourceRef is set).</td></tr>
+<tr><td valign="top">
+<strong>sourceRef</strong></td>
+<td><strong>string</strong>. Pointer to the source commit.</td></tr>
+<tr><td valign="top">
+<strong>canCompile</strong></td>
+<td></td></tr>
+<tr><td valign="top">
+<strong>canCompileInfo</strong></td>
+<td></td></tr>
+<tr><td valign="top">
+<strong>canFetch</strong></td>
+<td></td></tr>
+<tr><td valign="top">
+<strong>canFetchInfo</strong></td>
+<td></td></tr></tbody></table>
+
+## method [*sourceCode.serialize*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/program.browser.ts)
+<pre>
+sourceCode.serialize()
+</pre>
+
 # class *RustSourceCode*
 An object representing a given source code.
 
 <pre>
-<strong>const</strong> rustSourceCode = new RustSourceCode(
-  properties: <em>Partial&lt;RustSourceCode&gt;</em>,
-)
+<strong>const</strong> rustSourceCode = new RustSourceCode({
+  cargoCrate,
+  cargoFeatures,
+  cargoToml,
+  cargoWorkspace,
+  log,
+  sourceDirty,
+  sourceOrigin,
+  sourcePath,
+  sourceRef,
+})
 </pre>
 
 <table><tbody>
@@ -350,51 +350,65 @@ An object representing a given source code.
 <strong>canFetchInfo</strong></td>
 <td></td></tr></tbody></table>
 
-## method [*rustSourceCode.serialize*](https://github.com/hackbg/fadroma/blob/8021010d3bd291bbf15b55b54602374c0e5488a2/packages/agent/program.browser.ts#L116)
+## method [*rustSourceCode.serialize*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/program.browser.ts)
 <pre>
 rustSourceCode.serialize()
 </pre>
 
-# class *SourceCode*
-An object representing a given source code.
+# class *CompiledCode*
+An object representing a given compiled binary.
 
 <pre>
-<strong>const</strong> sourceCode = new SourceCode(
-  properties: <em>Partial&lt;SourceCode&gt;</em>,
-)
+<strong>const</strong> compiledCode = new CompiledCode({
+  codeData,
+  codeHash,
+  codePath,
+})
 </pre>
 
 <table><tbody>
 <tr><td valign="top">
-<strong>log</strong></td>
-<td><strong>Console</strong>. </td></tr>
+<strong>codeData</strong></td>
+<td><strong>Uint8Array</strong>. The compiled code.</td></tr>
 <tr><td valign="top">
-<strong>sourceDirty</strong></td>
-<td><strong>boolean</strong>. Whether the code contains uncommitted changes.</td></tr>
+<strong>codeHash</strong></td>
+<td><strong>string</strong>. Code hash uniquely identifying the compiled code.</td></tr>
 <tr><td valign="top">
-<strong>sourceOrigin</strong></td>
-<td><strong>undefined</strong>. URL pointing to Git upstream containing the canonical source code.</td></tr>
-<tr><td valign="top">
-<strong>sourcePath</strong></td>
-<td><strong>string</strong>. Path to local checkout of the source code (with .git directory if sourceRef is set).</td></tr>
-<tr><td valign="top">
-<strong>sourceRef</strong></td>
-<td><strong>string</strong>. Pointer to the source commit.</td></tr>
-<tr><td valign="top">
-<strong>canCompile</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<strong>canCompileInfo</strong></td>
-<td></td></tr>
+<strong>codePath</strong></td>
+<td><strong>undefined</strong>. Location of the compiled code.</td></tr>
 <tr><td valign="top">
 <strong>canFetch</strong></td>
 <td></td></tr>
 <tr><td valign="top">
 <strong>canFetchInfo</strong></td>
+<td></td></tr>
+<tr><td valign="top">
+<strong>canUpload</strong></td>
+<td></td></tr>
+<tr><td valign="top">
+<strong>canUploadInfo</strong></td>
 <td></td></tr></tbody></table>
 
-## method [*sourceCode.serialize*](https://github.com/hackbg/fadroma/blob/8021010d3bd291bbf15b55b54602374c0e5488a2/packages/agent/program.browser.ts#L61)
+## method [*compiledCode.computeHash*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/program.browser.ts)
+Compute the code hash if missing; throw if different.
 <pre>
-sourceCode.serialize()
+compiledCode.computeHash()
+</pre>
+
+## method [*compiledCode.fetch*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/program.browser.ts)
+<pre>
+<strong>const</strong> result: <em>Uint8Array</em> = <strong>await</strong> compiledCode.fetch()
+</pre>
+
+## method [*compiledCode.serialize*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/program.browser.ts)
+<pre>
+compiledCode.serialize()
+</pre>
+
+## method [*compiledCode.toCodeHash*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/program.browser.ts)
+<pre>
+<strong>const</strong> result: <em>string</em> = compiledCode.toCodeHash(
+  data: <em>Uint8Array</em>,
+)
 </pre>
 <!-- @hackbg/docs: end -->

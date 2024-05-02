@@ -1,14 +1,18 @@
 #!/usr/bin/env -S node --import=@ganesha/esbuild
 import { readFileSync } from 'node:fs'
-import { documentModule } from '@hackbg/docs'
-const data = JSON.parse(readFileSync('docs.json', 'utf8'))
-documentModule({ data, target: 'core.md',       sources: ['core.ts'],                          })
-documentModule({ data, target: 'chain.md',      sources: ['chain.ts'],                         })
-documentModule({ data, target: 'deploy.md',     sources: ['deploy.ts'],                        })
-documentModule({ data, target: 'governance.md', sources: ['governance.ts'],                    })
-documentModule({ data, target: 'program.md',    sources: ['program.browser.ts', 'program.ts'], })
-documentModule({ data, target: 'staking.md',    sources: ['staking.ts'],                       })
-documentModule({ data, target: 'store.md',      sources: ['store.ts'],                         })
-documentModule({ data, target: 'stub.md',       sources: ['stub.ts'],                          })
-documentModule({ data, target: 'token.md',      sources: ['token.ts'],                         })
-documentModule({ data, target: 'tx.md',         sources: ['tx.ts'],                            })
+import { generateDocumentation } from '@hackbg/docs'
+generateDocumentation({
+  data: JSON.parse(readFileSync('docs.json', 'utf8')),
+  pages: {
+    'core.md':       { sources: ['core.ts'] },
+    'chain.md':      { sources: ['chain.ts'] },
+    'deploy.md':     { sources: ['deploy.ts'] },
+    'governance.md': { sources: ['governance.ts'] },
+    'program.md':    { sources: ['program.browser.ts', 'program.ts'] },
+    'staking.md':    { sources: ['staking.ts'] },
+    'store.md':      { sources: ['store.ts'] },
+    'stub.md':       { sources: ['stub.ts'] },
+    'token.md':      { sources: ['token.ts'] },
+    'tx.md':         { sources: ['tx.ts'] },
+  }
+})

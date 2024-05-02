@@ -40,7 +40,7 @@ export type Message = string|Record<string, unknown>
 /** A transaction hash, uniquely identifying an executed transaction on a chain. */
 export type TxHash = string
 
-/** This is the base class for a remote endpoint.
+/** Base class representing a remote API endpoint.
   *
   * You shouldn't need to instantiate this class directly.
   * Instead, see `Connection` and its subclasses. */
@@ -86,7 +86,7 @@ export abstract class Endpoint extends Logged {
   }
 }
 
-/** This is the base class for any connection backend, such as:
+/** Base class representing any connection backend, such as:
   *
   *   * Remote RPC endpoint.
   *   * Local devnet RPC endpoint.
@@ -110,7 +110,7 @@ export abstract class Backend extends Logged {
   abstract getIdentity (name: string): Promise<{ address?: Address, mnemonic?: string }>
 }
 
-/** This is the base class for a connection to a blockchain via a given endpoint.
+/** Base class representing a connection to a blockchain via a given endpoint.
   *
   * Use one of its subclasses in `@fadroma/scrt`, `@fadroma/cw`, `@fadroma/namada`
   * to connect to the corresponding chain. Or, extend this class to implement
@@ -598,8 +598,12 @@ export abstract class Connection extends Endpoint {
 }
 
 /** The building block of a blockchain.
+  *
   * Each block contains collection of transactions that are
-  * appended to the blockchain at a given point in time. */
+  * appended to the blockchain at a given point in time.
+  *
+  * You shouldn't have to instantiate this directly;
+  * instead, it's returned from `connection.getBlock()` */
 export abstract class Block {
   /** Connection to the chain to which this block belongs. */
   chain?: Connection
@@ -620,8 +624,10 @@ export abstract class Block {
     Promise<Transaction[]>
 }
 
-/** Base class representing the API of a particular instance of a smart contract.
-  * Subclass this to add custom query and transaction methods. */
+/** Base class representing a particular instance of a smart contract.
+  *
+  * Subclass this to add custom query and transaction methods corresponding
+  * to the contract's API. */
 export class Contract extends Logged {
 
   /** Connection to the chain on which this contract is deployed. */

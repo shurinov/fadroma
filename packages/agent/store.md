@@ -22,18 +22,18 @@ and can create Deployment objects with the data from the receipts.
 <strong>[species]</strong></td>
 <td><strong>MapConstructor</strong>. </td></tr></tbody></table>
 
-## method [*deployStore.[iterator]*](undefined)
+## method [*deployStore.[iterator]*](https://github.com/hackbg/fadroma/tree/v2/node_modules/.pnpm/typescript@5.3.3/node_modules/typescript/lib/lib.es2015.iterable.d.ts)
 Returns an iterable of entries in the map.
 <pre>
 <strong>const</strong> result: <em>IterableIterator&lt;&gt;</em> = deployStore.[iterator]()
 </pre>
 
-## method [*deployStore.clear*](undefined)
+## method [*deployStore.clear*](https://github.com/hackbg/fadroma/tree/v2/node_modules/.pnpm/typescript@5.3.3/node_modules/typescript/lib/lib.es2015.collection.d.ts)
 <pre>
 <strong>const</strong> result: <em>void</em> = deployStore.clear()
 </pre>
 
-## method [*deployStore.delete*](undefined)
+## method [*deployStore.delete*](https://github.com/hackbg/fadroma/tree/v2/node_modules/.pnpm/typescript@5.3.3/node_modules/typescript/lib/lib.es2015.collection.d.ts)
 
 <pre>
 <strong>const</strong> result: <em>boolean</em> = deployStore.delete(
@@ -41,13 +41,13 @@ Returns an iterable of entries in the map.
 )
 </pre>
 
-## method [*deployStore.entries*](undefined)
+## method [*deployStore.entries*](https://github.com/hackbg/fadroma/tree/v2/node_modules/.pnpm/typescript@5.3.3/node_modules/typescript/lib/lib.es2015.iterable.d.ts)
 Returns an iterable of key, value pairs for every entry in the map.
 <pre>
 <strong>const</strong> result: <em>IterableIterator&lt;&gt;</em> = deployStore.entries()
 </pre>
 
-## method [*deployStore.forEach*](undefined)
+## method [*deployStore.forEach*](https://github.com/hackbg/fadroma/tree/v2/node_modules/.pnpm/typescript@5.3.3/node_modules/typescript/lib/lib.es2015.collection.d.ts)
 Executes a provided function once per each key/value pair in the Map, in insertion order.
 <pre>
 <strong>const</strong> result: <em>void</em> = deployStore.forEach(
@@ -56,14 +56,14 @@ Executes a provided function once per each key/value pair in the Map, in inserti
 )
 </pre>
 
-## method [*deployStore.get*](https://github.com/hackbg/fadroma/blob/8021010d3bd291bbf15b55b54602374c0e5488a2/packages/agent/store.ts#L17)
+## method [*deployStore.get*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/store.ts)
 <pre>
 <strong>const</strong> result: <em>Partial&lt;&gt;</em> = deployStore.get(
   name: <em>string</em>,
 )
 </pre>
 
-## method [*deployStore.has*](undefined)
+## method [*deployStore.has*](https://github.com/hackbg/fadroma/tree/v2/node_modules/.pnpm/typescript@5.3.3/node_modules/typescript/lib/lib.es2015.collection.d.ts)
 
 <pre>
 <strong>const</strong> result: <em>boolean</em> = deployStore.has(
@@ -71,21 +71,21 @@ Executes a provided function once per each key/value pair in the Map, in inserti
 )
 </pre>
 
-## method [*deployStore.keys*](undefined)
+## method [*deployStore.keys*](https://github.com/hackbg/fadroma/tree/v2/node_modules/.pnpm/typescript@5.3.3/node_modules/typescript/lib/lib.es2015.iterable.d.ts)
 Returns an iterable of keys in the map
 <pre>
 <strong>const</strong> result: <em>IterableIterator&lt;string&gt;</em> = deployStore.keys()
 </pre>
 
-## method [*deployStore.set*](https://github.com/hackbg/fadroma/blob/8021010d3bd291bbf15b55b54602374c0e5488a2/packages/agent/store.ts#L24)
+## method [*deployStore.set*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/store.ts)
 <pre>
 deployStore.set(
   name: <em>string</em>,
-  state: <em>Partial&lt;&gt; | Partial&lt;Deployment&gt;</em>,
+  state: <em> | </em>,
 )
 </pre>
 
-## method [*deployStore.values*](undefined)
+## method [*deployStore.values*](https://github.com/hackbg/fadroma/tree/v2/node_modules/.pnpm/typescript@5.3.3/node_modules/typescript/lib/lib.es2015.iterable.d.ts)
 Returns an iterable of values in the map
 <pre>
 <strong>const</strong> result: <em>IterableIterator&lt;Partial&gt;</em> = deployStore.values()
@@ -107,18 +107,18 @@ Returns an iterable of values in the map
 <strong>[species]</strong></td>
 <td><strong>MapConstructor</strong>. </td></tr></tbody></table>
 
-## method [*uploadStore.[iterator]*](undefined)
+## method [*uploadStore.[iterator]*](https://github.com/hackbg/fadroma/tree/v2/node_modules/.pnpm/typescript@5.3.3/node_modules/typescript/lib/lib.es2015.iterable.d.ts)
 Returns an iterable of entries in the map.
 <pre>
 <strong>const</strong> result: <em>IterableIterator&lt;&gt;</em> = uploadStore.[iterator]()
 </pre>
 
-## method [*uploadStore.clear*](undefined)
+## method [*uploadStore.clear*](https://github.com/hackbg/fadroma/tree/v2/node_modules/.pnpm/typescript@5.3.3/node_modules/typescript/lib/lib.es2015.collection.d.ts)
 <pre>
 <strong>const</strong> result: <em>void</em> = uploadStore.clear()
 </pre>
 
-## method [*uploadStore.delete*](undefined)
+## method [*uploadStore.delete*](https://github.com/hackbg/fadroma/tree/v2/node_modules/.pnpm/typescript@5.3.3/node_modules/typescript/lib/lib.es2015.collection.d.ts)
 
 <pre>
 <strong>const</strong> result: <em>boolean</em> = uploadStore.delete(
@@ -126,13 +126,13 @@ Returns an iterable of entries in the map.
 )
 </pre>
 
-## method [*uploadStore.entries*](undefined)
+## method [*uploadStore.entries*](https://github.com/hackbg/fadroma/tree/v2/node_modules/.pnpm/typescript@5.3.3/node_modules/typescript/lib/lib.es2015.iterable.d.ts)
 Returns an iterable of key, value pairs for every entry in the map.
 <pre>
 <strong>const</strong> result: <em>IterableIterator&lt;&gt;</em> = uploadStore.entries()
 </pre>
 
-## method [*uploadStore.forEach*](undefined)
+## method [*uploadStore.forEach*](https://github.com/hackbg/fadroma/tree/v2/node_modules/.pnpm/typescript@5.3.3/node_modules/typescript/lib/lib.es2015.collection.d.ts)
 Executes a provided function once per each key/value pair in the Map, in insertion order.
 <pre>
 <strong>const</strong> result: <em>void</em> = uploadStore.forEach(
@@ -141,14 +141,14 @@ Executes a provided function once per each key/value pair in the Map, in inserti
 )
 </pre>
 
-## method [*uploadStore.get*](https://github.com/hackbg/fadroma/blob/8021010d3bd291bbf15b55b54602374c0e5488a2/packages/agent/store.ts#L37)
+## method [*uploadStore.get*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/store.ts)
 <pre>
 <strong>const</strong> result: <em><a href="#">UploadedCode</a></em> = uploadStore.get(
   codeHash: <em>string</em>,
 )
 </pre>
 
-## method [*uploadStore.has*](undefined)
+## method [*uploadStore.has*](https://github.com/hackbg/fadroma/tree/v2/node_modules/.pnpm/typescript@5.3.3/node_modules/typescript/lib/lib.es2015.collection.d.ts)
 
 <pre>
 <strong>const</strong> result: <em>boolean</em> = uploadStore.has(
@@ -156,13 +156,13 @@ Executes a provided function once per each key/value pair in the Map, in inserti
 )
 </pre>
 
-## method [*uploadStore.keys*](undefined)
+## method [*uploadStore.keys*](https://github.com/hackbg/fadroma/tree/v2/node_modules/.pnpm/typescript@5.3.3/node_modules/typescript/lib/lib.es2015.iterable.d.ts)
 Returns an iterable of keys in the map
 <pre>
 <strong>const</strong> result: <em>IterableIterator&lt;string&gt;</em> = uploadStore.keys()
 </pre>
 
-## method [*uploadStore.set*](https://github.com/hackbg/fadroma/blob/8021010d3bd291bbf15b55b54602374c0e5488a2/packages/agent/store.ts#L41)
+## method [*uploadStore.set*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/store.ts)
 <pre>
 uploadStore.set(
   codeHash: <em>string</em>,
@@ -170,7 +170,7 @@ uploadStore.set(
 )
 </pre>
 
-## method [*uploadStore.values*](undefined)
+## method [*uploadStore.values*](https://github.com/hackbg/fadroma/tree/v2/node_modules/.pnpm/typescript@5.3.3/node_modules/typescript/lib/lib.es2015.iterable.d.ts)
 Returns an iterable of values in the map
 <pre>
 <strong>const</strong> result: <em>IterableIterator&lt;UploadedCode&gt;</em> = uploadStore.values()

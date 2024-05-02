@@ -54,55 +54,6 @@ assert.deepEqual(await client.withFee(fee2).getFee('my_method'), fee2)
 
 <!-- @hackbg/docs: begin -->
 
-# class *Batch*
-Builder object for batched transactions.
-
-<pre>
-<strong>const</strong> batch = new Batch(
-  properties: <em>Partial&lt;Batch&gt;</em>,
-)
-</pre>
-
-<table><tbody>
-<tr><td valign="top">
-<strong>connection</strong></td>
-<td><strong>C</strong>. </td></tr>
-<tr><td valign="top">
-<strong>log</strong></td>
-<td><strong>Console</strong>. </td></tr></tbody></table>
-
-## method [*batch.execute*](https://github.com/hackbg/fadroma/blob/8021010d3bd291bbf15b55b54602374c0e5488a2/packages/agent/tx.ts#L38)
-Add an execute message to the batch.
-<pre>
-batch.execute(
-  ...args: <em>Parameters&lt;&gt;</em>,
-)
-</pre>
-
-## method [*batch.instantiate*](https://github.com/hackbg/fadroma/blob/8021010d3bd291bbf15b55b54602374c0e5488a2/packages/agent/tx.ts#L32)
-Add an instantiate message to the batch.
-<pre>
-batch.instantiate(
-  ...args: <em>Parameters&lt;&gt;</em>,
-)
-</pre>
-
-## method [*batch.submit*](https://github.com/hackbg/fadroma/blob/8021010d3bd291bbf15b55b54602374c0e5488a2/packages/agent/tx.ts#L44)
-Submit the batch.
-<pre>
-<strong>const</strong> result: <em>unknown</em> = <strong>await</strong> batch.submit(
-  ...args: <em>unknown</em>,
-)
-</pre>
-
-## method [*batch.upload*](https://github.com/hackbg/fadroma/blob/8021010d3bd291bbf15b55b54602374c0e5488a2/packages/agent/tx.ts#L26)
-Add an upload message to the batch.
-<pre>
-batch.upload(
-  ...args: <em>Parameters&lt;&gt;</em>,
-)
-</pre>
-
 # class *Transaction*
 A transaction in a block on a chain.
 
@@ -132,4 +83,54 @@ A transaction in a block on a chain.
 <tr><td valign="top">
 <strong>type</strong></td>
 <td><strong>unknown</strong>. </td></tr></tbody></table>
+
+# class *Batch*
+Builder object for batched transactions.
+
+<pre>
+<strong>const</strong> batch = new Batch({
+  connection,
+  log,
+})
+</pre>
+
+<table><tbody>
+<tr><td valign="top">
+<strong>connection</strong></td>
+<td><strong>C</strong>. </td></tr>
+<tr><td valign="top">
+<strong>log</strong></td>
+<td><strong>Console</strong>. </td></tr></tbody></table>
+
+## method [*batch.execute*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/tx.ts)
+Add an execute message to the batch.
+<pre>
+batch.execute(
+  ...args: <em>Parameters&lt;&gt;</em>,
+)
+</pre>
+
+## method [*batch.instantiate*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/tx.ts)
+Add an instantiate message to the batch.
+<pre>
+batch.instantiate(
+  ...args: <em>Parameters&lt;&gt;</em>,
+)
+</pre>
+
+## method [*batch.submit*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/tx.ts)
+Submit the batch.
+<pre>
+<strong>const</strong> result: <em>unknown</em> = <strong>await</strong> batch.submit(
+  ...args: <em>unknown</em>,
+)
+</pre>
+
+## method [*batch.upload*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/tx.ts)
+Add an upload message to the batch.
+<pre>
+batch.upload(
+  ...args: <em>Parameters&lt;&gt;</em>,
+)
+</pre>
 <!-- @hackbg/docs: end -->
