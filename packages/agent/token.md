@@ -14,7 +14,7 @@ A constructable gas fee in native tokens.
 
 <pre>
 <strong>const</strong> fee = new Fee(
-  amount: <em> |  | </em>,
+  amount: <em>(string | number | bigint)</em>,
   denom: <em>string</em>,
   gas: <em>string</em>,
 )
@@ -31,7 +31,7 @@ A constructable gas fee in native tokens.
 ## method [*fee.add*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/token.ts)
 <pre>
 <strong>const</strong> result: <em>void</em> = fee.add(
-  amount: <em> |  | </em>,
+  amount: <em>(string | number | bigint)</em>,
   denom: <em>string</em>,
 )
 </pre>
@@ -41,7 +41,7 @@ Represents some amount of native token.
 
 <pre>
 <strong>const</strong> coin = new Coin(
-  amount: <em> | </em>,
+  amount: <em>(string | number)</em>,
   denom: <em>string</em>,
 )
 </pre>
@@ -86,9 +86,7 @@ An abstract fungible token.
 
 ## method [*fungible.amount*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/token.ts)
 <pre>
-<strong>const</strong> result: <em><a href="#">TokenAmount</a></em> = fungible.amount(
-  amount: <em> | </em>,
-)
+<strong>const</strong> result: <em><a href="#">TokenAmount</a></em> = fungible.amount(amount: <em>(string | number)</em>)
 </pre>
 
 ## abstract method [*fungible.isCustom*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/token.ts)
@@ -112,7 +110,7 @@ fungible.isNative()
 ## method [*fungible.addZeros*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/token.ts)
 <pre>
 <strong>const</strong> result: <em>string</em> = fungible.addZeros(
-  n: <em> | </em>,
+  n: <em>(string | number)</em>,
   z: <em>number</em>,
 )
 </pre>
@@ -139,9 +137,7 @@ An abstract non-fungible token.
 The chain's natively implemented token (such as SCRT on Secret Network).
 
 <pre>
-<strong>const</strong> native = new Native(
-  denom: <em>string</em>,
-)
+<strong>const</strong> native = new Native(denom: <em>string</em>)
 </pre>
 
 <table><tbody>
@@ -154,16 +150,12 @@ The chain's natively implemented token (such as SCRT on Secret Network).
 
 ## method [*native.amount*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/token.ts)
 <pre>
-<strong>const</strong> result: <em><a href="#">TokenAmount</a></em> = native.amount(
-  amount: <em> | </em>,
-)
+<strong>const</strong> result: <em><a href="#">TokenAmount</a></em> = native.amount(amount: <em>(string | number)</em>)
 </pre>
 
 ## method [*native.fee*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/token.ts)
 <pre>
-<strong>const</strong> result: <em><a href="#">IFee</a></em> = native.fee(
-  amount: <em> |  | </em>,
-)
+<strong>const</strong> result: <em><a href="#">IFee</a></em> = native.fee(amount: <em>(string | number | bigint)</em>)
 </pre>
 
 ## method [*native.isCustom*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/token.ts)
@@ -187,7 +179,7 @@ The chain's natively implemented token (such as SCRT on Secret Network).
 ## method [*native.addZeros*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/token.ts)
 <pre>
 <strong>const</strong> result: <em>string</em> = native.addZeros(
-  n: <em> | </em>,
+  n: <em>(string | number)</em>,
   z: <em>number</em>,
 )
 </pre>
@@ -215,9 +207,7 @@ A contract-based token.
 
 ## method [*custom.amount*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/token.ts)
 <pre>
-<strong>const</strong> result: <em><a href="#">TokenAmount</a></em> = custom.amount(
-  amount: <em> | </em>,
-)
+<strong>const</strong> result: <em><a href="#">TokenAmount</a></em> = custom.amount(amount: <em>(string | number)</em>)
 </pre>
 
 ## method [*custom.isCustom*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/token.ts)
@@ -241,7 +231,7 @@ A contract-based token.
 ## method [*custom.addZeros*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/token.ts)
 <pre>
 <strong>const</strong> result: <em>string</em> = custom.addZeros(
-  n: <em> | </em>,
+  n: <em>(string | number)</em>,
   z: <em>number</em>,
 )
 </pre>
@@ -272,7 +262,7 @@ An amount of a fungible token.
 
 <pre>
 <strong>const</strong> amount = new Amount(
-  amount: <em> |  | </em>,
+  amount: <em>(string | number | bigint)</em>,
   token: <em>FungibleToken</em>,
 )
 </pre>
@@ -298,9 +288,7 @@ An amount of a fungible token.
 
 ## method [*amount.asFee*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/token.ts)
 <pre>
-<strong>const</strong> result: <em><a href="#">IFee</a></em> = amount.asFee(
-  gas: <em>string</em>,
-)
+<strong>const</strong> result: <em><a href="#">IFee</a></em> = amount.asFee(gas: <em>string</em>)
 </pre>
 
 ## method [*amount.toString*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/token.ts)
@@ -313,8 +301,8 @@ A pair of token amounts.
 
 <pre>
 <strong>const</strong> swap = new Swap(
-  a: <em> | </em>,
-  b: <em> | </em>,
+  a: <em>(NonFungibleToken | TokenAmount)</em>,
+  b: <em>(NonFungibleToken | TokenAmount)</em>,
 )
 </pre>
 

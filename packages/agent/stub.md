@@ -10,9 +10,7 @@ You shouldn't have to instantiate this directly;
 instead, it's returned from `connection.getBlock()`
 
 <pre>
-<strong>const</strong> stubBlock = new StubBlock(
-  properties: <em>Partial&lt;Block&gt;</em>,
-)
+<strong>const</strong> stubBlock = new StubBlock(properties: <em>Partial&lt;Block&gt;</em>)
 </pre>
 
 <table><tbody>
@@ -134,7 +132,7 @@ Construct a transaction batch.
 Call a given program's transaction method.
 <pre>
 <strong>const</strong> result: <em>unknown</em> = <strong>await</strong> stubConnection.execute(
-  contract: <em> | </em>,
+  contract: <em>(string | Partial&lt;ContractInstance&gt;)</em>,
   message: <em>Message</em>,
   options: <em>{
     execFee,
@@ -151,7 +149,9 @@ or of another given address.
 <pre>
 <strong>const</strong> result: <em>unknown</em> = <strong>await</strong> stubConnection.getBalanceIn(
   token: <em>string</em>,
-  address: <em> | </em>,
+  address: <em>(string | {
+    address,
+  })</em>,
 )
 </pre>
 
@@ -161,7 +161,9 @@ either in this connection's gas token,
 or in another given token.
 <pre>
 <strong>const</strong> result: <em>unknown</em> = <strong>await</strong> stubConnection.getBalanceOf(
-  address: <em> | </em>,
+  address: <em>(string | {
+    address,
+  })</em>,
   token: <em>string</em>,
 )
 </pre>
@@ -170,33 +172,31 @@ or in another given token.
 Get info about a specific block.
 If no height is passed, gets info about the latest block.
 <pre>
-<strong>const</strong> result: <em><a href="#">Block</a></em> = <strong>await</strong> stubConnection.getBlock(
-  height: <em>number</em>,
-)
+<strong>const</strong> result: <em><a href="#">Block</a></em> = <strong>await</strong> stubConnection.getBlock(height: <em>number</em>)
 </pre>
 
 ## method [*stubConnection.getCodeHashOfAddress*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts)
 Get the code hash of a given address.
 <pre>
-<strong>const</strong> result: <em>string</em> = <strong>await</strong> stubConnection.getCodeHashOfAddress(
-  contract: <em> | </em>,
-)
+<strong>const</strong> result: <em>string</em> = <strong>await</strong> stubConnection.getCodeHashOfAddress(contract: <em>(string | {
+  address,
+})</em>)
 </pre>
 
 ## method [*stubConnection.getCodeHashOfCodeId*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts)
 Get the code hash of a given code id.
 <pre>
-<strong>const</strong> result: <em>string</em> = <strong>await</strong> stubConnection.getCodeHashOfCodeId(
-  contract: <em> | </em>,
-)
+<strong>const</strong> result: <em>string</em> = <strong>await</strong> stubConnection.getCodeHashOfCodeId(contract: <em>(string | {
+  codeId,
+})</em>)
 </pre>
 
 ## method [*stubConnection.getCodeId*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts)
 Get the code id of a given address.
 <pre>
-<strong>const</strong> result: <em>string</em> = <strong>await</strong> stubConnection.getCodeId(
-  contract: <em> | </em>,
-)
+<strong>const</strong> result: <em>string</em> = <strong>await</strong> stubConnection.getCodeId(contract: <em>(string | {
+  address,
+})</em>)
 </pre>
 
 ## method [*stubConnection.getCodes*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts)
@@ -207,17 +207,15 @@ Get the code id of a given address.
 ## method [*stubConnection.getContract*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts)
 Get a client handle for a specific smart contract, authenticated as as this agent.
 <pre>
-<strong>const</strong> result: <em><a href="#">Contract</a></em> = stubConnection.getContract(
-  options: <em> | </em>,
-)
+<strong>const</strong> result: <em><a href="#">Contract</a></em> = stubConnection.getContract(options: <em>(string | {
+  address,
+})</em>)
 </pre>
 
 ## method [*stubConnection.getContractsByCodeId*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts)
 Get client handles for all contracts that match a code ID
 <pre>
-<strong>const</strong> result: <em>Record&lt;string, Contract&gt;</em> = <strong>await</strong> stubConnection.getContractsByCodeId(
-  id: <em>string</em>,
-)
+<strong>const</strong> result: <em>Record&lt;string, Contract&gt;</em> = <strong>await</strong> stubConnection.getContractsByCodeId(id: <em>string</em>)
 </pre>
 <pre>
 <strong>const</strong> result: <em>Record&lt;string, InstanceType&gt;</em> = <strong>await</strong> stubConnection.getContractsByCodeId(
@@ -229,9 +227,7 @@ Get client handles for all contracts that match a code ID
 ## method [*stubConnection.getContractsByCodeIds*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts)
 Get client handles for all contracts that match multiple code IDs
 <pre>
-<strong>const</strong> result: <em>Record&lt;string, Record&gt;</em> = <strong>await</strong> stubConnection.getContractsByCodeIds(
-  ids: <em>Iterable&lt;string&gt;</em>,
-)
+<strong>const</strong> result: <em>Record&lt;string, Record&gt;</em> = <strong>await</strong> stubConnection.getContractsByCodeIds(ids: <em>Iterable&lt;string&gt;</em>)
 </pre>
 <pre>
 <strong>const</strong> result: <em>Record&lt;string, Record&gt;</em> = <strong>await</strong> stubConnection.getContractsByCodeIds(
@@ -240,16 +236,14 @@ Get client handles for all contracts that match multiple code IDs
 )
 </pre>
 <pre>
-<strong>const</strong> result: <em>Record&lt;string, Record&gt;</em> = <strong>await</strong> stubConnection.getContractsByCodeIds(
-  ids: <em>Record&lt;string, C&gt;</em>,
-)
+<strong>const</strong> result: <em>Record&lt;string, Record&gt;</em> = <strong>await</strong> stubConnection.getContractsByCodeIds(ids: <em>Record&lt;string, C&gt;</em>)
 </pre>
 
 ## method [*stubConnection.instantiate*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts)
 Instantiate a new program from a code id, label and init message.
 <pre>
 stubConnection.instantiate(
-  contract: <em> | </em>,
+  contract: <em>(string | Partial&lt;UploadedCode&gt;)</em>,
   options: <em>Partial&lt;ContractInstance&gt;</em>,
 )
 </pre>
@@ -258,7 +252,9 @@ stubConnection.instantiate(
 Query a contract.
 <pre>
 <strong>const</strong> result: <em>Q</em> = <strong>await</strong> stubConnection.query(
-  contract: <em> | </em>,
+  contract: <em>(string | {
+    address,
+  })</em>,
   message: <em>Message</em>,
 )
 </pre>
@@ -267,8 +263,10 @@ Query a contract.
 Send native tokens to 1 recipient.
 <pre>
 <strong>const</strong> result: <em>unknown</em> = <strong>await</strong> stubConnection.send(
-  recipient: <em> | </em>,
-  amounts: <em> | </em>,
+  recipient: <em>(string | {
+    address,
+  })</em>,
+  amounts: <em>(ICoin | TokenAmount)</em>,
   options: <em>{
     sendFee,
     sendMemo,
@@ -280,7 +278,7 @@ Send native tokens to 1 recipient.
 Upload a contract's code, generating a new code id/hash pair.
 <pre>
 stubConnection.upload(
-  code: <em> |  |  | </em>,
+  code: <em>(string | Uint8Array | URL | Partial&lt;CompiledCode&gt;)</em>,
   options: <em>{
     reupload,
     uploadFee,
@@ -293,9 +291,7 @@ stubConnection.upload(
 ## method [*stubConnection.gas*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts)
 Native token of chain.
 <pre>
-<strong>const</strong> result: <em><a href="#">TokenAmount</a></em> = stubConnection.gas(
-  amount: <em> | </em>,
-)
+<strong>const</strong> result: <em><a href="#">TokenAmount</a></em> = stubConnection.gas(amount: <em>(string | number)</em>)
 </pre>
 
 # class *StubBackend*
@@ -309,9 +305,7 @@ You shouldn't need to instantiate this class directly.
 Instead, see `Connection`, `Devnet`, and their subclasses.
 
 <pre>
-<strong>const</strong> stubBackend = new StubBackend(
-  properties: <em>Partial&lt;&gt;</em>,
-)
+<strong>const</strong> stubBackend = new StubBackend(properties: <em>Partial&lt;&gt;</em>)
 </pre>
 
 <table><tbody>
@@ -351,37 +345,27 @@ Instead, see `Connection`, `Devnet`, and their subclasses.
 
 ## method [*stubBackend.connect*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/stub.ts)
 <pre>
-<strong>const</strong> result: <em><a href="#">Connection</a></em> = <strong>await</strong> stubBackend.connect(
-  parameter: <em> | </em>,
-)
+<strong>const</strong> result: <em><a href="#">Connection</a></em> = <strong>await</strong> stubBackend.connect(parameter: <em>(string | Partial&lt;&gt;)</em>)
 </pre>
 
 ## method [*stubBackend.execute*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/stub.ts)
 <pre>
-<strong>const</strong> result: <em>unknown</em> = <strong>await</strong> stubBackend.execute(
-  ...args: <em>unknown</em>,
-)
+<strong>const</strong> result: <em>unknown</em> = <strong>await</strong> stubBackend.execute(args: <em>unknown</em>)
 </pre>
 
 ## method [*stubBackend.export*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/stub.ts)
 <pre>
-<strong>const</strong> result: <em>unknown</em> = <strong>await</strong> stubBackend.export(
-  ...args: <em>unknown</em>,
-)
+<strong>const</strong> result: <em>unknown</em> = <strong>await</strong> stubBackend.export(args: <em>unknown</em>)
 </pre>
 
 ## method [*stubBackend.getIdentity*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/stub.ts)
 <pre>
-<strong>const</strong> result: <em><a href="#">Identity</a></em> = <strong>await</strong> stubBackend.getIdentity(
-  name: <em>string</em>,
-)
+<strong>const</strong> result: <em><a href="#">Identity</a></em> = <strong>await</strong> stubBackend.getIdentity(name: <em>string</em>)
 </pre>
 
 ## method [*stubBackend.import*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/stub.ts)
 <pre>
-<strong>const</strong> result: <em>unknown</em> = <strong>await</strong> stubBackend.import(
-  ...args: <em>unknown</em>,
-)
+<strong>const</strong> result: <em>unknown</em> = <strong>await</strong> stubBackend.import(args: <em>unknown</em>)
 </pre>
 
 ## method [*stubBackend.instantiate*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/stub.ts)
@@ -405,18 +389,14 @@ stubBackend.instantiate(
 
 ## method [*stubBackend.upload*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/stub.ts)
 <pre>
-stubBackend.upload(
-  codeData: <em>Uint8Array</em>,
-)
+stubBackend.upload(codeData: <em>Uint8Array</em>)
 </pre>
 
 # class *StubBatch*
 Builder object for batched transactions.
 
 <pre>
-<strong>const</strong> stubBatch = new StubBatch(
-  properties: <em>Partial&lt;Batch&gt;</em>,
-)
+<strong>const</strong> stubBatch = new StubBatch(properties: <em>Partial&lt;Batch&gt;</em>)
 </pre>
 
 <table><tbody>
@@ -433,17 +413,17 @@ Builder object for batched transactions.
 ## method [*stubBatch.execute*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/stub.ts)
 Add an execute message to the batch.
 <pre>
-<strong>const</strong> result: <em><a href="#">StubBatch</a></em> = stubBatch.execute(
-  ...args: <em>[, , ]</em>,
-)
+<strong>const</strong> result: <em><a href="#">StubBatch</a></em> = stubBatch.execute(args: <em>[(string | Partial&lt;ContractInstance&gt;), Message, {
+  execFee,
+  execMemo,
+  execSend,
+}]</em>)
 </pre>
 
 ## method [*stubBatch.instantiate*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/stub.ts)
 Add an instantiate message to the batch.
 <pre>
-<strong>const</strong> result: <em><a href="#">StubBatch</a></em> = stubBatch.instantiate(
-  ...args: <em>[, ]</em>,
-)
+<strong>const</strong> result: <em><a href="#">StubBatch</a></em> = stubBatch.instantiate(args: <em>[(string | Partial&lt;UploadedCode&gt;), Partial&lt;ContractInstance&gt;]</em>)
 </pre>
 
 ## method [*stubBatch.submit*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/stub.ts)
@@ -455,18 +435,19 @@ Submit the batch.
 ## method [*stubBatch.upload*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/stub.ts)
 Add an upload message to the batch.
 <pre>
-<strong>const</strong> result: <em><a href="#">StubBatch</a></em> = stubBatch.upload(
-  ...args: <em>[, ]</em>,
-)
+<strong>const</strong> result: <em><a href="#">StubBatch</a></em> = stubBatch.upload(args: <em>[(string | Uint8Array | URL | Partial&lt;CompiledCode&gt;), {
+  reupload,
+  uploadFee,
+  uploadMemo,
+  uploadStore,
+}]</em>)
 </pre>
 
 # class *StubCompiler*
 A compiler that does nothing. Used for testing.
 
 <pre>
-<strong>const</strong> stubCompiler = new StubCompiler(
-  properties: <em>Partial&lt;Logged&gt;</em>,
-)
+<strong>const</strong> stubCompiler = new StubCompiler(properties: <em>Partial&lt;Logged&gt;</em>)
 </pre>
 
 <table><tbody>
@@ -488,7 +469,7 @@ Compile a source.
 variants using its `build.impl.mjs` script.
 <pre>
 <strong>const</strong> result: <em><a href="#">CompiledCode</a></em> = <strong>await</strong> stubCompiler.build(
-  source: <em> | </em>,
+  source: <em>(string | Partial&lt;SourceCode&gt;)</em>,
   ...args: <em>any</em>,
 )
 </pre>
@@ -498,8 +479,6 @@ Build multiple sources.
 Default implementation of buildMany is sequential.
 Compiler classes may override this to optimize.
 <pre>
-<strong>const</strong> result: <em><a href="#">CompiledCode</a>[]</em> = <strong>await</strong> stubCompiler.buildMany(
-  inputs: <em>Partial&lt;SourceCode&gt;[]</em>,
-)
+<strong>const</strong> result: <em><a href="#">CompiledCode</a>[]</em> = <strong>await</strong> stubCompiler.buildMany(inputs: <em>Partial&lt;SourceCode&gt;[]</em>)
 </pre>
 <!-- @hackbg/docs: end -->
