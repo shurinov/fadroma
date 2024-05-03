@@ -67,13 +67,10 @@ this compiles the source code first to obtain a binary.
 contractCode.upload({
   compiler,
   rebuild,
-} & {
   reupload,
   uploadFee,
   uploadMemo,
   uploadStore,
-} & {
-  reupload,
   uploader,
 })
 </pre>
@@ -201,13 +198,10 @@ this compiles the source code first to obtain a binary.
 deploymentUnit.upload({
   compiler,
   rebuild,
-} & {
   reupload,
   uploadFee,
   uploadMemo,
   uploadStore,
-} & {
-  reupload,
   uploader,
 })
 </pre>
@@ -308,13 +302,10 @@ this compiles the source code first to obtain a binary.
 contractTemplate.upload({
   compiler,
   rebuild,
-} & {
   reupload,
   uploadFee,
   uploadMemo,
   uploadStore,
-} & {
-  reupload,
   uploader,
 })
 </pre>
@@ -457,13 +448,10 @@ this compiles the source code first to obtain a binary.
 contractInstance.upload({
   compiler,
   rebuild,
-} & {
   reupload,
   uploadFee,
   uploadMemo,
   uploadStore,
-} & {
-  reupload,
   uploader,
 })
 </pre>
@@ -522,7 +510,6 @@ Returns an iterable of entries in the map.
 <strong>const</strong> result: <em>Record&lt;string, &gt;</em> = <strong>await</strong> deployment.build({
   compiler,
   rebuild,
-} & {
   units,
 })
 </pre>
@@ -641,17 +628,12 @@ the same code.
 <strong>const</strong> result: <em>Record&lt;string, &gt;</em> = <strong>await</strong> deployment.upload({
   compiler,
   rebuild,
-} & {
   reupload,
+  units,
   uploadFee,
   uploadMemo,
   uploadStore,
-} & {
-  reupload,
   uploader,
-} & {
-  units,
-  uploadStore,
 })
 </pre>
 
