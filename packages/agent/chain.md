@@ -8,10 +8,10 @@ with a local blockchain node instead, see `@fadroma/devnet`.
 <!-- @hackbg/docs: begin -->
 
 # abstract class *Endpoint*
-Base class representing a remote API endpoint.
+Represents a remote API endpoint.
 
 You shouldn't need to instantiate this class directly.
-Instead, see `Connection` and its subclasses.
+Instead, see [`Connection`](#abstract-class-connection) and its subclasses.
 
 <table><tbody>
 <tr><td valign="top">
@@ -43,9 +43,8 @@ The same chain may be accessible via different endpoints, so
 this property contains the URL to which requests are sent.</td></tr></tbody></table>
 
 # abstract class *Backend*
-Base class representing any connection backend, such as:
+Provides control over the service backing an [`Endpoint`](#abstract-class-endpoint), such as:
 
-  * Remote RPC endpoint.
   * Local devnet RPC endpoint.
   * Stub/mock implementation of chain.
 
@@ -77,10 +76,10 @@ backend.getIdentity(name: string)
 </pre>
 
 # abstract class *Connection*
-Base class representing a connection to a blockchain via a given endpoint.
-
-Use one of its subclasses in `@fadroma/scrt`, `@fadroma/cw`, `@fadroma/namada`
-to connect to the corresponding chain. Or, extend this class to implement
+Represents a connection to a blockchain via a given endpoint.
+* Use one of its subclasses in `@fadroma/scrt`, `@fadroma/cw`, `@fadroma/namada`
+to connect to the corresponding chain.
+* Or, extend this class to implement
 support for new kinds of blockchains.
 
 <table><tbody>
@@ -169,10 +168,21 @@ Fetch balance of 1 or many addresses in 1 or many native tokens.
 </pre>
 
 ## method [*connection.fetchBlock*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts)
-Get info about a specific block.
-If no height is passed, gets info about the latest block.
+Get info about the latest block.
 <pre>
-<strong>const</strong> result: <em><a href="#">Block</a></em> = <strong>await</strong> connection.fetchBlock(height: number)
+<strong>const</strong> result: <em><a href="#">Block</a></em> = <strong>await</strong> connection.fetchBlock()
+</pre>
+Get info about the block with a specific height.
+<pre>
+<strong>const</strong> result: <em><a href="#">Block</a></em> = <strong>await</strong> connection.fetchBlock({
+  height,
+})
+</pre>
+Get info about the block with a specific hash.
+<pre>
+<strong>const</strong> result: <em><a href="#">Block</a></em> = <strong>await</strong> connection.fetchBlock({
+  hash,
+})
 </pre>
 
 ## method [*connection.fetchCodeInfo*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts)
@@ -354,13 +364,10 @@ agent.upload(
 </pre>
 
 # abstract class *Block*
-The building block of a blockchain.
+The building block of a blockchain, as obtained by
+[the `fetchBlock` method of `Connection`](#method-connectionfetchblock)
 
-Each block contains collection of transactions that are
-appended to the blockchain at a given point in time.
-
-You shouldn't have to instantiate this directly;
-instead, it's returned from `connection.getBlock()`
+Contains zero or more transactions.
 
 <table><tbody>
 <tr><td valign="top">
@@ -384,7 +391,7 @@ instead, it's returned from `connection.getBlock()`
 </pre>
 
 # class *Contract*
-Base class representing a particular instance of a smart contract.
+Represents a particular instance of a smart contract.
 
 Subclass this to add custom query and transaction methods corresponding
 to the contract's API.

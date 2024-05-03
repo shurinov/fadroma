@@ -40,10 +40,10 @@ export type Message = string|Record<string, unknown>
 /** A transaction hash, uniquely identifying an executed transaction on a chain. */
 export type TxHash = string
 
-/** Base class representing a remote API endpoint.
+/** Represents a remote API endpoint.
   *
   * You shouldn't need to instantiate this class directly.
-  * Instead, see `Connection` and its subclasses. */
+  * Instead, see [`Connection`](#abstract-class-connection) and its subclasses. */
 export abstract class Endpoint extends Logged {
   /** Chain ID. This is a string that uniquely identifies a chain.
     * A project's mainnet and testnet have different chain IDs. */
@@ -86,9 +86,8 @@ export abstract class Endpoint extends Logged {
   }
 }
 
-/** Base class representing any connection backend, such as:
+/** Provides control over the service backing an [`Endpoint`](#abstract-class-endpoint), such as:
   *
-  *   * Remote RPC endpoint.
   *   * Local devnet RPC endpoint.
   *   * Stub/mock implementation of chain.
   *
@@ -111,10 +110,10 @@ export abstract class Backend extends Logged {
   abstract getIdentity (name: string): Promise<{ address?: Address, mnemonic?: string }>
 }
 
-/** Base class representing a connection to a blockchain via a given endpoint.
-  *
-  * Use one of its subclasses in `@fadroma/scrt`, `@fadroma/cw`, `@fadroma/namada`
-  * to connect to the corresponding chain. Or, extend this class to implement
+/** Represents a connection to a blockchain via a given endpoint.
+  * * Use one of its subclasses in `@fadroma/scrt`, `@fadroma/cw`, `@fadroma/namada`
+  * to connect to the corresponding chain.
+  * * Or, extend this class to implement
   * support for new kinds of blockchains. */
 export abstract class Connection extends Endpoint {
   /** Native token of chain. */
@@ -210,13 +209,32 @@ export abstract class Connection extends Endpoint {
   }
   protected abstract fetchHeightImpl (): Promise<number>
 
-  /** Get info about a specific block.
-    * If no height is passed, gets info about the latest block. */
-  fetchBlock (height?: number): Promise<Block> {
-    this.log.debug(height ? `Querying block ${height}` : `Querying latest block`)
-    return this.fetchBlockInfoImpl(height) as Promise<Block>
+  /** Get info about the latest block. */
+  fetchBlock (): Promise<Block>
+  /** Get info about the block with a specific height. */
+  fetchBlock ({ height }: { height: number }): Promise<Block>
+  /** Get info about the block with a specific hash. */
+  fetchBlock ({ hash }: { hash: string }): Promise<Block>
+  fetchBlock (...args: unknown[]): Promise<Block> {
+    if (args[0]) {
+      if (typeof args[0] === 'object') {
+        if ('height' in args[0]) {
+          this.log.debug(`Querying block by height ${args[0].height}`)
+          return this.fetchBlockImpl({ height: args[0].height as number })
+        } else if ('hash' in args[0]) {
+          this.log.debug(`Querying block by hash ${args[0].hash}`)
+          return this.fetchBlockImpl({ hash: args[0].hash as string })
+        }
+      } else {
+        throw new Error('Invalid arguments, pass {height:number} or {hash:string}')
+      }
+    } else {
+      this.log.debug(`Querying latest block`)
+      return this.fetchBlockImpl()
+    }
   }
-  protected abstract fetchBlockInfoImpl (height?: number): Promise<Block>
+  protected abstract fetchBlockImpl (options?: { height: number }|{ hash: string }):
+    Promise<Block>
 
   /////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -660,13 +678,10 @@ export abstract class Agent extends Logged {
   ): Promise<unknown>
 }
 
-/** The building block of a blockchain.
+/** The building block of a blockchain, as obtained by
+  * [the `fetchBlock` method of `Connection`](#method-connectionfetchblock)
   *
-  * Each block contains collection of transactions that are
-  * appended to the blockchain at a given point in time.
-  *
-  * You shouldn't have to instantiate this directly;
-  * instead, it's returned from `connection.getBlock()` */
+  * Contains zero or more transactions. */
 export abstract class Block {
   /** Connection to the chain to which this block belongs. */
   chain?: Connection
@@ -689,7 +704,7 @@ export abstract class Block {
   }
 }
 
-/** Base class representing a particular instance of a smart contract.
+/** Represents a particular instance of a smart contract.
   *
   * Subclass this to add custom query and transaction methods corresponding
   * to the contract's API. */

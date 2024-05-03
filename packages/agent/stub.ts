@@ -37,9 +37,9 @@ export class StubConnection extends Connection {
     return new StubBatch({ connection: this }) as unknown as Batch<this, StubAgent>
   }
   protected fetchHeightImpl () {
-    return this.fetchBlockInfoImpl().then(({height})=>height)
+    return this.fetchBlockImpl().then(({height})=>height)
   }
-  protected fetchBlockInfoImpl () {
+  protected fetchBlockImpl () {
     return Promise.resolve(new StubBlock({ height: + new Date() }))
   }
   protected fetchCodesImpl () {
