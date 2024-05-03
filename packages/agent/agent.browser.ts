@@ -28,6 +28,8 @@ export * as Stub       from './stub'
 export * as Governance from './governance'
 export * as Staking    from './staking'
 
+export * from './tx'
+
 export type { Address } from './identity'
 export type { CodeHash } from './program.browser'
 export type { ChainId, Message, TxHash } from './chain'

@@ -18,6 +18,8 @@ export class Batch<C extends Connection, A extends Agent> extends Logged {
 
   connection?: C
 
+  agent?: A
+
   constructor (properties?: Partial<Batch<C, A>>) {
     super(properties)
   }

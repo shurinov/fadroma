@@ -28,25 +28,21 @@ class ScrtMocknetConnection extends Stub.StubConnection {
     super({ chainId: 'mocknet', ...options })
     this.log.label += ` (${this.chainId})`
   }
+
   get height () {
     return Promise.resolve(this.backend.height)
   }
+
   get nextBlock () {
     this.backend.height++
     return Promise.resolve(this.backend.height)
   }
+
   getApi () {
     return Promise.resolve({})
   }
-  doInstantiate (...args: Parameters<Stub.StubConnection["doInstantiate"]>) {
-    return this.backend.instantiate(this.address!, ...args) as Promise<Deploy.ContractInstance & {
-      address: Address
-    }>
-  }
-  doExecute (...args: Parameters<Stub.StubConnection["doExecute"]>): Promise<unknown> {
-    return this.backend.execute(this.address!, ...args)
-  }
-  doQuery <Q> (
+
+  protected queryImpl <Q> (
     contract: Address|{address: Address},
     message:  Message
   ): Promise<Q> {
@@ -58,8 +54,25 @@ class ScrtMocknetConnection extends Stub.StubConnection {
 
 export { ScrtMocknetConnection as Connection }
 
-class ScrtMocknetBatch extends Chain.Batch<ScrtMocknetConnection> {
+class ScrtMocknetAgent extends Stub.StubAgent {
+
+  protected instantiateImpl (...args: Parameters<Stub.StubAgent["instantiateImpl"]>) {
+    return this.connection.backend.instantiate(
+      this.address!, ...args
+    ) as Promise<Deploy.ContractInstance & { address: Address }>
+  }
+
+  protected executeImpl (...args: Parameters<Stub.StubAgent["executeImpl"]>): Promise<unknown> {
+    return this.connection.backend.execute(this.address!, ...args)
+  }
+
+}
+
+export { ScrtMocknetAgent as Agent }
+
+class ScrtMocknetBatch extends Chain.Batch<ScrtMocknetConnection, ScrtMocknetAgent> {
   messages: any[] = []
+
   async submit (memo = "") {
     this.log.info('Submitting mocknet batch...')
     const results = []
@@ -67,7 +80,7 @@ class ScrtMocknetBatch extends Chain.Batch<ScrtMocknetConnection> {
       const { init, instantiate = init } = message
       if (!!init) {
         const { sender, codeId, codeHash, label, msg, funds } = init
-        results.push(await this.connection!.instantiate(codeId, {
+        results.push(await this.agent!.instantiate(codeId, {
           initMsg: msg, codeHash, label,
         }))
         continue
@@ -76,7 +89,7 @@ class ScrtMocknetBatch extends Chain.Batch<ScrtMocknetConnection> {
       const { exec, execute = exec } = message
       if (!!exec) {
         const { sender, contract: address, codeHash, msg, funds: execSend } = exec
-        results.push(await this.connection!.execute({ address, codeHash }, msg, { execSend }))
+        results.push(await this.agent!.execute({ address, codeHash }, msg, { execSend }))
         continue
       }
 
@@ -85,23 +98,27 @@ class ScrtMocknetBatch extends Chain.Batch<ScrtMocknetConnection> {
     }
     return results
   }
+
   save (name: string): Promise<unknown> {
     throw new Error('MocknetBatch#save: not implemented')
   }
+
   upload (
-    ...args: Parameters<Chain.Batch<ScrtMocknetConnection>["upload"]>
+    ...args: Parameters<Chain.Batch<ScrtMocknetConnection, ScrtMocknetAgent>["upload"]>
   ) {
     this.log.warn('scrt mocknet batch: not implemented')
     return this
   }
+
   instantiate (
-    ...args: Parameters<Chain.Batch<ScrtMocknetConnection>["instantiate"]>
+    ...args: Parameters<Chain.Batch<ScrtMocknetConnection, ScrtMocknetAgent>["instantiate"]>
   ) {
     this.log.warn('scrt mocknet batch: not implemented')
     return this
   }
+
   execute (
-    ...args: Parameters<Chain.Batch<ScrtMocknetConnection>["execute"]>
+    ...args: Parameters<Chain.Batch<ScrtMocknetConnection, ScrtMocknetAgent>["execute"]>
   ) {
     this.log.warn('scrt mocknet batch: not implemented')
     return this
@@ -170,7 +187,7 @@ class ScrtMocknetBackend extends Stub.StubBackend {
 
   //async instantiate (codeId: CodeId, options: unknown): Promise<Partial<ContractInstance> & {
   async instantiate (
-    creator: Address, ...args: Parameters<Stub.StubConnection["doInstantiate"]>
+    creator: Address, ...args: Parameters<Stub.StubAgent["instantiateImpl"]>
   ): Promise<Deploy.ContractInstance & {
     address: Address
   }> {
@@ -359,19 +376,28 @@ class ScrtMocknetBackend extends Stub.StubBackend {
     }))
   }
 
+  connect ():
+    Promise<ScrtMocknetConnection>
+  connect (_: string|Partial<Chain.Identity & { mnemonic?: string }>):
+    Promise<ScrtMocknetAgent>
   async connect (
-    parameter: string|Partial<Chain.Identity & { mnemonic?: string }> = {}
-  ): Promise<ScrtMocknetConnection> {
-    if (typeof parameter === 'string') {
-      parameter = await this.getIdentity(parameter)
-    }
-    return new ScrtMocknetConnection({
+    parameter?: string|Partial<Chain.Identity & { mnemonic?: string }>
+  ): Promise<unknown> {
+    const connection = new ScrtMocknetConnection({
       chainId:  this.chainId,
       url:      this.url,
       alive:    this.alive,
       backend:  this,
-      identity: new ScrtMnemonicIdentity(parameter)
     })
+    if (parameter) {
+      if (typeof parameter === 'string') {
+        parameter = await this.getIdentity(parameter)
+      }
+      return connection.authenticate(new ScrtMnemonicIdentity(parameter))
+      throw new Error("unimplemented!")
+    } else {
+      return connection
+    }
   }
 
 }

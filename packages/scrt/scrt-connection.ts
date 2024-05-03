@@ -64,11 +64,17 @@ export class ScrtConnection extends Chain.Connection {
     }
   }
 
-  protected async fetchBlockImpl () {
-    const {
-      block_id: { hash, part_set_header } = {},
-      block: { header, data, evidence, last_commit } = {}
-    } = await this.api.query.tendermint.getLatestBlock({})
+  protected async fetchBlockImpl (parameter): Promise<ScrtBlock> {
+    if (!parameter) {
+      const {
+        block_id: { hash, part_set_header } = {},
+        block: { header, data, evidence, last_commit } = {}
+      } = await this.api.query.tendermint.getLatestBlock({})
+      return new ScrtBlock({
+        hash:   Core.base16.encode(hash),
+        height: Number(header.height)
+      })
+    }
   }
 
   protected async fetchCodeInfoImpl () {}
@@ -133,7 +139,10 @@ export class ScrtConnection extends Chain.Connection {
       .code_hash!
   }
 
-  protected async fetchBalanceImpl (denom: string = this.defaultDenom, address: string|undefined = this.address) {
+  protected async fetchBalanceImpl (
+    denom:   string = this.defaultDenom,
+    address: string|undefined = this.address
+  ) {
     return (await withIntoError(this.api.query.bank.balance({
       address,
       denom
@@ -197,8 +206,8 @@ export class ScrtConnection extends Chain.Connection {
     return base64.encode(encrypted)
   }
 
-  batch (): Batch<this> {
-    return new ScrtBatch({ connection: this }) as unknown as Batch<this>
+  batch (): Batch<this, ScrtAgent> {
+    return new ScrtBatch({ connection: this }) as unknown as Batch<this, ScrtAgent>
   }
 
 }
@@ -208,7 +217,7 @@ export class ScrtAgent extends Chain.Agent {
   protected async sendImpl (
     recipient: Address,
     amounts:   Token.ICoin[],
-    options?:  Parameters<Chain.Connection["sendImpl"]>[2]
+    options?:  Parameters<Chain.Agent["sendImpl"]>[2]
   ) {
     return withIntoError(this.api.tx.bank.send(
       { from_address: this.address!, to_address: recipient, amount: amounts },
@@ -240,8 +249,8 @@ export class ScrtAgent extends Chain.Agent {
       )
       if (message === `account ${this.address} not found`) {
         this.log.info(`If this is a new account, send it some ${ScrtConnection.gasToken} first.`)
-        if (faucets[this.chainId!]) {
-          this.log.info(`Available faucets\n `, [...faucets[this.chainId!]].join('\n  '))
+        if (faucets[this.connection.chainId!]) {
+          this.log.info(`Available faucets\n `, [...faucets[this.connection.chainId!]].join('\n  '))
         }
       }
       this.log.error(`Upload failed`, { result })
@@ -255,9 +264,9 @@ export class ScrtAgent extends Chain.Agent {
       this.log.error(`Code ID not found in result`, { result })
       throw new Error('upload failed')
     }
-    const codeHash = await this.getCodeHashOfCodeId(codeId)
+    const codeHash = await this.connection.getCodeHashOfCodeId(codeId)
     return {
-      chainId:   this.chainId,
+      chainId:   this.connection.chainId,
       codeId,
       codeHash,
       uploadBy:  this.address,
@@ -268,7 +277,7 @@ export class ScrtAgent extends Chain.Agent {
 
   protected async instantiateImpl (
     codeId: CodeId,
-    options: Parameters<Chain.Connection["instantiateImpl"]>[1]
+    options: Parameters<Chain.Agent["instantiateImpl"]>[1]
   ): Promise<Partial<Deploy.ContractInstance>> {
     if (!this.address) throw new Error("agent has no address")
     const parameters = {
@@ -294,7 +303,7 @@ export class ScrtAgent extends Chain.Agent {
       ?.value!
 
     return {
-      chainId:  this.chainId,
+      chainId:  this.connection.chainId,
       address,
       codeHash: options.codeHash,
       initBy:   this.address,
@@ -307,7 +316,7 @@ export class ScrtAgent extends Chain.Agent {
   protected async executeImpl (
     contract: { address: Address, codeHash: CodeHash },
     message:  Message,
-    options?: Parameters<Chain.Connection["executeImpl"]>[2] & {
+    options?: Parameters<Chain.Agent["executeImpl"]>[2] & {
       preSimulate?: boolean
     }
   ): Promise<TxResponse> {
@@ -404,7 +413,7 @@ function removeTrailingSlash (url: string) {
   return url
 }
 
-export class ScrtBatch extends Batch<ScrtConnection> {
+export class ScrtBatch extends Batch<ScrtConnection, ScrtAgent> {
   /** Messages to encrypt. */
   messages: Array<
     |InstanceType<typeof MsgStoreCode>
@@ -414,21 +423,21 @@ export class ScrtBatch extends Batch<ScrtConnection> {
 
   /** TODO: Upload in batch. */
   upload (
-    code:    Parameters<Batch<ScrtConnection>["upload"]>[0],
-    options: Parameters<Batch<ScrtConnection>["upload"]>[1]
+    code:    Parameters<Batch<ScrtConnection, ScrtAgent>["upload"]>[0],
+    options: Parameters<Batch<ScrtConnection, ScrtAgent>["upload"]>[1]
   ) {
     throw new Error('ScrtBatch#upload: not implemented')
     return this
   }
 
   instantiate (
-    code:    Parameters<Batch<ScrtConnection>["instantiate"]>[0],
-    options: Parameters<Batch<ScrtConnection>["instantiate"]>[1]
+    code:    Parameters<Batch<ScrtConnection, ScrtAgent>["instantiate"]>[0],
+    options: Parameters<Batch<ScrtConnection, ScrtAgent>["instantiate"]>[1]
   ) {
     this.messages.push(new MsgInstantiateContract({
       //callback_code_hash: '',
       //callback_sig:       null,
-      sender:     this.connection!.address!,
+      sender:     this.agent!.address!,
       code_id:    ((typeof code === 'object') ? code.codeId : code) as CodeId,
       label:      options.label!,
       init_msg:   options.initMsg,
@@ -438,15 +447,15 @@ export class ScrtBatch extends Batch<ScrtConnection> {
   }
 
   execute (
-    contract: Parameters<Batch<ScrtConnection>["execute"]>[0],
-    message:  Parameters<Batch<ScrtConnection>["execute"]>[1],
-    options:  Parameters<Batch<ScrtConnection>["execute"]>[2],
+    contract: Parameters<Batch<ScrtConnection, ScrtAgent>["execute"]>[0],
+    message:  Parameters<Batch<ScrtConnection, ScrtAgent>["execute"]>[1],
+    options:  Parameters<Batch<ScrtConnection, ScrtAgent>["execute"]>[2],
   ) {
     if (typeof contract === 'object') contract = contract.address!
     this.messages.push(new MsgExecuteContract({
       //callback_code_hash: '',
       //callback_sig:       null,
-      sender:           this.connection!.address!,
+      sender:           this.agent!.address!,
       contract_address: contract,
       sent_funds:       options?.execSend,
       msg:              message as object,
@@ -491,7 +500,7 @@ export class ScrtBatch extends Batch<ScrtConnection> {
       "@type":            "/secret.compute.v1beta1.MsgInstantiateContract",
       callback_code_hash: '',
       callback_sig:       null,
-      sender:             this.connection!.address,
+      sender:             this.agent!.address,
       code_id:     String(init.codeId),
       init_funds:         init.funds,
       label:              init.label,
@@ -504,7 +513,7 @@ export class ScrtBatch extends Batch<ScrtConnection> {
       "@type":            '/secret.compute.v1beta1.MsgExecuteContract',
       callback_code_hash: '',
       callback_sig:       null,
-      sender:             this.connection!.address,
+      sender:             this.agent!.address,
       contract:           exec.contract,
       sent_funds:         exec.funds,
       msg:                await this.connection!.encrypt(exec.codeHash, exec.msg),
@@ -537,7 +546,7 @@ export class ScrtBatch extends Batch<ScrtConnection> {
 
         const result: Partial<ScrtBatchResult> = {
           chainId,
-          sender: this.connection!.address,
+          sender: this.agent!.address,
           tx: txResult.transactionHash,
         }
 
@@ -611,7 +620,7 @@ export class ScrtBatch extends Batch<ScrtConnection> {
     this.log.info('Multisig batch ready.')
     this.log.info(`Run the following command to sign the batch:
 \nsecretcli tx sign /dev/stdin --output-document=${output} \\
---offline --from=YOUR_MULTISIG_MEMBER_ACCOUNT_NAME_HERE --multisig=${this.connection!.address} \\
+--offline --from=YOUR_MULTISIG_MEMBER_ACCOUNT_NAME_HERE --multisig=${this.agent!.address} \\
 --chain-id=${this.connection!.chainId} --account-number=${accountNumber} --sequence=${sequence} \\
 <<< ${txdata}`)
     this.log.br()
