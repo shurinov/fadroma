@@ -54,20 +54,21 @@ export class StubConnection extends Connection {
     const balance = (this.backend.balances.get(address!)||{})[token] ?? 0
     return Promise.resolve(String(balance))
   }
-  protected async getCodeIdImpl (address: Address): Promise<CodeId> {
-    const contract = this.backend.instances.get(address)
-    if (!contract) {
-      throw new Error(`unknown contract ${address}`)
-    }
-    return contract.codeId
-  }
   protected fetchContractsByCodeIdImpl (id: CodeId) {
     return Promise.resolve([...this.backend.uploads.get(id)!.instances]
       .map(address=>({address})))
   }
   protected fetchCodeHashOfAddressImpl (address: Address): Promise<CodeHash> {
-    return this.getCodeId(address)
-      .then(id=>this.getCodeHashOfCodeId(id))
+    const contract = this.backend.instances.get(address)
+    if (!contract) {
+      throw new Error(`unknown contract ${address}`)
+    }
+    const { codeId } = contract
+    const code = this.backend.uploads.get(codeId)
+    if (!code) {
+      throw new Error(`inconsistent state: missing code ${codeId} for address ${address}`)
+    }
+    return Promise.resolve(code.codeHash)
   }
   protected fetchCodeHashOfCodeIdImpl (id: CodeId): Promise<CodeHash> {
     const code = this.backend.uploads.get(id)

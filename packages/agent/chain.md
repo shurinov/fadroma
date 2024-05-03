@@ -186,41 +186,43 @@ Get info about the block with a specific hash.
 </pre>
 
 ## method [*connection.fetchCodeInfo*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts)
-Fetch info about 1, many, or all code IDs (uploaded binaries).
+Fetch info about all code IDs uploaded to the chain.
 <pre>
 <strong>const</strong> result: <em>Record&lt;string, unknown&gt;</em> = <strong>await</strong> connection.fetchCodeInfo()
 </pre>
+Fetch info about a single code ID.
 <pre>
 <strong>const</strong> result: <em>unknown</em> = <strong>await</strong> connection.fetchCodeInfo(id: string)
 </pre>
+Fetch info about multiple code IDs.
 <pre>
 <strong>const</strong> result: <em>Record&lt;string, unknown&gt;</em> = <strong>await</strong> connection.fetchCodeInfo(ids: Iterable&lt;string&gt;)
 </pre>
 
 ## method [*connection.fetchCodeInstances*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts)
-Fetch all contracts that match one or more code IDs
+Fetch all instances of a code ID.
 <pre>
 <strong>const</strong> result: <em>Record&lt;string, Contract&gt;</em> = <strong>await</strong> connection.fetchCodeInstances(id: string)
 </pre>
-Fetch all contracts that match one or more code IDs
+Fetch all instances of a code ID, with custom client class.
 <pre>
 <strong>const</strong> result: <em>Record&lt;string, InstanceType&gt;</em> = <strong>await</strong> connection.fetchCodeInstances(
   $C: <em>C</em>,
   id: <em>string</em>,
 )
 </pre>
-Fetch all contracts that match one or more code IDs
+Fetch all instances of multple code IDs.
 <pre>
 <strong>const</strong> result: <em>Record&lt;string, Record&gt;</em> = <strong>await</strong> connection.fetchCodeInstances(ids: Iterable&lt;string&gt;)
 </pre>
-Fetch all contracts that match one or more code IDs
+Fetch all instances of multple code IDs, with custom client class.
 <pre>
 <strong>const</strong> result: <em>Record&lt;string, Record&gt;</em> = <strong>await</strong> connection.fetchCodeInstances(
   $C: <em>C</em>,
   ids: <em>Iterable&lt;string&gt;</em>,
 )
 </pre>
-Fetch all contracts that match one or more code IDs
+Fetch all instances of multple code IDs, with multiple custom client classes.
 <pre>
 <strong>const</strong> result: <em>Record&lt;string, &gt;</em> = <strong>await</strong> connection.fetchCodeInstances(ids: ???)
 </pre>
@@ -231,30 +233,6 @@ Fetch all contracts that match one or more code IDs
 </pre>
 <pre>
 <strong>const</strong> result: <em>Record&lt;string, unknown&gt;</em> = <strong>await</strong> connection.fetchContractInfo(addresses: string)
-</pre>
-
-## method [*connection.getCodeHashOfAddress*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts)
-Get the code hash of a given address.
-<pre>
-<strong>const</strong> result: <em>string</em> = <strong>await</strong> connection.getCodeHashOfAddress(contract: string | {
-  address,
-})
-</pre>
-
-## method [*connection.getCodeHashOfCodeId*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts)
-Get the code hash of a given code id.
-<pre>
-<strong>const</strong> result: <em>string</em> = <strong>await</strong> connection.getCodeHashOfCodeId(contract: string | {
-  codeId,
-})
-</pre>
-
-## method [*connection.getCodeId*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts)
-Get the code id of a given address.
-<pre>
-<strong>const</strong> result: <em>string</em> = <strong>await</strong> connection.getCodeId(contract: string | {
-  address,
-})
 </pre>
 
 ## method [*connection.getContract*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts)
