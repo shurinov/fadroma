@@ -200,11 +200,7 @@ localCompiledCode.serialize()
 <strong>const</strong> result: <em>string</em> = localCompiledCode.toCodeHash(data: Uint8Array)
 </pre>
 
-# class *Compiler*
-<pre>
-<strong>const</strong> compiler = new Compiler(properties: Partial&lt;Logged&gt;)
-</pre>
-
+# abstract class *Compiler*
 <table><tbody>
 <tr><td valign="top">
 <strong>caching</strong></td>

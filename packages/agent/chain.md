@@ -7,21 +7,11 @@ with a local blockchain node instead, see `@fadroma/devnet`.
 
 <!-- @hackbg/docs: begin -->
 
-# class *Endpoint*
+# abstract class *Endpoint*
 Base class representing a remote API endpoint.
 
 You shouldn't need to instantiate this class directly.
 Instead, see `Connection` and its subclasses.
-
-<pre>
-<strong>const</strong> endpoint = new Endpoint({
-  alive,
-  api,
-  chainId,
-  log,
-  url,
-})
-</pre>
 
 <table><tbody>
 <tr><td valign="top">
@@ -52,7 +42,7 @@ A project's mainnet and testnet have different chain IDs.</td></tr>
 The same chain may be accessible via different endpoints, so
 this property contains the URL to which requests are sent.</td></tr></tbody></table>
 
-# class *Backend*
+# abstract class *Backend*
 Base class representing any connection backend, such as:
 
   * Remote RPC endpoint.
@@ -61,14 +51,6 @@ Base class representing any connection backend, such as:
 
 You shouldn't need to instantiate this class directly.
 Instead, see `Connection`, `Devnet`, and their subclasses.
-
-<pre>
-<strong>const</strong> backend = new Backend({
-  chainId,
-  gasToken,
-  log,
-})
-</pre>
 
 <table><tbody>
 <tr><td valign="top">
@@ -94,25 +76,12 @@ Instead, see `Connection`, `Devnet`, and their subclasses.
 backend.getIdentity(name: string)
 </pre>
 
-# class *Connection*
+# abstract class *Connection*
 Base class representing a connection to a blockchain via a given endpoint.
 
 Use one of its subclasses in `@fadroma/scrt`, `@fadroma/cw`, `@fadroma/namada`
 to connect to the corresponding chain. Or, extend this class to implement
 support for new kinds of blockchains.
-
-<pre>
-<strong>const</strong> connection = new Connection({
-  alive,
-  api,
-  blockInterval,
-  chainId,
-  log,
-  mode,
-  url,
-  gasToken,
-})
-</pre>
 
 <table><tbody>
 <tr><td valign="top">
@@ -309,16 +278,7 @@ Native token of chain.
 <strong>const</strong> result: <em><a href="#">TokenAmount</a></em> = connection.gas(amount: string | number)
 </pre>
 
-# class *Agent*
-<pre>
-<strong>const</strong> agent = new Agent({
-  connection,
-  fees,
-  identity,
-  log,
-})
-</pre>
-
+# abstract class *Agent*
 <table><tbody>
 <tr><td valign="top">
 <strong>connection</strong></td>
@@ -393,7 +353,7 @@ agent.upload(
 )
 </pre>
 
-# class *Block*
+# abstract class *Block*
 The building block of a blockchain.
 
 Each block contains collection of transactions that are
@@ -401,14 +361,6 @@ appended to the blockchain at a given point in time.
 
 You shouldn't have to instantiate this directly;
 instead, it's returned from `connection.getBlock()`
-
-<pre>
-<strong>const</strong> block = new Block({
-  chain,
-  hash,
-  height,
-})
-</pre>
 
 <table><tbody>
 <tr><td valign="top">

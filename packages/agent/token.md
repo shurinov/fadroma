@@ -54,12 +54,8 @@ Represents some amount of native token.
 <strong>denom</strong></td>
 <td><strong>string</strong>. </td></tr></tbody></table>
 
-# class *Token*
+# abstract class *Token*
 An identifiable token on a network.
-
-<pre>
-<strong>const</strong> token = new Token()
-</pre>
 
 <table><tbody>
 <tr><td valign="top">
@@ -72,12 +68,8 @@ Whether this token is fungible.
 token.isFungible()
 </pre>
 
-# class *Fungible*
+# abstract class *Fungible*
 An abstract fungible token.
-
-<pre>
-<strong>const</strong> fungible = new Fungible()
-</pre>
 
 <table><tbody>
 <tr><td valign="top">
@@ -115,12 +107,8 @@ fungible.isNative()
 )
 </pre>
 
-# class *NonFungible*
+# abstract class *NonFungible*
 An abstract non-fungible token.
-
-<pre>
-<strong>const</strong> nonFungible = new NonFungible()
-</pre>
 
 <table><tbody>
 <tr><td valign="top">
