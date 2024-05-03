@@ -16,12 +16,16 @@ export type { TxResponse }
 
 /** Represents a Secret Network API endpoint. */
 export class ScrtConnection extends Chain.Connection {
+
   /** Smallest unit of native token. */
   static gasToken = new Token.Native('uscrt')
+
   /** Underlying API client. */
   declare api: SecretNetworkClient
+
   /** Supports multiple authentication methods. */
   declare identity: ScrtIdentity
+
   /** Set permissive fees by default. */
   fees = {
     upload: ScrtConnection.gasToken.fee(10000000),
@@ -29,6 +33,7 @@ export class ScrtConnection extends Chain.Connection {
     exec:   ScrtConnection.gasToken.fee(1000000),
     send:   ScrtConnection.gasToken.fee(1000000),
   }
+
   constructor (properties?: Partial<ScrtConnection>) {
     super(properties as Partial<Chain.Connection>)
     this.api ??= new SecretNetworkClient({ url: this.url!, chainId: this.chainId!, })
@@ -59,19 +64,29 @@ export class ScrtConnection extends Chain.Connection {
     }
   }
 
-  protected async doGetBlockInfo () {
+  protected async fetchBlockImpl () {
     const {
       block_id: { hash, part_set_header } = {},
       block: { header, data, evidence, last_commit } = {}
     } = await this.api.query.tendermint.getLatestBlock({})
   }
 
-  protected doGetHeight () {
-    return this.doGetBlockInfo().then((block: any)=>
+  protected async fetchCodeInfoImpl () {}
+
+  protected async fetchCodeInstancesImpl () {}
+
+  protected async fetchContractInfoImpl () {}
+
+  authenticate (identity: ScrtIdentity): Promise<ScrtAgent> {
+    return new ScrtAgent({ connection: this, identity })
+  }
+
+  protected fetchHeightImpl () {
+    return this.fetchBlockInfoImpl().then((block: any)=>
       Number(block.block?.header?.height))
   }
 
-  protected doGetCodes () {
+  protected fetchCodesImpl () {
     const codes: Record<CodeId, Deploy.UploadedCode> = {}
     return withIntoError(this.api.query.compute.codes({}))
       .then(({code_infos})=>{
@@ -87,14 +102,14 @@ export class ScrtConnection extends Chain.Connection {
       })
   }
 
-  protected async doGetCodeId (contract_address: Address): Promise<CodeId> {
+  protected async fetchCodeIdImpl (contract_address: Address): Promise<CodeId> {
     return (await withIntoError(this.api.query.compute.contractInfo({
       contract_address
     })))
       .ContractInfo!.code_id!
   }
 
-  protected async doGetContractsByCodeId (code_id: CodeId): Promise<Iterable<{address: Address}>> {
+  protected async fetchContractsByCodeIdImpl (code_id: CodeId): Promise<Iterable<{address: Address}>> {
     return (await withIntoError(this.api.query.compute.contractsByCodeId({ code_id })))
       .contract_infos!
       .map(({ contract_address, contract_info: { label, creator } }: any)=>({
@@ -104,21 +119,21 @@ export class ScrtConnection extends Chain.Connection {
       }))
   }
 
-  protected async doGetCodeHashOfAddress (contract_address: Address): Promise<CodeHash> {
+  protected async fetchCodeHashOfAddressImpl (contract_address: Address): Promise<CodeHash> {
     return (await withIntoError(this.api.query.compute.codeHashByContractAddress({
       contract_address
     })))
       .code_hash!
   }
 
-  protected async doGetCodeHashOfCodeId (code_id: CodeId): Promise<CodeHash> {
+  protected async fetchCodeHashOfCodeIdImpl (code_id: CodeId): Promise<CodeHash> {
     return (await withIntoError(this.api.query.compute.codeHashByCodeId({
       code_id
     })))
       .code_hash!
   }
 
-  protected async doGetBalance (denom: string = this.defaultDenom, address: string|undefined = this.address) {
+  protected async fetchBalanceImpl (denom: string = this.defaultDenom, address: string|undefined = this.address) {
     return (await withIntoError(this.api.query.bank.balance({
       address,
       denom
@@ -135,7 +150,7 @@ export class ScrtConnection extends Chain.Connection {
 
   /** Query a contract.
     * @returns the result of the query */
-  protected doQuery <U> (contract: { address: Address, codeHash: CodeHash }, message: Message): Promise<U> {
+  protected queryImpl <U> (contract: { address: Address, codeHash: CodeHash }, message: Message): Promise<U> {
     return withIntoError(this.api.query.compute.queryContract({
       contract_address: contract.address,
       code_hash: contract.codeHash,
@@ -145,148 +160,6 @@ export class ScrtConnection extends Chain.Connection {
 
   get account (): ReturnType<SecretNetworkClient['query']['auth']['account']> {
     return this.api.query.auth.account({ address: this.address })
-  }
-
-  protected async doSend (
-    recipient: Address,
-    amounts:   Token.ICoin[],
-    options?:  Parameters<Chain.Connection["doSend"]>[2]
-  ) {
-    return withIntoError(this.api.tx.bank.send(
-      { from_address: this.address!, to_address: recipient, amount: amounts },
-      { gasLimit: Number(options?.sendFee?.gas) }
-    ))
-  }
-
-  protected doSendMany (
-    outputs: [Address, Token.ICoin[]][], options?: unknown
-  ): Promise<unknown> {
-    throw new Error('unimplemented')
-  }
-
-  async sendMany (outputs: never, opts?: any) {
-    throw new Error('ScrtConnection#sendMany: not implemented')
-  }
-
-  /** Upload a WASM binary. */
-  protected async doUpload (data: Uint8Array): Promise<Partial<Deploy.UploadedCode>> {
-    const request = { sender: this.address!, wasm_byte_code: data, source: "", builder: "" }
-    const gasLimit = Number(this.fees.upload?.amount[0].amount) || undefined
-    const result = await withIntoError(this.api!.tx.compute.storeCode(request, { gasLimit }))
-    const { code, message, details = [], rawLog  } = result as any
-    if (code !== 0) {
-      this.log.error(
-        `Upload failed with code ${bold(code)}:`,
-        bold(message ?? rawLog ?? ''),
-        ...details
-      )
-      if (message === `account ${this.address} not found`) {
-        this.log.info(`If this is a new account, send it some ${ScrtConnection.gasToken} first.`)
-        if (faucets[this.chainId!]) {
-          this.log.info(`Available faucets\n `, [...faucets[this.chainId!]].join('\n  '))
-        }
-      }
-      this.log.error(`Upload failed`, { result })
-      throw new Error('upload failed')
-    }
-    type Log = { type: string, key: string }
-    const codeId = result.arrayLog
-      ?.find((log: Log) => log.type === "message" && log.key === "code_id")
-      ?.value
-    if (!codeId) {
-      this.log.error(`Code ID not found in result`, { result })
-      throw new Error('upload failed')
-    }
-    const codeHash = await this.getCodeHashOfCodeId(codeId)
-    return {
-      chainId:   this.chainId,
-      codeId,
-      codeHash,
-      uploadBy:  this.address,
-      uploadTx:  result.transactionHash,
-      uploadGas: result.gasUsed
-    }
-  }
-
-  protected async doInstantiate (
-    codeId: CodeId,
-    options: Parameters<Chain.Connection["doInstantiate"]>[1]
-  ): Promise<Partial<Deploy.ContractInstance>> {
-    if (!this.address) throw new Error("agent has no address")
-    const parameters = {
-      sender:     this.address,
-      code_id:    Number(codeId),
-      code_hash:  options.codeHash,
-      label:      options.label!,
-      init_msg:   options.initMsg,
-      init_funds: options.initSend,
-      memo:       options.initMemo
-    }
-    const instantiateOptions = { gasLimit: Number(this.fees.init?.amount[0].amount) || undefined }
-    const result = await withIntoError(
-      this.api.tx.compute.instantiateContract(parameters, instantiateOptions))
-    if (result.code !== 0) {
-      this.log.error('Init failed:', { parameters, instantiateOptions, result })
-      throw new Error(`init of code id ${codeId} failed`)
-    }
-
-    type Log = { type: string, key: string }
-    const address = result.arrayLog!
-      .find((log: Log) => log.type === "message" && log.key === "contract_address")
-      ?.value!
-
-    return {
-      chainId:  this.chainId,
-      address,
-      codeHash: options.codeHash,
-      initBy:   this.address,
-      initTx:   result.transactionHash,
-      initGas:  result.gasUsed,
-      label:    options.label,
-    }
-  }
-
-  protected async doExecute (
-    contract: { address: Address, codeHash: CodeHash },
-    message:  Message,
-    options?: Parameters<Chain.Connection["doExecute"]>[2] & {
-      preSimulate?: boolean
-    }
-  ): Promise<TxResponse> {
-    const tx = {
-      sender:           this.address!,
-      contract_address: contract.address,
-      code_hash:        contract.codeHash,
-      msg:              message as Record<string, unknown>,
-      sentFunds:        options?.execSend
-    }
-    const txOpts = {
-      gasLimit: Number(options?.execFee?.gas) || undefined
-    }
-    if (options?.preSimulate) {
-      this.log.info('Simulating transaction...')
-      let simResult
-      try {
-        simResult = await this.api.tx.compute.executeContract.simulate(tx, txOpts)
-      } catch (e) {
-        this.log.error(e)
-        this.log.warn('TX simulation failed:', tx, 'from', this)
-      }
-      const gas_used = simResult?.gas_info?.gas_used
-      if (gas_used) {
-        this.log.info('Simulation used gas:', gas_used)
-        const gas = Math.ceil(Number(gas_used) * 1.1)
-        // Adjust gasLimit up by 10% to account for gas estimation error
-        this.log.info('Setting gas to 110% of that:', gas)
-        txOpts.gasLimit = gas
-      }
-    }
-    const result = await this.api.tx.compute.executeContract(tx, txOpts)
-    // check error code as per https://grpc.github.io/grpc/core/md_doc_statuscodes.html
-    if (result.code !== 0) {
-      throw decodeError(result)
-    }
-    return result as TxResponse
   }
 
   async setMaxGas (): Promise<this> {
@@ -328,6 +201,151 @@ export class ScrtConnection extends Chain.Connection {
     return new ScrtBatch({ connection: this }) as unknown as Batch<this>
   }
 
+}
+
+export class ScrtAgent extends Chain.Agent {
+
+  protected async sendImpl (
+    recipient: Address,
+    amounts:   Token.ICoin[],
+    options?:  Parameters<Chain.Connection["sendImpl"]>[2]
+  ) {
+    return withIntoError(this.api.tx.bank.send(
+      { from_address: this.address!, to_address: recipient, amount: amounts },
+      { gasLimit: Number(options?.sendFee?.gas) }
+    ))
+  }
+
+  protected sendManyImpl (
+    outputs: [Address, Token.ICoin[]][], options?: unknown
+  ): Promise<unknown> {
+    throw new Error('unimplemented')
+  }
+
+  async sendMany (outputs: never, opts?: any) {
+    throw new Error('ScrtConnection#sendMany: not implemented')
+  }
+
+  /** Upload a WASM binary. */
+  protected async uploadImpl (data: Uint8Array): Promise<Partial<Deploy.UploadedCode>> {
+    const request = { sender: this.address!, wasm_byte_code: data, source: "", builder: "" }
+    const gasLimit = Number(this.fees.upload?.amount[0].amount) || undefined
+    const result = await withIntoError(this.api!.tx.compute.storeCode(request, { gasLimit }))
+    const { code, message, details = [], rawLog  } = result as any
+    if (code !== 0) {
+      this.log.error(
+        `Upload failed with code ${bold(code)}:`,
+        bold(message ?? rawLog ?? ''),
+        ...details
+      )
+      if (message === `account ${this.address} not found`) {
+        this.log.info(`If this is a new account, send it some ${ScrtConnection.gasToken} first.`)
+        if (faucets[this.chainId!]) {
+          this.log.info(`Available faucets\n `, [...faucets[this.chainId!]].join('\n  '))
+        }
+      }
+      this.log.error(`Upload failed`, { result })
+      throw new Error('upload failed')
+    }
+    type Log = { type: string, key: string }
+    const codeId = result.arrayLog
+      ?.find((log: Log) => log.type === "message" && log.key === "code_id")
+      ?.value
+    if (!codeId) {
+      this.log.error(`Code ID not found in result`, { result })
+      throw new Error('upload failed')
+    }
+    const codeHash = await this.getCodeHashOfCodeId(codeId)
+    return {
+      chainId:   this.chainId,
+      codeId,
+      codeHash,
+      uploadBy:  this.address,
+      uploadTx:  result.transactionHash,
+      uploadGas: result.gasUsed
+    }
+  }
+
+  protected async instantiateImpl (
+    codeId: CodeId,
+    options: Parameters<Chain.Connection["instantiateImpl"]>[1]
+  ): Promise<Partial<Deploy.ContractInstance>> {
+    if (!this.address) throw new Error("agent has no address")
+    const parameters = {
+      sender:     this.address,
+      code_id:    Number(codeId),
+      code_hash:  options.codeHash,
+      label:      options.label!,
+      init_msg:   options.initMsg,
+      init_funds: options.initSend,
+      memo:       options.initMemo
+    }
+    const instantiateOptions = { gasLimit: Number(this.fees.init?.amount[0].amount) || undefined }
+    const result = await withIntoError(
+      this.api.tx.compute.instantiateContract(parameters, instantiateOptions))
+    if (result.code !== 0) {
+      this.log.error('Init failed:', { parameters, instantiateOptions, result })
+      throw new Error(`init of code id ${codeId} failed`)
+    }
+
+    type Log = { type: string, key: string }
+    const address = result.arrayLog!
+      .find((log: Log) => log.type === "message" && log.key === "contract_address")
+      ?.value!
+
+    return {
+      chainId:  this.chainId,
+      address,
+      codeHash: options.codeHash,
+      initBy:   this.address,
+      initTx:   result.transactionHash,
+      initGas:  result.gasUsed,
+      label:    options.label,
+    }
+  }
+
+  protected async executeImpl (
+    contract: { address: Address, codeHash: CodeHash },
+    message:  Message,
+    options?: Parameters<Chain.Connection["executeImpl"]>[2] & {
+      preSimulate?: boolean
+    }
+  ): Promise<TxResponse> {
+    const tx = {
+      sender:           this.address!,
+      contract_address: contract.address,
+      code_hash:        contract.codeHash,
+      msg:              message as Record<string, unknown>,
+      sentFunds:        options?.execSend
+    }
+    const txOpts = {
+      gasLimit: Number(options?.execFee?.gas) || undefined
+    }
+    if (options?.preSimulate) {
+      this.log.info('Simulating transaction...')
+      let simResult
+      try {
+        simResult = await this.api.tx.compute.executeContract.simulate(tx, txOpts)
+      } catch (e) {
+        this.log.error(e)
+        this.log.warn('TX simulation failed:', tx, 'from', this)
+      }
+      const gas_used = simResult?.gas_info?.gas_used
+      if (gas_used) {
+        this.log.info('Simulation used gas:', gas_used)
+        const gas = Math.ceil(Number(gas_used) * 1.1)
+        // Adjust gasLimit up by 10% to account for gas estimation error
+        this.log.info('Setting gas to 110% of that:', gas)
+        txOpts.gasLimit = gas
+      }
+    }
+    const result = await this.api.tx.compute.executeContract(tx, txOpts)
+    // check error code as per https://grpc.github.io/grpc/core/md_doc_statuscodes.html
+    if (result.code !== 0) {
+      throw decodeError(result)
+    }
+    return result as TxResponse
+  }
 }
 
 export class ScrtBlock extends Chain.Block {
