@@ -126,7 +126,20 @@ A contract that is part of a deploment.
 - generates structured label
 
 <pre>
-<strong>const</strong> deploymentUnit = new DeploymentUnit(properties: Partial&lt;ContractCode&gt; & Partial&lt;DeploymentUnit&gt;)
+<strong>const</strong> deploymentUnit = new DeploymentUnit(properties: {
+  chainId,
+  codeHash,
+  codeId,
+  compiled,
+  compiler,
+  deployer,
+  deployment,
+  log,
+  name,
+  source,
+  uploaded,
+  uploader,
+})
 </pre>
 
 <table><tbody>
@@ -212,7 +225,20 @@ A contract that is part of a deploment.
 - generates structured label
 
 <pre>
-<strong>const</strong> contractTemplate = new ContractTemplate(properties: Partial&lt;ContractCode&gt; & Partial&lt;DeploymentUnit&gt;)
+<strong>const</strong> contractTemplate = new ContractTemplate(properties: {
+  chainId,
+  codeHash,
+  codeId,
+  compiled,
+  compiler,
+  deployer,
+  deployment,
+  log,
+  name,
+  source,
+  uploaded,
+  uploader,
+})
 </pre>
 
 <table><tbody>
@@ -316,7 +342,30 @@ A contract that is part of a deploment.
 - generates structured label
 
 <pre>
-<strong>const</strong> contractInstance = new ContractInstance(properties: Partial&lt;ContractCode&gt; & Partial&lt;DeploymentUnit&gt; & Partial&lt;ContractInstance&gt;)
+<strong>const</strong> contractInstance = new ContractInstance(properties: {
+  address,
+  chainId,
+  codeHash,
+  codeId,
+  compiled,
+  compiler,
+  deployer,
+  deployment,
+  initBy,
+  initFee,
+  initGas,
+  initMemo,
+  initMsg,
+  initSend,
+  initTx,
+  isTemplate,
+  label,
+  log,
+  name,
+  source,
+  uploaded,
+  uploader,
+})
 </pre>
 
 <table><tbody>
@@ -408,19 +457,34 @@ Returns a client to this contract instance.
 ## method [*contractInstance.deploy*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts)
 <pre>
 contractInstance.deploy({
+  address,
+  chainId,
+  codeHash,
+  codeId,
+  compiled,
   compiler,
+  deployer,
+  deployment,
+  initBy,
+  initFee,
+  initGas,
+  initMemo,
+  initMsg,
+  initSend,
+  initTx,
+  isTemplate,
+  label,
+  log,
+  name,
   rebuild,
-} & {
+  redeploy,
   reupload,
+  source,
   uploadFee,
   uploadMemo,
   uploadStore,
-} & {
-  reupload,
+  uploaded,
   uploader,
-} & Partial&lt;ContractInstance&gt; & {
-  deployer,
-  redeploy,
 })
 </pre>
 
@@ -490,19 +554,47 @@ Returns an iterable of entries in the map.
 ## method [*deployment.addContract*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts)
 <pre>
 <strong>const</strong> result: <em><a href="#">Deployment</a></em> = deployment.addContract(args: [string, ((({
+  cargoCrate,
+  cargoFeatures,
+  cargoToml,
+  cargoWorkspace,
   language,
-} & Partial&lt;RustSourceCode&gt;) | ({
+  log,
+  sourceDirty,
+  sourceOrigin,
+  sourcePath,
+  sourceRef,
+}) | ({
   language,
-} & Partial&lt;SourceCode&gt;)) & Partial&lt;CompiledCode&gt; & Partial&lt;UploadedCode&gt; & Partial&lt;ContractInstance&gt;)])
+  log,
+  sourceDirty,
+  sourceOrigin,
+  sourcePath,
+  sourceRef,
+})) & Partial&lt;CompiledCode&gt; & Partial&lt;UploadedCode&gt; & Partial&lt;ContractInstance&gt;)])
 </pre>
 
 ## method [*deployment.addContracts*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts)
 <pre>
 <strong>const</strong> result: <em><a href="#">Deployment</a></em> = deployment.addContracts(args: [string, ((({
+  cargoCrate,
+  cargoFeatures,
+  cargoToml,
+  cargoWorkspace,
   language,
-} & Partial&lt;RustSourceCode&gt;) | ({
+  log,
+  sourceDirty,
+  sourceOrigin,
+  sourcePath,
+  sourceRef,
+}) | ({
   language,
-} & Partial&lt;SourceCode&gt;)) & Partial&lt;CompiledCode&gt; & Partial&lt;UploadedCode&gt;)])
+  log,
+  sourceDirty,
+  sourceOrigin,
+  sourcePath,
+  sourceRef,
+})) & Partial&lt;CompiledCode&gt; & Partial&lt;UploadedCode&gt;)])
 </pre>
 
 ## method [*deployment.build*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts)
@@ -526,10 +618,24 @@ and instantiated as part of this deployment.
 <strong>const</strong> result: <em><a href="#">ContractInstance</a></em> = deployment.contract(
   name: <em>string</em>,
   properties: <em>(({
+    cargoCrate,
+    cargoFeatures,
+    cargoToml,
+    cargoWorkspace,
     language,
-  } & Partial&lt;RustSourceCode&gt;) | ({
+    log,
+    sourceDirty,
+    sourceOrigin,
+    sourcePath,
+    sourceRef,
+  }) | ({
     language,
-  } & Partial&lt;SourceCode&gt;)) & Partial&lt;CompiledCode&gt; & Partial&lt;UploadedCode&gt; & Partial&lt;ContractInstance&gt;</em>,
+    log,
+    sourceDirty,
+    sourceOrigin,
+    sourcePath,
+    sourceRef,
+  })) & Partial&lt;CompiledCode&gt; & Partial&lt;UploadedCode&gt; & Partial&lt;ContractInstance&gt;</em>,
 )
 </pre>
 
@@ -542,22 +648,36 @@ and instantiated as part of this deployment.
 ## method [*deployment.deploy*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts)
 <pre>
 <strong>const</strong> result: <em>Record&lt;string, &gt;</em> = <strong>await</strong> deployment.deploy({
+  address,
+  chainId,
+  codeHash,
+  codeId,
+  compiled,
   compiler,
+  deployStore,
+  deployer,
+  deployment,
+  initBy,
+  initFee,
+  initGas,
+  initMemo,
+  initMsg,
+  initSend,
+  initTx,
+  isTemplate,
+  label,
+  log,
+  name,
   rebuild,
-} & {
+  redeploy,
   reupload,
+  source,
+  units,
   uploadFee,
   uploadMemo,
   uploadStore,
-} & {
-  reupload,
+  uploaded,
   uploader,
-} & Partial&lt;ContractInstance&gt; & {
-  deployer,
-  redeploy,
-} & {
-  deployStore,
-  units,
 })
 </pre>
 
@@ -616,10 +736,24 @@ the same code.
 <strong>const</strong> result: <em><a href="#">ContractTemplate</a></em> = deployment.template(
   name: <em>string</em>,
   properties: <em>(({
+    cargoCrate,
+    cargoFeatures,
+    cargoToml,
+    cargoWorkspace,
     language,
-  } & Partial&lt;RustSourceCode&gt;) | ({
+    log,
+    sourceDirty,
+    sourceOrigin,
+    sourcePath,
+    sourceRef,
+  }) | ({
     language,
-  } & Partial&lt;SourceCode&gt;)) & Partial&lt;CompiledCode&gt; & Partial&lt;UploadedCode&gt;</em>,
+    log,
+    sourceDirty,
+    sourceOrigin,
+    sourcePath,
+    sourceRef,
+  })) & Partial&lt;CompiledCode&gt; & Partial&lt;UploadedCode&gt;</em>,
 )
 </pre>
 
