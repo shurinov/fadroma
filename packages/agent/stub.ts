@@ -3,7 +3,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>. **/
 import { assign, Console, Error, base16, SHA256, randomBech32 } from './core'
 import type { ChainId, Message, Label, TxHash } from './chain'
-import { Connection, Block, Backend } from './chain'
+import { Connection, Agent, Block, Backend } from './chain'
 import type { Address } from './identity'
 import { Identity } from './identity'
 import { Batch } from './tx'
@@ -33,61 +33,78 @@ export class StubConnection extends Connection {
     assign(this, properties, ['backend'])
     this.backend ??= new StubBackend()
   }
-  batch (): Batch<this> {
-    return new StubBatch({ connection: this }) as unknown as Batch<this>
+  batch (): Batch<this, StubAgent> {
+    return new StubBatch({ connection: this }) as unknown as Batch<this, StubAgent>
   }
-  protected doGetHeight () {
-    return this.doGetBlockInfo().then(({height})=>height)
+  protected fetchHeightImpl () {
+    return this.fetchBlockInfoImpl().then(({height})=>height)
   }
-  protected doGetBlockInfo () {
+  protected fetchBlockInfoImpl () {
     return Promise.resolve(new StubBlock({ height: + new Date() }))
   }
-  protected doGetCodes () {
+  protected fetchCodesImpl () {
     return Promise.resolve(Object.fromEntries(
       [...this.backend.uploads.entries()].map(
         ([key, val])=>[key, new UploadedCode(val)]
       )
     ))
   }
-  protected doGetBalance (token?: string, address?: string): Promise<string> {
+  protected fetchBalanceImpl (token?: string, address?: string): Promise<string> {
     token ??= this.defaultDenom
-    address ??= this.address
     const balance = (this.backend.balances.get(address!)||{})[token] ?? 0
     return Promise.resolve(String(balance))
   }
-  protected async doGetCodeId (address: Address): Promise<CodeId> {
+  protected async getCodeIdImpl (address: Address): Promise<CodeId> {
     const contract = this.backend.instances.get(address)
     if (!contract) {
       throw new Error(`unknown contract ${address}`)
     }
     return contract.codeId
   }
-  protected doGetContractsByCodeId (id: CodeId) {
+  protected fetchContractsByCodeIdImpl (id: CodeId) {
     return Promise.resolve([...this.backend.uploads.get(id)!.instances]
       .map(address=>({address})))
   }
-  protected doGetCodeHashOfAddress (address: Address): Promise<CodeHash> {
+  protected fetchCodeHashOfAddressImpl (address: Address): Promise<CodeHash> {
     return this.getCodeId(address)
       .then(id=>this.getCodeHashOfCodeId(id))
   }
-  protected doGetCodeHashOfCodeId (id: CodeId): Promise<CodeHash> {
+  protected fetchCodeHashOfCodeIdImpl (id: CodeId): Promise<CodeHash> {
     const code = this.backend.uploads.get(id)
     if (!code) {
       throw new Error(`unknown code ${id}`)
     }
     return Promise.resolve(code.codeHash)
   }
-  protected doQuery <Q> (contract: { address: Address }, message: Message): Promise<Q> {
+  protected fetchCodeIdImpl (options: string): Promise<string> {
+    throw new Error('unimplemented!')
+  }
+  protected fetchCodeInfoImpl (options): Promise<Record<string, UploadedCode>> {
+    throw new Error('unimplemented!')
+  }
+  protected fetchContractInfoImpl (): Promise<unknown> {
+    throw new Error('unimplemented!')
+  }
+  protected fetchCodeInstancesImpl (id: CodeId): Promise<Iterable<{ address: Address }>> {
+    throw new Error('unimplemented!')
+  }
+  protected queryImpl <Q> (contract: { address: Address }, message: Message): Promise<Q> {
     return Promise.resolve({} as Q)
   }
-  protected doSend (recipient: Address, sums: Token.ICoin[], opts?: never): Promise<void> {
+  authenticate (identity: Identity): StubAgent {
+    return new StubAgent({ connection: this, identity })
+  }
+}
+
+export class StubAgent extends Agent {
+  declare connection: StubConnection
+  protected sendImpl (recipient: Address, sums: Token.ICoin[], opts?: never): Promise<void> {
     if (!this.address) {
       throw new Error('not authenticated')
     }
-    const senderBalances = {
-      ...this.backend.balances.get(this.address) || {}}
-    const recipientBalances = {
-      ...this.backend.balances.get(recipient)    || {}}
+    const { backend } = this.connection
+    const senderBalances = { ...backend.balances.get(this.address) || {}}
+    const recipientBalances = { ...backend.balances.get(recipient) || {}}
     for (const sum of sums) {
       if (!Object.keys(senderBalances).includes(sum.denom)) {
         throw new Error(`sender has no balance in ${sum.denom}`)
@@ -103,29 +120,29 @@ export class StubConnection extends Connection {
       recipientBalances[sum.denom] =
         (recipientBalances[sum.denom] ?? BigInt(0)) + amount
     }
-    this.backend.balances.set(this.address, senderBalances)
-    this.backend.balances.set(recipient, recipientBalances)
+    backend.balances.set(this.address, senderBalances)
+    backend.balances.set(recipient, recipientBalances)
     return Promise.resolve()
   }
-  protected doSendMany (outputs: [Address, Token.ICoin[]][], opts?: never): Promise<void> {
+  protected sendManyImpl (outputs: [Address, Token.ICoin[]][], opts?: never): Promise<void> {
     return Promise.resolve()
   }
-  protected async doUpload (codeData: Uint8Array): Promise<UploadedCode> {
-    return new UploadedCode(await this.backend.upload(codeData))
+  protected async uploadImpl (codeData: Uint8Array): Promise<UploadedCode> {
+    return new UploadedCode(await this.connection.backend.upload(codeData))
   }
-  protected async doInstantiate (
-    codeId: CodeId, options: Parameters<Connection["doInstantiate"]>[1]
+  protected async instantiateImpl (
+    codeId: CodeId, options: Parameters<Agent["instantiateImpl"]>[1]
   ): Promise<ContractInstance & { address: Address }> {
-    return new ContractInstance(await this.backend.instantiate(
+    return new ContractInstance(await this.connection.backend.instantiate(
       this.address!, codeId, options
     )) as ContractInstance & {
       address: Address
     }
   }
-  protected doExecute (
+  protected executeImpl (
     contract: { address: Address, codeHash: CodeHash },
     message:  Message,
-    options?: Parameters<Connection["doExecute"]>[2]
+    options?: Parameters<Agent["executeImpl"]>[2]
   ): Promise<void|unknown> {
     return Promise.resolve({})
   }
@@ -187,9 +204,11 @@ export class StubBackend extends Backend {
     }
   }
 
-  async connect (
-    parameter: string|Partial<Identity & { mnemonic?: string }> = {}
-  ): Promise<Connection> {
+  async connect ():
+    Promise<Connection>
+  async connect (parameter: string|Partial<Identity & { mnemonic?: string }>):
+    Promise<Agent>
+  async connect (parameter: string|Partial<Identity & { mnemonic?: string }> = {}): Promise<unknown> {
     if (typeof parameter === 'string') {
       parameter = await this.getIdentity(parameter)
     }
@@ -201,8 +220,7 @@ export class StubBackend extends Backend {
       url:      'stub',
       alive:    this.alive,
       backend:  this,
-      identity: new Identity(parameter)
-    })
+    }).authenticate(new Identity(parameter))
   }
 
   getIdentity (name: string): Promise<Identity> {
@@ -260,20 +278,20 @@ export class StubBackend extends Backend {
   }
 }
 
-export class StubBatch extends Batch<StubConnection> {
+export class StubBatch extends Batch<StubConnection, StubAgent> {
   messages: object[] = []
 
-  upload (...args: Parameters<StubConnection["upload"]>) {
+  upload (...args: Parameters<StubAgent["upload"]>) {
     this.messages.push({ instantiate: args })
     return this
   }
 
-  instantiate (...args: Parameters<StubConnection["instantiate"]>) {
+  instantiate (...args: Parameters<StubAgent["instantiate"]>) {
     this.messages.push({ instantiate: args })
     return this
   }
 
-  execute (...args: Parameters<StubConnection["execute"]>) {
+  execute (...args: Parameters<StubAgent["execute"]>) {
     this.messages.push({ execute: args })
     return this
   }

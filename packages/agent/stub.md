@@ -24,6 +24,16 @@ instead, it's returned from `connection.getBlock()`
 <strong>height</strong></td>
 <td><strong>number</strong>. Monotonically incrementing ID of block.</td></tr></tbody></table>
 
+## method [*stubBlock.fetchTransactions*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts)
+<pre>
+<strong>const</strong> result: <em><a href="#">Transaction</a>[]</em> = <strong>await</strong> stubBlock.fetchTransactions()
+</pre>
+<pre>
+<strong>const</strong> result: <em>Record&lt;string, Transaction&gt;</em> = <strong>await</strong> stubBlock.fetchTransactions(options: {
+  byId,
+})
+</pre>
+
 ## method [*stubBlock.getTransactionsById*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/stub.ts)
 <pre>
 <strong>const</strong> result: <em>Record&lt;string, Transaction&gt;</em> = <strong>await</strong> stubBlock.getTransactionsById()
@@ -48,8 +58,6 @@ support for new kinds of blockchains.
   backend,
   blockInterval,
   chainId,
-  fees,
-  identity,
   log,
   mode,
   url,
@@ -83,12 +91,6 @@ is available.</td></tr>
 <td><strong>string</strong>. Chain ID. This is a string that uniquely identifies a chain.
 A project's mainnet and testnet have different chain IDs.</td></tr>
 <tr><td valign="top">
-<strong>fees</strong></td>
-<td><strong>undefined</strong>. Default transaction fees.</td></tr>
-<tr><td valign="top">
-<strong>identity</strong></td>
-<td><strong>Identity</strong>. Signer identity.</td></tr>
-<tr><td valign="top">
 <strong>log</strong></td>
 <td><strong>Console</strong>. </td></tr>
 <tr><td valign="top">
@@ -104,15 +106,6 @@ this property contains the URL to which requests are sent.</td></tr>
 <strong>gasToken</strong></td>
 <td><strong>NativeToken</strong>. Native token of chain.</td></tr>
 <tr><td valign="top">
-<strong>address</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<strong>balance</strong></td>
-<td></td></tr>
-<tr><td valign="top">
-<strong>block</strong></td>
-<td></td></tr>
-<tr><td valign="top">
 <strong>defaultDenom</strong></td>
 <td></td></tr>
 <tr><td valign="top">
@@ -122,57 +115,97 @@ this property contains the URL to which requests are sent.</td></tr>
 <strong>nextBlock</strong></td>
 <td></td></tr></tbody></table>
 
+## method [*stubConnection.authenticate*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/stub.ts)
+<pre>
+<strong>const</strong> result: <em><a href="#">StubAgent</a></em> = stubConnection.authenticate(identity: Identity)
+</pre>
+
 ## method [*stubConnection.batch*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/stub.ts)
 Construct a transaction batch.
 <pre>
-<strong>const</strong> result: <em><a href="#">Batch&lt;StubConnection&gt;</a></em> = stubConnection.batch()
+<strong>const</strong> result: <em><a href="#">Batch&lt;StubConnection, StubAgent&gt;</a></em> = stubConnection.batch()
 </pre>
 
-## method [*stubConnection.execute*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts)
-Call a given program's transaction method.
+## method [*stubConnection.fetchBalance*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts)
+Fetch balance of 1 or many addresses in 1 or many native tokens.
 <pre>
-<strong>const</strong> result: <em>unknown</em> = <strong>await</strong> stubConnection.execute(
-  contract: <em>string | Partial&lt;ContractInstance&gt;</em>,
-  message: <em>Message</em>,
-  options: <em>{
-    execFee,
-    execMemo,
-    execSend,
-  }</em>,
-)
-</pre>
-
-## method [*stubConnection.getBalanceIn*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts)
-Get the balance in a given native token, of
-either this connection's identity's address,
-or of another given address.
-<pre>
-<strong>const</strong> result: <em>unknown</em> = <strong>await</strong> stubConnection.getBalanceIn(
-  token: <em>string</em>,
-  address: <em>string | {
-    address,
-  }</em>,
-)
-</pre>
-
-## method [*stubConnection.getBalanceOf*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts)
-Get the balance in a native token of a given address,
-either in this connection's gas token,
-or in another given token.
-<pre>
-<strong>const</strong> result: <em>unknown</em> = <strong>await</strong> stubConnection.getBalanceOf(
-  address: <em>string | {
-    address,
-  }</em>,
+<strong>const</strong> result: <em>string</em> = <strong>await</strong> stubConnection.fetchBalance(
+  address: <em>string</em>,
   token: <em>string</em>,
 )
 </pre>
+<pre>
+<strong>const</strong> result: <em>Record&lt;string, string&gt;</em> = <strong>await</strong> stubConnection.fetchBalance(
+  address: <em>string</em>,
+  tokens: <em>string</em>,
+)
+</pre>
+<pre>
+<strong>const</strong> result: <em>Record&lt;string, string&gt;</em> = <strong>await</strong> stubConnection.fetchBalance(
+  addresses: <em>string</em>,
+  token: <em>string</em>,
+)
+</pre>
+<pre>
+<strong>const</strong> result: <em>Record&lt;string, Record&gt;</em> = <strong>await</strong> stubConnection.fetchBalance(
+  addresses: <em>string</em>,
+  tokens: <em>string</em>,
+)
+</pre>
 
-## method [*stubConnection.getBlock*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts)
+## method [*stubConnection.fetchBlock*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts)
 Get info about a specific block.
 If no height is passed, gets info about the latest block.
 <pre>
-<strong>const</strong> result: <em><a href="#">Block</a></em> = <strong>await</strong> stubConnection.getBlock(height: number)
+<strong>const</strong> result: <em><a href="#">Block</a></em> = <strong>await</strong> stubConnection.fetchBlock(height: number)
+</pre>
+
+## method [*stubConnection.fetchCodeInfo*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts)
+Fetch info about 1, many, or all code IDs (uploaded binaries).
+<pre>
+<strong>const</strong> result: <em>Record&lt;string, unknown&gt;</em> = <strong>await</strong> stubConnection.fetchCodeInfo()
+</pre>
+<pre>
+<strong>const</strong> result: <em>unknown</em> = <strong>await</strong> stubConnection.fetchCodeInfo(id: string)
+</pre>
+<pre>
+<strong>const</strong> result: <em>Record&lt;string, unknown&gt;</em> = <strong>await</strong> stubConnection.fetchCodeInfo(ids: Iterable&lt;string&gt;)
+</pre>
+
+## method [*stubConnection.fetchCodeInstances*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts)
+Fetch all contracts that match one or more code IDs
+<pre>
+<strong>const</strong> result: <em>Record&lt;string, Contract&gt;</em> = <strong>await</strong> stubConnection.fetchCodeInstances(id: string)
+</pre>
+Fetch all contracts that match one or more code IDs
+<pre>
+<strong>const</strong> result: <em>Record&lt;string, InstanceType&gt;</em> = <strong>await</strong> stubConnection.fetchCodeInstances(
+  $C: <em>C</em>,
+  id: <em>string</em>,
+)
+</pre>
+Fetch all contracts that match one or more code IDs
+<pre>
+<strong>const</strong> result: <em>Record&lt;string, Record&gt;</em> = <strong>await</strong> stubConnection.fetchCodeInstances(ids: Iterable&lt;string&gt;)
+</pre>
+Fetch all contracts that match one or more code IDs
+<pre>
+<strong>const</strong> result: <em>Record&lt;string, Record&gt;</em> = <strong>await</strong> stubConnection.fetchCodeInstances(
+  $C: <em>C</em>,
+  ids: <em>Iterable&lt;string&gt;</em>,
+)
+</pre>
+Fetch all contracts that match one or more code IDs
+<pre>
+<strong>const</strong> result: <em>Record&lt;string, &gt;</em> = <strong>await</strong> stubConnection.fetchCodeInstances(ids: ???)
+</pre>
+
+## method [*stubConnection.fetchContractInfo*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts)
+<pre>
+<strong>const</strong> result: <em>unknown</em> = <strong>await</strong> stubConnection.fetchContractInfo(address: string)
+</pre>
+<pre>
+<strong>const</strong> result: <em>Record&lt;string, unknown&gt;</em> = <strong>await</strong> stubConnection.fetchContractInfo(addresses: string)
 </pre>
 
 ## method [*stubConnection.getCodeHashOfAddress*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts)
@@ -199,11 +232,6 @@ Get the code id of a given address.
 })
 </pre>
 
-## method [*stubConnection.getCodes*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts)
-<pre>
-<strong>const</strong> result: <em>Record&lt;string, UploadedCode&gt;</em> = <strong>await</strong> stubConnection.getCodes()
-</pre>
-
 ## method [*stubConnection.getContract*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts)
 Get a client handle for a specific smart contract, authenticated as as this agent.
 <pre>
@@ -212,57 +240,83 @@ Get a client handle for a specific smart contract, authenticated as as this agen
 })
 </pre>
 
-## method [*stubConnection.getContractsByCodeId*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts)
-Get client handles for all contracts that match a code ID
-<pre>
-<strong>const</strong> result: <em>Record&lt;string, Contract&gt;</em> = <strong>await</strong> stubConnection.getContractsByCodeId(id: string)
-</pre>
-<pre>
-<strong>const</strong> result: <em>Record&lt;string, InstanceType&gt;</em> = <strong>await</strong> stubConnection.getContractsByCodeId(
-  id: <em>string</em>,
-  $C: <em>C</em>,
-)
-</pre>
-
-## method [*stubConnection.getContractsByCodeIds*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts)
-Get client handles for all contracts that match multiple code IDs
-<pre>
-<strong>const</strong> result: <em>Record&lt;string, Record&gt;</em> = <strong>await</strong> stubConnection.getContractsByCodeIds(ids: Iterable&lt;string&gt;)
-</pre>
-<pre>
-<strong>const</strong> result: <em>Record&lt;string, Record&gt;</em> = <strong>await</strong> stubConnection.getContractsByCodeIds(
-  ids: <em>Iterable&lt;string&gt;</em>,
-  $C: <em>C</em>,
-)
-</pre>
-<pre>
-<strong>const</strong> result: <em>Record&lt;string, Record&gt;</em> = <strong>await</strong> stubConnection.getContractsByCodeIds(ids: Record&lt;string, C&gt;)
-</pre>
-
-## method [*stubConnection.instantiate*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts)
-Instantiate a new program from a code id, label and init message.
-<pre>
-stubConnection.instantiate(
-  contract: <em>string | Partial&lt;UploadedCode&gt;</em>,
-  options: <em>Partial&lt;ContractInstance&gt;</em>,
-)
-</pre>
-
 ## method [*stubConnection.query*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts)
 Query a contract.
 <pre>
 <strong>const</strong> result: <em>Q</em> = <strong>await</strong> stubConnection.query(
-  contract: <em>string | {
+  contract: <em>string</em>,
+  message: <em>Message</em>,
+)
+</pre>
+<pre>
+<strong>const</strong> result: <em>Q</em> = <strong>await</strong> stubConnection.query(
+  contract: <em>{
     address,
   }</em>,
   message: <em>Message</em>,
 )
 </pre>
 
-## method [*stubConnection.send*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts)
+## method [*stubConnection.gas*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts)
+Native token of chain.
+<pre>
+<strong>const</strong> result: <em><a href="#">TokenAmount</a></em> = stubConnection.gas(amount: string | number)
+</pre>
+
+# class *StubAgent*
+<pre>
+<strong>const</strong> stubAgent = new StubAgent(properties: Partial&lt;Agent&gt;)
+</pre>
+
+<table><tbody>
+<tr><td valign="top">
+<strong>connection</strong></td>
+<td><strong>StubConnection</strong>. </td></tr>
+<tr><td valign="top">
+<strong>fees</strong></td>
+<td><strong>undefined</strong>. Default transaction fees.</td></tr>
+<tr><td valign="top">
+<strong>identity</strong></td>
+<td><strong>Identity</strong>. </td></tr>
+<tr><td valign="top">
+<strong>log</strong></td>
+<td><strong>Console</strong>. </td></tr>
+<tr><td valign="top">
+<strong>address</strong></td>
+<td></td></tr></tbody></table>
+
+## method [*stubAgent.execute*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts)
+Call a given program's transaction method.
+<pre>
+<strong>const</strong> result: <em>unknown</em> = <strong>await</strong> stubAgent.execute(
+  contract: <em>string | Partial&lt;ContractInstance&gt;</em>,
+  message: <em>Message</em>,
+  options: <em>{
+    execFee,
+    execMemo,
+    execSend,
+  }</em>,
+)
+</pre>
+
+## method [*stubAgent.fetchBalance*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts)
+<pre>
+<strong>const</strong> result: <em>void</em> = <strong>await</strong> stubAgent.fetchBalance(tokens: string | string)
+</pre>
+
+## method [*stubAgent.instantiate*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts)
+Instantiate a new program from a code id, label and init message.
+<pre>
+stubAgent.instantiate(
+  contract: <em>string | Partial&lt;UploadedCode&gt;</em>,
+  options: <em>Partial&lt;ContractInstance&gt;</em>,
+)
+</pre>
+
+## method [*stubAgent.send*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts)
 Send native tokens to 1 recipient.
 <pre>
-<strong>const</strong> result: <em>unknown</em> = <strong>await</strong> stubConnection.send(
+<strong>const</strong> result: <em>unknown</em> = <strong>await</strong> stubAgent.send(
   recipient: <em>string | {
     address,
   }</em>,
@@ -274,10 +328,10 @@ Send native tokens to 1 recipient.
 )
 </pre>
 
-## method [*stubConnection.upload*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts)
+## method [*stubAgent.upload*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts)
 Upload a contract's code, generating a new code id/hash pair.
 <pre>
-stubConnection.upload(
+stubAgent.upload(
   code: <em>string | Uint8Array | URL | Partial&lt;CompiledCode&gt;</em>,
   options: <em>{
     reupload,
@@ -286,12 +340,6 @@ stubConnection.upload(
     uploadStore,
   }</em>,
 )
-</pre>
-
-## method [*stubConnection.gas*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts)
-Native token of chain.
-<pre>
-<strong>const</strong> result: <em><a href="#">TokenAmount</a></em> = stubConnection.gas(amount: string | number)
 </pre>
 
 # class *StubBackend*
@@ -345,7 +393,10 @@ Instead, see `Connection`, `Devnet`, and their subclasses.
 
 ## method [*stubBackend.connect*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/stub.ts)
 <pre>
-<strong>const</strong> result: <em><a href="#">Connection</a></em> = <strong>await</strong> stubBackend.connect(parameter: string | Partial&lt;&gt;)
+<strong>const</strong> result: <em><a href="#">Connection</a></em> = <strong>await</strong> stubBackend.connect()
+</pre>
+<pre>
+<strong>const</strong> result: <em><a href="#">Agent</a></em> = <strong>await</strong> stubBackend.connect(parameter: string | Partial&lt;&gt;)
 </pre>
 
 ## method [*stubBackend.execute*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/stub.ts)

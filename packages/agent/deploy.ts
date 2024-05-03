@@ -4,7 +4,7 @@
 import { Logged, Console, timestamp, bold, assign, hideProperties } from './core'
 import type { Into } from './core'
 import { Contract } from './chain'
-import type { Connection, ChainId, Label, Message, TxHash } from './chain'
+import type { Connection, Agent, ChainId, Label, Message, TxHash } from './chain'
 import type { Address } from './identity'
 import * as Token from './token'
 import type * as Store from './store'
@@ -23,9 +23,9 @@ export class ContractCode extends Logged {
   source?:   SourceCode
   compiler?: Compiler
   compiled?: CompiledCode
-  uploader?: Connection|Address
+  uploader?: Agent|Address
   uploaded?: UploadedCode
-  deployer?: Connection|Address
+  deployer?: Agent|Address
 
   constructor (properties?: Partial<ContractCode>) {
     super(properties)
@@ -84,8 +84,8 @@ export class ContractCode extends Logged {
     uploader = this.uploader,
     reupload = rebuild,
     ...uploadOptions
-  }: Parameters<this["compile"]>[0] & Parameters<Connection["upload"]>[1] & {
-    uploader?: Address|{ upload: Connection["upload"] }
+  }: Parameters<this["compile"]>[0] & Parameters<Agent["upload"]>[1] & {
+    uploader?: Address|{ upload: Agent["upload"] }
     reupload?: boolean,
   } = {}): Promise<UploadedCode & {
     codeId: CodeId
@@ -116,7 +116,7 @@ export class UploadedCode {
   /** TXID of transaction that performed the upload. */
   uploadTx?:  TxHash
   /** address of agent that performed the upload. */
-  uploadBy?:  Address|Connection
+  uploadBy?:  Address|Agent
   /** address of agent that performed the upload. */
   uploadGas?: string|number
 
@@ -146,7 +146,7 @@ export class UploadedCode {
   } {
     let { codeHash, chainId, codeId, uploadTx, uploadBy, uploadGas } = this
     if ((typeof this.uploadBy === 'object')) {
-      uploadBy = (uploadBy as Connection).identity?.address
+      uploadBy = (uploadBy as Agent).identity?.address
     }
     return { codeHash, chainId, codeId, uploadTx, uploadBy: uploadBy as string, uploadGas }
   }
@@ -223,7 +223,7 @@ export class ContractInstance extends DeploymentUnit {
   /** Contents of init message. */
   initMsg?:  Into<Message>
   /** Address of agent that performed the init tx. */
-  initBy?:   Address|Connection
+  initBy?:   Address|Agent
   /** Native tokens to send to the new contract. */
   initSend?: Token.ICoin[]
   /** Fee to use for init. */
@@ -253,8 +253,8 @@ export class ContractInstance extends DeploymentUnit {
     compiler = this.compiler,
     rebuild  = false,
     ...initOptions
-  }: Parameters<this["upload"]>[0] & Parameters<Connection["instantiate"]>[1] & {
-    deployer?: Address|{ instantiate: Connection["instantiate"] }
+  }: Parameters<this["upload"]>[0] & Parameters<Agent["instantiate"]>[1] & {
+    deployer?: Address|{ instantiate: Agent["instantiate"] }
     redeploy?: boolean
   } = {}): Promise<ContractInstance & {
     address: Address

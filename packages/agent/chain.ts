@@ -105,6 +105,7 @@ export abstract class Backend extends Logged {
     assign(this, properties, ["chainId"])
   }
 
+  abstract connect (): Promise<Connection>
   abstract connect (parameter?: string|Partial<Identity>): Promise<Connection>
 
   abstract getIdentity (name: string): Promise<{ address?: Address, mnemonic?: string }>
@@ -122,52 +123,47 @@ export abstract class Connection extends Endpoint {
   static gas (amount: number|Token.Uint128): Token.Amount {
     return this.gasToken.amount(String(amount))
   }
-  /** Signer identity. */
-  identity?: Identity
-  /** Default transaction fees. */
-  fees?: { send?: Token.IFee, upload?: Token.IFee, init?: Token.IFee, exec?: Token.IFee }
   /** Chain mode. */
   mode?: 'Mainnet'|'Testnet'|'Devnet'|'Mocknet'
 
   constructor (properties: Partial<Connection> = {}) {
     super(properties)
-    assign(this, properties, ['identity', 'fees'])
+    assign(this, properties, ['mode'])
+
     this.log.label = new.target.constructor.name
     const chainColor = randomColor({ // url takes priority in determining color
       luminosity: 'dark', seed: this.chainId||this.url
     })
     this.log.label = colors.bgHex(chainColor).whiteBright(` ${this.chainId||this.url} `)
-    if ((this.identity && (this.identity.name||this.identity.address))) {
-      const identityColor = randomColor({ // address takes priority in determining color
-        luminosity: 'dark', seed: this.identity.address||this.identity.name
-      })
-      this.log.label += ' '
-      this.log.label += colors.bgHex(identityColor).whiteBright(
-        ` ${this.identity.name||this.identity.address} `
-      )
-    }
+
+    //if ((this.identity && (this.identity.name||this.identity.address))) {
+      //const identityColor = randomColor({ // address takes priority in determining color
+        //luminosity: 'dark', seed: this.identity.address||this.identity.name
+      //})
+      //this.log.label += ' '
+      //this.log.label += colors.bgHex(identityColor).whiteBright(
+        //` ${this.identity.name||this.identity.address} `
+      //)
+    //}
   }
 
   get [Symbol.toStringTag] () {
     let tag = super[Symbol.toStringTag]
-    if ((this.identity && (this.identity.name||this.identity.address))) {
-      let myTag = `${this.identity.name||this.identity.address}`
-      const myColor = randomColor({ luminosity: 'dark', seed: myTag })
-      myTag = colors.bgHex(myColor).whiteBright.bold(myTag)
-      tag = [tag, myTag].filter(Boolean).join(':')
-    }
+    //if ((this.identity && (this.identity.name||this.identity.address))) {
+      //let myTag = `${this.identity.name||this.identity.address}`
+      //const myColor = randomColor({ luminosity: 'dark', seed: myTag })
+      //myTag = colors.bgHex(myColor).whiteBright.bold(myTag)
+      //tag = [tag, myTag].filter(Boolean).join(':')
+    //}
     return tag
-  }
-
-  /** The address of this connection's default identity. */
-  get address (): Address|undefined {
-    return this.identity?.address
   }
 
   /** The default gas token of the chain. */
   get defaultDenom (): string {
     return (this.constructor as Function & {gasToken: Token.Native}).gasToken?.id
   }
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////
 
   /** Time to ping for next block. */
   blockInterval = 250
@@ -207,75 +203,196 @@ export abstract class Connection extends Endpoint {
     })
   }
 
-  protected abstract doGetHeight (): Promise<number>
-
   /** Get the current block height. */
   get height (): Promise<number> {
     this.log.debug('Querying block height')
-    return this.doGetHeight()
+    return this.fetchHeightImpl()
   }
-
-  protected abstract doGetBlockInfo (height?: number): Promise<Block>
+  protected abstract fetchHeightImpl (): Promise<number>
 
   /** Get info about a specific block.
     * If no height is passed, gets info about the latest block. */
-  getBlock (height?: number): Promise<Block> {
+  fetchBlock (height?: number): Promise<Block> {
     this.log.debug(height ? `Querying block ${height}` : `Querying latest block`)
-    return this.doGetBlockInfo(height) as Promise<Block>
+    return this.fetchBlockInfoImpl(height) as Promise<Block>
+  }
+  protected abstract fetchBlockInfoImpl (height?: number): Promise<Block>
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////
+
+  /** Query a contract. */
+  query <Q> (contract: Address, message: Message): Promise<Q>
+  query <Q> (contract: { address: Address }, message: Message): Promise<Q>
+  async query <Q> (contract: Address|{ address: Address }, message: Message): Promise<Q> {
+    const _contract = (typeof contract === 'string') ? { address: contract } : contract
+    const result = await timed(
+      ()=>this.queryImpl(_contract, message),
+      ({ elapsed, result }) => this.log.debug(
+        `Queried in ${bold(elapsed)}s: `, JSON.stringify(result)
+      )
+    )
+    return result as Q
   }
 
-  get block (): Promise<Block> {
-    return this.getBlock()
+  protected abstract queryImpl (contract: { address: Address }, message: Message):
+    Promise<unknown>
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////
+
+  /** Fetch balance of 1 or many addresses in 1 or many native tokens. */
+  fetchBalance (address: Address, token: string):
+    Promise<Token.Uint128>
+  fetchBalance (address: Address, tokens?: string[]):
+    Promise<Record<string, Token.Uint128>>
+  fetchBalance (addresses: Address[], token: string):
+    Promise<Record<Address, Token.Uint128>>
+  fetchBalance (addresses: Address[], tokens?: string):
+    Promise<Record<Address, Record<string, Token.Uint128>>>
+  async fetchBalance (...args: unknown[]): Promise<unknown> {
+    throw new Error('unimplemented!')
+
+    //[>* Get balance of current identity in main token. <]
+    //get balance () {
+      //if (!this.identity?.address) {
+        //throw new Error('not authenticated, use .getBalance(token, address)')
+      //} else if (!this.defaultDenom) {
+        //throw new Error('no default token for this chain, use .getBalance(token, address)')
+      //} else {
+        //return this.getBalanceOf(this.identity.address)
+      //}
+    //}
+
+    /** Get the balance in a native token of a given address,
+      * either in this connection's gas token,
+      * or in another given token. */
+    //getBalanceOf (address: Address|{ address: Address }, token?: string) {
+      //if (!address) {
+        //throw new Error('pass (address, token?) to getBalanceOf')
+      //}
+      //token ??= this.defaultDenom
+      //if (!token) {
+        //throw new Error('no token for balance query')
+      //}
+      //const addr = (typeof address === 'string') ? address : address.address
+      //if (addr === this.identity?.address) {
+        //this.log.debug('Querying', bold(token), 'balance')
+      //} else {
+        //this.log.debug('Querying', bold(token), 'balance of', bold(addr))
+      //}
+      //return timed(
+        //this.doGetBalance.bind(this, token, addr),
+        //({ elapsed, result }) => this.log.debug(
+          //`Queried in ${elapsed}s: ${bold(address)} has ${bold(result)} ${token}`
+        //)
+      //)
+    //}
+
+    /** Get the balance in a given native token, of
+      * either this connection's identity's address,
+      * or of another given address. */
+    //getBalanceIn (token: string, address?: Address|{ address: Address }) {
+      //if (!token) {
+        //throw new Error('pass (token, address?) to getBalanceIn')
+      //}
+      //address ??= this.identity?.address
+      //if (!address) {
+        //throw new Error('no address for balance query')
+      //}
+      //const addr = (typeof address === 'string') ? address : address.address
+      //if (addr === this.identity?.address) {
+        //this.log.debug('Querying', bold(token), 'balance')
+      //} else {
+        //this.log.debug('Querying', bold(token), 'balance of', bold(addr))
+      //}
+      //return timed(
+        //this.doGetBalance.bind(this, token, addr),
+        //({ elapsed, result }) => this.log.debug(
+          //`Queried in ${elapsed}s: balance of ${bold(address)} is ${bold(result)}`
+        //)
+      //)
+    //}
   }
+  protected abstract fetchBalanceImpl (token?: string, address?: string):
+    Promise<string|number|bigint>
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////
+
+  /** Fetch info about 1, many, or all code IDs (uploaded binaries). */
+  fetchCodeInfo (): Promise<Record<Deploy.CodeId, unknown>>
+  fetchCodeInfo (id: Deploy.CodeId): Promise<unknown>
+  fetchCodeInfo (ids: Iterable<Deploy.CodeId>): Promise<Record<Deploy.CodeId, unknown>>
+  async fetchCodeInfo (...args: unknown[]): Promise<unknown> {
+    if (args.length === 0) {
+      this.log.debug('Querying all codes...')
+      return this.fetchCodeInfoImpl({})
+    } else if (args.length === 1) {
+      if (args[0] instanceof Array) {
+        return this.fetchCodeInfoImpl({ ids: args[0] })
+      } else {
+        return this.fetchCodeInfoImpl({ ids: [args[0] as Deploy.CodeId] })
+      }
+    } else {
+      throw new Error('fetchCodeInfo takes 0 or 1 arguments')
+    }
+  }
+  /** Chain-specific implementation of fetchCodeInfo. */
+  protected abstract fetchCodeInfoImpl (options: { ids?: Deploy.CodeId[] }|undefined):
+    Promise<Record<Deploy.CodeId, Deploy.UploadedCode>>
 
   /** Get the code id of a given address. */
   getCodeId (contract: Address|{ address: Address }): Promise<Deploy.CodeId> {
     const address = (typeof contract === 'string') ? contract : contract.address
     this.log.debug(`Querying code ID of ${bold(address)}`)
     return timed(
-      this.doGetCodeId.bind(this, address),
+      this.fetchCodeIdImpl.bind(this, address),
       ({ elapsed, result }) => this.log.debug(
         `Queried in ${bold(elapsed)}: ${bold(address)} is code id ${bold(result)}`
       )
     )
   }
 
-  protected abstract doGetCodeId (
-    contract: Address
-  ): Promise<Deploy.CodeId>
+  protected abstract fetchCodeIdImpl (contract: Address):
+    Promise<Deploy.CodeId>
 
   /** Get the code hash of a given code id. */
   getCodeHashOfCodeId (contract: Deploy.CodeId|{ codeId: Deploy.CodeId }): Promise<Code.CodeHash> {
     const codeId = (typeof contract === 'object') ? contract.codeId : contract
     this.log.debug(`Querying code hash of code id ${bold(codeId)}`)
     return timed(
-      this.doGetCodeHashOfCodeId.bind(this, codeId),
+      this.fetchCodeHashOfCodeIdImpl.bind(this, codeId),
       ({ elapsed, result }) => this.log.debug(
         `Queried in ${bold(elapsed)}: code hash of code id ${bold(codeId)} is ${bold(result)}`
       )
     )
   }
 
-  protected abstract doGetCodeHashOfCodeId (
-    codeId: Deploy.CodeId
-  ): Promise<Code.CodeHash>
+  protected abstract fetchCodeHashOfCodeIdImpl (codeId: Deploy.CodeId):
+    Promise<Code.CodeHash>
 
+  /////////////////////////////////////////////////////////////////////////////////////////////////
+
+  fetchContractInfo (address: Address): Promise<unknown>
+  fetchContractInfo (addresses: Address[]): Promise<Record<Address, unknown>>
+  async fetchContractInfo (...args: unknown[]): Promise<unknown> {
+    throw new Error("unimplemented!")
+    return {}
+  }
+  /** Chain-specific implementation of fetchContractInfo. */
+  protected abstract fetchContractInfoImpl (): Promise<unknown>
   /** Get the code hash of a given address. */
   getCodeHashOfAddress (contract: Address|{ address: Address }): Promise<Code.CodeHash> {
     const address = (typeof contract === 'string') ? contract : contract.address
     this.log.debug(`Querying code hash of address ${bold(address)}`)
     return timed(
-      this.doGetCodeHashOfAddress.bind( this, address),
+      this.fetchCodeHashOfAddressImpl.bind( this, address),
       ({ elapsed, result }) => this.log.debug(
         `Queried in ${bold(elapsed)}: code hash of address ${bold(address)} is ${bold(result)}`
       )
     )
   }
-
-  protected abstract doGetCodeHashOfAddress (
+  protected abstract fetchCodeHashOfAddressImpl (
     contract: Address
   ): Promise<Code.CodeHash>
-
   /** Get a client handle for a specific smart contract, authenticated as as this agent. */
   getContract (
     options: Address|{ address: Address }): Contract
@@ -291,142 +408,98 @@ export abstract class Connection extends Endpoint {
     }) as InstanceType<C>
   }
 
-  getCodes (): Promise<Record<Deploy.CodeId, Deploy.UploadedCode>> {
-    this.log.debug('Querying all codes...')
-    return this.doGetCodes()
-  }
+  /////////////////////////////////////////////////////////////////////////////////////////////////
 
-  protected abstract doGetCodes ():
-    Promise<Record<Deploy.CodeId, Deploy.UploadedCode>>
-
-  /** Get client handles for all contracts that match a code ID */
-  getContractsByCodeId (
-    id: Deploy.CodeId): Promise<Record<Address, Contract>>
-  getContractsByCodeId <C extends typeof Contract> (
-    id: Deploy.CodeId, $C: C): Promise<Record<Address, InstanceType<C>>>
-  getContractsByCodeId <C extends typeof Contract> (
-    id: Deploy.CodeId, $C: C = Contract as C
-  ): Promise<Record<Address, InstanceType<C>>> {
-    this.log.debug(`Querying contracts with code id ${id}...`)
-    return this.doGetContractsByCodeId(id).then(contracts=>{
-      const results: Record<Address, InstanceType<C>> = {}
-      for (const instance of contracts) {
-        results[instance.address] = new $C({ instance, connection: this }) as InstanceType<C>
-      }
-      return results
-    })
-  }
-
-  protected abstract doGetContractsByCodeId (
-    id: Deploy.CodeId
-  ): Promise<Iterable<{ address: Address }>>
-
-  /** Get client handles for all contracts that match multiple code IDs */
-  getContractsByCodeIds (
-    ids: Iterable<Deploy.CodeId>): Promise<Record<Deploy.CodeId, Record<Address, Contract>>>
-  getContractsByCodeIds <C extends typeof Contract> (
-    ids: Iterable<Deploy.CodeId>, $C?: C): Promise<Record<Deploy.CodeId, Record<Address, InstanceType<C>>>>
-  getContractsByCodeIds <C extends typeof Contract> (
-    ids: Record<Deploy.CodeId, C>): Promise<Record<Deploy.CodeId, Record<Address, InstanceType<C>>>>
-  async getContractsByCodeIds (...args: any[]) {
-    if (!args[0]) {
-      throw new Error('Invalid arguments. Pass Deploy.CodeId[] or Record<Deploy.CodeId, typeof Contract>')
+  fetchCodeInstances (id: Deploy.CodeId):
+    Promise<Record<Address, Contract>>
+  fetchCodeInstances <C extends typeof Contract> ($C: C, id: Deploy.CodeId):
+    Promise<Record<Address, InstanceType<C>>>
+  fetchCodeInstances (ids: Iterable<Deploy.CodeId>):
+    Promise<Record<Deploy.CodeId, Record<Address, Contract>>>
+  fetchCodeInstances <C extends typeof Contract> ($C: C, ids: Iterable<Deploy.CodeId>):
+    Promise<Record<Deploy.CodeId, Record<Address, InstanceType<C>>>>
+  fetchCodeInstances (ids: { [id: Deploy.CodeId]: typeof Contract }):
+    Promise<Record<Deploy.CodeId, { [id in keyof typeof ids]: InstanceType<typeof ids[id]> }>>
+  /** Fetch all contracts that match one or more code IDs */
+  async fetchCodeInstances (...args: unknown[]): Promise<unknown> {
+    let $C = Contract
+    if (typeof args[0] === 'function') {
+      $C = args.shift() as typeof Contract
     }
-    const result: Record<Deploy.CodeId, Record<Address, Contract>> = {}
-    if (args[0][Symbol.iterator]) {
-      this.log.debug(`Querying contracts with code ids ${[...args[0]].join(', ')}...`)
-      for (const codeId of args[0]) {
-        result[codeId] = await this.getContractsByCodeId(codeId, args[1])
+
+    if (!args[0]) {
+      throw new Error('Invalid arguments')
+    }
+
+    if (!!(args[0][Symbol.iterator])) {
+      const result: Record<Deploy.CodeId, Record<Address, Contract>> = {}
+      const ids = [...args[0] as Deploy.CodeId[]]
+      this.log.debug(`Querying contracts with code ids ${ids.join(', ')}...`)
+      for (const codeId of ids) {
+        result[codeId] = {}
+        for (const instance of await this.fetchCodeInstancesImpl(codeId)) {
+          result[codeId][instance.address] = new $C(instance)
+        }
       }
-    } else {
+      return result
+    }
+
+    if (typeof args[0] === 'object') {
+      const result: Record<Deploy.CodeId, Record<Address, Contract>> = {}
       this.log.debug(`Querying contracts with code ids ${Object.keys(args[0]).join(', ')}...`)
       for (const [codeId, $C] of Object.entries(args[0])) {
-        result[codeId] = await this.getContractsByCodeId(codeId, args[1])
+        result[codeId] = {}
+        for (const instance of await this.fetchCodeInstancesImpl(codeId)) {
+          result[codeId][instance.address] = new $C(instance)
+        }
       }
+      return result
     }
-    return {}
+
+    if ((typeof args[0] === 'number')||(typeof args[0] === 'string')) {
+      const id = args[0]
+      this.log.debug(`Querying contracts with code id ${id}...`)
+      const result = {}
+      for (const instance of await this.fetchCodeInstancesImpl(id as string)) {
+        result[instance.address] = new $C(instance)
+      }
+      return result
+    }
+    
+    throw new Error('Invalid arguments')
+  }
+  /** Chain-specific implementation of fetchCodeInstances. */
+  protected abstract fetchCodeInstancesImpl (id: Deploy.CodeId):
+    Promise<Iterable<{ address: Address }>>
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////
+
+  abstract authenticate (identity: Identity): Agent
+
+  /** Construct a transaction batch. */
+  batch (): Batch<Connection, Agent> {
+    return new Batch({ connection: this })
+  }
+}
+
+export abstract class Agent extends Logged {
+  connection: Connection
+  identity:   Identity
+  /** Default transaction fees. */
+  fees?: { send?: Token.IFee, upload?: Token.IFee, init?: Token.IFee, exec?: Token.IFee }
+
+  constructor (properties: Partial<Agent>) {
+    super()
+    assign(this, properties, ["connection", "identity", "fees"])
   }
 
-  /** Get balance of current identity in main token. */
-  get balance () {
-    if (!this.identity?.address) {
-      throw new Error('not authenticated, use .getBalance(token, address)')
-    } else if (!this.defaultDenom) {
-      throw new Error('no default token for this chain, use .getBalance(token, address)')
-    } else {
-      return this.getBalanceOf(this.identity.address)
-    }
+  get address (): Address|undefined {
+    return this.identity?.address
   }
 
-  /** Get the balance in a native token of a given address,
-    * either in this connection's gas token,
-    * or in another given token. */
-  getBalanceOf (address: Address|{ address: Address }, token?: string) {
-    if (!address) {
-      throw new Error('pass (address, token?) to getBalanceOf')
-    }
-    token ??= this.defaultDenom
-    if (!token) {
-      throw new Error('no token for balance query')
-    }
-    const addr = (typeof address === 'string') ? address : address.address
-    if (addr === this.identity?.address) {
-      this.log.debug('Querying', bold(token), 'balance')
-    } else {
-      this.log.debug('Querying', bold(token), 'balance of', bold(addr))
-    }
-    return timed(
-      this.doGetBalance.bind(this, token, addr),
-      ({ elapsed, result }) => this.log.debug(
-        `Queried in ${elapsed}s: ${bold(address)} has ${bold(result)} ${token}`
-      )
-    )
+  async fetchBalance (tokens?: string[]|string): Promise<void> {
+    throw new Error("unimplemented!")
   }
-
-  /** Get the balance in a given native token, of
-    * either this connection's identity's address,
-    * or of another given address. */
-  getBalanceIn (token: string, address?: Address|{ address: Address }) {
-    if (!token) {
-      throw new Error('pass (token, address?) to getBalanceIn')
-    }
-    address ??= this.identity?.address
-    if (!address) {
-      throw new Error('no address for balance query')
-    }
-    const addr = (typeof address === 'string') ? address : address.address
-    if (addr === this.identity?.address) {
-      this.log.debug('Querying', bold(token), 'balance')
-    } else {
-      this.log.debug('Querying', bold(token), 'balance of', bold(addr))
-    }
-    return timed(
-      this.doGetBalance.bind(this, token, addr),
-      ({ elapsed, result }) => this.log.debug(
-        `Queried in ${elapsed}s: balance of ${bold(address)} is ${bold(result)}`
-      )
-    )
-  }
-
-  protected abstract doGetBalance (
-    token?: string, address?: string
-  ): Promise<string|number|bigint>
-
-  /** Query a contract. */
-  async query <Q> (contract: Address|{ address: Address }, message: Message): Promise<Q> {
-    const _contract = (typeof contract === 'string') ? { address: contract } : contract
-    const result = await timed(
-      ()=>this.doQuery(_contract, message),
-      ({ elapsed, result }) => this.log.debug(
-        `Queried in ${bold(elapsed)}s: `, JSON.stringify(result)
-      )
-    )
-    return result as Q
-  }
-
-  protected abstract doQuery (
-    contract: { address: Address }, message: Message
-  ): Promise<unknown>
 
   /** Send native tokens to 1 recipient. */
   async send (
@@ -445,18 +518,16 @@ export abstract class Connection extends Endpoint {
       ` ${amounts.map(x=>x.toString()).join(', ')}`
     )
     return await timed(
-      ()=>this.doSend(recipient as string, amounts.map(
+      ()=>this.sendImpl(recipient as string, amounts.map(
         amount=>(amount instanceof Token.Amount)?amount.asCoin():amount
       ), options),
       t=>`Sent in ${bold(t)}s`
     )
   }
-
-  protected abstract doSend (
-    recipient: Address, amounts: Token.ICoin[], options?: Parameters<Connection["send"]>[2]
+  protected abstract sendImpl (
+    recipient: Address, amounts: Token.ICoin[], options?: Parameters<Agent["send"]>[2]
   ): Promise<unknown>
-
-  protected abstract doSendMany (
+  protected abstract sendManyImpl (
     outputs: [Address, Token.ICoin[]][], options?: unknown
   ): Promise<unknown>
 
@@ -473,7 +544,6 @@ export abstract class Connection extends Endpoint {
     chainId: ChainId,
     codeId:  Deploy.CodeId
   }> {
-
     let template: Uint8Array
     if (code instanceof Uint8Array) {
       template = code
@@ -491,25 +561,21 @@ export abstract class Connection extends Endpoint {
         bold(code.codeHash), `(${bold(String(code.codeData?.length))} bytes`
       )
     }
-
     this.log.debug(`Uploading ${bold((code as any).codeHash)}`)
     const result = await timed(
-      this.doUpload.bind(this, template, options),
+      this.uploadImpl.bind(this, template, options),
       ({elapsed, result}: any) => this.log.debug(
         `Uploaded in ${bold(elapsed)}:`,
         `code with hash ${bold(result.codeHash)} as code id ${bold(String(result.codeId))}`,
       ))
-
     return new Deploy.UploadedCode({
       ...template, ...result as any
     }) as Deploy.UploadedCode & {
       chainId: ChainId, codeId: Deploy.CodeId,
     }
-
   }
-
-  protected abstract doUpload (
-    data: Uint8Array, options: Parameters<Connection["upload"]>[1]
+  protected abstract uploadImpl (
+    data: Uint8Array, options: Parameters<Agent["upload"]>[1]
   ): Promise<Partial<Deploy.UploadedCode & {
     chainId: ChainId,
     codeId:  Deploy.CodeId
@@ -544,7 +610,7 @@ export abstract class Connection extends Endpoint {
     }
     const { codeId, codeHash } = contract
     const result = await timed(
-      () => into(options.initMsg).then(initMsg=>this.doInstantiate(codeId, {
+      () => into(options.initMsg).then(initMsg=>this.instantiateImpl(codeId, {
         codeHash, ...options, initMsg
       })),
       ({ elapsed, result }) => this.log.debug(
@@ -560,7 +626,7 @@ export abstract class Connection extends Endpoint {
     }
   }
 
-  protected abstract doInstantiate (
+  protected abstract instantiateImpl (
     codeId: Deploy.CodeId, options: Partial<Deploy.ContractInstance>
   ): Promise<Deploy.ContractInstance & { address: Address, }>
 
@@ -579,7 +645,7 @@ export abstract class Connection extends Endpoint {
     const { address } = contract
     let method = (typeof message === 'string') ? message : Object.keys(message||{})[0]
     return timed(
-      () => this.doExecute(contract as { address: Address }, message, options),
+      () => this.executeImpl(contract as { address: Address }, message, options),
       ({ elapsed }) => this.log.debug(
         `Executed in ${bold(elapsed)}:`,
         `tx ${bold(method||'(???)')} of ${bold(address)}`
@@ -587,14 +653,11 @@ export abstract class Connection extends Endpoint {
     )
   }
 
-  protected abstract doExecute (
-    contract: { address: Address }, message: Message, options: Parameters<Connection["execute"]>[2]
+  protected abstract executeImpl (
+    contract: { address: Address },
+    message: Message,
+    options: Parameters<Agent["execute"]>[2]
   ): Promise<unknown>
-
-  /** Construct a transaction batch. */
-  batch (): Batch<typeof this> {
-    return new Batch({ connection: this })
-  }
 }
 
 /** The building block of a blockchain.
@@ -617,11 +680,13 @@ export abstract class Block {
     hideProperties(this, "block")
   }
 
-  abstract getTransactionsById ():
-    Promise<Record<string, Transaction>>
-
-  abstract getTransactionsInOrder ():
+  async fetchTransactions ():
     Promise<Transaction[]>
+  async fetchTransactions (options: { byId: true }):
+    Promise<Record<string, Transaction>>
+  async fetchTransactions (...args: unknown[]): Promise<unknown> {
+    return []
+  }
 }
 
 /** Base class representing a particular instance of a smart contract.
@@ -633,9 +698,15 @@ export class Contract extends Logged {
   /** Connection to the chain on which this contract is deployed. */
   connection?: Connection
 
+  agent?: Agent
+
   instance?: { address?: Address }
 
-  constructor (properties: Address|Partial<Contract>) {
+  get address (): Address|undefined {
+    return this.instance?.address
+  }
+
+  constructor (properties: Partial<Contract>) {
     super((typeof properties === 'string')?{}:properties)
     if (typeof properties === 'string') {
       properties = { instance: { address: properties } }
@@ -660,17 +731,17 @@ export class Contract extends Logged {
   }
 
   /** Execute a transaction on the specified instance as the specified Connection. */
-  execute (message: Message, options: Parameters<Connection["execute"]>[2] = {}): Promise<unknown> {
+  execute (message: Message, options: Parameters<Agent["execute"]>[2] = {}): Promise<unknown> {
     if (!this.connection) {
       throw new Error("can't transact with instance without connection")
     }
-    if (!this.connection.execute) {
+    if (!this.agent?.execute) {
       throw new Error("can't transact with instance without authorizing the connection")
     }
     if (!this.instance?.address) {
       throw new Error("can't transact with instance without address")
     }
-    return this.connection.execute(
+    return this.agent?.execute(
       this.instance as Deploy.ContractInstance & { address: Address }, message, options
     )
   }
