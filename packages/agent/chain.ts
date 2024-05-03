@@ -336,11 +336,14 @@ export abstract class Connection extends Endpoint {
   /////////////////////////////////////////////////////////////////////////////////////////////////
 
   /** Fetch info about all code IDs uploaded to the chain. */
-  fetchCodeInfo (): Promise<Record<Deploy.CodeId, unknown>>
+  fetchCodeInfo ():
+    Promise<Record<Deploy.CodeId, unknown>>
   /** Fetch info about a single code ID. */
-  fetchCodeInfo (id: Deploy.CodeId): Promise<unknown>
+  fetchCodeInfo (id: Deploy.CodeId):
+    Promise<unknown>
   /** Fetch info about multiple code IDs. */
-  fetchCodeInfo (ids: Iterable<Deploy.CodeId>): Promise<Record<Deploy.CodeId, unknown>>
+  fetchCodeInfo (ids: Iterable<Deploy.CodeId>):
+    Promise<Record<Deploy.CodeId, unknown>>
   async fetchCodeInfo (...args: unknown[]): Promise<unknown> {
     if (args.length === 0) {
       this.log.debug('Querying all codes...')

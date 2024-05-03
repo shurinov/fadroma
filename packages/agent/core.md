@@ -28,7 +28,7 @@
 <strong>stackTraceLimit</strong></td>
 <td><strong>number</strong>. </td></tr></tbody></table>
 
-## method [*error.captureStackTrace*](https://github.com/hackbg/fadroma/tree/v2/node_modules/.pnpm/@types+node@20.10.3/node_modules/@types/node/globals.d.ts)
+## method [*error.captureStackTrace*](https://github.com/hackbg/fadroma/tree/v2/node_modules/.pnpm/@types+node@20.10.3/node_modules/@types/node/globals.d.ts#L21)
 Create .stack property on a target object
 <pre>
 <strong>const</strong> result: <em>void</em> = error.captureStackTrace(
@@ -37,7 +37,7 @@ Create .stack property on a target object
 )
 </pre>
 
-## method [*error.define*](https://github.com/hackbg/fadroma/tree/v2/toolbox/oops/oops.ts)
+## method [*error.define*](https://github.com/hackbg/fadroma/tree/v2/toolbox/oops/oops.ts#L6)
 Define an error subclass.
 <pre>
 error.define(

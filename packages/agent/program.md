@@ -179,23 +179,23 @@ An object representing a given compiled binary on the local filesystem.
 <strong>canUploadInfo</strong></td>
 <td></td></tr></tbody></table>
 
-## method [*localCompiledCode.computeHash*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/program.browser.ts)
+## method [*localCompiledCode.computeHash*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/program.browser.ts#L262)
 Compute the code hash if missing; throw if different.
 <pre>
 localCompiledCode.computeHash()
 </pre>
 
-## method [*localCompiledCode.fetch*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/program.browser.ts)
+## method [*localCompiledCode.fetch*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/program.browser.ts#L226)
 <pre>
 <strong>const</strong> result: <em>Uint8Array</em> = <strong>await</strong> localCompiledCode.fetch()
 </pre>
 
-## method [*localCompiledCode.serialize*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/program.browser.ts)
+## method [*localCompiledCode.serialize*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/program.browser.ts#L194)
 <pre>
 localCompiledCode.serialize()
 </pre>
 
-## method [*localCompiledCode.toCodeHash*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/program.browser.ts)
+## method [*localCompiledCode.toCodeHash*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/program.browser.ts#L274)
 <pre>
 <strong>const</strong> result: <em>string</em> = localCompiledCode.toCodeHash(data: Uint8Array)
 </pre>
@@ -214,7 +214,7 @@ binary and checksum are both present in wasm/ directory</td></tr>
 <strong>log</strong></td>
 <td><strong>Console</strong>. </td></tr></tbody></table>
 
-## abstract method [*compiler.build*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/program.browser.ts)
+## abstract method [*compiler.build*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/program.browser.ts#L21)
 Compile a source.
 `@hackbg/fadroma` implements dockerized and non-dockerized
 variants using its `build.impl.mjs` script.
@@ -225,7 +225,7 @@ variants using its `build.impl.mjs` script.
 )
 </pre>
 
-## method [*compiler.buildMany*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/program.browser.ts)
+## method [*compiler.buildMany*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/program.browser.ts#L27)
 Build multiple sources.
 Default implementation of buildMany is sequential.
 Compiler classes may override this to optimize.
@@ -275,7 +275,7 @@ An object representing a given source code.
 <strong>canFetchInfo</strong></td>
 <td></td></tr></tbody></table>
 
-## method [*sourceCode.serialize*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/program.browser.ts)
+## method [*sourceCode.serialize*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/program.browser.ts#L61)
 <pre>
 sourceCode.serialize()
 </pre>
@@ -338,7 +338,7 @@ An object representing a given source code.
 <strong>canFetchInfo</strong></td>
 <td></td></tr></tbody></table>
 
-## method [*rustSourceCode.serialize*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/program.browser.ts)
+## method [*rustSourceCode.serialize*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/program.browser.ts#L116)
 <pre>
 rustSourceCode.serialize()
 </pre>
@@ -377,23 +377,23 @@ An object representing a given compiled binary.
 <strong>canUploadInfo</strong></td>
 <td></td></tr></tbody></table>
 
-## method [*compiledCode.computeHash*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/program.browser.ts)
+## method [*compiledCode.computeHash*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/program.browser.ts#L262)
 Compute the code hash if missing; throw if different.
 <pre>
 compiledCode.computeHash()
 </pre>
 
-## method [*compiledCode.fetch*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/program.browser.ts)
+## method [*compiledCode.fetch*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/program.browser.ts#L226)
 <pre>
 <strong>const</strong> result: <em>Uint8Array</em> = <strong>await</strong> compiledCode.fetch()
 </pre>
 
-## method [*compiledCode.serialize*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/program.browser.ts)
+## method [*compiledCode.serialize*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/program.browser.ts#L194)
 <pre>
 compiledCode.serialize()
 </pre>
 
-## method [*compiledCode.toCodeHash*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/program.browser.ts)
+## method [*compiledCode.toCodeHash*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/program.browser.ts#L274)
 <pre>
 <strong>const</strong> result: <em>string</em> = compiledCode.toCodeHash(data: Uint8Array)
 </pre>

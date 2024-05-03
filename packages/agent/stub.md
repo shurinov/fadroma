@@ -21,7 +21,7 @@ Contains zero or more transactions.
 <strong>height</strong></td>
 <td><strong>number</strong>. Monotonically incrementing ID of block.</td></tr></tbody></table>
 
-## method [*stubBlock.fetchTransactions*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts)
+## method [*stubBlock.fetchTransactions*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts#L702)
 <pre>
 <strong>const</strong> result: <em><a href="#">Transaction</a>[]</em> = <strong>await</strong> stubBlock.fetchTransactions()
 </pre>
@@ -31,12 +31,12 @@ Contains zero or more transactions.
 })
 </pre>
 
-## method [*stubBlock.getTransactionsById*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/stub.ts)
+## method [*stubBlock.getTransactionsById*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/stub.ts#L18)
 <pre>
 <strong>const</strong> result: <em>Record&lt;string, Transaction&gt;</em> = <strong>await</strong> stubBlock.getTransactionsById()
 </pre>
 
-## method [*stubBlock.getTransactionsInOrder*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/stub.ts)
+## method [*stubBlock.getTransactionsInOrder*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/stub.ts#L21)
 <pre>
 <strong>const</strong> result: <em><a href="#">Transaction</a>[]</em> = <strong>await</strong> stubBlock.getTransactionsInOrder()
 </pre>
@@ -112,18 +112,18 @@ this property contains the URL to which requests are sent.</td></tr>
 <strong>nextBlock</strong></td>
 <td></td></tr></tbody></table>
 
-## method [*stubConnection.authenticate*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/stub.ts)
+## method [*stubConnection.authenticate*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/stub.ts#L95)
 <pre>
 <strong>const</strong> result: <em><a href="#">StubAgent</a></em> = stubConnection.authenticate(identity: Identity)
 </pre>
 
-## method [*stubConnection.batch*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/stub.ts)
+## method [*stubConnection.batch*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/stub.ts#L36)
 Construct a transaction batch.
 <pre>
 <strong>const</strong> result: <em><a href="#">Batch&lt;StubConnection, StubAgent&gt;</a></em> = stubConnection.batch()
 </pre>
 
-## method [*stubConnection.fetchBalance*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts)
+## method [*stubConnection.fetchBalance*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts#L261)
 Fetch balance of 1 or many addresses in 1 or many native tokens.
 <pre>
 <strong>const</strong> result: <em>string</em> = <strong>await</strong> stubConnection.fetchBalance(
@@ -150,7 +150,7 @@ Fetch balance of 1 or many addresses in 1 or many native tokens.
 )
 </pre>
 
-## method [*stubConnection.fetchBlock*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts)
+## method [*stubConnection.fetchBlock*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts#L213)
 Get info about the latest block.
 <pre>
 <strong>const</strong> result: <em><a href="#">Block</a></em> = <strong>await</strong> stubConnection.fetchBlock()
@@ -168,7 +168,7 @@ Get info about the block with a specific hash.
 })
 </pre>
 
-## method [*stubConnection.fetchCodeInfo*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts)
+## method [*stubConnection.fetchCodeInfo*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts#L339)
 Fetch info about all code IDs uploaded to the chain.
 <pre>
 <strong>const</strong> result: <em>Record&lt;string, unknown&gt;</em> = <strong>await</strong> stubConnection.fetchCodeInfo()
@@ -182,7 +182,7 @@ Fetch info about multiple code IDs.
 <strong>const</strong> result: <em>Record&lt;string, unknown&gt;</em> = <strong>await</strong> stubConnection.fetchCodeInfo(ids: Iterable&lt;string&gt;)
 </pre>
 
-## method [*stubConnection.fetchCodeInstances*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts)
+## method [*stubConnection.fetchCodeInstances*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts#L432)
 Fetch all instances of a code ID.
 <pre>
 <strong>const</strong> result: <em>Record&lt;string, Contract&gt;</em> = <strong>await</strong> stubConnection.fetchCodeInstances(id: string)
@@ -210,7 +210,7 @@ Fetch all instances of multple code IDs, with multiple custom client classes.
 <strong>const</strong> result: <em>Record&lt;string, &gt;</em> = <strong>await</strong> stubConnection.fetchCodeInstances(ids: ???)
 </pre>
 
-## method [*stubConnection.fetchContractInfo*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts)
+## method [*stubConnection.fetchContractInfo*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts#L383)
 <pre>
 <strong>const</strong> result: <em>unknown</em> = <strong>await</strong> stubConnection.fetchContractInfo(address: string)
 </pre>
@@ -218,7 +218,7 @@ Fetch all instances of multple code IDs, with multiple custom client classes.
 <strong>const</strong> result: <em>Record&lt;string, unknown&gt;</em> = <strong>await</strong> stubConnection.fetchContractInfo(addresses: string)
 </pre>
 
-## method [*stubConnection.getContract*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts)
+## method [*stubConnection.getContract*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts#L415)
 Get a client handle for a specific smart contract, authenticated as as this agent.
 <pre>
 <strong>const</strong> result: <em><a href="#">Contract</a></em> = stubConnection.getContract(options: string | {
@@ -226,7 +226,7 @@ Get a client handle for a specific smart contract, authenticated as as this agen
 })
 </pre>
 
-## method [*stubConnection.query*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts)
+## method [*stubConnection.query*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts#L242)
 Query a contract.
 <pre>
 <strong>const</strong> result: <em>Q</em> = <strong>await</strong> stubConnection.query(
@@ -243,7 +243,7 @@ Query a contract.
 )
 </pre>
 
-## method [*stubConnection.gas*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts)
+## method [*stubConnection.gas*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts#L122)
 Native token of chain.
 <pre>
 <strong>const</strong> result: <em><a href="#">TokenAmount</a></em> = stubConnection.gas(amount: string | number)
@@ -271,7 +271,7 @@ Native token of chain.
 <strong>address</strong></td>
 <td></td></tr></tbody></table>
 
-## method [*stubAgent.execute*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts)
+## method [*stubAgent.execute*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts#L656)
 Call a given program's transaction method.
 <pre>
 <strong>const</strong> result: <em>unknown</em> = <strong>await</strong> stubAgent.execute(
@@ -285,12 +285,12 @@ Call a given program's transaction method.
 )
 </pre>
 
-## method [*stubAgent.fetchBalance*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts)
+## method [*stubAgent.fetchBalance*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts#L522)
 <pre>
 <strong>const</strong> result: <em>void</em> = <strong>await</strong> stubAgent.fetchBalance(tokens: string | string)
 </pre>
 
-## method [*stubAgent.instantiate*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts)
+## method [*stubAgent.instantiate*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts#L612)
 Instantiate a new program from a code id, label and init message.
 <pre>
 stubAgent.instantiate(
@@ -299,7 +299,7 @@ stubAgent.instantiate(
 )
 </pre>
 
-## method [*stubAgent.send*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts)
+## method [*stubAgent.send*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts#L527)
 Send native tokens to 1 recipient.
 <pre>
 <strong>const</strong> result: <em>unknown</em> = <strong>await</strong> stubAgent.send(
@@ -314,7 +314,7 @@ Send native tokens to 1 recipient.
 )
 </pre>
 
-## method [*stubAgent.upload*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts)
+## method [*stubAgent.upload*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/chain.ts#L557)
 Upload a contract's code, generating a new code id/hash pair.
 <pre>
 stubAgent.upload(
@@ -376,7 +376,7 @@ Instead, see `Connection`, `Devnet`, and their subclasses.
 <strong>url</strong></td>
 <td><strong>string</strong>. </td></tr></tbody></table>
 
-## method [*stubBackend.connect*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/stub.ts)
+## method [*stubBackend.connect*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/stub.ts#L208)
 <pre>
 <strong>const</strong> result: <em><a href="#">Connection</a></em> = <strong>await</strong> stubBackend.connect()
 </pre>
@@ -384,27 +384,27 @@ Instead, see `Connection`, `Devnet`, and their subclasses.
 <strong>const</strong> result: <em><a href="#">Agent</a></em> = <strong>await</strong> stubBackend.connect(parameter: string | Partial&lt;&gt;)
 </pre>
 
-## method [*stubBackend.execute*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/stub.ts)
+## method [*stubBackend.execute*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/stub.ts#L277)
 <pre>
 <strong>const</strong> result: <em>unknown</em> = <strong>await</strong> stubBackend.execute(args: unknown)
 </pre>
 
-## method [*stubBackend.export*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/stub.ts)
+## method [*stubBackend.export*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/stub.ts#L248)
 <pre>
 <strong>const</strong> result: <em>unknown</em> = <strong>await</strong> stubBackend.export(args: unknown)
 </pre>
 
-## method [*stubBackend.getIdentity*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/stub.ts)
+## method [*stubBackend.getIdentity*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/stub.ts#L227)
 <pre>
 <strong>const</strong> result: <em><a href="#">Identity</a></em> = <strong>await</strong> stubBackend.getIdentity(name: string)
 </pre>
 
-## method [*stubBackend.import*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/stub.ts)
+## method [*stubBackend.import*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/stub.ts#L244)
 <pre>
 <strong>const</strong> result: <em>unknown</em> = <strong>await</strong> stubBackend.import(args: unknown)
 </pre>
 
-## method [*stubBackend.instantiate*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/stub.ts)
+## method [*stubBackend.instantiate*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/stub.ts#L262)
 <pre>
 stubBackend.instantiate(
   creator: <em>string</em>,
@@ -413,17 +413,17 @@ stubBackend.instantiate(
 )
 </pre>
 
-## method [*stubBackend.pause*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/stub.ts)
+## method [*stubBackend.pause*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/stub.ts#L239)
 <pre>
 <strong>const</strong> result: <em><a href="#">StubBackend</a></em> = <strong>await</strong> stubBackend.pause()
 </pre>
 
-## method [*stubBackend.start*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/stub.ts)
+## method [*stubBackend.start*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/stub.ts#L234)
 <pre>
 <strong>const</strong> result: <em><a href="#">StubBackend</a></em> = <strong>await</strong> stubBackend.start()
 </pre>
 
-## method [*stubBackend.upload*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/stub.ts)
+## method [*stubBackend.upload*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/stub.ts#L252)
 <pre>
 stubBackend.upload(codeData: Uint8Array)
 </pre>
@@ -446,7 +446,7 @@ Builder object for batched transactions.
 <strong>messages</strong></td>
 <td><strong>undefined</strong>. </td></tr></tbody></table>
 
-## method [*stubBatch.execute*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/stub.ts)
+## method [*stubBatch.execute*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/stub.ts#L295)
 Add an execute message to the batch.
 <pre>
 <strong>const</strong> result: <em><a href="#">StubBatch</a></em> = stubBatch.execute(args: [(string | Partial&lt;ContractInstance&gt;), Message, {
@@ -456,19 +456,19 @@ Add an execute message to the batch.
 }])
 </pre>
 
-## method [*stubBatch.instantiate*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/stub.ts)
+## method [*stubBatch.instantiate*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/stub.ts#L290)
 Add an instantiate message to the batch.
 <pre>
 <strong>const</strong> result: <em><a href="#">StubBatch</a></em> = stubBatch.instantiate(args: [(string | Partial&lt;UploadedCode&gt;), Partial&lt;ContractInstance&gt;])
 </pre>
 
-## method [*stubBatch.submit*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/stub.ts)
+## method [*stubBatch.submit*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/stub.ts#L300)
 Submit the batch.
 <pre>
 <strong>const</strong> result: <em>object</em> = <strong>await</strong> stubBatch.submit()
 </pre>
 
-## method [*stubBatch.upload*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/stub.ts)
+## method [*stubBatch.upload*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/stub.ts#L285)
 Add an upload message to the batch.
 <pre>
 <strong>const</strong> result: <em><a href="#">StubBatch</a></em> = stubBatch.upload(args: [(string | Uint8Array | URL | Partial&lt;CompiledCode&gt;), {
@@ -499,7 +499,7 @@ binary and checksum are both present in wasm/ directory</td></tr>
 <strong>log</strong></td>
 <td><strong>Console</strong>. </td></tr></tbody></table>
 
-## method [*stubCompiler.build*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/stub.ts)
+## method [*stubCompiler.build*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/stub.ts#L316)
 Compile a source.
 `@hackbg/fadroma` implements dockerized and non-dockerized
 variants using its `build.impl.mjs` script.
@@ -510,7 +510,7 @@ variants using its `build.impl.mjs` script.
 )
 </pre>
 
-## method [*stubCompiler.buildMany*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/program.browser.ts)
+## method [*stubCompiler.buildMany*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/program.browser.ts#L27)
 Build multiple sources.
 Default implementation of buildMany is sequential.
 Compiler classes may override this to optimize.

@@ -41,7 +41,7 @@ up to and including uploading it, but not instantiating it.
 <strong>uploader</strong></td>
 <td><strong>undefined</strong>. </td></tr></tbody></table>
 
-## method [*contractCode.compile*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts)
+## method [*contractCode.compile*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts#L41)
 Compile this contract.
 
 If a valid binary is present and a rebuild is not requested,
@@ -53,7 +53,7 @@ contractCode.compile({
 })
 </pre>
 
-## method [*contractCode.upload*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts)
+## method [*contractCode.upload*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts#L81)
 Upload this contract.
 
 If a valid binary is not present, compile it first.
@@ -115,7 +115,7 @@ Represents a contract's code, in binary form, uploaded to a given chain.
 <strong>canInstantiateInfo</strong></td>
 <td></td></tr></tbody></table>
 
-## method [*uploadedCode.serialize*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts)
+## method [*uploadedCode.serialize*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts#L137)
 <pre>
 uploadedCode.serialize()
 </pre>
@@ -180,7 +180,7 @@ A contract that is part of a deploment.
 <strong>uploader</strong></td>
 <td><strong>undefined</strong>. </td></tr></tbody></table>
 
-## method [*deploymentUnit.compile*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts)
+## method [*deploymentUnit.compile*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts#L41)
 Compile this contract.
 
 If a valid binary is present and a rebuild is not requested,
@@ -192,12 +192,12 @@ deploymentUnit.compile({
 })
 </pre>
 
-## method [*deploymentUnit.serialize*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts)
+## method [*deploymentUnit.serialize*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts#L191)
 <pre>
 deploymentUnit.serialize()
 </pre>
 
-## method [*deploymentUnit.upload*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts)
+## method [*deploymentUnit.upload*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts#L81)
 Upload this contract.
 
 If a valid binary is not present, compile it first.
@@ -282,7 +282,7 @@ A contract that is part of a deploment.
 <strong>uploader</strong></td>
 <td><strong>undefined</strong>. </td></tr></tbody></table>
 
-## method [*contractTemplate.compile*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts)
+## method [*contractTemplate.compile*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts#L41)
 Compile this contract.
 
 If a valid binary is present and a rebuild is not requested,
@@ -294,7 +294,7 @@ contractTemplate.compile({
 })
 </pre>
 
-## method [*contractTemplate.contract*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts)
+## method [*contractTemplate.contract*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts#L200)
 Create a new instance of this contract.
 <pre>
 <strong>const</strong> result: <em><a href="#">ContractInstance</a></em> = contractTemplate.contract(
@@ -303,18 +303,18 @@ Create a new instance of this contract.
 )
 </pre>
 
-## method [*contractTemplate.contracts*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts)
+## method [*contractTemplate.contracts*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts#L206)
 Create multiple instances of this contract.
 <pre>
 <strong>const</strong> result: <em>Record&lt;string, ContractInstance&gt;</em> = contractTemplate.contracts(instanceParameters: Record&lt;string, Partial&gt;)
 </pre>
 
-## method [*contractTemplate.serialize*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts)
+## method [*contractTemplate.serialize*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts#L191)
 <pre>
 contractTemplate.serialize()
 </pre>
 
-## method [*contractTemplate.upload*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts)
+## method [*contractTemplate.upload*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts#L81)
 Upload this contract.
 
 If a valid binary is not present, compile it first.
@@ -436,7 +436,7 @@ A contract that is part of a deploment.
 <strong>uploader</strong></td>
 <td><strong>undefined</strong>. </td></tr></tbody></table>
 
-## method [*contractInstance.compile*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts)
+## method [*contractInstance.compile*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts#L41)
 Compile this contract.
 
 If a valid binary is present and a rebuild is not requested,
@@ -448,13 +448,13 @@ contractInstance.compile({
 })
 </pre>
 
-## method [*contractInstance.connect*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts)
+## method [*contractInstance.connect*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts#L287)
 Returns a client to this contract instance.
 <pre>
 <strong>const</strong> result: <em><a href="#">Contract</a></em> = contractInstance.connect(agent: Connection)
 </pre>
 
-## method [*contractInstance.deploy*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts)
+## method [*contractInstance.deploy*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts#L248)
 <pre>
 contractInstance.deploy({
   address,
@@ -488,17 +488,17 @@ contractInstance.deploy({
 })
 </pre>
 
-## method [*contractInstance.isValid*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts)
+## method [*contractInstance.isValid*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts#L295)
 <pre>
 contractInstance.isValid()
 </pre>
 
-## method [*contractInstance.serialize*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts)
+## method [*contractInstance.serialize*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts#L278)
 <pre>
 contractInstance.serialize()
 </pre>
 
-## method [*contractInstance.upload*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts)
+## method [*contractInstance.upload*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts#L81)
 Upload this contract.
 
 If a valid binary is not present, compile it first.
@@ -545,13 +545,13 @@ A collection of contracts.
 <strong>[species]</strong></td>
 <td><strong>MapConstructor</strong>. </td></tr></tbody></table>
 
-## method [*deployment.[iterator]*](https://github.com/hackbg/fadroma/tree/v2/node_modules/.pnpm/typescript@5.3.3/node_modules/typescript/lib/lib.es2015.iterable.d.ts)
+## method [*deployment.[iterator]*](https://github.com/hackbg/fadroma/tree/v2/node_modules/.pnpm/typescript@5.3.3/node_modules/typescript/lib/lib.es2015.iterable.d.ts#L119)
 Returns an iterable of entries in the map.
 <pre>
 <strong>const</strong> result: <em>IterableIterator&lt;&gt;</em> = deployment.[iterator]()
 </pre>
 
-## method [*deployment.addContract*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts)
+## method [*deployment.addContract*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts#L387)
 <pre>
 <strong>const</strong> result: <em><a href="#">Deployment</a></em> = deployment.addContract(args: [string, ((({
   cargoCrate,
@@ -574,7 +574,7 @@ Returns an iterable of entries in the map.
 })) & Partial&lt;CompiledCode&gt; & Partial&lt;UploadedCode&gt; & Partial&lt;ContractInstance&gt;)])
 </pre>
 
-## method [*deployment.addContracts*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts)
+## method [*deployment.addContracts*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts#L395)
 <pre>
 <strong>const</strong> result: <em><a href="#">Deployment</a></em> = deployment.addContracts(args: [string, ((({
   cargoCrate,
@@ -597,7 +597,7 @@ Returns an iterable of entries in the map.
 })) & Partial&lt;CompiledCode&gt; & Partial&lt;UploadedCode&gt;)])
 </pre>
 
-## method [*deployment.build*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts)
+## method [*deployment.build*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts#L403)
 <pre>
 <strong>const</strong> result: <em>Record&lt;string, &gt;</em> = <strong>await</strong> deployment.build({
   compiler,
@@ -606,12 +606,12 @@ Returns an iterable of entries in the map.
 })
 </pre>
 
-## method [*deployment.clear*](https://github.com/hackbg/fadroma/tree/v2/node_modules/.pnpm/typescript@5.3.3/node_modules/typescript/lib/lib.es2015.collection.d.ts)
+## method [*deployment.clear*](https://github.com/hackbg/fadroma/tree/v2/node_modules/.pnpm/typescript@5.3.3/node_modules/typescript/lib/lib.es2015.collection.d.ts#L20)
 <pre>
 <strong>const</strong> result: <em>void</em> = deployment.clear()
 </pre>
 
-## method [*deployment.contract*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts)
+## method [*deployment.contract*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts#L365)
 Define a contract that will be automatically compiled, uploaded,
 and instantiated as part of this deployment.
 <pre>
@@ -639,13 +639,13 @@ and instantiated as part of this deployment.
 )
 </pre>
 
-## method [*deployment.delete*](https://github.com/hackbg/fadroma/tree/v2/node_modules/.pnpm/typescript@5.3.3/node_modules/typescript/lib/lib.es2015.collection.d.ts)
+## method [*deployment.delete*](https://github.com/hackbg/fadroma/tree/v2/node_modules/.pnpm/typescript@5.3.3/node_modules/typescript/lib/lib.es2015.collection.d.ts#L24)
 
 <pre>
 <strong>const</strong> result: <em>boolean</em> = deployment.delete(key: string)
 </pre>
 
-## method [*deployment.deploy*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts)
+## method [*deployment.deploy*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts#L457)
 <pre>
 <strong>const</strong> result: <em>Record&lt;string, &gt;</em> = <strong>await</strong> deployment.deploy({
   address,
@@ -681,13 +681,13 @@ and instantiated as part of this deployment.
 })
 </pre>
 
-## method [*deployment.entries*](https://github.com/hackbg/fadroma/tree/v2/node_modules/.pnpm/typescript@5.3.3/node_modules/typescript/lib/lib.es2015.iterable.d.ts)
+## method [*deployment.entries*](https://github.com/hackbg/fadroma/tree/v2/node_modules/.pnpm/typescript@5.3.3/node_modules/typescript/lib/lib.es2015.iterable.d.ts#L124)
 Returns an iterable of key, value pairs for every entry in the map.
 <pre>
 <strong>const</strong> result: <em>IterableIterator&lt;&gt;</em> = deployment.entries()
 </pre>
 
-## method [*deployment.forEach*](https://github.com/hackbg/fadroma/tree/v2/node_modules/.pnpm/typescript@5.3.3/node_modules/typescript/lib/lib.es2015.collection.d.ts)
+## method [*deployment.forEach*](https://github.com/hackbg/fadroma/tree/v2/node_modules/.pnpm/typescript@5.3.3/node_modules/typescript/lib/lib.es2015.collection.d.ts#L28)
 Executes a provided function once per each key/value pair in the Map, in insertion order.
 <pre>
 <strong>const</strong> result: <em>void</em> = deployment.forEach(
@@ -696,30 +696,30 @@ Executes a provided function once per each key/value pair in the Map, in inserti
 )
 </pre>
 
-## method [*deployment.get*](https://github.com/hackbg/fadroma/tree/v2/node_modules/.pnpm/typescript@5.3.3/node_modules/typescript/lib/lib.es2015.collection.d.ts)
+## method [*deployment.get*](https://github.com/hackbg/fadroma/tree/v2/node_modules/.pnpm/typescript@5.3.3/node_modules/typescript/lib/lib.es2015.collection.d.ts#L33)
 Returns a specified element from the Map object. If the value that is associated to the provided key is an object, then you will get a reference to that object and any change made to that object will effectively modify it inside the Map.
 <pre>
 <strong>const</strong> result: <em><a href="#">DeploymentUnit</a></em> = deployment.get(key: string)
 </pre>
 
-## method [*deployment.has*](https://github.com/hackbg/fadroma/tree/v2/node_modules/.pnpm/typescript@5.3.3/node_modules/typescript/lib/lib.es2015.collection.d.ts)
+## method [*deployment.has*](https://github.com/hackbg/fadroma/tree/v2/node_modules/.pnpm/typescript@5.3.3/node_modules/typescript/lib/lib.es2015.collection.d.ts#L37)
 
 <pre>
 <strong>const</strong> result: <em>boolean</em> = deployment.has(key: string)
 </pre>
 
-## method [*deployment.keys*](https://github.com/hackbg/fadroma/tree/v2/node_modules/.pnpm/typescript@5.3.3/node_modules/typescript/lib/lib.es2015.iterable.d.ts)
+## method [*deployment.keys*](https://github.com/hackbg/fadroma/tree/v2/node_modules/.pnpm/typescript@5.3.3/node_modules/typescript/lib/lib.es2015.iterable.d.ts#L129)
 Returns an iterable of keys in the map
 <pre>
 <strong>const</strong> result: <em>IterableIterator&lt;string&gt;</em> = deployment.keys()
 </pre>
 
-## method [*deployment.serialize*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts)
+## method [*deployment.serialize*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts#L323)
 <pre>
 deployment.serialize()
 </pre>
 
-## method [*deployment.set*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts)
+## method [*deployment.set*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts#L331)
 <pre>
 deployment.set(
   name: <em>string</em>,
@@ -727,7 +727,7 @@ deployment.set(
 )
 </pre>
 
-## method [*deployment.template*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts)
+## method [*deployment.template*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts#L342)
 Define a template, representing code that can be compiled
 and uploaded, but will not be automatically instantiated.
 This can then be used to define multiple instances of
@@ -757,7 +757,7 @@ the same code.
 )
 </pre>
 
-## method [*deployment.upload*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts)
+## method [*deployment.upload*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts#L440)
 <pre>
 <strong>const</strong> result: <em>Record&lt;string, &gt;</em> = <strong>await</strong> deployment.upload({
   compiler,
@@ -771,13 +771,13 @@ the same code.
 })
 </pre>
 
-## method [*deployment.values*](https://github.com/hackbg/fadroma/tree/v2/node_modules/.pnpm/typescript@5.3.3/node_modules/typescript/lib/lib.es2015.iterable.d.ts)
+## method [*deployment.values*](https://github.com/hackbg/fadroma/tree/v2/node_modules/.pnpm/typescript@5.3.3/node_modules/typescript/lib/lib.es2015.iterable.d.ts#L134)
 Returns an iterable of values in the map
 <pre>
 <strong>const</strong> result: <em>IterableIterator&lt;DeploymentUnit&gt;</em> = deployment.values()
 </pre>
 
-## method [*deployment.fromSnapshot*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts)
+## method [*deployment.fromSnapshot*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/deploy.ts#L308)
 <pre>
 <strong>const</strong> result: <em><a href="#">Deployment</a></em> = deployment.fromSnapshot(Partial&lt;&gt;)
 </pre>

@@ -102,25 +102,25 @@ Builder object for batched transactions.
 <strong>log</strong></td>
 <td><strong>Console</strong>. </td></tr></tbody></table>
 
-## method [*batch.execute*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/tx.ts)
+## method [*batch.execute*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/tx.ts#L38)
 Add an execute message to the batch.
 <pre>
 batch.execute(args: Parameters&lt;&gt;)
 </pre>
 
-## method [*batch.instantiate*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/tx.ts)
+## method [*batch.instantiate*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/tx.ts#L32)
 Add an instantiate message to the batch.
 <pre>
 batch.instantiate(args: Parameters&lt;&gt;)
 </pre>
 
-## method [*batch.submit*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/tx.ts)
+## method [*batch.submit*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/tx.ts#L44)
 Submit the batch.
 <pre>
 <strong>const</strong> result: <em>unknown</em> = <strong>await</strong> batch.submit(args: unknown)
 </pre>
 
-## method [*batch.upload*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/tx.ts)
+## method [*batch.upload*](https://github.com/hackbg/fadroma/tree/v2/packages/agent/tx.ts#L26)
 Add an upload message to the batch.
 <pre>
 batch.upload(args: Parameters&lt;&gt;)
