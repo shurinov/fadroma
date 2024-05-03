@@ -64,7 +64,7 @@ export class ScrtConnection extends Chain.Connection {
     }
   }
 
-  protected async fetchBlockImpl (parameter): Promise<ScrtBlock> {
+  protected override async fetchBlockImpl (parameter): Promise<ScrtBlock> {
     if (!parameter) {
       const {
         block_id: { hash, part_set_header } = {},
@@ -77,22 +77,22 @@ export class ScrtConnection extends Chain.Connection {
     }
   }
 
-  protected async fetchCodeInfoImpl () {}
+  protected override async fetchCodeInfoImpl () {}
 
-  protected async fetchCodeInstancesImpl () {}
+  protected override async fetchCodeInstancesImpl () {}
 
-  protected async fetchContractInfoImpl () {}
+  protected override async fetchContractInfoImpl () {}
 
   authenticate (identity: ScrtIdentity): Promise<ScrtAgent> {
     return new ScrtAgent({ connection: this, identity })
   }
 
-  protected fetchHeightImpl () {
+  protected override fetchHeightImpl () {
     return this.fetchBlockInfoImpl().then((block: any)=>
       Number(block.block?.header?.height))
   }
 
-  protected fetchCodesImpl () {
+  protected override fetchCodesImpl () {
     const codes: Record<CodeId, Deploy.UploadedCode> = {}
     return withIntoError(this.api.query.compute.codes({}))
       .then(({code_infos})=>{
@@ -108,14 +108,14 @@ export class ScrtConnection extends Chain.Connection {
       })
   }
 
-  protected async fetchCodeIdImpl (contract_address: Address): Promise<CodeId> {
+  protected override async fetchCodeIdImpl (contract_address: Address): Promise<CodeId> {
     return (await withIntoError(this.api.query.compute.contractInfo({
       contract_address
     })))
       .ContractInfo!.code_id!
   }
 
-  protected async fetchContractsByCodeIdImpl (code_id: CodeId): Promise<Iterable<{address: Address}>> {
+  protected override async fetchContractsByCodeIdImpl (code_id: CodeId): Promise<Iterable<{address: Address}>> {
     return (await withIntoError(this.api.query.compute.contractsByCodeId({ code_id })))
       .contract_infos!
       .map(({ contract_address, contract_info: { label, creator } }: any)=>({
@@ -125,21 +125,21 @@ export class ScrtConnection extends Chain.Connection {
       }))
   }
 
-  protected async fetchCodeHashOfAddressImpl (contract_address: Address): Promise<CodeHash> {
+  protected override async fetchCodeHashOfAddressImpl (contract_address: Address): Promise<CodeHash> {
     return (await withIntoError(this.api.query.compute.codeHashByContractAddress({
       contract_address
     })))
       .code_hash!
   }
 
-  protected async fetchCodeHashOfCodeIdImpl (code_id: CodeId): Promise<CodeHash> {
+  protected override async fetchCodeHashOfCodeIdImpl (code_id: CodeId): Promise<CodeHash> {
     return (await withIntoError(this.api.query.compute.codeHashByCodeId({
       code_id
     })))
       .code_hash!
   }
 
-  protected async fetchBalanceImpl (
+  protected override async fetchBalanceImpl (
     denom:   string = this.defaultDenom,
     address: string|undefined = this.address
   ) {
@@ -159,7 +159,7 @@ export class ScrtConnection extends Chain.Connection {
 
   /** Query a contract.
     * @returns the result of the query */
-  protected queryImpl <U> (contract: { address: Address, codeHash: CodeHash }, message: Message): Promise<U> {
+  protected override queryImpl <U> (contract: { address: Address, codeHash: CodeHash }, message: Message): Promise<U> {
     return withIntoError(this.api.query.compute.queryContract({
       contract_address: contract.address,
       code_hash: contract.codeHash,

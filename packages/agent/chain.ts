@@ -347,36 +347,36 @@ export abstract class Connection extends Endpoint {
   async fetchCodeInfo (...args: unknown[]): Promise<unknown> {
     if (args.length === 0) {
       this.log.debug('Querying all codes...')
-      return this.fetchCodeInfoImpl({})
+      return timed(
+        this.fetchCodeInfoImpl.bind(this, {}),
+        ({ elapsed, result }) => this.log.debug(
+          `Queried in ${bold(elapsed)}: all codes`
+        ))
     } else if (args.length === 1) {
       if (args[0] instanceof Array) {
-        return this.fetchCodeInfoImpl({ ids: args[0] })
+        const ids = args[0] as Array<Deploy.CodeId>
+        this.log.debug(`Querying info about ${ids.length} code ids...`)
+        return timed(
+          this.fetchCodeInfoImpl.bind(this, { ids }),
+          ({ elapsed, result }) => this.log.debug(
+            `Queried in ${bold(elapsed)}: info about ${ids.length} code ids`
+          ))
       } else {
-        return this.fetchCodeInfoImpl({ ids: [args[0] as Deploy.CodeId] })
+        const ids = [args[0] as Deploy.CodeId]
+        this.log.debug(`Querying info about code id ${args[0]}...`)
+        return timed(
+          this.fetchCodeInfoImpl.bind(this, { ids }),
+          ({ elapsed, result }) => this.log.debug(
+            `Queried in ${bold(elapsed)}: info about code id ${ids[0]}`
+          ))
       }
     } else {
       throw new Error('fetchCodeInfo takes 0 or 1 arguments')
     }
-
-    //[>* Get the code hash of a given code id. <]
-    //getCodeHashOfCodeId (contract: Deploy.CodeId|{ codeId: Deploy.CodeId }): Promise<Code.CodeHash> {
-      //const codeId = (typeof contract === 'object') ? contract.codeId : contract
-      //this.log.debug(`Querying code hash of code id ${bold(codeId)}`)
-      //return timed(
-        //this.fetchCodeHashOfCodeIdImpl.bind(this, codeId),
-        //({ elapsed, result }) => this.log.debug(
-          //`Queried in ${bold(elapsed)}: code hash of code id ${bold(codeId)} is ${bold(result)}`
-        //)
-      //)
-    //}
   }
   /** Chain-specific implementation of fetchCodeInfo. */
   protected abstract fetchCodeInfoImpl (options: { ids?: Deploy.CodeId[] }|undefined):
     Promise<Record<Deploy.CodeId, Deploy.UploadedCode>>
-  protected abstract fetchCodeIdImpl (contract: Address):
-    Promise<Deploy.CodeId>
-  protected abstract fetchCodeHashOfCodeIdImpl (codeId: Deploy.CodeId):
-    Promise<Code.CodeHash>
 
   /////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -385,32 +385,31 @@ export abstract class Connection extends Endpoint {
   fetchContractInfo (addresses: Address[]):
     Promise<Record<Address, unknown>>
   async fetchContractInfo (...args: unknown[]): Promise<unknown> {
-    throw new Error("unimplemented!")
-    return {}
-    //getCodeHashOfAddress (contract: Address|{ address: Address }): Promise<Code.CodeHash> {
-      //const address = (typeof contract === 'string') ? contract : contract.address
-      //this.log.debug(`Querying code hash of address ${bold(address)}`)
-      //return timed(
-        //this.fetchCodeHashOfAddressImpl.bind( this, address),
-        //({ elapsed, result }) => this.log.debug(
-          //`Queried in ${bold(elapsed)}: code hash of address ${bold(address)} is ${bold(result)}`
-        //)
-      //)
-    //}
-    /** Get the code id of a given address. */
-    //getCodeId (contract: Address|{ address: Address }): Promise<Deploy.CodeId> {
-      //const address = (typeof contract === 'string') ? contract : contract.address
-      //this.log.debug(`Querying code ID of ${bold(address)}`)
-      //return timed(
-        //this.fetchCodeIdImpl.bind(this, address),
-        //({ elapsed, result }) => this.log.debug(
-          //`Queried in ${bold(elapsed)}: ${bold(address)} is code id ${bold(result)}`
-        //)
-      //)
-    //}
+    if (!args[0]) {
+      throw new Error('fetchContractInfo takes Address or Address[]')
+    }
+    if (typeof args[0] === 'string') {
+      this.log.debug(`Querying info about contract ${args[0]}`)
+      return timed(
+        this.fetchContractInfoImpl.bind(this, { addresses: [args[0]] }),
+        ({ elapsed, result }) => this.log.debug(
+          `Queried in ${bold(elapsed)}: info about contract ${args[0]}`
+        ))
+    } else if (args[0][Symbol.iterator]) {
+      const addresses = args[0] as Address[]
+      this.log.debug(`Querying info about ${addresses.length} contracts`)
+      return timed(
+        this.fetchContractInfoImpl.bind(this, { addresses }),
+        ({ elapsed, result }) => this.log.debug(
+          `Queried in ${bold(elapsed)}: info about ${addresses.length} contracts`
+        ))
+    } else {
+      throw new Error('fetchContractInfo takes Address or Address[]')
+    }
   }
   /** Chain-specific implementation of fetchContractInfo. */
-  protected abstract fetchContractInfoImpl (): Promise<unknown>
+  protected abstract fetchContractInfoImpl ({ addresses }: { addresses: Address[] }):
+    Promise<unknown>
   /** Get a client handle for a specific smart contract, authenticated as as this agent. */
   getContract (options: Address|{ address: Address }):
     Contract

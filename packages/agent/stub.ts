@@ -3,7 +3,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>. **/
 import { assign, Console, Error, base16, SHA256, randomBech32 } from './core'
 import type { ChainId, Message, Label, TxHash } from './chain'
-import { Connection, Agent, Block, Backend } from './chain'
+import { Connection, Agent, Block, Backend, Contract } from './chain'
 import type { Address } from './identity'
 import { Identity } from './identity'
 import { Batch } from './tx'
@@ -33,65 +33,74 @@ export class StubConnection extends Connection {
     assign(this, properties, ['backend'])
     this.backend ??= new StubBackend()
   }
+
   batch (): Batch<this, StubAgent> {
     return new StubBatch({ connection: this }) as unknown as Batch<this, StubAgent>
   }
-  protected fetchHeightImpl () {
+
+  protected override fetchHeightImpl () {
     return this.fetchBlockImpl().then(({height})=>height)
   }
-  protected fetchBlockImpl () {
+
+  protected override fetchBlockImpl () {
     return Promise.resolve(new StubBlock({ height: + new Date() }))
   }
-  protected fetchCodesImpl () {
-    return Promise.resolve(Object.fromEntries(
-      [...this.backend.uploads.entries()].map(
-        ([key, val])=>[key, new UploadedCode(val)]
-      )
-    ))
-  }
-  protected fetchBalanceImpl (token?: string, address?: string): Promise<string> {
+
+  protected override fetchBalanceImpl (token?: string, address?: string): Promise<string> {
     token ??= this.defaultDenom
     const balance = (this.backend.balances.get(address!)||{})[token] ?? 0
     return Promise.resolve(String(balance))
   }
-  protected fetchContractsByCodeIdImpl (id: CodeId) {
+
+  protected override fetchCodeInfoImpl ({ ids }: { ids: CodeId[]|undefined }):
+    Promise<Record<string, UploadedCode>>
+  {
+    if (!ids) {
+      return Promise.resolve(Object.fromEntries(
+        [...this.backend.uploads.entries()].map(
+          ([key, val])=>[key, new UploadedCode(val)]
+        )
+      ))
+    } else {
+      const results = {}
+      for (const id of ids) {
+        results[id] = new UploadedCode(this.backend.uploads.get(id))
+      }
+      return Promise.resolve(results)
+    }
+  }
+
+  protected override fetchCodeInstancesImpl (id: CodeId) {
     return Promise.resolve([...this.backend.uploads.get(id)!.instances]
       .map(address=>({address})))
   }
-  protected fetchCodeHashOfAddressImpl (address: Address): Promise<CodeHash> {
-    const contract = this.backend.instances.get(address)
-    if (!contract) {
-      throw new Error(`unknown contract ${address}`)
+
+  protected override fetchContractInfoImpl ({ addresses }: { addresses: Address[] }):
+    Promise<Record<Address, Contract>>
+  {
+    const results = {}
+    for (const address of addresses) {
+      const contract = this.backend.instances.get(address)
+      if (!contract) {
+        throw new Error(`unknown contract ${address}`)
+      }
+      const { codeId } = contract
+      const code = this.backend.uploads.get(codeId)
+      if (!code) {
+        throw new Error(`inconsistent state: missing code ${codeId} for address ${address}`)
+      }
+      results[address] = new Contract({
+        ...code,
+        ...contract,
+      })
     }
-    const { codeId } = contract
-    const code = this.backend.uploads.get(codeId)
-    if (!code) {
-      throw new Error(`inconsistent state: missing code ${codeId} for address ${address}`)
-    }
-    return Promise.resolve(code.codeHash)
+    return Promise.resolve(results)
   }
-  protected fetchCodeHashOfCodeIdImpl (id: CodeId): Promise<CodeHash> {
-    const code = this.backend.uploads.get(id)
-    if (!code) {
-      throw new Error(`unknown code ${id}`)
-    }
-    return Promise.resolve(code.codeHash)
-  }
-  protected fetchCodeIdImpl (options: string): Promise<string> {
-    throw new Error('unimplemented!')
-  }
-  protected fetchCodeInfoImpl (options): Promise<Record<string, UploadedCode>> {
-    throw new Error('unimplemented!')
-  }
-  protected fetchContractInfoImpl (): Promise<unknown> {
-    throw new Error('unimplemented!')
-  }
-  protected fetchCodeInstancesImpl (id: CodeId): Promise<Iterable<{ address: Address }>> {
-    throw new Error('unimplemented!')
-  }
-  protected queryImpl <Q> (contract: { address: Address }, message: Message): Promise<Q> {
+
+  protected override queryImpl <Q> (contract: { address: Address }, message: Message): Promise<Q> {
     return Promise.resolve({} as Q)
   }
+
   authenticate (identity: Identity): StubAgent {
     return new StubAgent({ connection: this, identity })
   }
