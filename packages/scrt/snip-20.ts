@@ -81,19 +81,20 @@ export class Snip20 extends Chain.Contract implements Token.Fungible {
       throw new Error("can't fetch metadata without contract address")
     }
     return Promise.all([
-      this.connection.getCodeHashOfAddress(this.instance.address).then((codeHash: CodeHash) =>
+      this.connection.fetchContractInfo(this.instance.address).then(({codeHash}) =>
         this.instance!.codeHash = codeHash),
-      this.getTokenInfo().then(({ name, symbol, decimals, total_supply }: Snip20TokenInfo) =>
+      this.fetchTokenInfo().then(({ name, symbol, decimals, total_supply }: Snip20TokenInfo) =>
         Object.assign(this, { name, symbol, decimals, total_supply }))
     ]).then(()=>this)
   }
 
-  async getTokenInfo () {
+  async fetchTokenInfo () {
     const msg = { token_info: {} }
     const { token_info }: { token_info: Snip20TokenInfo } = await this.query(msg)
     return token_info
   }
-  async getBalance (address: Address, key: string) {
+
+  async fetchBalance (address: Address, key: string) {
     const msg = { balance: { address, key } }
     const response: { balance: { amount: Uint128 } } = await this.query(msg)
     if (response.balance && response.balance.amount) {
@@ -104,21 +105,25 @@ export class Snip20 extends Chain.Contract implements Token.Fungible {
   }
 
   /** Change the admin of the token, who can set the minters */
-  changeAdmin = (address: string) =>
-    this.execute({ change_admin: { address } })
+  changeAdmin (address: string) {
+    return this.execute({ change_admin: { address } })
+  }
 
   /** Set specific addresses to be minters, remove all others */
-  setMinters = (minters: Array<string>) =>
-    this.execute({ set_minters: { minters } })
+  setMinters (minters: Array<string>) {
+    return this.execute({ set_minters: { minters } })
+  }
 
   /** Add addresses to be minters */
-  addMinters = (minters: Array<string>) =>
-    this.execute({ add_minters: { minters } })
+  addMinters (minters: Array<string>) {
+    return this.execute({ add_minters: { minters } })
+  }
 
   /** Mint SNIP20 tokens */
-  mint = (
-    amount: string|number|bigint, recipient: string|undefined = this.connection?.address
-  ) => {
+  mint (
+    amount: string|number|bigint,
+    recipient: string|undefined = this.agent?.address
+  ) {
     if (!recipient) {
       throw new Error('Snip20#mint: specify recipient')
     }
@@ -126,77 +131,93 @@ export class Snip20 extends Chain.Contract implements Token.Fungible {
   }
 
   /** Burn SNIP20 tokens */
-  burn = (amount: string|number|bigint, memo?: string) =>
-    this.execute({ burn: { amount: String(amount), memo } })
+  burn (amount: string|number|bigint, memo?: string) {
+    return this.execute({ burn: { amount: String(amount), memo } })
+  }
 
   /** Deposit native tokens into the contract. */
-  deposit = (nativeToken: Token.ICoin[]) =>
-    this.execute({ deposit: {} }, { execSend: nativeToken })
+  deposit (nativeToken: Token.ICoin[]) {
+    return this.execute({ deposit: {} }, { execSend: nativeToken })
+  }
 
   /** Redeem an amount of a native token from the contract. */
-  redeem = (amount: string|number|bigint, denom?: string) =>
-    this.execute({ redeem: { amount: String(amount), denom } })
+  redeem (amount: string|number|bigint, denom?: string) {
+    return this.execute({ redeem: { amount: String(amount), denom } })
+  }
 
   /** Get the current allowance from `owner` to `spender` */
-  getAllowance = async (owner: Address, spender: Address, key: string): Promise<Snip20Allowance> => {
+  async fetchAllowance (owner: Address, spender: Address, key: string): Promise<Snip20Allowance> {
     const msg = { allowance: { owner, spender, key } }
     const response: { allowance: Snip20Allowance } = await this.query(msg)
     return response.allowance
   }
 
   /** Check the current allowance from `owner` to `spender`. */
-  checkAllowance = (spender: string, owner: string, key: string) =>
-    this.query({ check_allowance: { owner, spender, key } })
+  checkAllowance (spender: string, owner: string, key: string) {
+    return this.query({ check_allowance: { owner, spender, key } })
+  }
 
   /** Increase allowance to spender */
-  increaseAllowance = (amount:  string|number|bigint, spender: Address) => {
+  increaseAllowance (amount: string|number|bigint, spender: Address) {
     this.log.debug(
-      `${bold(this.connection?.address||'(missing address)')}: increasing allowance of`,
+      `${bold(this.agent?.address||'(missing address)')}: increasing allowance of`,
       bold(spender), 'by', bold(String(amount)), bold(String(this.symbol||this.instance?.address))
     )
     return this.execute({ increase_allowance: { amount: String(amount), spender } })
   }
 
   /** Decrease allowance to spender */
-  decreaseAllowance = (amount: string|number|bigint, spender: Address) =>
-    this.execute({ decrease_allowance: { amount: String(amount), spender } })
+  decreaseAllowance (amount: string|number|bigint, spender: Address) {
+    return this.execute({ decrease_allowance: { amount: String(amount), spender } })
+  }
 
   /** Transfer tokens to address */
-  transfer = (amount: string|number|bigint, recipient: Address) =>
-    this.execute({ transfer: { amount, recipient } })
+  transfer (amount: string|number|bigint, recipient: Address) {
+    return this.execute({ transfer: { amount, recipient } })
+  }
 
-  transferFrom = (owner: Address, recipient: Address, amount: Uint128, memo?: string) =>
-    this.execute({ transfer_from: { owner, recipient, amount, memo } })
+  transferFrom (owner: Address, recipient: Address, amount: Uint128, memo?: string) {
+    return this.execute({ transfer_from: { owner, recipient, amount, memo } })
+  }
 
   /** Send tokens to address.
     * Same as transfer but allows for receive callback. */
-  send = (
-    amount: string|number|bigint, recipient: Address, callback?: string|object
-  ) => this.execute({
-    send: {
-      amount, recipient,
-      msg: callback ? Buffer.from(JSON.stringify(callback)).toString('base64') : undefined
-    }
-  })
+  send (
+    amount:    string|number|bigint,
+    recipient: Address,
+    callback?: string|object
+  ) {
+    const msg = callback ? Buffer.from(JSON.stringify(callback)).toString('base64') : undefined
+    return this.execute({ send: { amount, recipient, msg } })
+  }
 
-  sendFrom = (
-    owner: Address, amount: Uint128, recipient: String,
-    hash?: CodeHash, msg?: string, memo?: string
-  ) => this.execute({
-    send_from: { owner, recipient, recipient_code_hash: hash, amount, msg, memo }
-  })
+  sendFrom (
+    owner:     Address,
+    amount:    Uint128,
+    recipient: String,
+    hash?:     CodeHash,
+    msg?:      string,
+    memo?:     string
+  ) {
+    const recipient_code_hash = hash
+    return this.execute({ send_from: { owner, recipient, recipient_code_hash, amount, msg, memo } })
+  }
 
-  batchTransfer = (actions: TransferAction[]) =>
-    this.execute({ batch_transfer: { actions } })
+  batchTransfer (actions: TransferAction[]) {
+    return this.execute({ batch_transfer: { actions } })
+  }
 
-  batchTransferFrom = (actions: TransferFromAction[]) =>
-    this.execute({ batch_transfer_from: { actions } })
+  batchTransferFrom (actions: TransferFromAction[]) {
+    return this.execute({ batch_transfer_from: { actions } })
+  }
 
-  batchSend = (actions: SendAction[]) =>
-    this.execute({ batch_transfer: { actions } })
+  batchSend (actions: SendAction[]) {
+    return this.execute({ batch_transfer: { actions } })
+  }
 
-  batchSendFrom = (actions: SendFromAction[]) =>
-    this.execute({ batch_send_from: { actions } })
+  batchSendFrom (actions: SendFromAction[]) {
+    return this.execute({ batch_send_from: { actions } })
+  }
 
   amount (amount: Uint128): Token.Amount {
     return new Token.Amount(amount, this)
