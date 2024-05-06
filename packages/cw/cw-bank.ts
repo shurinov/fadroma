@@ -6,10 +6,9 @@ type Connection = {
   api: CosmWasmClient|Promise<CosmWasmClient>
 }
 
-export async function getBalance (
-  { api }: Connection,
-  token:   string,
-  address: Address
+export async function fetchBalance (
+  { api }:  Connection,
+  balances: Parameters<Chain.Connection["fetchBalanceImpl"]>[0]
 ) {
   api = await Promise.resolve(api)
   if (!address) {

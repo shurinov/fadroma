@@ -9,7 +9,7 @@ export default function testSnip20 () {
     admin: 'address'
   }).prng_seed?.length > 0)
 
-  assert.equal(new Snip20('address').id, 'address')
+  assert.equal(new Snip20({ address: 'address' }).id, 'address')
 
-  assert(new Snip20('address').vk instanceof ViewingKeyClient)
+  assert(new Snip20({ address: 'address' }).vk instanceof ViewingKeyClient)
 }

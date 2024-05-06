@@ -34,8 +34,8 @@ export class StubConnection extends Connection {
     this.backend ??= new StubBackend()
   }
 
-  batch (): Batch<this, StubAgent> {
-    return new StubBatch({ connection: this }) as unknown as Batch<this, StubAgent>
+  batch (): Batch<StubConnection, StubAgent> {
+    return new StubBatch({ connection: this }) as unknown as Batch<StubConnection, StubAgent>
   }
 
   protected override fetchHeightImpl () {
@@ -46,13 +46,19 @@ export class StubConnection extends Connection {
     return Promise.resolve(new StubBlock({ height: + new Date() }))
   }
 
-  protected override fetchBalanceImpl (token?: string, address?: string): Promise<string> {
-    token ??= this.defaultDenom
-    const balance = (this.backend.balances.get(address!)||{})[token] ?? 0
-    return Promise.resolve(String(balance))
+  protected override fetchBalanceImpl (
+    ...args: Parameters<Connection["fetchBalanceImpl"]>
+  ): Promise<string> {
+    throw new Error('unimplemented!')
+    //token ??= this.defaultDenom
+    //const balance = (this.backend.balances.get(address!)||{})[token] ?? 0
+    //return Promise.resolve(String(balance))
+    return Promise.resolve('')
   }
 
-  protected override fetchCodeInfoImpl ({ ids }: { ids: CodeId[]|undefined }):
+  protected override fetchCodeInfoImpl (
+    ...args: Parameters<Connection["fetchCodeInfoImpl"]>
+  ):
     Promise<Record<string, UploadedCode>>
   {
     if (!ids) {
@@ -70,12 +76,18 @@ export class StubConnection extends Connection {
     }
   }
 
-  protected override fetchCodeInstancesImpl (id: CodeId) {
-    return Promise.resolve([...this.backend.uploads.get(id)!.instances]
-      .map(address=>({address})))
+  protected override async fetchCodeInstancesImpl (
+    ...args: Parameters<Connection["fetchCodeInstancesImpl"]>
+  ) {
+    throw new Error('unimplemented!')
+    return {}
+    //return Promise.resolve([...this.backend.uploads.get(id)!.instances]
+      //.map(address=>({address})))
   }
 
-  protected override fetchContractInfoImpl ({ addresses }: { addresses: Address[] }):
+  protected override fetchContractInfoImpl (
+    ...args: Parameters<Connection["fetchContractInfoImpl"]>
+  ):
     Promise<Record<Address, Contract>>
   {
     const results = {}
@@ -97,8 +109,10 @@ export class StubConnection extends Connection {
     return Promise.resolve(results)
   }
 
-  protected override queryImpl <Q> (contract: { address: Address }, message: Message): Promise<Q> {
-    return Promise.resolve({} as Q)
+  protected override queryImpl <T> (
+    ...args: Parameters<Connection["queryImpl"]>
+  ): Promise<T> {
+    return Promise.resolve({} as T)
   }
 
   authenticate (identity: Identity): StubAgent {
@@ -107,8 +121,10 @@ export class StubConnection extends Connection {
 }
 
 export class StubAgent extends Agent {
+
   declare connection: StubConnection
-  protected sendImpl (recipient: Address, sums: Token.ICoin[], opts?: never): Promise<void> {
+
+  protected sendImpl (...args: Parameters<Agent["sendImpl"]>): Promise<void> {
     if (!this.address) {
       throw new Error('not authenticated')
     }
@@ -134,14 +150,15 @@ export class StubAgent extends Agent {
     backend.balances.set(recipient, recipientBalances)
     return Promise.resolve()
   }
-  protected sendManyImpl (outputs: [Address, Token.ICoin[]][], opts?: never): Promise<void> {
-    return Promise.resolve()
-  }
-  protected async uploadImpl (codeData: Uint8Array): Promise<UploadedCode> {
+
+  protected async uploadImpl (
+    ...args: Parameters<Agent["uploadImpl"]>
+  ): Promise<UploadedCode> {
     return new UploadedCode(await this.connection.backend.upload(codeData))
   }
+
   protected async instantiateImpl (
-    codeId: CodeId, options: Parameters<Agent["instantiateImpl"]>[1]
+    ...args: Parameters<Agent["instantiateImpl"]>
   ): Promise<ContractInstance & { address: Address }> {
     return new ContractInstance(await this.connection.backend.instantiate(
       this.address!, codeId, options
@@ -149,12 +166,11 @@ export class StubAgent extends Agent {
       address: Address
     }
   }
-  protected executeImpl (
-    contract: { address: Address, codeHash: CodeHash },
-    message:  Message,
-    options?: Parameters<Agent["executeImpl"]>[2]
-  ): Promise<void|unknown> {
-    return Promise.resolve({})
+
+  protected executeImpl <T> (
+    ...args: Parameters<Agent["executeImpl"]>
+  ): Promise<T> {
+    return Promise.resolve({} as T)
   }
 }
 
@@ -214,23 +230,31 @@ export class StubBackend extends Backend {
     }
   }
 
-  async connect ():
-    Promise<Connection>
-  async connect (parameter: string|Partial<Identity & { mnemonic?: string }>):
-    Promise<Agent>
-  async connect (parameter: string|Partial<Identity & { mnemonic?: string }> = {}): Promise<unknown> {
-    if (typeof parameter === 'string') {
-      parameter = await this.getIdentity(parameter)
-    }
-    if (parameter.mnemonic && !parameter.address) {
-      parameter.address = `${this.prefix}${parameter.name}`
-    }
-    return new StubConnection({
+  connect ():
+    Promise<StubConnection>
+  connect (name: string):
+    Promise<StubAgent>
+  connect (identity: Partial<Identity>):
+    Promise<StubAgent>
+  async connect (...args: unknown[]): Promise<StubConnection|StubAgent> {
+    const connection = new StubConnection({
       chainId:  this.chainId,
       url:      'stub',
       alive:    this.alive,
       backend:  this,
-    }).authenticate(new Identity(parameter))
+    })
+    if (!args[0]) {
+      return connection
+    }
+    if (typeof args[0] === 'string') {
+      return connection.authenticate(new Identity(await this.getIdentity(args[0])))
+    }
+    const parameter = args[0] as Partial<Identity> & { mnemonic?: string }
+    if (parameter.mnemonic && !parameter.address) {
+      parameter.address = `${this.prefix}${parameter.name}`
+      return connection.authenticate(new Identity(parameter))
+    }
+    throw new Error('invalid argument')
   }
 
   getIdentity (name: string): Promise<Identity> {
@@ -268,19 +292,18 @@ export class StubBackend extends Backend {
     return upload
   }
 
-  async instantiate (
-    creator: Address, codeId: CodeId, options: unknown
-  ): Promise<Partial<ContractInstance> & {
-    address: Address
-  }> {
+  async instantiate (args: { creator: Address, codeId: CodeId }):
+    Promise<ContractInstance & { address: Address }>
+  {
+    const { codeId, creator } = args
     const address = randomBech32(this.prefix)
     const code = this.uploads.get(codeId)
     if (!code) {
-      throw new Error(`invalid code id ${codeId}`)
+      throw new Error(`invalid code id ${args.codeId}`)
     }
     code.instances.add(address)
     this.instances.set(address, { address, codeId, creator })
-    return { address, codeId }
+    return new ContractInstance({ address, codeId }) as ContractInstance & { address: Address }
   }
 
   async execute (...args: unknown[]): Promise<unknown> {

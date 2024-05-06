@@ -107,48 +107,35 @@ export class CWConnection extends Chain.Connection {
   }
 
   /** Query native token balance. */
-  protected override fetchBalanceImpl (parameters) {
-    return Bank.getBalance(this, parameters)
+  protected override fetchBalanceImpl (
+    ...args: Parameters<Chain.Connection["fetchBalanceImpl"]>
+  ) {
+    return Bank.fetchBalance(this, ...args)
   }
 
-  protected override fetchCodeInfoImpl (parameters) {
-    const { ids = [] } = parameters || {}
-    if (!ids || ids.length === 0) {
-      return Compute.getCodes(this)
-    } else if (ids.length === 1) {
-      return Compute.getCodes(this, ids)
-    } else {
-      throw new Error('CWConnection.fetchCodeInfo({ ids: [multiple] }): unimplemented!')
-    }
-    //protected override fetchCodesImpl () {
-      //return Compute.getCodes(this)
-    //}
-    //protected override fetchCodeIdImpl (address: Address): Promise<CodeId> {
-      //return getCodeId(this, address)
-    //}
-    //protected override fetchCodeHashOfCodeIdImpl (codeId: CodeId): Promise<CodeHash> {
-      //return Compute.getCodeHashOfCodeId(this, codeId)
-    //}
+  protected override fetchCodeInfoImpl (
+    ...args: Parameters<Chain.Connection["fetchCodeInfoImpl"]>
+  ) {
+    return Compute.fetchCodeInfo(this, ...args)
   }
 
-  protected override fetchCodeInstancesImpl (parameters) {
-    //protected override fetchContractsByCodeIdImpl (id: CodeId): Promise<Iterable<{address: Address}>> {
-      //return Compute.getContractsByCodeId(this, id)
-    //}
+  protected override fetchCodeInstancesImpl (
+    ...args: Parameters<Chain.Connection["fetchCodeInstancesImpl"]>
+  ) {
+    return Compute.fetchCodeInstances(this, ...args)
+
   }
 
-  protected override fetchContractInfoImpl (parameters) {
-    //return Compute.getCodeId(this, address)
-    //protected override fetchCodeHashOfAddressImpl (address: Address): Promise<CodeHash> {
-      //return Compute.getCodeHashOfAddress(this, address)
-    //}
-    //protected override fetchLabelImpl (address: Address): Promise<string> {
-      //return Compute.getLabel(this, address)
-    //}
+  protected override fetchContractInfoImpl (
+    ...args: Parameters<Chain.Connection["fetchContractInfoImpl"]>
+  ) {
+    return Compute.fetchContractInfo(this, ...args)
   }
 
-  protected override async queryImpl <T> (parameters) {
-    return await Compute.query(this, parameters) as T
+  protected override async queryImpl <T> (
+    ...args: Parameters<Chain.Connection["queryImpl"]>
+  ) {
+    return await Compute.query(this, ...args) as T
   }
 
   fetchValidators ({ details = false }: {
@@ -169,16 +156,19 @@ export class CWAgent extends Chain.Agent {
   /** API connects asynchronously, so API handle is a promise. */
   declare api: Promise<SigningCosmWasmClient>
 
-  protected override async sendImpl (parameters) {
-    return Bank.send(this as Compute.SigningConnection, parameters)
+  protected async sendImpl (...args: Parameters<Chain.Agent["sendImpl"]>) {
+    return await Bank.send(this, ...args)
   }
-  protected override async uploadImpl (parameters) {
-    return Compute.upload(this as Compute.SigningConnection, parameters)
+
+  protected async uploadImpl (...args: Parameters<Chain.Agent["uploadImpl"]>) {
+    return await Compute.upload(this, ...args)
   }
-  protected override async instantiateImpl (parameters) {
-    return Compute.instantiate(this as Compute.SigningConnection, parameters)
+
+  protected async instantiateImpl (...args: Parameters<Chain.Agent["instantiateImpl"]>) {
+    return await Compute.instantiate(this, ...args)
   }
-  protected override async executeImpl (parameters) {
-    return Compute.execute(this as Compute.SigningConnection, parameters)
+
+  protected async executeImpl <T> (...args: Parameters<Chain.Agent["executeImpl"]>): Promise<T> {
+    return await Compute.execute(this, ...args) as T
   }
 }

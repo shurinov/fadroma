@@ -424,7 +424,7 @@ export default class NamadaCLI extends CLI {
       height = Number(height)
     }
     const connection = new NamadaConnection({ url })
-    const block = await connection.getBlock(height)
+    const block = await connection.fetchBlock({ height })
     this.log.log()
       .log('Block:', Core.bold(block.height))
       .log('ID:   ', Core.bold(block.hash))
@@ -447,7 +447,7 @@ export default class NamadaCLI extends CLI {
     const connection = new NamadaConnection({ url })
     let block
     do {
-      block = await connection.getBlock(Number(height))
+      block = await connection.fetchBlock({ height: Number(height) })
       height = block.header.height
       this.log.log()
         .log('Block:', Core.bold(block.header.height))

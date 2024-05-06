@@ -284,8 +284,8 @@ export class ContractInstance extends DeploymentUnit {
   }
 
   /** Returns a client to this contract instance. */
-  connect (
-    agent?: Connection): Contract
+  connect (agent?: Connection):
+    Contract
   connect <C extends typeof Contract> (
     connection?: Connection, $C: C = Contract as C
   ) {

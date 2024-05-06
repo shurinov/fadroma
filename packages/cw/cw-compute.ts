@@ -1,7 +1,8 @@
 import type { CosmWasmClient, SigningCosmWasmClient } from '@hackbg/cosmjs-esm'
-import { Deploy } from '@fadroma/agent'
-import type { Address, CodeId, Chain, Message, Token, Core } from '@fadroma/agent'
+import { Chain, Deploy } from '@fadroma/agent'
+import type { Address, CodeId, Message, Token, Core } from '@fadroma/agent'
 import { Amino } from '@hackbg/cosmjs-esm'
+import type { CWConnection, CWAgent } from './cw-connection'
 
 type Connection = {
   chainId?: string,
@@ -14,6 +15,65 @@ export type SigningConnection = {
   address:  string,
   fees?:    any,
   api:      SigningCosmWasmClient|Promise<SigningCosmWasmClient>
+}
+
+export async function fetchCodeInfo (
+  conn: CWConnection,
+  args: Parameters<Chain.Connection["fetchCodeInfoImpl"]>[0]
+):
+  Promise<Record<Deploy.CodeId, Deploy.UploadedCode>>
+{
+  throw new Error('unimplemented!')
+  return {}
+    //const { ids = [] } = parameters || {}
+    //if (!ids || ids.length === 0) {
+      //return Compute.getCodes(this)
+    //} else if (ids.length === 1) {
+      //return Compute.getCodes(this, ids)
+    //} else {
+      //throw new Error('CWConnection.fetchCodeInfo({ ids: [multiple] }): unimplemented!')
+    //}
+    //protected override fetchCodesImpl () {
+      //return Compute.getCodes(this)
+    //}
+    //protected override fetchCodeIdImpl (address: Address): Promise<CodeId> {
+      //return getCodeId(this, address)
+    //}
+    //protected override fetchCodeHashOfCodeIdImpl (codeId: CodeId): Promise<CodeHash> {
+      //return Compute.getCodeHashOfCodeId(this, codeId)
+    //}
+}
+
+export async function fetchCodeInstances (
+  conn: CWConnection,
+  args: Parameters<Chain.Connection["fetchCodeInstancesImpl"]>[0]
+):
+  Promise<Record<Deploy.CodeId, Record<Chain.Address, Chain.Contract>>>
+{
+  throw new Error('unimplemented!')
+  return {}
+    //protected override fetchContractsByCodeIdImpl (id: CodeId): Promise<Iterable<{address: Address}>> {
+      //return Compute.getContractsByCodeId(this, id)
+    //}
+}
+
+export async function fetchContractInfo (
+  conn: CWConnection,
+  args: Parameters<Chain.Connection["fetchContractInfoImpl"]>[0]
+):
+  Promise<{
+    [address in keyof typeof args["contracts"]]: InstanceType<typeof args["contracts"][address]>
+  }>
+{
+  throw new Error('unimplemented!')
+  return {}
+    //return Compute.getCodeId(this, address)
+    //protected override fetchCodeHashOfAddressImpl (address: Address): Promise<CodeHash> {
+      //return Compute.getCodeHashOfAddress(this, address)
+    //}
+    //protected override fetchLabelImpl (address: Address): Promise<string> {
+      //return Compute.getLabel(this, address)
+    //}
 }
 
 export async function getCodes (
@@ -141,7 +201,7 @@ export async function instantiate (
     options.initFee as Amino.StdFee || 'auto',
     { admin: address, funds: options.initSend, memo: options.initMemo }
   )
-  return {
+  return new Deploy.ContractInstance({
     codeId:   options.codeId,
     codeHash: options.codeHash,
     label:    options.label,
@@ -154,7 +214,7 @@ export async function instantiate (
     initFee:  options.initFee || 'auto',
     initSend: options.initSend,
     initMemo: options.initMemo
-  }
+  }) as Deploy.ContractInstance & { address: Address }
 }
 
 export async function execute (

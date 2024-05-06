@@ -20,11 +20,12 @@ export type { TxResponse }
 
 /** Represents a Secret Network API endpoint. */
 export class ScrtConnection extends Chain.Connection {
+
   /** Smallest unit of native token. */
   static gasToken = new Token.Native('uscrt')
+
   /** Underlying API client. */
-  declare api:
-    SecretNetworkClient
+  declare api: SecretNetworkClient
 
   constructor (properties?: Partial<ScrtConnection>) {
     super(properties as Partial<Chain.Connection>)
@@ -38,12 +39,15 @@ export class ScrtConnection extends Chain.Connection {
     }
     this.api = new SecretNetworkClient({ chainId, url })
   }
+
   authenticate (identity: ScrtIdentity): ScrtAgent {
     return new ScrtAgent({ connection: this, identity })
   }
+
   batch (): Batch<ScrtConnection, ScrtAgent> {
     return new ScrtBatch({ connection: this }) as unknown as Batch<ScrtConnection, ScrtAgent>
   }
+
   protected override async fetchBlockImpl (parameter?): Promise<ScrtBlock> {
     if (!parameter) {
       const {
@@ -56,25 +60,40 @@ export class ScrtConnection extends Chain.Connection {
       })
     }
   }
+
   protected override async fetchHeightImpl () {
     const { height } = await this.fetchBlockImpl()
     return height
   }
-  protected override async fetchBalanceImpl (parameters) {
-    return await Bank.fetchBalance(this, parameters)
+
+  protected override async fetchBalanceImpl (
+    ...args: Parameters<Chain.Connection["fetchBalanceImpl"]>
+  ) {
+    return await Bank.fetchBalance(this, ...args)
   }
-  protected override async fetchCodeInfoImpl (parameters) {
-    return await Compute.fetchCodeInfo(this, parameters)
+
+  protected override async fetchCodeInfoImpl (
+    ...args: Parameters<Chain.Connection["fetchCodeInfoImpl"]>
+  ) {
+    return await Compute.fetchCodeInfo(this, ...args)
   }
-  protected override async fetchCodeInstancesImpl (parameters) {
-    return await Compute.fetchCodeInstances(this, parameters)
+
+  protected override async fetchCodeInstancesImpl (
+    ...args: Parameters<Chain.Connection["fetchCodeInstancesImpl"]>
+  ) {
+    return await Compute.fetchCodeInstances(this, ...args)
   }
-  protected override async fetchContractInfoImpl (parameters) {
-    return await Compute.fetchContractInfo(this, parameters)
+
+  protected override async fetchContractInfoImpl (
+    ...args: Parameters<Chain.Connection["fetchContractInfoImpl"]>
+  ) {
+    return await Compute.fetchContractInfo(this, ...args)
   }
+
   protected override async queryImpl <T> (parameters): Promise<T> {
     return await Compute.query(this, parameters) as T
   }
+
   async fetchLimits (): Promise<{ gas: number }> {
     const params = { subspace: "baseapp", key: "BlockParams" }
     const { param } = await this.api.query.params.params(params)
@@ -141,6 +160,7 @@ export class ScrtAgent extends Chain.Agent {
     const { account_number, sequence } = result.account
     return { accountNumber: Number(account_number), sequence: Number(sequence) }
   }
+
   async encrypt (codeHash: CodeHash, msg: Message) {
     if (!codeHash) {
       throw new Error("can't encrypt message without code hash")
@@ -153,12 +173,15 @@ export class ScrtAgent extends Chain.Agent {
   protected async sendImpl (...args: Parameters<Chain.Agent["sendImpl"]>) {
     return await Bank.send(this, ...args)
   }
+
   protected async uploadImpl (...args: Parameters<Chain.Agent["uploadImpl"]>) {
     return await Compute.upload(this, ...args)
   }
+
   protected async instantiateImpl (...args: Parameters<Chain.Agent["instantiateImpl"]>) {
     return await Compute.instantiate(this, ...args)
   }
+
   protected async executeImpl <T> (...args: Parameters<Chain.Agent["executeImpl"]>): Promise<T> {
     return await Compute.execute(this, ...args) as T
   }
@@ -262,7 +285,7 @@ export class ScrtBatch extends Batch<ScrtConnection, ScrtAgent> {
       code_id:     String(init.codeId),
       init_funds:         init.funds,
       label:              init.label,
-      init_msg:           await this.connection!.encrypt(init.codeHash, init.msg),
+      init_msg:           await this.agent!.encrypt(init.codeHash, init.msg),
     }
   }
 
@@ -274,7 +297,7 @@ export class ScrtBatch extends Batch<ScrtConnection, ScrtAgent> {
       sender:             this.agent!.address,
       contract:           exec.contract,
       sent_funds:         exec.funds,
-      msg:                await this.connection!.encrypt(exec.codeHash, exec.msg),
+      msg:                await this.agent!.encrypt(exec.codeHash, exec.msg),
     }
   }
 
@@ -286,7 +309,7 @@ export class ScrtBatch extends Batch<ScrtConnection, ScrtAgent> {
     const api = await Promise.resolve(this.connection!.api)
     const chainId  = this.connection!.chainId!
     const messages = this.messages
-    const limit    = Number(this.connection!.fees.exec?.amount[0].amount) || undefined
+    const limit    = Number(this.agent!.fees.exec?.amount[0].amount) || undefined
     const gas      = messages.length * (limit || 0)
 
     const results: ScrtBatchResult[] = []
@@ -354,7 +377,7 @@ export class ScrtBatch extends Batch<ScrtConnection, ScrtAgent> {
     // Number of batch, just for identification in console
     name ??= name || `TX.${+new Date()}`
     // Get signer's account number and sequence via the canonical API
-    const { accountNumber, sequence } = await this.connection!.getNonce()//this.chain.url, this.connection!.address)
+    const { accountNumber, sequence } = await this.agent!.getNonce()//this.chain.url, this.connection!.address)
     // Print the body of the batch
     this.log.debug(`Messages in batch:`)
     for (const msg of this.messages??[]) {

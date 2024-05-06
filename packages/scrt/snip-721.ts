@@ -6,7 +6,7 @@ export class Snip721 extends Chain.Contract implements Token.NonFungible {
   isFungible = () => false
 
   get id () {
-    return this.instance!.address!
+    return this.address!
   }
 
 }

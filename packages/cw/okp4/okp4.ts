@@ -35,27 +35,6 @@ class OKP4Connection extends CWConnection {
     super({ ...defaults, ...options } as Partial<CWConnection>)
   }
 
-  getContractsById (id: CodeId):
-    Promise<Chain.Contract>
-  getContractsById <C extends typeof Chain.Contract> (id: CodeId):
-    Promise<InstanceType<C>>
-  {
-    return Promise.resolve(new Chain.Contract({
-      instance: { address: '' },
-      connection: this
-    }) as InstanceType<C>)
-  }
-
-  getContractsByIds (ids: CodeId[]):
-    Promise<Map<CodeId, Chain.Contract>>
-  getContractsByIds (ids: Record<CodeId, typeof Chain.Contract>):
-    Promise<Map<CodeId, Chain.Contract>>
-  getContractsByIds (ids: unknown):
-    Promise<Map<CodeId, Chain.Contract>>
-  {
-    return Promise.resolve(new Map())
-  }
-
   /** Get clients for all Cognitarium instances, keyed by address. */
   //async cognitaria ({ map = true } = {}) {
     //const ids = Object.values(cognitariumCodeIds)

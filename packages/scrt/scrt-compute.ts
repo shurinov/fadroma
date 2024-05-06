@@ -164,7 +164,7 @@ export async function upload (
     throw new Error('upload failed')
   }
   const { codeHash } = await this.conn.fetchCodeInfo(codeId)
-  return new Deploy.ContractTemplate({
+  return new Deploy.UploadedCode({
     chainId:   this.conn.chainId,
     codeId,
     codeHash,

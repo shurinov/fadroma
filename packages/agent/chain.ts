@@ -61,8 +61,11 @@ export abstract class Backend extends Logged {
 
   abstract connect ():
     Promise<Connection>
-  abstract connect (parameter?: string|Partial<Identity>):
-    Promise<Connection>
+  abstract connect (name: string):
+    Promise<Agent>
+  abstract connect (identity: Partial<Identity>):
+    Promise<Agent>
+
   abstract getIdentity (name: string):
     Promise<{ address?: Address, mnemonic?: string }>
 }

@@ -42,12 +42,9 @@ class ScrtMocknetConnection extends Stub.StubConnection {
     return Promise.resolve({})
   }
 
-  protected queryImpl <Q> (
-    contract: Address|{address: Address},
-    message:  Message
-  ): Promise<Q> {
+  protected queryImpl <Q> ({ address, message }): Promise<Q> {
     return (this.backend as ScrtMocknetBackend)
-      .getContract(contract)
+      .getContract({address})
       .query({ msg: message })
   }
 }
@@ -57,13 +54,16 @@ export { ScrtMocknetConnection as Connection }
 class ScrtMocknetAgent extends Stub.StubAgent {
 
   protected instantiateImpl (...args: Parameters<Stub.StubAgent["instantiateImpl"]>) {
-    return this.connection.backend.instantiate(
-      this.address!, ...args
-    ) as Promise<Deploy.ContractInstance & { address: Address }>
+    return this.connection.backend.instantiate({
+      ...args[0] as typeof args[0] & { codeId: CodeId },
+      creator: this.address!
+    }) as Promise<Deploy.ContractInstance & { address: Address }>
   }
 
-  protected executeImpl (...args: Parameters<Stub.StubAgent["executeImpl"]>): Promise<unknown> {
-    return this.connection.backend.execute(this.address!, ...args)
+  protected async executeImpl <T> (...args: Parameters<Stub.StubAgent["executeImpl"]>):
+    Promise<T>
+  {
+    return await this.connection.backend.execute(this.address!, ...args) as T
   }
 
 }
@@ -186,12 +186,19 @@ class ScrtMocknetBackend extends Stub.StubBackend {
   }
 
   //async instantiate (codeId: CodeId, options: unknown): Promise<Partial<ContractInstance> & {
-  async instantiate (
-    creator: Address, ...args: Parameters<Stub.StubAgent["instantiateImpl"]>
-  ): Promise<Deploy.ContractInstance & {
-    address: Address
-  }> {
-    const [codeId, { codeHash, label, initSend, initMsg, initFee }] = args
+  async instantiate (args: {
+    creator:   Address
+    codeId:    CodeId
+    codeHash:  CodeHash
+    label:     string
+    initMsg:   Message
+    initSend?: unknown[]
+    initFee?
+    initMemo?
+  }):
+    Promise<Deploy.ContractInstance & { address: Address }>
+  {
+    const { creator, codeId, codeHash, label, initSend, initMsg, initFee } = args
     if (!codeId) {
       throw new Error('missing code id')
     }
@@ -376,13 +383,7 @@ class ScrtMocknetBackend extends Stub.StubBackend {
     }))
   }
 
-  connect ():
-    Promise<ScrtMocknetConnection>
-  connect (_: string|Partial<Chain.Identity & { mnemonic?: string }>):
-    Promise<ScrtMocknetAgent>
-  async connect (
-    parameter?: string|Partial<Chain.Identity & { mnemonic?: string }>
-  ): Promise<unknown> {
+  async connect (...args: unknown[]): Promise<ScrtMocknetConnection> {
     const connection = new ScrtMocknetConnection({
       chainId:  this.chainId,
       url:      this.url,
@@ -472,7 +473,10 @@ class ScrtMocknetContract<V extends ScrtCWVersion> {
   runtime?:   WebAssembly.Instance<ScrtCWAPI<V>['exports']>
   storage = new Map<string, Buffer>()
 
-  constructor (readonly mocknet: ScrtMocknetBackend, options: Partial<ScrtMocknetContract<V>> = {}) {
+  constructor (
+    readonly mocknet: ScrtMocknetBackend,
+    options: Partial<ScrtMocknetContract<V>> = {}
+  ) {
     Object.assign(this, options)
   }
 
