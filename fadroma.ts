@@ -62,7 +62,7 @@ export default function main (...args: any) {
       (...units: string[]) => getProject().getDeployment().then(async deployment=>deployment.upload({
         compiler:    await getCompiler(),
         uploadStore: getUploadStore(),
-        uploader:    getConnection(),
+        uploader:    getAgent(),
         units
       })))
     .addCommand(
@@ -70,7 +70,7 @@ export default function main (...args: any) {
       (...units: string[]) => getProject().getDeployment().then(async deployment=>deployment.upload({
         compiler:    await getCompiler(),
         uploadStore: getUploadStore(),
-        uploader:    getConnection(),
+        uploader:    getAgent(),
         reupload:    true,
         units,
       })))
@@ -80,7 +80,7 @@ export default function main (...args: any) {
         compiler:    await getCompiler(),
         uploadStore: getUploadStore(),
         deployStore: getDeployStore(),
-        deployer:    getConnection(),
+        deployer:    getAgent(),
         units
       })))
     .addCommand(
@@ -89,7 +89,7 @@ export default function main (...args: any) {
         compiler:    await getCompiler(),
         uploadStore: getUploadStore(),
         deployStore: getDeployStore(),
-        deployer:    getConnection(),
+        deployer:    getAgent(),
         redeploy:    true,
         units,
       })))
@@ -120,6 +120,10 @@ type Project = { // FIXME
 }
 
 export function getConnection (): Chain.Connection {
+  throw new Error('not implemented')
+}
+
+export function getAgent (): Chain.Agent {
   throw new Error('not implemented')
 }
 

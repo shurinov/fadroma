@@ -337,10 +337,10 @@ export abstract class Connection extends Endpoint {
   fetchCodeInfo ():
     Promise<Record<Deploy.CodeId, Deploy.UploadedCode>>
   /** Fetch info about a single code ID. */
-  fetchCodeInfo (codeId: Deploy.CodeId, options: { parallel?: boolean }):
+  fetchCodeInfo (codeId: Deploy.CodeId, options?: { parallel?: boolean }):
     Promise<Deploy.UploadedCode>
   /** Fetch info about multiple code IDs. */
-  fetchCodeInfo (codeIds: Iterable<Deploy.CodeId>, options: { parallel?: boolean }):
+  fetchCodeInfo (codeIds: Iterable<Deploy.CodeId>, options?: { parallel?: boolean }):
     Promise<Record<Deploy.CodeId, Deploy.UploadedCode>>
 
   fetchCodeInfo (...args: unknown[]): Promise<unknown> {
@@ -514,7 +514,7 @@ export abstract class Connection extends Endpoint {
     if (typeof args[0] === 'string') {
       this.log.debug(`Fetching contract ${args[0]}`)
       const contracts = await timed(
-        ()=>this.fetchContractInfoImpl({ addresses: [args[0] as Address] }),
+        ()=>this.fetchContractInfoImpl({ contracts: [args[0] as Address] }),
         ({ elapsed }) => this.log.debug(
           `Fetched in ${bold(elapsed)}: contract ${args[0]}`
         ))
@@ -529,15 +529,15 @@ export abstract class Connection extends Endpoint {
     if (args[0][Symbol.iterator]) {
       const addresses = args[0] as Address[]
       this.log.debug(`Fetching ${addresses.length} contracts`)
-      const contracts = await timed(
-        ()=>this.fetchContractInfoImpl({ addresses, parallel }),
+      const results = await timed(
+        ()=>this.fetchContractInfoImpl({ contracts, parallel }),
         ({ elapsed }) => this.log.debug(
           `Fetched in ${bold(elapsed)}: ${addresses.length} contracts`
         ))
       if (custom) {
-        return addresses.map(address=>new $C(contracts[address]))
+        return addresses.map(address=>new $C(results[address]))
       } else {
-        return addresses.map(address=>contracts[address])
+        return addresses.map(address=>results[address])
       }
     }
 
@@ -618,7 +618,7 @@ export abstract class Agent extends Logged {
     return this.identity?.address
   }
 
-  async fetchBalance (tokens?: string[]|string): Promise<void> {
+  async fetchBalance (tokens?: string[]|string): Promise<Record<string, Token.Uint128>> {
     throw new Error("unimplemented!")
   }
 
@@ -843,12 +843,17 @@ export class Contract extends Logged {
   constructor (properties: Partial<Contract>) {
     super((typeof properties === 'string')?{}:properties)
     if (typeof properties === 'string') {
-      properties = { instance: { address: properties } }
+      properties = { address: properties }
     }
-    assign(this, properties, [ 'instance', 'connection' ])
-    let { instance, connection } = properties
-    this.instance = instance as Partial<Deploy.ContractInstance>
-    this.connection = connection
+    assign(this, properties, [
+      'connection',
+      'agent',
+      'codeId',
+      'codeHash',
+      'address',
+      'label',
+      'initBy'
+    ])
   }
 
   /** Execute a query on the specified instance as the specified Connection. */
@@ -856,12 +861,10 @@ export class Contract extends Logged {
     if (!this.connection) {
       throw new Error("can't query instance without connection")
     }
-    if (!this.instance?.address) {
+    if (!this.address) {
       throw new Error("can't query instance without address")
     }
-    return this.connection.query<Q>(
-      this.instance as Deploy.ContractInstance & { address: Address }, message
-    )
+    return this.connection.query<Q>(this as { address }, message)
   }
 
   /** Execute a transaction on the specified instance as the specified Connection. */
@@ -872,11 +875,9 @@ export class Contract extends Logged {
     if (!this.agent?.execute) {
       throw new Error("can't transact with instance without authorizing the connection")
     }
-    if (!this.instance?.address) {
+    if (!this.address) {
       throw new Error("can't transact with instance without address")
     }
-    return this.agent?.execute(
-      this.instance as Deploy.ContractInstance & { address: Address }, message, options
-    )
+    return this.agent?.execute(this as { address }, message, options)
   }
 }

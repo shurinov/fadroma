@@ -19,58 +19,48 @@ export default new Suite([
 
 export async function testHeight () {
   const connection = new Stub.StubConnection()
-  assert(
-    await connection.height)
-  assert(
-    await connection.nextBlock)
+  assert(await connection.height)
+  assert(await connection.nextBlock)
   Object.defineProperty(connection, 'height', { configurable: true, get () {
     return Promise.resolve('NaN')
   } })
-  assert.equal(
-    await connection.nextBlock, NaN)
+  assert.equal(await connection.nextBlock, NaN)
   Object.defineProperty(connection, 'height', { configurable: true, get () {
     Object.defineProperty(connection, 'height', { configurable: true, get () {
       throw new Error('yeet')
     } })
     return Promise.resolve(0)
   } })
-  assert.rejects(
-    ()=>connection.nextBlock)
-  assert(
-    await connection.query('', {}))
+  assert.rejects(()=>connection.nextBlock)
+  assert(await connection.query('', {}))
 }
 
 export async function testCodes () {
-
   const backend = new Stub.StubBackend({})
   backend.uploads.set("123", { codeHash: "abc", codeData: new Uint8Array() } as any)
   backend.instances.set("stub1abc", {
     codeId:  "123",
     address: 'stub1instancefoo',
-    creator: 'stub1instancefoo'
+    initBy:  'stub1instancefoo'
   })
-
   const connection = new Stub.StubConnection({ backend })
-  assert.equal(
-    await connection.getCodeId('stub1abc'), "123")
-  assert.equal(
-    await connection.getCodeHashOfAddress('stub1abc'), "abc")
-  assert.equal(
-    await connection.getCodeHashOfCodeId('123'), "abc")
-
+  const { codeId, codeHash } = await connection.fetchContractInfo('stub1abs')
+  assert.equal(codeId,   "123")
+  assert.equal(codeHash, "abc")
+  assert.equal((await connection.fetchCodeInfo('123')).codeHash, "abc")
 }
 
 export async function testAuth () {
   throws(()=>new Identity().sign(''))
   const identity = new Identity({ name: 'foo', address: 'foo1bar' })
-  const connection = new Stub.StubConnection({ identity })
+  const connection = new Stub.StubConnection().authenticate(identity)
   //assert.equal(connection[Symbol.toStringTag], 'stub (mocknet): testing1')
   assert(connection instanceof Stub.StubConnection)
   assert(connection.identity?.address)
   assert(connection.identity?.name)
-  connection.height
-  connection.nextBlock
-  await connection.query('', {})
+  connection.connection.height
+  connection.connection.nextBlock
+  await connection.connection.query('', {})
   await connection.send('x', [])
   //await connection.sendMany([])
 
@@ -84,10 +74,10 @@ export async function testAuth () {
   rejects(()=>connection.instantiate('1', { label: 'foo' }))
   rejects(()=>connection.instantiate('1', { initMsg: {} }))
 
-  await connection.getContractsByCodeId('1')
-  rejects(connection.getContractsByCodeIds(null as any))
-  await connection.getContractsByCodeIds(['1', '2'])
-  await connection.getContractsByCodeIds({'1': Contract, '2': Contract})
+  await connection.connection.fetchCodeInstances('1')
+  rejects(connection.connection.fetchCodeInstances(null as any))
+  await connection.connection.fetchCodeInstances(['1', '2'])
+  await connection.connection.fetchCodeInstances({'1': Contract, '2': Contract})
 
   await connection.execute('stub', {}, {})
   await connection.execute('stub', 'method', {})
@@ -106,7 +96,7 @@ export async function testAuth () {
 }
 
 export async function testBatch () {
-  const connection = new Stub.StubConnection({ identity: new Identity() })
+  const connection = new Stub.StubConnection().authenticate(new Identity())
   const batch = connection.batch()
     .upload({})
     .upload({})
@@ -121,15 +111,13 @@ export async function testBatch () {
 export async function testClient () {
   const instance   = { address: 'addr', codeHash: 'code-hash-stub', codeId: '100' }
   const connection = new Stub.StubConnection()
-  const client     = connection.getContract(instance)
+  const client     = await connection.fetchContractInfo('addr')
   assert.equal(client.connection, connection)
-  assert.equal(client.instance, instance)
+  assert.equal(client.address, 'addr')
   await client.query({foo: 'bar'})
   await client.execute({foo: 'bar'})
-  await connection.getContract('addr')
-
-  assert(new Contract('addr'))
-  assert(new Contract(new ContractInstance({ address: 'addr' })))
+  await connection.fetchContractInfo('addr')
+  assert(new Contract({ address: 'addr' }))
   assert.throws(()=>new Contract({}).query({}))
   assert.throws(()=>new Contract({ connection }).query({}))
   assert.throws(()=>new Contract({}).execute({}))

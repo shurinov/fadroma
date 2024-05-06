@@ -90,10 +90,18 @@ export async function testConnectionWithBackend <
   const uploadFee = Connection.gas(10000000).asFee()
   const initFee   = Connection.gas(10000000).asFee()
   const execFee   = Connection.gas(10000000).asFee()
+
   const [alice, bob] = await Promise.all([backend.connect('Alice'), backend.connect('Bob')])
-  //ok(alice.identity.address && bob.identity?.address)
-  await alice.height
-  const [aliceBalance, bobBalance] = await Promise.all([alice.balance, bob.balance])
+
+  ok(alice.address && bob.address)
+
+  await alice.connection.height
+
+  const [aliceBalance, bobBalance] = await Promise.all([
+    alice.fetchBalance(),
+    bob.fetchBalance()
+  ])
+
   const guest = await backend.connect({
     name: 'Guest',
     mnemonic: [
@@ -103,19 +111,33 @@ export async function testConnectionWithBackend <
       'angry tiny foil prosper water news'
     ].join(' ')
   } as any)
-  equal((await guest.balance)??'0', '0')
+
+  equal((await guest.fetchBalance())??'0', '0')
+
   await alice.send(guest, [Connection.gas(1)], { sendFee })
-  equal(await guest.balance, '1')
+
+  equal(await guest.fetchBalance(), '1')
+
   await bob.send(guest, [Connection.gas(11)], { sendFee })
-  equal(await guest.balance, '12')
+
+  equal(await guest.fetchBalance(), '12')
+
   const uploaded = await alice.upload(code)
-  equal(Object.keys(await bob.getCodes()).length, 1)
-  equal(await bob.getCodeHashOfCodeId(uploaded.codeId), uploaded.codeHash)
-  rejects(()=>bob.getCodeHashOfCodeId('missing'))
+
+  equal(Object.keys(await bob.connection.fetchCodeInfo()).length, 1)
+
+  equal(await bob.connection.fetchCodeInfo(uploaded.codeId), uploaded.codeHash)
+
+  rejects(()=>bob.connection.fetchCodeInfo('missing'))
+
   const label = 'my-contract-label'
+
   const instance = await bob.instantiate(uploaded, { label, initMsg, initFee })
-  equal(await guest.getCodeHashOfAddress(instance.address), uploaded.codeHash)
+
+  equal(await guest.connection.fetchContractInfo(instance.address), uploaded.codeHash)
+
   const txResult = await alice.execute(instance, null as any, { execFee })
-  const qResult = await alice.query(instance, null as any)
+
+  const qResult = await alice.connection.query(instance, null as any)
   return { backend, alice, bob, guest }
 }

@@ -61,7 +61,7 @@ export class StubConnection extends Connection {
   ):
     Promise<Record<string, UploadedCode>>
   {
-    if (!ids) {
+    if (!args[0].codeIds) {
       return Promise.resolve(Object.fromEntries(
         [...this.backend.uploads.entries()].map(
           ([key, val])=>[key, new UploadedCode(val)]
@@ -69,7 +69,7 @@ export class StubConnection extends Connection {
       ))
     } else {
       const results = {}
-      for (const id of ids) {
+      for (const id of args[0].codeIds) {
         results[id] = new UploadedCode(this.backend.uploads.get(id))
       }
       return Promise.resolve(results)
@@ -154,15 +154,16 @@ export class StubAgent extends Agent {
   protected async uploadImpl (
     ...args: Parameters<Agent["uploadImpl"]>
   ): Promise<UploadedCode> {
-    return new UploadedCode(await this.connection.backend.upload(codeData))
+    return new UploadedCode(await this.connection.backend.upload(args[0].binary))
   }
 
   protected async instantiateImpl (
     ...args: Parameters<Agent["instantiateImpl"]>
   ): Promise<ContractInstance & { address: Address }> {
-    return new ContractInstance(await this.connection.backend.instantiate(
-      this.address!, codeId, options
-    )) as ContractInstance & {
+    return new ContractInstance(await this.connection.backend.instantiate({
+      initBy: this.address!,
+      codeId: args[0].codeId
+    })) as ContractInstance & {
       address: Address
     }
   }
@@ -192,7 +193,7 @@ type StubUpload = {
 type StubInstance = {
   codeId: CodeId,
   address: Address,
-  creator: Address
+  initBy: Address
 }
 
 export type {
@@ -292,17 +293,17 @@ export class StubBackend extends Backend {
     return upload
   }
 
-  async instantiate (args: { creator: Address, codeId: CodeId }):
+  async instantiate (args: { initBy: Address, codeId: CodeId }):
     Promise<ContractInstance & { address: Address }>
   {
-    const { codeId, creator } = args
+    const { codeId, initBy } = args
     const address = randomBech32(this.prefix)
     const code = this.uploads.get(codeId)
     if (!code) {
       throw new Error(`invalid code id ${args.codeId}`)
     }
     code.instances.add(address)
-    this.instances.set(address, { address, codeId, creator })
+    this.instances.set(address, { address, codeId, initBy })
     return new ContractInstance({ address, codeId }) as ContractInstance & { address: Address }
   }
 
