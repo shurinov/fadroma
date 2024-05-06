@@ -40,6 +40,33 @@ export type Message = string|Record<string, unknown>
 /** A transaction hash, uniquely identifying an executed transaction on a chain. */
 export type TxHash = string
 
+/** Represents the backend of an [`Endpoint`](#abstract-class-endpoint), managed by us,
+  * such as:
+  *
+  *   * Local devnet RPC endpoint.
+  *   * Stub/mock implementation of chain.
+  *
+  * You shouldn't need to instantiate this class directly.
+  * Instead, see `Connection`, `Devnet`, and their subclasses. */
+export abstract class Backend extends Logged {
+  /** The chain ID that will be passed to the devnet node. */
+  chainId?:  ChainId
+  /** Denomination of base gas token for this chain. */
+  gasToken?: Token.Native
+
+  constructor (properties?: Partial<Backend>) {
+    super(properties)
+    assign(this, properties, ["chainId"])
+  }
+
+  abstract connect ():
+    Promise<Connection>
+  abstract connect (parameter?: string|Partial<Identity>):
+    Promise<Connection>
+  abstract getIdentity (name: string):
+    Promise<{ address?: Address, mnemonic?: string }>
+}
+
 /** Represents a remote API endpoint.
   *
   * You shouldn't need to instantiate this class directly.
@@ -84,30 +111,6 @@ export abstract class Endpoint extends Logged {
     }
     return tag
   }
-}
-
-/** Provides control over the service backing an [`Endpoint`](#abstract-class-endpoint), such as:
-  *
-  *   * Local devnet RPC endpoint.
-  *   * Stub/mock implementation of chain.
-  *
-  * You shouldn't need to instantiate this class directly.
-  * Instead, see `Connection`, `Devnet`, and their subclasses. */
-export abstract class Backend extends Logged {
-  /** The chain ID that will be passed to the devnet node. */
-  chainId?:  ChainId
-  /** Denomination of base gas token for this chain. */
-  gasToken?: Token.Native
-
-  constructor (properties?: Partial<Backend>) {
-    super(properties)
-    assign(this, properties, ["chainId"])
-  }
-
-  abstract connect (): Promise<Connection>
-  abstract connect (parameter?: string|Partial<Identity>): Promise<Connection>
-
-  abstract getIdentity (name: string): Promise<{ address?: Address, mnemonic?: string }>
 }
 
 /** Represents a connection to a blockchain via a given endpoint.
@@ -157,12 +160,52 @@ export abstract class Connection extends Endpoint {
     return tag
   }
 
-  /** The default gas token of the chain. */
-  get defaultDenom (): string {
-    return (this.constructor as Function & {gasToken: Token.Native}).gasToken?.id
+  /////////////////////////////////////////////////////////////////////////////////////////////////
+
+  abstract authenticate (identity: Identity): Agent
+
+  /** Construct a transaction batch. */
+  batch (): Batch<Connection, Agent> {
+    return new Batch({ connection: this })
   }
 
-  /////////////////////////////////////////////////////////////////////////////////////////////////
+  /// FETCH BLOCK ///
+
+  /** Get info about the latest block. */
+  fetchBlock (): Promise<Block>
+  /** Get info about the block with a specific height. */
+  fetchBlock ({ height }: { height: number }): Promise<Block>
+  /** Get info about the block with a specific hash. */
+  fetchBlock ({ hash }: { hash: string }): Promise<Block>
+
+  fetchBlock (...args: unknown[]): Promise<Block> {
+    if (args[0]) {
+      if (typeof args[0] === 'object') {
+        if ('height' in args[0]) {
+          this.log.debug(`Querying block by height ${args[0].height}`)
+          return this.fetchBlockImpl({ height: args[0].height as number })
+        } else if ('hash' in args[0]) {
+          this.log.debug(`Querying block by hash ${args[0].hash}`)
+          return this.fetchBlockImpl({ hash: args[0].hash as string })
+        }
+      } else {
+        throw new Error('Invalid arguments, pass {height:number} or {hash:string}')
+      }
+    } else {
+      this.log.debug(`Querying latest block`)
+      return this.fetchBlockImpl()
+    }
+  }
+  protected abstract fetchBlockImpl (parameters?: { height: number }|{ hash: string }):
+    Promise<Block>
+
+  /** Get the current block height. */
+  get height (): Promise<number> {
+    this.log.debug('Querying block height')
+    return this.fetchHeightImpl()
+  }
+  protected abstract fetchHeightImpl ():
+    Promise<number>
 
   /** Time to ping for next block. */
   blockInterval = 250
@@ -202,60 +245,12 @@ export abstract class Connection extends Endpoint {
     })
   }
 
-  /** Get the current block height. */
-  get height (): Promise<number> {
-    this.log.debug('Querying block height')
-    return this.fetchHeightImpl()
+  /// FETCH BALANCE ///
+
+  /** The default gas token of the chain. */
+  get defaultDenom (): string {
+    return (this.constructor as Function & {gasToken: Token.Native}).gasToken?.id
   }
-  protected abstract fetchHeightImpl (): Promise<number>
-
-  /** Get info about the latest block. */
-  fetchBlock (): Promise<Block>
-  /** Get info about the block with a specific height. */
-  fetchBlock ({ height }: { height: number }): Promise<Block>
-  /** Get info about the block with a specific hash. */
-  fetchBlock ({ hash }: { hash: string }): Promise<Block>
-  fetchBlock (...args: unknown[]): Promise<Block> {
-    if (args[0]) {
-      if (typeof args[0] === 'object') {
-        if ('height' in args[0]) {
-          this.log.debug(`Querying block by height ${args[0].height}`)
-          return this.fetchBlockImpl({ height: args[0].height as number })
-        } else if ('hash' in args[0]) {
-          this.log.debug(`Querying block by hash ${args[0].hash}`)
-          return this.fetchBlockImpl({ hash: args[0].hash as string })
-        }
-      } else {
-        throw new Error('Invalid arguments, pass {height:number} or {hash:string}')
-      }
-    } else {
-      this.log.debug(`Querying latest block`)
-      return this.fetchBlockImpl()
-    }
-  }
-  protected abstract fetchBlockImpl (options?: { height: number }|{ hash: string }):
-    Promise<Block>
-
-  /////////////////////////////////////////////////////////////////////////////////////////////////
-
-  /** Query a contract. */
-  query <Q> (contract: Address, message: Message): Promise<Q>
-  query <Q> (contract: { address: Address }, message: Message): Promise<Q>
-  async query <Q> (contract: Address|{ address: Address }, message: Message): Promise<Q> {
-    const _contract = (typeof contract === 'string') ? { address: contract } : contract
-    const result = await timed(
-      ()=>this.queryImpl(_contract, message),
-      ({ elapsed, result }) => this.log.debug(
-        `Queried in ${bold(elapsed)}s: `, JSON.stringify(result)
-      )
-    )
-    return result as Q
-  }
-
-  protected abstract queryImpl (contract: { address: Address }, message: Message):
-    Promise<unknown>
-
-  /////////////////////////////////////////////////////////////////////////////////////////////////
 
   /** Fetch balance of 1 or many addresses in 1 or many native tokens. */
   fetchBalance (address: Address, token: string):
@@ -330,44 +325,48 @@ export abstract class Connection extends Endpoint {
       //)
     //}
   }
-  protected abstract fetchBalanceImpl (token?: string, address?: string):
+  protected abstract fetchBalanceImpl (parameters: { token?: string, address?: string }):
     Promise<string|number|bigint>
 
-  /////////////////////////////////////////////////////////////////////////////////////////////////
+  /// FETCH CODE INFO ///
 
   /** Fetch info about all code IDs uploaded to the chain. */
   fetchCodeInfo ():
-    Promise<Record<Deploy.CodeId, unknown>>
+    Promise<Record<Deploy.CodeId, Deploy.UploadedCode>>
   /** Fetch info about a single code ID. */
-  fetchCodeInfo (id: Deploy.CodeId):
-    Promise<unknown>
+  fetchCodeInfo (codeId: Deploy.CodeId, options: { parallel?: boolean }):
+    Promise<Deploy.UploadedCode>
   /** Fetch info about multiple code IDs. */
-  fetchCodeInfo (ids: Iterable<Deploy.CodeId>):
-    Promise<Record<Deploy.CodeId, unknown>>
-  async fetchCodeInfo (...args: unknown[]): Promise<unknown> {
+  fetchCodeInfo (codeIds: Iterable<Deploy.CodeId>, options: { parallel?: boolean }):
+    Promise<Record<Deploy.CodeId, Deploy.UploadedCode>>
+
+  fetchCodeInfo (...args: unknown[]): Promise<unknown> {
     if (args.length === 0) {
       this.log.debug('Querying all codes...')
       return timed(
-        this.fetchCodeInfoImpl.bind(this, {}),
+        ()=>this.fetchCodeInfoImpl(),
         ({ elapsed, result }) => this.log.debug(
           `Queried in ${bold(elapsed)}: all codes`
         ))
-    } else if (args.length === 1) {
+    }
+    if (args.length === 1) {
       if (args[0] instanceof Array) {
-        const ids = args[0] as Array<Deploy.CodeId>
-        this.log.debug(`Querying info about ${ids.length} code ids...`)
+        const codeIds = args[0] as Array<Deploy.CodeId>
+        const { parallel } = args[1] as { parallel?: boolean }
+        this.log.debug(`Querying info about ${codeIds.length} code IDs...`)
         return timed(
-          this.fetchCodeInfoImpl.bind(this, { ids }),
+          ()=>this.fetchCodeInfoImpl({ codeIds, parallel }),
           ({ elapsed, result }) => this.log.debug(
-            `Queried in ${bold(elapsed)}: info about ${ids.length} code ids`
+            `Queried in ${bold(elapsed)}: info about ${codeIds.length} code IDs`
           ))
       } else {
-        const ids = [args[0] as Deploy.CodeId]
+        const codeIds = [args[0] as Deploy.CodeId]
+        const { parallel } = args[1] as { parallel?: boolean }
         this.log.debug(`Querying info about code id ${args[0]}...`)
         return timed(
-          this.fetchCodeInfoImpl.bind(this, { ids }),
-          ({ elapsed, result }) => this.log.debug(
-            `Queried in ${bold(elapsed)}: info about code id ${ids[0]}`
+          ()=>this.fetchCodeInfoImpl({ codeIds, parallel }),
+          ({ elapsed }) => this.log.debug(
+            `Queried in ${bold(elapsed)}: info about code id ${codeIds[0]}`
           ))
       }
     } else {
@@ -375,139 +374,237 @@ export abstract class Connection extends Endpoint {
     }
   }
   /** Chain-specific implementation of fetchCodeInfo. */
-  protected abstract fetchCodeInfoImpl (options: { ids?: Deploy.CodeId[] }|undefined):
+  protected abstract fetchCodeInfoImpl (parameters?: {
+    codeIds?: Deploy.CodeId[]
+    parallel?: boolean
+  }):
     Promise<Record<Deploy.CodeId, Deploy.UploadedCode>>
 
-  /////////////////////////////////////////////////////////////////////////////////////////////////
-
-  fetchContractInfo (address: Address):
-    Promise<unknown>
-  fetchContractInfo (addresses: Address[]):
-    Promise<Record<Address, unknown>>
-  async fetchContractInfo (...args: unknown[]): Promise<unknown> {
-    if (!args[0]) {
-      throw new Error('fetchContractInfo takes Address or Address[]')
-    }
-    if (typeof args[0] === 'string') {
-      this.log.debug(`Querying info about contract ${args[0]}`)
-      return timed(
-        this.fetchContractInfoImpl.bind(this, { addresses: [args[0]] }),
-        ({ elapsed, result }) => this.log.debug(
-          `Queried in ${bold(elapsed)}: info about contract ${args[0]}`
-        ))
-    } else if (args[0][Symbol.iterator]) {
-      const addresses = args[0] as Address[]
-      this.log.debug(`Querying info about ${addresses.length} contracts`)
-      return timed(
-        this.fetchContractInfoImpl.bind(this, { addresses }),
-        ({ elapsed, result }) => this.log.debug(
-          `Queried in ${bold(elapsed)}: info about ${addresses.length} contracts`
-        ))
-    } else {
-      throw new Error('fetchContractInfo takes Address or Address[]')
-    }
-  }
-  /** Chain-specific implementation of fetchContractInfo. */
-  protected abstract fetchContractInfoImpl ({ addresses }: { addresses: Address[] }):
-    Promise<unknown>
-  /** Get a client handle for a specific smart contract, authenticated as as this agent. */
-  getContract (options: Address|{ address: Address }):
-    Contract
-  getContract <C extends typeof Contract> (
-    options: Address|{ address: Address }, $C: C = Contract as C,
-  ): InstanceType<C> {
-    if (typeof options === 'string') {
-      options = { address: options }
-    }
-    return new $C({
-      instance: options,
-      connection: this
-    }) as InstanceType<C>
-  }
-
-  /////////////////////////////////////////////////////////////////////////////////////////////////
+  /// FETCH CODE INSTANCES ///
 
   /** Fetch all instances of a code ID. */
-  fetchCodeInstances (id: Deploy.CodeId):
-    Promise<Record<Address, Contract>>
+  fetchCodeInstances (
+    codeId: Deploy.CodeId
+  ): Promise<Record<Address, Contract>>
   /** Fetch all instances of a code ID, with custom client class. */
-  fetchCodeInstances <C extends typeof Contract> ($C: C, id: Deploy.CodeId):
-    Promise<Record<Address, InstanceType<C>>>
+  fetchCodeInstances <C extends typeof Contract> (
+    Contract: C,
+    codeId: Deploy.CodeId
+  ): Promise<Record<Address, InstanceType<C>>>
   /** Fetch all instances of multple code IDs. */
-  fetchCodeInstances (ids: Iterable<Deploy.CodeId>):
-    Promise<Record<Deploy.CodeId, Record<Address, Contract>>>
+  fetchCodeInstances (
+    codeIds:  Iterable<Deploy.CodeId>,
+    options?: { parallel?: boolean }
+  ): Promise<Record<Deploy.CodeId, Record<Address, Contract>>>
   /** Fetch all instances of multple code IDs, with custom client class. */
-  fetchCodeInstances <C extends typeof Contract> ($C: C, ids: Iterable<Deploy.CodeId>):
-    Promise<Record<Deploy.CodeId, Record<Address, InstanceType<C>>>>
+  fetchCodeInstances <C extends typeof Contract> (
+    Contract: C,
+    codeIds:  Iterable<Deploy.CodeId>,
+    options?: { parallel?: boolean }
+  ): Promise<Record<Deploy.CodeId, Record<Address, InstanceType<C>>>>
   /** Fetch all instances of multple code IDs, with multiple custom client classes. */
-  fetchCodeInstances (ids: { [id: Deploy.CodeId]: typeof Contract }):
-    Promise<Record<Deploy.CodeId, { [id in keyof typeof ids]: InstanceType<typeof ids[id]> }>>
+  fetchCodeInstances (
+    codeIds:  { [id: Deploy.CodeId]: typeof Contract },
+    options?: { parallel?: boolean }
+  ): Promise<{
+    [codeId in keyof typeof codeIds]: Record<Address, InstanceType<typeof codeIds[codeId]>>
+  }>
   async fetchCodeInstances (...args: unknown[]): Promise<unknown> {
     let $C = Contract
+    let custom = false
     if (typeof args[0] === 'function') {
       $C = args.shift() as typeof Contract
+      let custom = true
     }
-
     if (!args[0]) {
       throw new Error('Invalid arguments')
     }
 
-    if (!!(args[0][Symbol.iterator])) {
+    if (args[0][Symbol.iterator]) {
       const result: Record<Deploy.CodeId, Record<Address, Contract>> = {}
-      const ids = [...args[0] as Deploy.CodeId[]]
-      this.log.debug(`Querying contracts with code ids ${ids.join(', ')}...`)
-      for (const codeId of ids) {
-        result[codeId] = {}
-        for (const instance of await this.fetchCodeInstancesImpl(codeId)) {
-          result[codeId][instance.address] = new $C(instance)
-        }
+      const codeIds = {}
+      for (const codeId of args[0] as Deploy.CodeId[]) {
+        codeIds[codeId] = $C
       }
-      return result
+      this.log.debug(`Querying contracts with code ids ${Object.keys(codeIds).join(', ')}...`)
+      return timed(
+        ()=>this.fetchCodeInstancesImpl({ codeIds }),
+        ({elapsed})=>this.log.debug(`Queried in ${elapsed}ms`))
     }
 
     if (typeof args[0] === 'object') {
+      if (custom) {
+        throw new Error('Invalid arguments')
+      }
       const result: Record<Deploy.CodeId, Record<Address, Contract>> = {}
       this.log.debug(`Querying contracts with code ids ${Object.keys(args[0]).join(', ')}...`)
-      for (const [codeId, $C] of Object.entries(args[0])) {
-        result[codeId] = {}
-        for (const instance of await this.fetchCodeInstancesImpl(codeId)) {
-          result[codeId][instance.address] = new $C(instance)
-        }
-      }
-      return result
+      const codeIds = args[0] as { [id: Deploy.CodeId]: typeof Contract }
+      return timed(
+        ()=>this.fetchCodeInstancesImpl({ codeIds }),
+        ({elapsed})=>this.log.debug(`Queried in ${elapsed}ms`))
     }
 
     if ((typeof args[0] === 'number')||(typeof args[0] === 'string')) {
       const id = args[0]
       this.log.debug(`Querying contracts with code id ${id}...`)
       const result = {}
-      for (const instance of await this.fetchCodeInstancesImpl(id as string)) {
-        result[instance.address] = new $C(instance)
-      }
-      return result
+      return timed(
+        ()=>this.fetchCodeInstancesImpl({ codeIds: { [id]: $C } }),
+        ({elapsed})=>this.log.debug(`Queried in ${elapsed}ms`))
     }
     
     throw new Error('Invalid arguments')
   }
   /** Chain-specific implementation of fetchCodeInstances. */
-  protected abstract fetchCodeInstancesImpl (id: Deploy.CodeId):
-    Promise<Iterable<{ address: Address }>>
+  protected abstract fetchCodeInstancesImpl (parameters: {
+    codeIds: { [id: Deploy.CodeId]: typeof Contract },
+    parallel?: boolean
+  }):
+    Promise<{
+      [codeId in keyof typeof parameters["codeIds"]]:
+        Record<Address, InstanceType<typeof parameters["codeIds"][codeId]>>
+    }>
 
-  /////////////////////////////////////////////////////////////////////////////////////////////////
+  /// FETCH CONTRACT INFO ///
 
-  abstract authenticate (identity: Identity): Agent
+  /** Fetch a contract's details wrapped in a `Contract` instance. */
+  fetchContractInfo (
+    address:   Address
+  ): Promise<Contract>
+  /** Fetch a contract's details wrapped in a custom class instance. */
+  fetchContractInfo <C extends typeof Contract> (
+    Contract:  C,
+    address:   Address
+  ): Promise<Contract>
+  /** Fetch multiple contracts' details wrapped in `Contract` instance. */
+  fetchContractInfo (
+    addresses: Address[],
+    options?:  { parallel?: boolean }
+  ): Promise<Record<Address, Contract>>
+  /** Fetch multiple contracts' details wrapped in instances of a custom class. */
+  fetchContractInfo <C extends typeof Contract> (
+    Contract:  C,
+    addresses: Address[],
+    options?:  { parallel?: boolean }
+  ): Promise<Record<Address, Contract>>
+  /** Fetch multiple contracts' details, specifying a custom class for each. */
+  fetchContractInfo (
+    contracts: { [address: Address]: typeof Contract },
+    options?:  { parallel?: boolean }
+  ): Promise<{
+    [address in keyof typeof contracts]: InstanceType<typeof contracts[address]>
+  }>
 
-  /** Construct a transaction batch. */
-  batch (): Batch<Connection, Agent> {
-    return new Batch({ connection: this })
+  async fetchContractInfo (...args: unknown[]): Promise<unknown> {
+    let $C = Contract
+    let custom = false
+    if (typeof args[0] === 'function') {
+      $C = args.shift() as typeof Contract
+      custom = true
+    }
+    if (!args[0]) {
+      throw new Error('Invalid arguments')
+    }
+    const { parallel = false } = (args[1] || {}) as { parallel?: boolean }
+
+    // Fetch single contract
+    if (typeof args[0] === 'string') {
+      this.log.debug(`Fetching contract ${args[0]}`)
+      const contracts = await timed(
+        ()=>this.fetchContractInfoImpl({ addresses: [args[0] as Address] }),
+        ({ elapsed }) => this.log.debug(
+          `Fetched in ${bold(elapsed)}: contract ${args[0]}`
+        ))
+      if (custom) {
+        return new $C(contracts[args[0]])
+      } else {
+        return contracts[args[0]]
+      }
+    }
+
+    // Fetch array of contracts
+    if (args[0][Symbol.iterator]) {
+      const addresses = args[0] as Address[]
+      this.log.debug(`Fetching ${addresses.length} contracts`)
+      const contracts = await timed(
+        ()=>this.fetchContractInfoImpl({ addresses, parallel }),
+        ({ elapsed }) => this.log.debug(
+          `Fetched in ${bold(elapsed)}: ${addresses.length} contracts`
+        ))
+      if (custom) {
+        return addresses.map(address=>new $C(contracts[address]))
+      } else {
+        return addresses.map(address=>contracts[address])
+      }
+    }
+
+    // Fetch map of contracts with different classes
+    if (typeof args[0] === 'object') {
+      if (custom) {
+        // Can't specify class as first argument
+        throw new Error('Invalid arguments')
+      }
+
+      const addresses = Object.keys(args[0]) as Address[]
+      this.log.debug(`Querying info about ${addresses.length} contracts`)
+      const contracts = await timed(
+        ()=>this.fetchContractInfoImpl({ addresses, parallel }),
+        ({ elapsed }) => this.log.debug(
+          `Queried in ${bold(elapsed)}: info about ${addresses.length} contracts`
+        ))
+      const result = {}
+      for (const address of addresses) {
+        result[address] = new args[0][address](contracts[address])
+      }
+      return result
+    }
+
+    throw new Error('Invalid arguments')
   }
+  /** Chain-specific implementation of fetchContractInfo. */
+  protected abstract fetchContractInfoImpl (parameters: {
+    contracts: { [address: Address]: typeof Contract },
+    parallel?: boolean
+  }):
+    Promise<Record<Address, Contract>>
+
+  /// QUERY ///
+
+  /** Query a contract by address. */
+  query <T> (contract: Address, message: Message): Promise<T>
+  /** Query a contract object. */
+  query <T> (contract: { address: Address }, message: Message): Promise<T>
+
+  query <T> (contract: Address|{ address: Address }, message: Message):
+    Promise<T> {
+    return timed(
+      ()=>this.queryImpl({
+        ...(typeof contract === 'string') ? { address: contract } : contract,
+        message
+      }),
+      ({ elapsed, result }) => this.log.debug(
+        `Queried in ${bold(elapsed)}s: `, JSON.stringify(result)
+      )
+    )
+  }
+
+  protected abstract queryImpl <T> (parameters: {
+    address:   Address
+    codeHash?: string
+    message:   Message
+  }):
+    Promise<T>
+
 }
 
+/** Enables non-read-only transactions by binding an `Identity` to a `Connection`. */
 export abstract class Agent extends Logged {
+  /** The connection that will broadcast the transactions. */
   connection: Connection
+  /** The identity that will sign the transactions. */
   identity:   Identity
   /** Default transaction fees. */
-  fees?: { send?: Token.IFee, upload?: Token.IFee, init?: Token.IFee, exec?: Token.IFee }
+  fees?: Token.FeeMap<'send'|'upload'|'init'|'exec'>
 
   constructor (properties: Partial<Agent>) {
     super()
@@ -539,28 +636,29 @@ export abstract class Agent extends Logged {
       ` ${amounts.map(x=>x.toString()).join(', ')}`
     )
     return await timed(
-      ()=>this.sendImpl(recipient as string, amounts.map(
-        amount=>(amount instanceof Token.Amount)?amount.asCoin():amount
-      ), options),
+      ()=>this.sendImpl({
+        recipient: recipient as string,
+        amounts: amounts.map(
+          amount=>(amount instanceof Token.Amount)?amount.asCoin():amount
+        ),
+        options
+      }),
       t=>`Sent in ${bold(t)}s`
     )
   }
-  protected abstract sendImpl (
-    recipient: Address, amounts: Token.ICoin[], options?: Parameters<Agent["send"]>[2]
-  ): Promise<unknown>
-  protected abstract sendManyImpl (
-    outputs: [Address, Token.ICoin[]][], options?: unknown
-  ): Promise<unknown>
+
+  /** Chain-specific implementation of native token transfer. */
+  protected abstract sendImpl (parameters: {
+    outputs:   Record<Address, Record<string, Token.Uint128>>,
+    sendFee?:  Token.IFee,
+    sendMemo?: string,
+    parallel?: boolean
+  }): Promise<unknown>
 
   /** Upload a contract's code, generating a new code id/hash pair. */
   async upload (
-    code: string|URL|Uint8Array|Partial<Code.CompiledCode>,
-    options: {
-      reupload?:    boolean,
-      uploadStore?: Store.UploadStore,
-      uploadFee?:   Token.ICoin[]|'auto',
-      uploadMemo?:  string
-    } = {},
+    code:     string|URL|Uint8Array|Partial<Code.CompiledCode>,
+    options?: Omit<Parameters<Agent["uploadImpl"]>[0], 'binary'>,
   ): Promise<Deploy.UploadedCode & {
     chainId: ChainId,
     codeId:  Deploy.CodeId
@@ -584,7 +682,7 @@ export abstract class Agent extends Logged {
     }
     this.log.debug(`Uploading ${bold((code as any).codeHash)}`)
     const result = await timed(
-      this.uploadImpl.bind(this, template, options),
+      () => this.uploadImpl({ ...options, binary: template }),
       ({elapsed, result}: any) => this.log.debug(
         `Uploaded in ${bold(elapsed)}:`,
         `code with hash ${bold(result.codeHash)} as code id ${bold(String(result.codeId))}`,
@@ -595,19 +693,20 @@ export abstract class Agent extends Logged {
       chainId: ChainId, codeId: Deploy.CodeId,
     }
   }
-  protected abstract uploadImpl (
-    data: Uint8Array, options: Parameters<Agent["upload"]>[1]
-  ): Promise<Partial<Deploy.UploadedCode & {
+
+  /** Chain-specific implementation of code upload. */
+  protected abstract uploadImpl (parameters: {
+    binary:       Uint8Array,
+    reupload?:    boolean,
+    uploadStore?: Store.UploadStore,
+    uploadFee?:   Token.ICoin[]|'auto',
+    uploadMemo?:  string
+  }): Promise<Partial<Deploy.UploadedCode & {
     chainId: ChainId,
     codeId:  Deploy.CodeId
   }>>
 
-  /** Instantiate a new program from a code id, label and init message.
-    * @example
-    *   await agent.instantiate(template.define({ label, initMsg })
-    * @returns
-    *   Deploy.ContractInstance with no `address` populated yet.
-    *   This will be populated after executing the batch. */
+  /** Instantiate a new program from a code id, label and init message. */
   async instantiate (
     contract: Deploy.CodeId|Partial<Deploy.UploadedCode>,
     options:  Partial<Deploy.ContractInstance>
@@ -631,8 +730,11 @@ export abstract class Agent extends Logged {
     }
     const { codeId, codeHash } = contract
     const result = await timed(
-      () => into(options.initMsg).then(initMsg=>this.instantiateImpl(codeId, {
-        codeHash, ...options, initMsg
+      () => into(options.initMsg).then(initMsg=>this.instantiateImpl({
+        ...options,
+        codeId,
+        codeHash,
+        initMsg
       })),
       ({ elapsed, result }) => this.log.debug(
         `Instantiated in ${bold(elapsed)}:`,
@@ -647,16 +749,16 @@ export abstract class Agent extends Logged {
     }
   }
 
-  protected abstract instantiateImpl (
-    codeId: Deploy.CodeId, options: Partial<Deploy.ContractInstance>
-  ): Promise<Deploy.ContractInstance & { address: Address, }>
+  /** Chain-specific implementation of contract instantiation. */
+  protected abstract instantiateImpl (parameters: Partial<Deploy.ContractInstance>):
+    Promise<Deploy.ContractInstance & { address: Address }>
 
   /** Call a given program's transaction method. */
-  async execute (
+  async execute <T> (
     contract: Address|Partial<Deploy.ContractInstance>,
     message:  Message,
-    options?: { execFee?: Token.IFee, execSend?: Token.ICoin[], execMemo?: string }
-  ): Promise<unknown> {
+    options?: Omit<Parameters<Agent["executeImpl"]>[0], 'address'|'codeHash'|'message'>
+  ): Promise<T> {
     if (typeof contract === 'string') {
       contract = new Deploy.ContractInstance({ address: contract })
     }
@@ -666,7 +768,11 @@ export abstract class Agent extends Logged {
     const { address } = contract
     let method = (typeof message === 'string') ? message : Object.keys(message||{})[0]
     return timed(
-      () => this.executeImpl(contract as { address: Address }, message, options),
+      () => this.executeImpl({
+        ...contract as { address, codeHash },
+        message,
+        ...options
+      }),
       ({ elapsed }) => this.log.debug(
         `Executed in ${bold(elapsed)}:`,
         `tx ${bold(method||'(???)')} of ${bold(address)}`
@@ -674,11 +780,15 @@ export abstract class Agent extends Logged {
     )
   }
 
-  protected abstract executeImpl (
-    contract: { address: Address },
-    message: Message,
-    options: Parameters<Agent["execute"]>[2]
-  ): Promise<unknown>
+  /** Chain-specific implementation of contract transaction. */
+  protected abstract executeImpl <T> (parameters: {
+    address:   Address
+    codeHash?: string
+    message:   Message
+    execFee?:  Token.IFee
+    execSend?: Token.ICoin[]
+    execMemo?: string
+  }): Promise<T>
 }
 
 /** The building block of a blockchain, as obtained by
@@ -712,17 +822,20 @@ export abstract class Block {
   * Subclass this to add custom query and transaction methods corresponding
   * to the contract's API. */
 export class Contract extends Logged {
-
   /** Connection to the chain on which this contract is deployed. */
   connection?: Connection
-
-  agent?: Agent
-
-  instance?: { address?: Address }
-
-  get address (): Address|undefined {
-    return this.instance?.address
-  }
+  /** Connection to the chain on which this contract is deployed. */
+  agent?:      Agent
+  /** Code upload from which this contract is created. */
+  codeId?:     Deploy.CodeId
+  /** The code hash uniquely identifies the contents of the contract code. */
+  codeHash?:   Code.CodeHash
+  /** The address uniquely identifies the contract instance. */
+  address?:    Address
+  /** The label is a human-friendly identifier of the contract. */
+  label?:      Label
+  /** The address of the account which instantiated the contract. */
+  initBy?:     Address
 
   constructor (properties: Partial<Contract>) {
     super((typeof properties === 'string')?{}:properties)
@@ -763,5 +876,4 @@ export class Contract extends Logged {
       this.instance as Deploy.ContractInstance & { address: Address }, message, options
     )
   }
-
 }

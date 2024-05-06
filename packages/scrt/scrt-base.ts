@@ -23,3 +23,12 @@ export const {
   randomBase64,
   randomBech32,
 } = Core
+
+export const withIntoError = <T>(p: Promise<T>): Promise<T> =>
+  p.catch(intoError)
+
+const intoError = async (e: object)=>{
+  e = await Promise.resolve(e)
+  console.error(e)
+  throw Object.assign(new Error(), e)
+}

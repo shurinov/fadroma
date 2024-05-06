@@ -19,7 +19,10 @@ export type Decimal256 = string
 export interface ICoin { amount: Uint128, denom: string }
 
 /** A gas fee, payable in native tokens. */
-export interface IFee { amount: readonly ICoin[], gas: Uint128 }
+export interface IFee { gas: Uint128, amount: readonly ICoin[] }
+
+/** A mapping of transaction type to default fee in one or more tokens. */
+export type FeeMap<T extends string> = { [key in T]: IFee }
 
 /** A constructable gas fee in native tokens. */
 export class Fee implements IFee {

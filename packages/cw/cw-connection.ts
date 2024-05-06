@@ -1,38 +1,13 @@
 import { Core, Chain, Deploy } from '@fadroma/agent'
 import type { Address, Message, CodeId, CodeHash, Token } from '@fadroma/agent'
-import type { CWMnemonicIdentity, CWSignerIdentity } from './cw-identity'
+import type { CWIdentity, CWMnemonicIdentity, CWSignerIdentity } from './cw-identity'
 import { CWConsole as Console, CWError as Error } from './cw-base'
-import { CWBatch } from './cw-batch'
-
+import { CWBatch }  from './cw-batch'
+import * as Bank    from './cw-bank'
+import * as Compute from './cw-compute'
+import * as Staking from './cw-staking'
 import { Amino, Proto, CosmWasmClient, SigningCosmWasmClient } from '@hackbg/cosmjs-esm'
 import type { Block } from '@hackbg/cosmjs-esm'
-
-import {
-  getBalance,
-  send,
-} from './cw-bank'
-
-import {
-  getCodes,
-  getCodeId,
-  getContractsByCodeId,
-  getCodeHashOfAddress,
-  getCodeHashOfCodeId,
-  getLabel,
-  upload,
-  instantiate,
-  execute,
-  query
-} from './cw-compute'
-
-import type {
-  SigningConnection
-} from './cw-compute'
-
-import {
-  Validator,
-  getValidators,
-} from './cw-staking'
 
 export class CWBlock extends Chain.Block {
   rawTxs: Uint8Array[]
@@ -50,8 +25,8 @@ export class CWConnection extends Chain.Connection {
   coinType?:        number
   /** The account index in the HD derivation path */
   hdAccountIndex?:  number
-  /** API connects asynchronously, so API handle is a promise of either variant. */
-  declare api:      Promise<CosmWasmClient|SigningCosmWasmClient>
+  /** API connects asynchronously, so API handle is a promise. */
+  declare api:      Promise<CosmWasmClient>
   /** A supported method of authentication. */
   declare identity: CWMnemonicIdentity|CWSignerIdentity
 
@@ -67,11 +42,22 @@ export class CWConnection extends Chain.Connection {
     }
     if (this.identity?.signer) {
       this.log.debug('Connecting and authenticating via', Core.bold(this.url))
-      this.api = SigningCosmWasmClient.connectWithSigner(this.url, this.identity.signer)
+      this.api = SigningCosmWasmClient.connectWithSigner(
+        this.url,
+        this.identity.signer
+      )
     } else {
       this.log.debug('Connecting anonymously via', Core.bold(this.url))
       this.api = CosmWasmClient.connect(this.url)
     }
+  }
+
+  authenticate (identity: CWIdentity): CWAgent {
+    return new CWAgent({ connection: this, identity })
+  }
+
+  batch (): Chain.Batch<this, CWAgent> {
+    return new CWBatch({ connection: this }) as unknown as Chain.Batch<this, CWAgent>
   }
 
   /** Handle to the API's internal query client. */
@@ -92,118 +78,107 @@ export class CWConnection extends Chain.Connection {
     })
   }
 
-  async doGetBlockInfo (height?: number): Promise<CWBlock> {
+  protected override async fetchBlockImpl (parameter?: { height: number }|{ hash: string }):
+    Promise<CWBlock>
+  {
     const api = await this.api
-    const { id, header, txs } = await api.getBlock(height)
-    return new CWBlock({
-      hash:   id,
-      height: header.height,
-      rawTxs: txs as Uint8Array[],
-    })
+    if ((parameter as { height })?.height) {
+      const { id, header, txs } = await api.getBlock((parameter as { height }).height)
+      return new CWBlock({
+        hash:   id,
+        height: header.height,
+        rawTxs: txs as Uint8Array[],
+      })
+    } else if ((parameter as { hash })?.hash) {
+      throw new Error('CWConnection.fetchBlock({ hash }): unimplemented!')
+    } else {
+      const { id, header, txs } = await api.getBlock()
+      return new CWBlock({
+        hash:   id,
+        height: header.height,
+        rawTxs: txs as Uint8Array[],
+      })
+    }
   }
 
-  async doGetHeight () {
-    const { height } = await this.doGetBlockInfo()
+  protected override async fetchHeightImpl () {
+    const { height } = await this.fetchBlockImpl()
     return height
   }
 
   /** Query native token balance. */
-  doGetBalance (
-    token:   string = this.defaultDenom,
-    address: Address|undefined = this.address
-  ): Promise<string> {
-    return getBalance(this, token, address)
+  protected override fetchBalanceImpl (parameters) {
+    return Bank.getBalance(this, parameters)
   }
 
-  doGetCodes () {
-    return getCodes(this)
-  }
-
-  doGetCodeId (address: Address): Promise<CodeId> {
-    return getCodeId(this, address)
-  }
-
-  doGetContractsByCodeId (id: CodeId): Promise<Iterable<{address: Address}>> {
-    return getContractsByCodeId(this, id)
-  }
-
-  doGetCodeHashOfAddress (address: Address): Promise<CodeHash> {
-    return getCodeHashOfAddress(this, address)
-  }
-
-  doGetCodeHashOfCodeId (codeId: CodeId): Promise<CodeHash> {
-    return getCodeHashOfCodeId(this, codeId)
-  }
-
-  async getLabel (address: Address): Promise<string> {
-    return getLabel(this, address)
-  }
-
-  async doSend (
-    recipient: Address,
-    amounts:   Token.ICoin[],
-    options?:  Parameters<Chain.Connection["doSend"]>[2]
-  ) {
-    return send(this as SigningConnection, recipient, amounts, options)
-  }
-
-  doSendMany (
-    outputs: [Address, Token.ICoin[]][],
-    options?: Parameters<Chain.Connection["doSendMany"]>[1]
-  ): Promise<void|unknown> {
-    throw new Error('doSendMany: not implemented')
-  }
-
-  async doUpload (data: Uint8Array): Promise<Partial<Deploy.UploadedCode>> {
-    if (!this.address) {
-      throw new Error("can't upload contract without sender address")
+  protected override fetchCodeInfoImpl (parameters) {
+    const { ids = [] } = parameters || {}
+    if (!ids || ids.length === 0) {
+      return Compute.getCodes(this)
+    } else if (ids.length === 1) {
+      return Compute.getCodes(this, ids)
+    } else {
+      throw new Error('CWConnection.fetchCodeInfo({ ids: [multiple] }): unimplemented!')
     }
-    return upload(this as SigningConnection, data)
+    //protected override fetchCodesImpl () {
+      //return Compute.getCodes(this)
+    //}
+    //protected override fetchCodeIdImpl (address: Address): Promise<CodeId> {
+      //return getCodeId(this, address)
+    //}
+    //protected override fetchCodeHashOfCodeIdImpl (codeId: CodeId): Promise<CodeHash> {
+      //return Compute.getCodeHashOfCodeId(this, codeId)
+    //}
   }
 
-  async doInstantiate (
-    codeId: CodeId, options: Parameters<Chain.Connection["doInstantiate"]>[1]
-  ): Promise<Partial<Deploy.ContractInstance>> {
-    if (!this.address) {
-      throw new Error("can't instantiate contract without sender address")
-    }
-    return instantiate(this as SigningConnection, codeId, options)
+  protected override fetchCodeInstancesImpl (parameters) {
+    //protected override fetchContractsByCodeIdImpl (id: CodeId): Promise<Iterable<{address: Address}>> {
+      //return Compute.getContractsByCodeId(this, id)
+    //}
   }
 
-  async doExecute (
-    contract: { address: Address }, 
-    message: Message,
-    options: Omit<NonNullable<Parameters<Chain.Connection["execute"]>[2]>, 'execFee'> & {
-      execFee?: Token.IFee | number | 'auto'
-    } = {}
-  ): Promise<unknown> {
-    if (!this.address) {
-      throw new Error("can't execute transaction without sender address")
-    }
-    options.execFee ??= 'auto'
-    return execute(this as SigningConnection, contract, message, options)
+  protected override fetchContractInfoImpl (parameters) {
+    //return Compute.getCodeId(this, address)
+    //protected override fetchCodeHashOfAddressImpl (address: Address): Promise<CodeHash> {
+      //return Compute.getCodeHashOfAddress(this, address)
+    //}
+    //protected override fetchLabelImpl (address: Address): Promise<string> {
+      //return Compute.getLabel(this, address)
+    //}
   }
 
-  async doQuery <U> (
-    contract: Address|{ address: Address }, message: Message
-  ): Promise<U> {
-    return query(this, contract, message)
+  protected override async queryImpl <T> (parameters) {
+    return await Compute.query(this, parameters) as T
   }
 
-  batch (): Chain.Batch<this> {
-    return new CWBatch({ connection: this }) as unknown as Chain.Batch<this>
-  }
-
-  getValidators ({ details = false }: {
+  fetchValidators ({ details = false }: {
     details?: boolean
   } = {}) {
-    return this.tendermintClient.then(()=>getValidators(this, { details }))
+    return this.tendermintClient.then(()=>Staking.getValidators(this, { details }))
   }
 
-  getValidator (address: Address): Promise<unknown> {
+  fetchValidatorInfo (address: Address): Promise<unknown> {
     return Promise.all([
       this.queryClient,
       this.tendermintClient
-    ]).then(()=>new Validator({ address }).fetchDetails(this))
+    ]).then(()=>new Staking.Validator({ address }).fetchDetails(this))
+  }
+}
+
+export class CWAgent extends Chain.Agent {
+  /** API connects asynchronously, so API handle is a promise. */
+  declare api: Promise<SigningCosmWasmClient>
+
+  protected override async sendImpl (parameters) {
+    return Bank.send(this as Compute.SigningConnection, parameters)
+  }
+  protected override async uploadImpl (parameters) {
+    return Compute.upload(this as Compute.SigningConnection, parameters)
+  }
+  protected override async instantiateImpl (parameters) {
+    return Compute.instantiate(this as Compute.SigningConnection, parameters)
+  }
+  protected override async executeImpl (parameters) {
+    return Compute.execute(this as Compute.SigningConnection, parameters)
   }
 }

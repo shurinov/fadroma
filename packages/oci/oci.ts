@@ -36,64 +36,45 @@ class OCIConnection extends Chain.Connection {
 
   declare api: DockerHandle
 
-  async doGetHeight () {
-    throw new Error('doGetHeight: not applicable')
+  protected override async fetchHeightImpl () {
+    throw new Error('fetchHeightImpl: not applicable')
     return + new Date()
   }
-  async doGetBlockInfo () {
-    throw new Error('doGetBlockInfo: not applicable')
+
+  protected override async fetchBlockImpl () {
+    throw new Error('fetchBlockImpl: not applicable')
     return {}
   }
-  async doGetBalance () {
-    throw new Error('doGetBalance: not applicable')
+
+  protected override async fetchBalanceImpl () {
+    throw new Error('fetchBalanceImpl: not applicable')
     return 0
   }
-  async doSend () {
-    throw new Error('doSend: not applicable')
-  }
-  async doSendMany () {
-    throw new Error('doSendMany: not applicable')
-  }
 
-  async doGetCodeId (containerId: string): Promise<string> {
+  protected override async fetchContractInfoImpl (containerId: string): Promise<string> {
     const container = await this.api.getContainer(containerId)
     const info = await container.inspect()
     return info.Image
   }
-  async doGetCodeHashOfCodeId (contract) {
-    return ''
-  }
-  async doGetCodeHashOfAddress (contract) {
-    return ''
-  }
+
   /** Returns list of container images. */
-  async doGetCodes () {
+  protected override async fetchCodeInfoImpl () {
     return (await this.api.listImages())
       .reduce((images, image)=>Object.assign(images, {
         [image.Id]: image
       }), {})
   }
+
   /** Returns list of containers from a given image. */
-  async doGetContractsByCodeId (imageId) {
+  protected override async fetchCodeInstancesImpl (imageId) {
     return (await this.api.listContainers())
       .filter(container=>container.Image === imageId)
       .map(container=>({ address: container.Id, codeId: imageId, container }))
   }
-  async doUpload (data: Uint8Array) {
-    throw new Error('doUpload (load/import image): not implemented')
-    return {}
-  }
-  async doInstantiate (imageId: string) {
-    throw new Error('doInstantiate (create container): not implemented')
-    return {}
-  }
-  async doExecute () {
-    throw new Error('doExecute (exec in container): not implemented')
-    return {}
-  }
-  async doQuery (contract, message) {
-    throw new Error('doQuery (inspect image): not implamented')
-    return {}
+
+  protected override async queryImpl <T> ({ address, message }) {
+    throw new Error('doQuery (inspect image): not implemented')
+    return {} as T
   }
 
   image (
@@ -106,6 +87,26 @@ class OCIConnection extends Chain.Connection {
 
   container (id: string): OCIContainer {
     return new OCIContainer({ engine: this, id })
+  }
+}
+
+class OCIAgent extends Chain.Agent {
+  protected override async sendImpl (_) {
+    throw new Error('send: not applicable')
+  }
+
+  protected override async uploadImpl (_) {
+    throw new Error('upload (load/import image): not implemented')
+    return {}
+  }
+
+  protected override async instantiateImpl (_) {
+    throw new Error('instantiate (create container): not implemented')
+  }
+
+  protected override async executeImpl <T> () {
+    throw new Error('execute (run in container): not implemented')
+    return {} as T
   }
 }
 

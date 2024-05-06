@@ -7,6 +7,10 @@ import { ScrtError as Error, console, bold, base64 } from './scrt-base'
 import { ScrtIdentity, ScrtSignerIdentity, ScrtMnemonicIdentity } from './scrt-identity'
 import faucets from './scrt-faucets'
 //import * as Mocknet from './scrt-mocknet'
+import * as Bank from './scrt-bank'
+import * as Compute from './scrt-compute'
+import * as Staking from './scrt-staking'
+import * as Governance from './scrt-governance'
 import type { Uint128, Message, Address, TxHash, ChainId, CodeId, CodeHash } from '@fadroma/agent'
 import { Core, Chain, Token, Deploy, Batch } from '@fadroma/agent'
 
@@ -16,23 +20,11 @@ export type { TxResponse }
 
 /** Represents a Secret Network API endpoint. */
 export class ScrtConnection extends Chain.Connection {
-
   /** Smallest unit of native token. */
   static gasToken = new Token.Native('uscrt')
-
   /** Underlying API client. */
-  declare api: SecretNetworkClient
-
-  /** Supports multiple authentication methods. */
-  declare identity: ScrtIdentity
-
-  /** Set permissive fees by default. */
-  fees = {
-    upload: ScrtConnection.gasToken.fee(10000000),
-    init:   ScrtConnection.gasToken.fee(10000000),
-    exec:   ScrtConnection.gasToken.fee(1000000),
-    send:   ScrtConnection.gasToken.fee(1000000),
-  }
+  declare api:
+    SecretNetworkClient
 
   constructor (properties?: Partial<ScrtConnection>) {
     super(properties as Partial<Chain.Connection>)
@@ -44,27 +36,15 @@ export class ScrtConnection extends Chain.Connection {
     if (!url) {
       throw new Error("can't connect without url")
     }
-    if (this.identity) {
-      if (!(this.identity instanceof ScrtIdentity)) {
-        if (!(typeof this.identity === 'object')) {
-          throw new Error('identity must be ScrtIdentity instance, { mnemonic }, or { encryptionUtils }')
-        } else if ((this.identity as { mnemonic: string }).mnemonic) {
-          this.log.debug('Identifying with mnemonic')
-          this.identity = new ScrtMnemonicIdentity(this.identity)
-        } else if ((this.identity as { encryptionUtils: unknown }).encryptionUtils) {
-          this.log.debug('Identifying with signer (encryptionUtils)')
-          this.identity = new ScrtSignerIdentity(this.identity)
-        } else {
-          throw new Error('identity must be ScrtIdentity instance, { mnemonic }, or { encryptionUtils }')
-        }
-      }
-      this.api = this.identity.getApi({ chainId, url }) 
-    } else {
-      this.api = new SecretNetworkClient({ chainId, url })
-    }
+    this.api = new SecretNetworkClient({ chainId, url })
   }
-
-  protected override async fetchBlockImpl (parameter): Promise<ScrtBlock> {
+  authenticate (identity: ScrtIdentity): ScrtAgent {
+    return new ScrtAgent({ connection: this, identity })
+  }
+  batch (): Batch<ScrtConnection, ScrtAgent> {
+    return new ScrtBatch({ connection: this }) as unknown as Batch<ScrtConnection, ScrtAgent>
+  }
+  protected override async fetchBlockImpl (parameter?): Promise<ScrtBlock> {
     if (!parameter) {
       const {
         block_id: { hash, part_set_header } = {},
@@ -76,107 +56,25 @@ export class ScrtConnection extends Chain.Connection {
       })
     }
   }
-
-  protected override async fetchCodeInfoImpl () {}
-
-  protected override async fetchCodeInstancesImpl () {}
-
-  protected override async fetchContractInfoImpl () {}
-
-  authenticate (identity: ScrtIdentity): Promise<ScrtAgent> {
-    return new ScrtAgent({ connection: this, identity })
+  protected override async fetchHeightImpl () {
+    const { height } = await this.fetchBlockImpl()
+    return height
   }
-
-  protected override fetchHeightImpl () {
-    return this.fetchBlockInfoImpl().then((block: any)=>
-      Number(block.block?.header?.height))
+  protected override async fetchBalanceImpl (parameters) {
+    return await Bank.fetchBalance(this, parameters)
   }
-
-  protected override fetchCodesImpl () {
-    const codes: Record<CodeId, Deploy.UploadedCode> = {}
-    return withIntoError(this.api.query.compute.codes({}))
-      .then(({code_infos})=>{
-        for (const { code_id, code_hash, creator } of code_infos||[]) {
-          codes[code_id!] = new Deploy.UploadedCode({
-            chainId:  this.chainId,
-            codeId:   code_id,
-            codeHash: code_hash,
-            uploadBy: creator
-          })
-        }
-        return codes
-      })
+  protected override async fetchCodeInfoImpl (parameters) {
+    return await Compute.fetchCodeInfo(this, parameters)
   }
-
-  protected override async fetchCodeIdImpl (contract_address: Address): Promise<CodeId> {
-    return (await withIntoError(this.api.query.compute.contractInfo({
-      contract_address
-    })))
-      .ContractInfo!.code_id!
+  protected override async fetchCodeInstancesImpl (parameters) {
+    return await Compute.fetchCodeInstances(this, parameters)
   }
-
-  protected override async fetchContractsByCodeIdImpl (code_id: CodeId): Promise<Iterable<{address: Address}>> {
-    return (await withIntoError(this.api.query.compute.contractsByCodeId({ code_id })))
-      .contract_infos!
-      .map(({ contract_address, contract_info: { label, creator } }: any)=>({
-        label,
-        address: contract_address,
-        initBy:  creator
-      }))
+  protected override async fetchContractInfoImpl (parameters) {
+    return await Compute.fetchContractInfo(this, parameters)
   }
-
-  protected override async fetchCodeHashOfAddressImpl (contract_address: Address): Promise<CodeHash> {
-    return (await withIntoError(this.api.query.compute.codeHashByContractAddress({
-      contract_address
-    })))
-      .code_hash!
+  protected override async queryImpl <T> (parameters): Promise<T> {
+    return await Compute.query(this, parameters) as T
   }
-
-  protected override async fetchCodeHashOfCodeIdImpl (code_id: CodeId): Promise<CodeHash> {
-    return (await withIntoError(this.api.query.compute.codeHashByCodeId({
-      code_id
-    })))
-      .code_hash!
-  }
-
-  protected override async fetchBalanceImpl (
-    denom:   string = this.defaultDenom,
-    address: string|undefined = this.address
-  ) {
-    return (await withIntoError(this.api.query.bank.balance({
-      address,
-      denom
-    })))
-      .balance!.amount!
-  }
-
-  async getLabel (contract_address: Address): Promise<Chain.Label> {
-    return (await withIntoError(this.api.query.compute.contractInfo({
-      contract_address
-    })))
-      .ContractInfo!.label!
-  }
-
-  /** Query a contract.
-    * @returns the result of the query */
-  protected override queryImpl <U> (contract: { address: Address, codeHash: CodeHash }, message: Message): Promise<U> {
-    return withIntoError(this.api.query.compute.queryContract({
-      contract_address: contract.address,
-      code_hash: contract.codeHash,
-      query: message as Record<string, unknown>
-    }))
-  }
-
-  get account (): ReturnType<SecretNetworkClient['query']['auth']['account']> {
-    return this.api.query.auth.account({ address: this.address })
-  }
-
-  async setMaxGas (): Promise<this> {
-    const max = ScrtConnection.gasToken.fee((await this.fetchLimits()).gas)
-    this.fees = { upload: max, init: max, exec: max, send: max }
-    return this
-  }
-
   async fetchLimits (): Promise<{ gas: number }> {
     const params = { subspace: "baseapp", key: "BlockParams" }
     const { param } = await this.api.query.params.params(params)
@@ -188,225 +86,85 @@ export class ScrtConnection extends Chain.Connection {
     }
     return { gas: max_gas }
   }
-
-  async getNonce (): Promise<{ accountNumber: number, sequence: number }> {
-    const result: any = await this.api.query.auth.account({ address: this.address }) ?? (() => {
-      throw new Error(`Cannot find account "${this.address}", make sure it has a balance.`)
-    })
-    const { account_number, sequence } = result.account
-    return { accountNumber: Number(account_number), sequence: Number(sequence) }
-  }
-
-  async encrypt (codeHash: CodeHash, msg: Message) {
-    if (!codeHash) {
-      throw new Error("can't encrypt message without code hash")
-    }
-    const { encryptionUtils } = this.api as any
-    const encrypted = await encryptionUtils.encrypt(codeHash, msg as object)
-    return base64.encode(encrypted)
-  }
-
-  batch (): Batch<this, ScrtAgent> {
-    return new ScrtBatch({ connection: this }) as unknown as Batch<this, ScrtAgent>
-  }
-
 }
 
 export class ScrtAgent extends Chain.Agent {
 
-  protected async sendImpl (
-    recipient: Address,
-    amounts:   Token.ICoin[],
-    options?:  Parameters<Chain.Agent["sendImpl"]>[2]
-  ) {
-    return withIntoError(this.api.tx.bank.send(
-      { from_address: this.address!, to_address: recipient, amount: amounts },
-      { gasLimit: Number(options?.sendFee?.gas) }
-    ))
+  api: SecretNetworkClient
+
+  declare connection: ScrtConnection
+
+  declare identity:   ScrtIdentity
+
+  /** Set permissive fees by default. */
+  fees = {
+    upload: ScrtConnection.gasToken.fee(10000000),
+    init:   ScrtConnection.gasToken.fee(10000000),
+    exec:   ScrtConnection.gasToken.fee(1000000),
+    send:   ScrtConnection.gasToken.fee(1000000),
   }
 
-  protected sendManyImpl (
-    outputs: [Address, Token.ICoin[]][], options?: unknown
-  ): Promise<unknown> {
-    throw new Error('unimplemented')
-  }
-
-  async sendMany (outputs: never, opts?: any) {
-    throw new Error('ScrtConnection#sendMany: not implemented')
-  }
-
-  /** Upload a WASM binary. */
-  protected async uploadImpl (data: Uint8Array): Promise<Partial<Deploy.UploadedCode>> {
-    const request = { sender: this.address!, wasm_byte_code: data, source: "", builder: "" }
-    const gasLimit = Number(this.fees.upload?.amount[0].amount) || undefined
-    const result = await withIntoError(this.api!.tx.compute.storeCode(request, { gasLimit }))
-    const { code, message, details = [], rawLog  } = result as any
-    if (code !== 0) {
-      this.log.error(
-        `Upload failed with code ${bold(code)}:`,
-        bold(message ?? rawLog ?? ''),
-        ...details
-      )
-      if (message === `account ${this.address} not found`) {
-        this.log.info(`If this is a new account, send it some ${ScrtConnection.gasToken} first.`)
-        if (faucets[this.connection.chainId!]) {
-          this.log.info(`Available faucets\n `, [...faucets[this.connection.chainId!]].join('\n  '))
-        }
-      }
-      this.log.error(`Upload failed`, { result })
-      throw new Error('upload failed')
-    }
-    type Log = { type: string, key: string }
-    const codeId = result.arrayLog
-      ?.find((log: Log) => log.type === "message" && log.key === "code_id")
-      ?.value
-    if (!codeId) {
-      this.log.error(`Code ID not found in result`, { result })
-      throw new Error('upload failed')
-    }
-    const codeHash = await this.connection.getCodeHashOfCodeId(codeId)
-    return {
-      chainId:   this.connection.chainId,
-      codeId,
-      codeHash,
-      uploadBy:  this.address,
-      uploadTx:  result.transactionHash,
-      uploadGas: result.gasUsed
-    }
-  }
-
-  protected async instantiateImpl (
-    codeId: CodeId,
-    options: Parameters<Chain.Agent["instantiateImpl"]>[1]
-  ): Promise<Partial<Deploy.ContractInstance>> {
-    if (!this.address) throw new Error("agent has no address")
-    const parameters = {
-      sender:     this.address,
-      code_id:    Number(codeId),
-      code_hash:  options.codeHash,
-      label:      options.label!,
-      init_msg:   options.initMsg,
-      init_funds: options.initSend,
-      memo:       options.initMemo
-    }
-    const instantiateOptions = { gasLimit: Number(this.fees.init?.amount[0].amount) || undefined }
-    const result = await withIntoError(
-      this.api.tx.compute.instantiateContract(parameters, instantiateOptions))
-    if (result.code !== 0) {
-      this.log.error('Init failed:', { parameters, instantiateOptions, result })
-      throw new Error(`init of code id ${codeId} failed`)
-    }
-
-    type Log = { type: string, key: string }
-    const address = result.arrayLog!
-      .find((log: Log) => log.type === "message" && log.key === "contract_address")
-      ?.value!
-
-    return {
-      chainId:  this.connection.chainId,
-      address,
-      codeHash: options.codeHash,
-      initBy:   this.address,
-      initTx:   result.transactionHash,
-      initGas:  result.gasUsed,
-      label:    options.label,
-    }
-  }
-
-  protected async executeImpl (
-    contract: { address: Address, codeHash: CodeHash },
-    message:  Message,
-    options?: Parameters<Chain.Agent["executeImpl"]>[2] & {
-      preSimulate?: boolean
-    }
-  ): Promise<TxResponse> {
-    const tx = {
-      sender:           this.address!,
-      contract_address: contract.address,
-      code_hash:        contract.codeHash,
-      msg:              message as Record<string, unknown>,
-      sentFunds:        options?.execSend
-    }
-    const txOpts = {
-      gasLimit: Number(options?.execFee?.gas) || undefined
-    }
-    if (options?.preSimulate) {
-      this.log.info('Simulating transaction...')
-      let simResult
-      try {
-        simResult = await this.api.tx.compute.executeContract.simulate(tx, txOpts)
-      } catch (e) {
-        this.log.error(e)
-        this.log.warn('TX simulation failed:', tx, 'from', this)
-      }
-      const gas_used = simResult?.gas_info?.gas_used
-      if (gas_used) {
-        this.log.info('Simulation used gas:', gas_used)
-        const gas = Math.ceil(Number(gas_used) * 1.1)
-        // Adjust gasLimit up by 10% to account for gas estimation error
-        this.log.info('Setting gas to 110% of that:', gas)
-        txOpts.gasLimit = gas
+  constructor (properties: Partial<ScrtAgent> = {}) {
+    super(properties)
+    if (!(this.identity instanceof ScrtIdentity)) {
+      if (!(typeof this.identity === 'object')) {
+        throw new Error('identity must be ScrtIdentity instance, { mnemonic }, or { encryptionUtils }')
+      } else if ((this.identity as { mnemonic?: string }).mnemonic) {
+        this.log.debug('Identifying with mnemonic')
+        this.identity = new ScrtMnemonicIdentity(this.identity)
+      } else if ((this.identity as { encryptionUtils?: unknown }).encryptionUtils) {
+        this.log.debug('Identifying with signer (encryptionUtils)')
+        this.identity = new ScrtSignerIdentity(this.identity)
+      } else {
+        throw new Error('identity must be ScrtIdentity instance, { mnemonic }, or { encryptionUtils }')
       }
     }
-    const result = await this.api.tx.compute.executeContract(tx, txOpts)
-    // check error code as per https://grpc.github.io/grpc/core/md_doc_statuscodes.html
-    if (result.code !== 0) {
-      throw decodeError(result)
+    const { chainId, url } = this.connection
+    this.api = this.identity.getApi({ chainId, url }) 
+  }
+
+  async setMaxGas (): Promise<this> {
+    const { gas } = await this.connection.fetchLimits()
+    const max = ScrtConnection.gasToken.fee(gas)
+    this.fees = { upload: max, init: max, exec: max, send: max }
+    return this
+  }
+
+  get account (): ReturnType<SecretNetworkClient['query']['auth']['account']> {
+    return this.api.query.auth.account({ address: this.address })
+  }
+
+  async getNonce (): Promise<{ accountNumber: number, sequence: number }> {
+    const result: any = await this.account ?? (() => {
+      throw new Error(`Cannot find account "${this.address}", make sure it has a balance.`)
+    })()
+    const { account_number, sequence } = result.account
+    return { accountNumber: Number(account_number), sequence: Number(sequence) }
+  }
+  async encrypt (codeHash: CodeHash, msg: Message) {
+    if (!codeHash) {
+      throw new Error("can't encrypt message without code hash")
     }
-    return result as TxResponse
+    const { encryptionUtils } = await Promise.resolve(this.api) as any
+    const encrypted = await encryptionUtils.encrypt(codeHash, msg as object)
+    return base64.encode(encrypted)
+  }
+
+  protected async sendImpl (...args: Parameters<Chain.Agent["sendImpl"]>) {
+    return await Bank.send(this, ...args)
+  }
+  protected async uploadImpl (...args: Parameters<Chain.Agent["uploadImpl"]>) {
+    return await Compute.upload(this, ...args)
+  }
+  protected async instantiateImpl (...args: Parameters<Chain.Agent["instantiateImpl"]>) {
+    return await Compute.instantiate(this, ...args)
+  }
+  protected async executeImpl <T> (...args: Parameters<Chain.Agent["executeImpl"]>): Promise<T> {
+    return await Compute.execute(this, ...args) as T
   }
 }
 
-export class ScrtBlock extends Chain.Block {
-}
-
-export function decodeError (result: TxResponse) {
-  const error = `ScrtConnection#execute: gRPC error ${result.code}: ${result.rawLog}`
-  // make the original result available on request
-  const original = structuredClone(result)
-  Object.defineProperty(result, "original", {
-    enumerable: false, get () { return original }
-  })
-  // decode the values in the result
-  const txBytes = tryDecode(result.tx as Uint8Array)
-  Object.assign(result, { txBytes })
-  for (const i in result.tx.signatures) {
-    Object.assign(result.tx.signatures, { [i]: tryDecode(result.tx.signatures[i as any]) })
-  }
-  for (const event of result.events) {
-    for (const attr of event?.attributes ?? []) {
-      //@ts-ignore
-      try { attr.key   = tryDecode(attr.key)   } catch (e) {}
-      //@ts-ignore
-      try { attr.value = tryDecode(attr.value) } catch (e) {}
-    }
-  }
-  return Object.assign(new Error(error), result)
-}
-
-const withIntoError = <T>(p: Promise<T>): Promise<T> =>
-  p.catch(intoError)
-
-const intoError = async (e: object)=>{
-  e = await Promise.resolve(e)
-  console.error(e)
-  throw Object.assign(new Error(), e)
-}
-
-/** Used to decode Uint8Array-represented UTF8 strings in TX responses. */
-const decoder = new TextDecoder('utf-8', { fatal: true })
-
-/** Marks a response field as non-UTF8 to prevent large binary arrays filling the console. */
-export const nonUtf8 = Symbol('(binary data, see result.original for the raw Uint8Array)')
-
-/** Decode binary response data or mark it as non-UTF8 */
-const tryDecode = (data: Uint8Array): string|Symbol => {
-  try {
-    return decoder.decode(data)
-  } catch (e) {
-    return nonUtf8
-  }
-}
+export class ScrtBlock extends Chain.Block {}
 
 function removeTrailingSlash (url: string) {
   while (url.endsWith('/')) { url = url.slice(0, url.length - 1) }
