@@ -17,18 +17,24 @@
 **/
 
 import * as Chains from './cw-chains'
-import { Core } from '@fadroma/agent'
 import CLI from '@hackbg/cmds'
 import { CWConsole } from './cw-base'
 import { CWConnection } from './cw-connection'
+import { bold } from '@fadroma/agent'
 
 export * as CosmJS from '@hackbg/cosmjs-esm'
-export { CWError as Error, CWConsole as Console } from './cw-base'
 export {
-  CWConnection as Connection,
-  CWBlock      as Block
+  CWError            as Error,
+  CWConsole          as Console
+} from './cw-base'
+export {
+  CWChain            as Chain,
+  CWConnection       as Connection,
 } from './cw-connection'
-export { CWBatch as Batch } from './cw-batch'
+export {
+  CWBlock            as Block,
+  CWBatch            as Batch,
+} from './cw-tx'
 export {
   CWIdentity         as Identity,
   CWSignerIdentity   as SignerIdentity,
@@ -37,7 +43,6 @@ export {
 } from './cw-identity'
 export * from './cw-chains'
 export * as Staking from './cw-staking'
-export { Core }
 
 export default class CWCLI extends CLI {
 
@@ -58,7 +63,7 @@ export default class CWCLI extends CLI {
     args: 'RPC_URL [TIMEOUT_SEC]'
   }, async (url: string, timeout: number = 5) => {
     if (!url) {
-      this.log.error(Core.bold('Pass a RPC URL to connect.'))
+      this.log.error(bold('Pass a RPC URL to connect.'))
       process.exit(1)
     }
     const connection = new CWConnection({ url })
@@ -72,7 +77,7 @@ export default class CWCLI extends CLI {
       api = await connection.api
     } catch (e) {
       this.log.error(e.stack)
-      this.log.error(Core.bold(`Failed to connect because of the above error.`))
+      this.log.error(bold(`Failed to connect because of the above error.`))
       process.exit(1)
     }
     clearTimeout(timer)

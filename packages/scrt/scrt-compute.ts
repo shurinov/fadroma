@@ -1,22 +1,22 @@
 import type { TxResponse } from '@hackbg/secretjs-esm'
-import { Deploy, Chain } from '@fadroma/agent'
+import { Compute, Chain, Agent, Connection, Address } from '@fadroma/agent'
+import type { CodeId } from '@fadroma/agent'
 import { bold, withIntoError } from './scrt-base'
 import faucets from './scrt-faucets'
-import type { ScrtConnection, ScrtAgent } from './scrt-connection'
+import type { ScrtChain, ScrtConnection } from './scrt-chain'
+import type { ScrtAgent, ScrtSigningConnection } from './scrt-identity'
 
 export async function fetchCodeInfo (
-  conn: ScrtConnection,
-  args: Parameters<Chain.Connection["fetchCodeInfoImpl"]>[0]
+  chain: ScrtConnection, args: Parameters<Connection["fetchCodeInfoImpl"]>[0]
 ):
-  Promise<Record<Deploy.CodeId, Deploy.UploadedCode>>
+  Promise<Record<CodeId, Compute.UploadedCode>>
 {
-  const api = await Promise.resolve(conn.api)
-  const { chainId } = conn
+  const { chainId, connection } = chain
   const result = {}
-  await withIntoError(this.api.query.compute.codes({})).then(({code_infos})=>{
+  await withIntoError(connection.api.query.compute.codes({})).then(({code_infos})=>{
     for (const { code_id, code_hash, creator } of code_infos||[]) {
       if (!args.codeIds || args.codeIds.includes(code_id)) {
-        result[code_id!] = new Deploy.UploadedCode({
+        result[code_id!] = new Compute.UploadedCode({
           chainId,
           codeId:   code_id,
           codeHash: code_hash,
@@ -29,15 +29,13 @@ export async function fetchCodeInfo (
 }
 
 export async function fetchCodeInstances (
-  conn: ScrtConnection,
-  args: Parameters<Chain.Connection["fetchCodeInstancesImpl"]>[0]
+  chain: ScrtConnection, args: Parameters<Connection["fetchCodeInstancesImpl"]>[0]
 ):
-  Promise<Record<Deploy.CodeId, Record<Chain.Address, Chain.Contract>>>
+  Promise<Record<CodeId, Record<Address, Compute.Contract>>>
 {
-  const api = await Promise.resolve(conn.api)
-  const { chainId } = conn
+  const { chainId, connection } = chain
   if (args.parallel) {
-    conn.log.warn('fetchCodeInstances in parallel: not implemented')
+    chain.log.warn('fetchCodeInstances in parallel: not implemented')
   }
   const result = {}
   for (const [codeId, Contract] of Object.entries(args.codeIds)) {
@@ -49,7 +47,7 @@ export async function fetchCodeInstances (
       .then(({contract_infos})=>{
         for (const { contract_address, contract_info: { label, creator } } of contract_infos) {
           result[contract_address] = new Contract({
-            connection: conn,
+            chain,
             codeId,
             codeHash,
             label,
@@ -65,7 +63,7 @@ export async function fetchCodeInstances (
 
 export async function fetchContractInfo (
   conn: ScrtConnection,
-  args: Parameters<Chain.Connection["fetchContractInfoImpl"]>[0]
+  args: Parameters<Connection["fetchContractInfoImpl"]>[0]
 ):
   Promise<{
     [address in keyof typeof args["contracts"]]: InstanceType<typeof args["contracts"][address]>
@@ -94,7 +92,7 @@ export async function fetchContractInfo (
 
 export async function query (
   conn: ScrtConnection,
-  args: Parameters<Chain.Connection["queryImpl"]>[0]
+  args: Parameters<Connection["queryImpl"]>[0]
 ) {
   const api = await Promise.resolve(conn.api)
   return withIntoError(api.query.compute.queryContract({
@@ -105,8 +103,8 @@ export async function query (
 }
 
 export async function upload (
-  conn: ScrtAgent,
-  args: Parameters<Chain.Agent["uploadImpl"]>[0]
+  conn: ScrtSigningConnection,
+  args: Parameters<Agent["uploadImpl"]>[0]
 ) {
 
   const api = await Promise.resolve(conn.api)
@@ -164,7 +162,7 @@ export async function upload (
     throw new Error('upload failed')
   }
   const { codeHash } = await this.conn.fetchCodeInfo(codeId)
-  return new Deploy.UploadedCode({
+  return new Compute.UploadedCode({
     chainId:   this.conn.chainId,
     codeId,
     codeHash,
@@ -175,8 +173,8 @@ export async function upload (
 }
 
 export async function instantiate (
-  conn: ScrtAgent,
-  args: Parameters<Chain.Agent["instantiateImpl"]>[0]
+  conn: ScrtSigningConnection,
+  args: Parameters<Agent["instantiateImpl"]>[0]
 ) {
   if (!this.address) {
     throw new Error("agent has no address")
@@ -212,7 +210,7 @@ export async function instantiate (
     .find((log: Log) => log.type === "message" && log.key === "contract_address")
     ?.value!
 
-  return new Deploy.ContractInstance({
+  return new Compute.ContractInstance({
     chainId:  this.conn.chainId,
     address,
     codeHash: args.codeHash,
@@ -220,12 +218,12 @@ export async function instantiate (
     initTx:   result.transactionHash,
     initGas:  result.gasUsed,
     label:    args.label,
-  }) as Deploy.ContractInstance & { address: Chain.Address }
+  }) as Compute.ContractInstance & { address: Chain.Address }
 }
 
 export async function execute (
-  conn: ScrtAgent,
-  args: Parameters<Chain.Agent["executeImpl"]>[0] & { preSimulate?: boolean }
+  conn: ScrtSigningConnection,
+  args: Parameters<Agent["executeImpl"]>[0] & { preSimulate?: boolean }
 ) {
   const api = await Promise.resolve(conn.api)
 

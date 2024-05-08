@@ -1,4 +1,4 @@
-import { Core } from '@fadroma/agent'
+import { assign } from '@fadroma/agent'
 import type { Fields } from '@hackbg/borshest'
 import { Section } from './namada-tx-section-base'
 
@@ -19,7 +19,7 @@ class DataSection extends Section {
   data!: string
   constructor (properties: Partial<DataSection> = {}) {
     super()
-    Core.assign(this, properties, [ 'salt', 'data' ])
+    assign(this, properties, [ 'salt', 'data' ])
   }
 }
 
@@ -31,7 +31,7 @@ class ExtraDataSection extends Section {
   tag!:  string
   constructor (properties: Partial<ExtraDataSection> = {}) {
     super()
-    Core.assign(this, properties, [ 'salt', 'code', 'tag' ])
+    assign(this, properties, [ 'salt', 'code', 'tag' ])
   }
 }
 
@@ -43,7 +43,7 @@ class CodeSection extends Section {
   tag!:  string
   constructor (properties: Partial<CodeSection> = {}) {
     super()
-    Core.assign(this, properties, [ 'salt', 'code', 'tag' ])
+    assign(this, properties, [ 'salt', 'code', 'tag' ])
   }
 }
 
@@ -55,7 +55,7 @@ class SignatureSection extends Section {
   signatures!: string[]
   constructor (properties: Partial<SignatureSection> = {}) {
     super()
-    Core.assign(this, properties, [ 'targets', 'signer', 'signatures' ])
+    assign(this, properties, [ 'targets', 'signer', 'signatures' ])
   }
 }
 
@@ -107,7 +107,7 @@ class MaspTxSection extends Section {
   }
   constructor (properties: Partial<MaspTxSection> = {}) {
     super()
-    Core.assign(this, properties, [
+    assign(this, properties, [
       'txid',
       'lockTime',
       'expiryHeight',
@@ -129,7 +129,7 @@ class MaspBuilderSection extends Section {
   }>
   constructor (properties: Partial<MaspBuilderSection> = {}) {
     super()
-    Core.assign(this, properties, [
+    assign(this, properties, [
       'target',
       'assetTypes'
     ])
@@ -148,7 +148,7 @@ class HeaderSection extends Section {
   txType!:     'Raw'|'Wrapper'|'Decrypted'|'Protocol'
   constructor (properties: Partial<HeaderSection> = {}) {
     super()
-    Core.assign(this, properties, [
+    assign(this, properties, [
       'chainId',
       'expiration',
       'timestamp',

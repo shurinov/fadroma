@@ -1,7 +1,7 @@
 import { packageRoot } from './package'
 import type * as Devnets from './devnet'
 import DevnetContainer from './devnet-base'
-import { Core, Chain, Token } from '@fadroma/agent'
+import { randomBech32, Token } from '@fadroma/agent'
 import * as OCI from '@fadroma/oci'
 import { ok, equal, deepEqual, throws, rejects } from 'node:assert'
 import { getuid, getgid } from 'node:process'
@@ -17,8 +17,8 @@ export async function testDevnetPlatform (
   const codePath = resolve(
     packageRoot, 'fixtures', 'fadroma-example-cw-null@HEAD.wasm'
   )
-  const user1 = Core.randomBech32(spec.bech32Prefix)
-  const user2 = Core.randomBech32(spec.bech32Prefix)
+  const user1 = randomBech32(spec.bech32Prefix)
+  const user2 = randomBech32(spec.bech32Prefix)
   let devnet = new DevnetContainer({
     ...spec,
     onScriptExit: 'remove',

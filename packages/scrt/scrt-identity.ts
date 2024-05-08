@@ -1,10 +1,97 @@
-import { Chain } from '@fadroma/agent'
-import type { ChainId } from '@fadroma/agent'
+import { base64, Chain, Identity, Agent, SigningConnection } from '@fadroma/agent'
+import type { ChainId, CodeHash, Message } from '@fadroma/agent'
 import { SecretNetworkClient, Wallet } from '@hackbg/secretjs-esm'
 import type { EncryptionUtils } from '@hackbg/secretjs-esm'
 import { ScrtError as Error, bold, colors, assign, Bip39, Bip39EN } from './scrt-base'
+import { ScrtChain, ScrtConnection } from './scrt-chain'
+import { ScrtBatch } from './scrt-tx'
+import * as ScrtBank from './scrt-bank'
+import * as ScrtCompute from './scrt-compute'
+import * as ScrtStaking from './scrt-staking'
+import * as ScrtGovernance from './scrt-governance'
 
-export abstract class ScrtIdentity extends Chain.Identity {
+export class ScrtAgent extends Agent {
+  api: SecretNetworkClient
+  declare chain:      ScrtChain
+  declare connection: ScrtSigningConnection
+  declare identity:   ScrtIdentity
+
+  override batch (): ScrtBatch {
+    return new ScrtBatch({ agent: this })
+  }
+
+  /** Set permissive fees by default. */
+  fees = {
+    upload: ScrtConnection.gasToken.fee(10000000),
+    init:   ScrtConnection.gasToken.fee(10000000),
+    exec:   ScrtConnection.gasToken.fee(1000000),
+    send:   ScrtConnection.gasToken.fee(1000000),
+  }
+
+  constructor (properties: Partial<ScrtAgent> = {}) {
+    super(properties)
+    if (!(this.identity instanceof ScrtIdentity)) {
+      if (!(typeof this.identity === 'object')) {
+        throw new Error('identity must be ScrtIdentity instance, { mnemonic }, or { encryptionUtils }')
+      } else if ((this.identity as { mnemonic?: string }).mnemonic) {
+        this.log.debug('Identifying with mnemonic')
+        this.identity = new ScrtMnemonicIdentity(this.identity)
+      } else if ((this.identity as { encryptionUtils?: unknown }).encryptionUtils) {
+        this.log.debug('Identifying with signer (encryptionUtils)')
+        this.identity = new ScrtSignerIdentity(this.identity)
+      } else {
+        throw new Error('identity must be ScrtIdentity instance, { mnemonic }, or { encryptionUtils }')
+      }
+    }
+    const { chainId, url } = this.connection
+    this.api = this.identity.getApi({ chainId, url }) 
+  }
+
+  async setMaxGas (): Promise<this> {
+    const { gas } = await this.chain.fetchLimits()
+    const max = ScrtConnection.gasToken.fee(gas)
+    this.fees = { upload: max, init: max, exec: max, send: max }
+    return this
+  }
+
+  get account (): ReturnType<SecretNetworkClient['query']['auth']['account']> {
+    return this.api.query.auth.account({ address: this.address })
+  }
+
+  async getNonce (): Promise<{ accountNumber: number, sequence: number }> {
+    const result: any = await this.account ?? (() => {
+      throw new Error(`Cannot find account "${this.address}", make sure it has a balance.`)
+    })()
+    const { account_number, sequence } = result.account
+    return { accountNumber: Number(account_number), sequence: Number(sequence) }
+  }
+
+  async encrypt (codeHash: CodeHash, msg: Message) {
+    if (!codeHash) {
+      throw new Error("can't encrypt message without code hash")
+    }
+    const { encryptionUtils } = await Promise.resolve(this.api) as any
+    const encrypted = await encryptionUtils.encrypt(codeHash, msg as object)
+    return base64.encode(encrypted)
+  }
+}
+
+export class ScrtSigningConnection extends SigningConnection {
+  async sendImpl (...args: Parameters<SigningConnection["sendImpl"]>) {
+    return await ScrtBank.send(this, ...args)
+  }
+  async uploadImpl (...args: Parameters<SigningConnection["uploadImpl"]>) {
+    return await ScrtCompute.upload(this, ...args)
+  }
+  async instantiateImpl (...args: Parameters<SigningConnection["instantiateImpl"]>) {
+    return await ScrtCompute.instantiate(this, ...args)
+  }
+  async executeImpl <T> (...args: Parameters<SigningConnection["executeImpl"]>): Promise<T> {
+    return await ScrtCompute.execute(this, ...args) as T
+  }
+}
+
+export abstract class ScrtIdentity extends Identity {
   abstract getApi ({chainId, url}: {chainId: ChainId, url: string|URL}): SecretNetworkClient
 
   static fromKeplr = () => {

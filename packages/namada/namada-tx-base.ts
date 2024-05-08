@@ -1,4 +1,4 @@
-import { Core } from '@fadroma/agent'
+import { assign } from '@fadroma/agent'
 import * as Sections from './namada-tx-section'
 
 class NamadaTransaction {
@@ -40,7 +40,7 @@ class NamadaTransaction {
   content?:    object
 
   constructor (properties: Partial<NamadaTransaction> = {}) {
-    Core.assign(this, properties, [
+    assign(this, properties, [
       'chainId',
       'expiration',
       'timestamp',

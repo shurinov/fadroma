@@ -6,7 +6,7 @@ export default async function testJSONFileStores () {
   await withTmpDir(async dir=>{
     const deployment = new TestProjectDeployment()
     await deployment.upload({
-      uploader:    new Stub.StubAgent({}),
+      uploader:    new Stub.Agent({}),
       uploadStore: new JSONFileUploadStore(dir)
     })
   })

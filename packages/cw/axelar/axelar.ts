@@ -1,6 +1,5 @@
 import { CLI } from '../cw-base'
 import { CWConnection } from '../cw-connection'
-import { CWBatch } from '../cw-batch'
 import { CWMnemonicIdentity } from '../cw-identity'
 
 class AxelarCLI extends CLI {}

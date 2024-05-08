@@ -20,12 +20,17 @@
   ],
   "description": "CosmJS Stargate integration for Fadroma.",
   "dependencies": {
-    "@fadroma/agent":     "workspace:*",
     "@hackbg/cosmjs-esm": "workspace:*",
     "@hackbg/cmds":       "workspace:*",
     "@hackbg/borshest":   "workspace:*",
     "borsh":              "^2.0.0",
     "borsher":            "^1.2.1"
+  },
+  "peerDependencies": {
+    "@fadroma/agent":     "workspace:*"
+  },
+  "devDependencies": {
+    "@fadroma/agent":     "workspace:*"
   },
   "scripts": {
     "check":  "time tsc --noEmit",

@@ -18,27 +18,25 @@ globalThis.crypto ??= webcrypto
 export const packageRoot = dirname(resolve(fileURLToPath(import.meta.url)))
 
 const joinWith = (sep: string, ...strings: string[]) => strings.join(sep)
-let chain: any // for mocking
-let agent: Scrt.Connection
 const mnemonic = 'define abandon palace resource estate elevator relief stock order pool knock myth brush element immense task rapid habit angry tiny foil prosper water news'
 
 import { Suite } from '@hackbg/ensuite'
 export default new Suite([
   ['chain',    testScrtChain],
-  ['snip-20',  () => import('./snip-20.test')],
-  ['snip-24',  () => import('./snip-24.test')],
-  ['snip-721', () => import('./snip-721.test')],
+  ['snip-20',  () => import('./snip/snip-20.test')],
+  ['snip-24',  () => import('./snip/snip-24.test')],
+  ['snip-721', () => import('./snip/snip-721.test')],
   //['mocknet',  () => import('./scrt-mocknet.test')],
 ])
 
 export async function testScrtChain () {
-  ok(Scrt.mainnet() instanceof Scrt.Connection)
-  ok(Scrt.testnet() instanceof Scrt.Connection)
+  ok(await Scrt.mainnet() instanceof Scrt.Chain)
+  ok(await Scrt.testnet() instanceof Scrt.Chain)
   const backend = new Devnet.Container(Devnet.Platform.Scrt.versions['1.12'])
   const { alice, bob, guest } = await testConnectionWithBackend(backend, {
-    Connection: Scrt.Connection,
-    Identity:   Scrt.MnemonicIdentity,
-    code:       fixture('scrt-null.wasm'),
+    Chain:    Scrt.Chain,
+    Identity: Scrt.MnemonicIdentity,
+    code:     fixture('scrt-null.wasm'),
   })
   //const batch = () => alice.batch()
     //.instantiate('id', {

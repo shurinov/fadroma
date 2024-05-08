@@ -3,7 +3,7 @@ import type { APIMode } from '../devnet-base'
 import type * as Platform from '../devnet-platform'
 import * as OCI from '@fadroma/oci'
 import * as CW from '@fadroma/cw'
-import { Chain, Token } from '@fadroma/agent'
+import { Connection, Identity, Token } from '@fadroma/agent'
 
 export type Version = `1.12.9-testnet`
 
@@ -21,8 +21,8 @@ export function version (platformVersion: Version, baseImage: string, baseSha256
   return {
     platformName,
     platformVersion,
-    Connection:   CW.Injective.Connection as { new (...args: unknown[]): Chain.Connection },
-    Identity:     CW.Injective.MnemonicIdentity as { new (...args: unknown[]): Chain.Identity },
+    Connection:   CW.Injective.Connection as { new (...args: unknown[]): Connection },
+    Identity:     CW.Injective.MnemonicIdentity as { new (...args: unknown[]): Identity },
     gasToken:     new Token.Native('uarch'),
     nodeBinary:   'injectived',
     bech32Prefix: 'inj',

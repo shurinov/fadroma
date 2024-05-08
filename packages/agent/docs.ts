@@ -4,15 +4,16 @@ import { generateDocumentation } from '@hackbg/docs'
 generateDocumentation({
   data: JSON.parse(readFileSync('docs.json', 'utf8')),
   pages: {
-    'core.md':       { sources: ['core.ts'] },
-    'chain.md':      { sources: ['chain.ts'] },
-    'deploy.md':     { sources: ['deploy.ts'] },
-    'governance.md': { sources: ['governance.ts'] },
-    'program.md':    { sources: ['program.browser.ts', 'program.ts'] },
-    'staking.md':    { sources: ['staking.ts'] },
-    'store.md':      { sources: ['store.ts'] },
-    'stub.md':       { sources: ['stub.ts'] },
-    'token.md':      { sources: ['token.ts'] },
-    'tx.md':         { sources: ['tx.ts'] },
+    'doc/core.md':        { sources: ['agent-core.ts'] },
+    'doc/chain.md':       { sources: ['agent-chain.ts'] },
+    'doc/deploy.md':      { sources: ['agent-deploy.ts'] },
+    'doc/governance.md':  { sources: ['agent-governance.ts'] },
+    'doc/compute.md':     { sources: ['agent-compute.browser.ts', 'agent-compute.ts'] },
+    'doc/staking.md':     { sources: ['agent-staking.ts'] },
+    'doc/store.md':       { sources: ['agent-store.ts'] },
+    'doc/token.md':       { sources: ['agent-token.ts'] },
+    'doc/tx.md':          { sources: ['agent-tx.ts'] },
+
+    'stub/README.md': { sources: ['stub/stub.ts'] },
   }
 })

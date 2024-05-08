@@ -1,5 +1,5 @@
 import CLI from '@hackbg/cmds'
-import { Core } from '@fadroma/agent'
+import { Core, bold } from '@fadroma/agent'
 import { brailleDump } from '@hackbg/dump'
 import {
   NamadaConsole
@@ -11,7 +11,6 @@ import {
   NamadaMnemonicIdentity
 } from './namada-connection'
 export {
-  Core,
   connect,
   initDecoder,
   NamadaCLI              as CLI,
@@ -43,7 +42,7 @@ export const testnet = (options: Partial<NamadaConnection> = {}): NamadaConnecti
   return new NamadaConnection({
     ...options||{},
     chainId: options?.chainId || chainIds.testnet,
-    url:     options?.url     || Core.pickRandom(testnets),
+    url:     options?.url     || pickRandom(testnets),
   })
 }
 
@@ -63,7 +62,7 @@ export default class NamadaCLI extends CLI {
     args: "RPC_URL",
   }, async (url) => {
     if (!url) {
-      this.log.error(Core.bold('Pass a RPC URL to query the epoch.'))
+      this.log.error(bold('Pass a RPC URL to query the epoch.'))
       process.exit(1)
     }
     const connection = new NamadaConnection({ url })
@@ -78,7 +77,7 @@ export default class NamadaCLI extends CLI {
     args: "RPC_URL"
   }, async (url) => {
     if (!url) {
-      this.log.error(Core.bold('Pass a RPC URL to query the epoch.'))
+      this.log.error(bold('Pass a RPC URL to query the epoch.'))
       process.exit(1)
     }
     const connection = new NamadaConnection({ url })
@@ -93,7 +92,7 @@ export default class NamadaCLI extends CLI {
     args: "RPC_URL",
   }, async (url) => {
     if (!url) {
-      this.log.error(Core.bold('Pass a RPC URL to query total tokens staked.'))
+      this.log.error(bold('Pass a RPC URL to query total tokens staked.'))
       process.exit(1)
     }
     const connection = new NamadaConnection({ url })
@@ -108,7 +107,7 @@ export default class NamadaCLI extends CLI {
     args: 'RPC_URL',
   }, async (url: string) => {
     if (!url) {
-      this.log.error(Core.bold('Pass a RPC URL to query governance parameters.'))
+      this.log.error(bold('Pass a RPC URL to query governance parameters.'))
       process.exit(1)
     }
     const connection = new NamadaConnection({ url })
@@ -123,7 +122,7 @@ export default class NamadaCLI extends CLI {
     args: 'RPC_URL'
   }, async (url: string) => {
     if (!url) {
-      this.log.error(Core.bold('Pass a RPC URL to query validators.'))
+      this.log.error(bold('Pass a RPC URL to query validators.'))
       process.exit(1)
     }
     const connection = new NamadaConnection({ url })
@@ -131,14 +130,14 @@ export default class NamadaCLI extends CLI {
     for (const validator of await connection.getValidatorAddresses()) {
       this.log.log(validator)
     }
-    this.log.br().info('Total validators:', Core.bold(String(validatorAddresses.length)))
+    this.log.br().info('Total validators:', bold(String(validatorAddresses.length)))
     //for (const validator of await connection.getValidators({ prefix: 'tnam' })) {
       //this.log.br()
-        ////.info('Validator:        ', Core.bold(validator.address))
-        //.info('Address (hex):    ', Core.bold(validator.addressHex))
-        //.info('Public key:       ', Core.bold(validator.pubKeyHex))
-        //.info('Voting power:     ', Core.bold(String(validator.votingPower)))
-        //.info('Proposer priority:', Core.bold(String(validator.proposerPriority)))
+        ////.info('Validator:        ', bold(validator.address))
+        //.info('Address (hex):    ', bold(validator.addressHex))
+        //.info('Public key:       ', bold(validator.pubKeyHex))
+        //.info('Voting power:     ', bold(String(validator.votingPower)))
+        //.info('Proposer priority:', bold(String(validator.proposerPriority)))
     //}
     process.exit(0)
   })
@@ -149,12 +148,12 @@ export default class NamadaCLI extends CLI {
     args: 'RPC_URL'
   }, async (url: string) => {
     if (!url) {
-      this.log.error(Core.bold('Pass a RPC URL to query validators.'))
+      this.log.error(bold('Pass a RPC URL to query validators.'))
       process.exit(1)
     }
     const connection = new NamadaConnection({ url })
     for (const {address, bondedStake} of await connection.getValidatorsConsensus()) {
-      this.log.log(Core.bold(address), bondedStake.toString())
+      this.log.log(bold(address), bondedStake.toString())
     }
     process.exit(0)
   })
@@ -165,12 +164,12 @@ export default class NamadaCLI extends CLI {
     args: 'RPC_URL'
   }, async (url: string) => {
     if (!url) {
-      this.log.error(Core.bold('Pass a RPC URL to query validators.'))
+      this.log.error(bold('Pass a RPC URL to query validators.'))
       process.exit(1)
     }
     const connection = new NamadaConnection({ url })
     for (const {address, bondedStake} of await connection.getValidatorsBelowCapacity()) {
-      this.log.log(Core.bold(address), bondedStake.toString())
+      this.log.log(bold(address), bondedStake.toString())
     }
     process.exit(0)
   })
@@ -181,7 +180,7 @@ export default class NamadaCLI extends CLI {
     args: 'RPC_URL'
   }, async (url: string) => {
     if (!url) {
-      this.log.error(Core.bold('Pass a RPC URL to query validators.'))
+      this.log.error(bold('Pass a RPC URL to query validators.'))
       process.exit(1)
     }
     const connection = new NamadaConnection({ url })
@@ -205,15 +204,15 @@ export default class NamadaCLI extends CLI {
     page = Number(page)
     perPage = Number(perPage)
     if (!url || isNaN(page) || isNaN(perPage)) {
-      this.log.error(Core.bold('Pass a RPC URL, page number, and page size to query validators.'))
+      this.log.error(bold('Pass a RPC URL, page number, and page size to query validators.'))
       process.exit(1)
     }
     if (page < 1) {
-      this.log.error(Core.bold('Pages start from 1.'))
+      this.log.error(bold('Pages start from 1.'))
       process.exit(1)
     }
     if (perPage < 1) {
-      this.log.error(Core.bold('Need to specify at least 1 result per page'))
+      this.log.error(bold('Need to specify at least 1 result per page'))
       process.exit(1)
     }
     const connection = new NamadaConnection({ url })
@@ -243,7 +242,7 @@ export default class NamadaCLI extends CLI {
     args: 'RPC_URL ADDRESS'
   }, async (url: string, address: string) => {
     if (!url || !address) {
-      this.log.error(Core.bold('Pass a RPC URL and an address to query validator info.'))
+      this.log.error(bold('Pass a RPC URL and an address to query validator info.'))
       process.exit(1)
     }
     const connection = new NamadaConnection({ url })
@@ -269,20 +268,20 @@ export default class NamadaCLI extends CLI {
     args: 'RPC_URL',
   }, async (url: string) => {
     if (!url) {
-      this.log.error(Core.bold('Pass a RPC URL to query governance parameters.'))
+      this.log.error(bold('Pass a RPC URL to query governance parameters.'))
       process.exit(1)
     }
     const connection = new NamadaConnection({ url })
     const parameters = await connection.getGovernanceParameters()
     this.log
       .log()
-      .log('Minimum proposal fund:         ', Core.bold(parameters.minProposalFund))
-      .log('Minimum proposal voting period:', Core.bold(parameters.minProposalVotingPeriod))
-      .log('Minimum proposal grace epochs: ', Core.bold(parameters.minProposalGraceEpochs))
+      .log('Minimum proposal fund:         ', bold(parameters.minProposalFund))
+      .log('Minimum proposal voting period:', bold(parameters.minProposalVotingPeriod))
+      .log('Minimum proposal grace epochs: ', bold(parameters.minProposalGraceEpochs))
       .log()
-      .log('Maximum proposal period:       ', Core.bold(parameters.maxProposalPeriod))
-      .log('Maximum proposal content size: ', Core.bold(parameters.maxProposalContentSize))
-      .log('Maximum proposal code size:    ', Core.bold(parameters.maxProposalCodeSize))
+      .log('Maximum proposal period:       ', bold(parameters.maxProposalPeriod))
+      .log('Maximum proposal content size: ', bold(parameters.maxProposalContentSize))
+      .log('Maximum proposal code size:    ', bold(parameters.maxProposalCodeSize))
       .log()
     process.exit(0)
   })
@@ -293,15 +292,15 @@ export default class NamadaCLI extends CLI {
     args: 'RPC_URL'
   }, async (url: string) => {
     if (!url) {
-      this.log.error(Core.bold('Pass a RPC URL to query proposal counter.'))
+      this.log.error(bold('Pass a RPC URL to query proposal counter.'))
       process.exit(1)
     }
     const connection = new NamadaConnection({ url })
     const counter = await connection.getProposalCount()
     this.log
-      .log('Proposal count:', Core.bold(String(counter)))
-      .log('Last proposal: ', Core.bold(String(counter-1n)))
-      .info('Use the', Core.bold('proposal'), 'command to query proposal details.')
+      .log('Proposal count:', bold(String(counter)))
+      .log('Last proposal: ', bold(String(counter-1n)))
+      .info('Use the', bold('proposal'), 'command to query proposal details.')
     process.exit(0)
   })
 
@@ -311,24 +310,24 @@ export default class NamadaCLI extends CLI {
     args: 'RPC_URL NUMBER'
   }, async (url: string, number: string) => {
     if (!url || !number || isNaN(Number(number))) {
-      this.log.error(Core.bold('Pass a RPC URL and proposal number to query proposal info.'))
+      this.log.error(bold('Pass a RPC URL and proposal number to query proposal info.'))
       process.exit(1)
     }
     const connection = new NamadaConnection({ url })
     const {proposal, votes, result} = await connection.getProposalInfo(Number(number))
     this.log
       .log()
-      .log('Proposal:   ', Core.bold(number))
-      .log('Author:     ', Core.bold(proposal.author))
-      .log('Type:       ', Core.bold(JSON.stringify(proposal.type)))
-      .log('Start epoch:', Core.bold(proposal.votingStartEpoch))
-      .log('End epoch:  ', Core.bold(proposal.votingEndEpoch))
-      .log('Grace epoch:', Core.bold(proposal.graceEpoch))
+      .log('Proposal:   ', bold(number))
+      .log('Author:     ', bold(proposal.author))
+      .log('Type:       ', bold(JSON.stringify(proposal.type)))
+      .log('Start epoch:', bold(proposal.votingStartEpoch))
+      .log('End epoch:  ', bold(proposal.votingEndEpoch))
+      .log('Grace epoch:', bold(proposal.graceEpoch))
       .log()
       .log('Content:    ')
     for (const [key, value] of proposal.content.entries()) {
       this.log
-        .log(`  ${Core.bold(key)}:`)
+        .log(`  ${bold(key)}:`)
         .log(`    ${value}`)
     }
     if (result) {
@@ -341,24 +340,24 @@ export default class NamadaCLI extends CLI {
       } = result
       this.log
         .log()
-        .log('Votes:       ', Core.bold(votes.length))
-        .log('Result:      ', Core.bold(JSON.stringify(result.result)))
-        .log('  Tally type:', Core.bold(JSON.stringify(result.tallyType)))
-        .log('  Yay:       ', Core.bold(yayPercent),
-           `of turnout`, `(${Core.bold(totalYayPower)})`)
-        .log('  Nay:       ', Core.bold(nayPercent),
-           `of turnout`, `(${Core.bold(totalNayPower)})`)
-        .log('  Abstain:   ', Core.bold(abstainPercent),
-           `of turnout`, `(${Core.bold(totalAbstainPower)})`)
-        .log('  Turnout:   ', Core.bold(turnoutPercent),
-           `of total voting power`, `(${Core.bold(turnout)})`)
-        .log('  Power:     ', Core.bold(result.totalVotingPower))
+        .log('Votes:       ', bold(votes.length))
+        .log('Result:      ', bold(JSON.stringify(result.result)))
+        .log('  Tally type:', bold(JSON.stringify(result.tallyType)))
+        .log('  Yay:       ', bold(yayPercent),
+           `of turnout`, `(${bold(totalYayPower)})`)
+        .log('  Nay:       ', bold(nayPercent),
+           `of turnout`, `(${bold(totalNayPower)})`)
+        .log('  Abstain:   ', bold(abstainPercent),
+           `of turnout`, `(${bold(totalAbstainPower)})`)
+        .log('  Turnout:   ', bold(turnoutPercent),
+           `of total voting power`, `(${bold(turnout)})`)
+        .log('  Power:     ', bold(result.totalVotingPower))
         .log()
-        .info('Use the', Core.bold('proposal-votes'), 'command to see individual votes.')
+        .info('Use the', bold('proposal-votes'), 'command to see individual votes.')
     } else {
       this.log
         .log()
-        .log(Core.bold('There is no result for this proposal yet.'))
+        .log(bold('There is no result for this proposal yet.'))
         .log()
     }
     process.exit(0)
@@ -370,38 +369,38 @@ export default class NamadaCLI extends CLI {
     args: 'RPC_URL NUMBER'
   }, async (url: string, number: string) => {
     if (!url || !number || isNaN(Number(number))) {
-      this.log.error(Core.bold('Pass a RPC URL and proposal number to query proposal votes.'))
+      this.log.error(bold('Pass a RPC URL and proposal number to query proposal votes.'))
       process.exit(1)
     }
     const connection = new NamadaConnection({ url })
     const {proposal, votes, result} = await connection.getProposalInfo(Number(number))
     this.log
       .log()
-      .log('Proposal:   ', Core.bold(number))
-      .log('Author:     ', Core.bold(JSON.stringify(proposal.author)))
-      .log('Type:       ', Core.bold(JSON.stringify(proposal.type)))
-      .log('Start epoch:', Core.bold(proposal.votingStartEpoch))
-      .log('End epoch:  ', Core.bold(proposal.votingEndEpoch))
-      .log('Grace epoch:', Core.bold(proposal.graceEpoch))
+      .log('Proposal:   ', bold(number))
+      .log('Author:     ', bold(JSON.stringify(proposal.author)))
+      .log('Type:       ', bold(JSON.stringify(proposal.type)))
+      .log('Start epoch:', bold(proposal.votingStartEpoch))
+      .log('End epoch:  ', bold(proposal.votingEndEpoch))
+      .log('Grace epoch:', bold(proposal.graceEpoch))
       .log()
       .log('Content:    ')
     for (const [key, value] of proposal.content.entries()) {
       this.log
-        .log(`  ${Core.bold(key)}:`)
+        .log(`  ${bold(key)}:`)
         .log(`    ${value}`)
     }
     if (votes.length > 0) {
       for (const vote of votes) {
         this.log
           .log()
-          .log(`Vote:`, Core.bold(vote.data))
-          .log(`  Validator:`, Core.bold(vote.validator))
-          .log(`  Delegator:`, Core.bold(vote.delegator))
+          .log(`Vote:`, bold(vote.data))
+          .log(`  Validator:`, bold(vote.validator))
+          .log(`  Delegator:`, bold(vote.delegator))
       }
       this.log.log()
     } else {
       this.log.log()
-        .log(Core.bold("There are no votes for this proposal yet."))
+        .log(bold("There are no votes for this proposal yet."))
         .log()
     }
     process.exit(0)
@@ -413,12 +412,12 @@ export default class NamadaCLI extends CLI {
     args: 'RPC_URL [BLOCK]'
   }, async (url: string, height?: number) => {
     if (!url) {
-      this.log.error(Core.bold('Pass a RPC URL to query validators.'))
+      this.log.error(bold('Pass a RPC URL to query validators.'))
       process.exit(1)
     }
     if (height !== undefined) {
       if (isNaN(Number(height))) {
-        this.log.error(Core.bold(`{height} is not a valid block height`))
+        this.log.error(bold(`{height} is not a valid block height`))
         process.exit(1)
       }
       height = Number(height)
@@ -426,10 +425,10 @@ export default class NamadaCLI extends CLI {
     const connection = new NamadaConnection({ url })
     const block = await connection.fetchBlock({ height })
     this.log.log()
-      .log('Block:', Core.bold(block.height))
-      .log('ID:   ', Core.bold(block.hash))
-      .log('Time: ', Core.bold(block.time))
-      .log(Core.bold('Transactions:'))
+      .log('Block:', bold(block.height))
+      .log('ID:   ', bold(block.hash))
+      .log('Time: ', bold(block.time))
+      .log(bold('Transactions:'))
     for (const tx of block.txs) {
       this.log.log(tx)
     }
@@ -441,7 +440,7 @@ export default class NamadaCLI extends CLI {
     args: 'RPC_URL [BLOCK]'
   }, async (url: string, height?: number) => {
     if (!url) {
-      this.log.error(Core.bold('Pass a RPC URL to query validators.'))
+      this.log.error(bold('Pass a RPC URL to query validators.'))
       process.exit(1)
     }
     const connection = new NamadaConnection({ url })
@@ -450,10 +449,10 @@ export default class NamadaCLI extends CLI {
       block = await connection.fetchBlock({ height: Number(height) })
       height = block.header.height
       this.log.log()
-        .log('Block:', Core.bold(block.header.height))
-        .log('ID:   ', Core.bold(block.id))
-        .log('Time: ', Core.bold(block.header.time))
-        .log(Core.bold('Transactions:'))
+        .log('Block:', bold(block.header.height))
+        .log('ID:   ', bold(block.id))
+        .log('Time: ', bold(block.header.time))
+        .log(bold('Transactions:'))
       for (const tx of block.txsDecoded) {
         this.log.log(tx)
       }

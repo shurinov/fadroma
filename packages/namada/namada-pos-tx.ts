@@ -1,4 +1,4 @@
-import { Core } from '@fadroma/cw'
+import { assign } from '@fadroma/agent'
 
 export class BecomeValidator {
   static noun = 'Become Validator'
@@ -15,7 +15,7 @@ export class BecomeValidator {
   discordHandle!:           string
   avatar!:                  string
   constructor (properties: Partial<BecomeValidator> = {}) {
-    Core.assign(this, properties, [
+    assign(this, properties, [
       'address',
       'consensusKey',
       'ethColdKey',
@@ -38,7 +38,7 @@ export class Bond {
   amount!:    bigint
   source!:    null|string
   constructor (properties: Partial<Bond> = {}) {
-    Core.assign(this, properties, [
+    assign(this, properties, [
       'validator',
       'amount',
       'source',
@@ -51,7 +51,7 @@ export class ClaimRewards {
   validator!: string
   source!:    null|string
   constructor (properties: Partial<ClaimRewards> = {}) {
-    Core.assign(this, properties, [
+    assign(this, properties, [
       'validator',
       'source'
     ])
@@ -63,7 +63,7 @@ export class ConsensusKeyChange {
   validator!:    string
   consensusKey!: unknown
   constructor (properties: Partial<ConsensusKeyChange> = {}) {
-    Core.assign(this, properties, [
+    assign(this, properties, [
       'validator',
       'consensusKey'
     ])
@@ -75,7 +75,7 @@ export class CommissionChange {
   validator!: string
   newRate!:   bigint
   constructor (properties: Partial<CommissionChange> = {}) {
-    Core.assign(this, properties, [
+    assign(this, properties, [
       'validator',
       'newRate'
     ])
@@ -92,7 +92,7 @@ export class MetaDataChange {
   avatar!:         null|string
   commissionRate!: null|string
   constructor (properties: Partial<MetaDataChange> = {}) {
-    Core.assign(this, properties, [
+    assign(this, properties, [
       'validator',
       'email',
       'description',
@@ -111,7 +111,7 @@ export class Redelegation {
   owner!:          string
   amount!:         bigint
   constructor (properties: Partial<Redelegation> = {}) {
-    Core.assign(this, properties, [
+    assign(this, properties, [
       'srcValidator',
       'destValidator',
       'owner',
@@ -126,7 +126,7 @@ export class Unbond {
   amount!:    bigint
   source!:    null|string
   constructor (properties: Partial<Redelegation> = {}) {
-    Core.assign(this, properties, [
+    assign(this, properties, [
       'validator',
       'amount',
       'source',
@@ -139,7 +139,7 @@ export class Withdraw {
   validator!: string
   source!:    null|string
   constructor (properties: Partial<Redelegation> = {}) {
-    Core.assign(this, properties, [
+    assign(this, properties, [
       'validator',
       'source',
     ])
@@ -150,7 +150,7 @@ export class DeactivateValidator {
   static noun = 'Validator Deactivation'
   address!: string
   constructor (properties: Partial<Redelegation> = {}) {
-    Core.assign(this, properties, [
+    assign(this, properties, [
       'address'
     ])
   }
@@ -160,7 +160,7 @@ export class ReactivateValidator {
   static noun = 'Validator Reactivation'
   address!: string
   constructor (properties: Partial<Redelegation> = {}) {
-    Core.assign(this, properties, [
+    assign(this, properties, [
       'address'
     ])
   }
@@ -170,7 +170,7 @@ export class UnjailValidator {
   static noun = 'Validator Unjail'
   address!: string
   constructor (properties: Partial<Redelegation> = {}) {
-    Core.assign(this, properties, [
+    assign(this, properties, [
       'address'
     ])
   }

@@ -3,21 +3,19 @@
   * i.e. not accessible at all outside the package. */
 import portManager from '@hackbg/port'
 import { Path, SyncFS, FileFormat, XDG } from '@hackbg/file'
-import { Core, Chain } from '@fadroma/agent'
+import { bold, colors, randomColor, randomBase16, Connection, Identity, Console } from '@fadroma/agent'
 import * as OCI from '@fadroma/oci'
 import Error from './devnet-error'
 import type { default as DevnetContainer } from './devnet-base'
 import type { APIMode } from './devnet-base'
 import platforms from './devnet-platform'
 
-const { bold } = Core
-
 const ENTRYPOINT_MOUNTPOINT = '/devnet.init.mjs'
 
 /** Pick only the properties of a DevnetContainer that are used in a given function. */
 type $D<
-  C extends Chain.Connection,
-  I extends Chain.Identity,
+  C extends Connection,
+  I extends Identity,
   T extends keyof DevnetContainer<C, I>
 > = Pick<
   DevnetContainer<C, I>,
@@ -25,7 +23,7 @@ type $D<
 >
 
 export function initPort (
-  devnet: $D<Chain.Connection, Chain.Identity, 'nodePortMode'|'nodePort'>
+  devnet: $D<Connection, Identity, 'nodePortMode'|'nodePort'>
 ) {
   if (devnet.nodePortMode) {
     devnet.nodePort ??= defaultPorts[devnet.nodePortMode]
@@ -34,7 +32,7 @@ export function initPort (
 }
 
 export function initChainId (
-  devnet: $D<Chain.Connection, Chain.Identity, 'chainId'|'platformName'|'platformVersion'>
+  devnet: $D<Connection, Identity, 'chainId'|'platformName'|'platformVersion'>
 ) {
   if (!devnet.chainId) {
     devnet.chainId = 'dev'
@@ -44,18 +42,18 @@ export function initChainId (
     if (devnet.platformVersion) {
       devnet.chainId += `-${devnet.platformVersion}`
     }
-    devnet.chainId += `-${Core.randomBase16(4).toLowerCase()}`
+    devnet.chainId += `-${randomBase16(4).toLowerCase()}`
   }
   return devnet
 }
 
 export function initLogger (
-  devnet: $D<Chain.Connection, Chain.Identity, 'chainId'|'log'>
+  devnet: $D<Connection, Identity, 'chainId'|'log'>
 ) {
-  const devnetTag   = Core.colors.bgWhiteBright.black(` creating `)
-  const loggerColor = Core.randomColor({ luminosity: 'dark', seed: devnet.chainId })
-  const loggerTag   = Core.colors.whiteBright.bgHex(loggerColor)(` ${devnet.chainId} `)
-  const logger      = new Core.Console(`${devnetTag} ${loggerTag}`)
+  const devnetTag   = colors.bgWhiteBright.black(` creating `)
+  const loggerColor = randomColor({ luminosity: 'dark', seed: devnet.chainId })
+  const loggerTag   = colors.whiteBright.bgHex(loggerColor)(` ${devnet.chainId} `)
+  const logger      = new Console(`${devnetTag} ${loggerTag}`)
   Object.defineProperties(devnet, {
     log: {
       enumerable: true, configurable: true, get () {
@@ -69,7 +67,7 @@ export function initLogger (
 }
 
 export function initState (
-  devnet: $D<Chain.Connection, Chain.Identity, 'stateRoot'|'chainId'|'stateFile'|'runFile'>,
+  devnet: $D<Connection, Identity, 'stateRoot'|'chainId'|'stateFile'|'runFile'>,
   { stateRoot }: Partial<typeof devnet>
 ) {
   const dataDir = XDG({ expanded: true, subdir: 'fadroma' }).data.home
@@ -79,7 +77,7 @@ export function initState (
 }
 
 export function initDynamicUrl (
-  devnet: $D<Chain.Connection, Chain.Identity, 'log'|'url'|'nodeProtocol'|'nodeHost'|'nodePort'>
+  devnet: $D<Connection, Identity, 'log'|'url'|'nodeProtocol'|'nodeHost'|'nodePort'>
 ) {
   Object.defineProperties(devnet, {
     url: {
@@ -156,7 +154,7 @@ export async function createDevnetContainer (
     & Parameters<typeof saveDevnetState>[0]
     & Parameters<typeof containerOptions>[0]
     & Parameters<typeof setExitHandler>[0]
-    & $D<Chain.Connection, Chain.Identity, 'container'|'verbose'|'initScript'|'url'>
+    & $D<Connection, Identity, 'container'|'verbose'|'initScript'|'url'>
 ) {
   devnet.log.label = devnet.container.log.label
   if (await devnet.container.exists()) {
@@ -198,7 +196,7 @@ export async function createDevnetContainer (
 /** Options for the devnet container. */
 export function containerOptions (
   devnet: $D<
-    Chain.Connection, Chain.Identity,
+    Connection, Identity,
     'chainId'|'initScript'|'stateRoot'|'nodePort'|'platformName'|'platformVersion'|'chainId'
   > & Parameters<typeof containerEnvironment>[0]
 ) {
@@ -235,7 +233,7 @@ export function containerOptions (
 /** Environment variables in the devnet container. */
 export function containerEnvironment (
   devnet: $D<
-    Chain.Connection, Chain.Identity,
+    Connection, Identity,
     'log'|'chainId'|'gasToken'|'nodeBinary'|'nodePortMode'|'nodePort'|'genesisAccounts'|'verbose'
   >
 ) {
@@ -266,7 +264,7 @@ export function containerEnvironment (
 
 export async function removeDevnetContainer (
   devnet: $D<
-    Chain.Connection, Chain.Identity, 'log'|'container'|'stateRoot'|'paused'
+    Connection, Identity, 'log'|'container'|'stateRoot'|'paused'
   > & Parameters<typeof forceDelete>[0]
 ) {
   devnet.log.label = devnet.container.log.label
@@ -303,7 +301,7 @@ export async function removeDevnetContainer (
 
 /** Run the cleanup container, deleting devnet state even if emitted as root. */
 export async function forceDelete (
-  devnet: $D<Chain.Connection, Chain.Identity, 'stateRoot'|'container'|'chainId'|'log'>
+  devnet: $D<Connection, Identity, 'stateRoot'|'container'|'chainId'|'log'>
 ) {
   const path = new SyncFS.Path(devnet.stateRoot)
   devnet.log('Running cleanup container for', path.short)
@@ -328,7 +326,7 @@ export async function forceDelete (
 /** Write the state of the devnet to a file.
   * This saves the info needed to respawn the node */
 async function saveDevnetState (devnet: $D<
-  Chain.Connection, Chain.Identity,
+  Connection, Identity,
   'platformName'|'platformVersion'|'chainId'|'container'|'nodePort'
 > & {
   stateFile: { save (data: object) }
@@ -344,7 +342,7 @@ async function saveDevnetState (devnet: $D<
 
 export async function startDevnetContainer (
   devnet: Parameters<typeof createDevnetContainer>[0] & $D<
-    Chain.Connection, Chain.Identity,
+    Connection, Identity,
     |'log'|'running'|'container'|'waitString'|'waitMore'
     |'nodeHost'|'nodePort'|'chainId'|'waitPort'|'created'
   >
@@ -390,7 +388,7 @@ export function setExitHandler (devnet: Parameters<typeof defineExitHandler>[0])
 }
 
 function defineExitHandler (devnet: $D<
-  Chain.Connection, Chain.Identity,
+  Connection, Identity,
   'log'|'onScriptExit'|'runFile'|'chainId'|'nodePort'|'exitHandler'|'container'|'url'|'stateDir'
 >) {
   let called = false
@@ -422,7 +420,7 @@ function defineExitHandler (devnet: $D<
 }
 
 export async function pauseDevnetContainer (
-  devnet: $D<Chain.Connection, Chain.Identity, 'log'|'container'|'running'|'runFile'>
+  devnet: $D<Connection, Identity, 'log'|'container'|'running'|'runFile'>
 ) {
   devnet.log.label = devnet.container.log.label
   if (await devnet.container.exists()) {
@@ -444,7 +442,7 @@ export async function pauseDevnetContainer (
   return devnet
 }
 
-export async function connect <C extends Chain.Connection, I extends Chain.Identity> (
+export async function connect <C extends Connection, I extends Identity> (
   devnet:      $D<C, I, 'chainId'|'started'|'url'|'running'> & Parameters<typeof getIdentity>[0],
   $Connection: { new (...args: unknown[]): C },
   $Identity:   { new (...args: unknown[]): I },
@@ -465,7 +463,7 @@ export async function connect <C extends Chain.Connection, I extends Chain.Ident
   })
 }
 
-export async function getIdentity <C extends Chain.Connection, I extends Chain.Identity> (
+export async function getIdentity <C extends Connection, I extends Identity> (
   devnet: $D<C, I, 'log'|'stateDir'|'created'|'started'>,
   name:   string|{name?: string}
 ) {

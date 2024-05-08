@@ -1,6 +1,6 @@
 /** Index of inner transaction content. */
 
-import { Core } from '@fadroma/agent'
+import { assign } from '@fadroma/agent'
 import {
   InitProposal,
   VoteProposal
@@ -51,7 +51,7 @@ export class InitAccount {
   vpCodeHash!: string
   threshold!:  bigint
   constructor (properties: Partial<InitAccount> = {}) {
-    Core.assign(this, properties, [
+    assign(this, properties, [
       "publicKeys",
       "vpCodeHash",
       "threshold"
@@ -66,7 +66,7 @@ export class UpdateAccount {
   vpCodeHash!: string
   threshold!:  bigint
   constructor (properties: Partial<UpdateAccount> = {}) {
-    Core.assign(this, properties, [
+    assign(this, properties, [
       "address",
       "publicKeys",
       "vpCodeHash",
@@ -79,7 +79,7 @@ export class RevealPK {
   static noun = 'PK Reveal'
   pk!: string
   constructor (properties: Partial<RevealPK> = {}) {
-    Core.assign(this, properties, [
+    assign(this, properties, [
       "pk"
     ])
   }
@@ -94,7 +94,7 @@ export class Transfer {
   key!:      string
   shielded!: unknown
   constructor (properties: Partial<Transfer> = {}) {
-    Core.assign(this, properties, [
+    assign(this, properties, [
       "source",
       "target",
       "token",

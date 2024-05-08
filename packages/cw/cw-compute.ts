@@ -1,27 +1,14 @@
 import type { CosmWasmClient, SigningCosmWasmClient } from '@hackbg/cosmjs-esm'
-import { Chain, Deploy } from '@fadroma/agent'
-import type { Address, CodeId, Message, Token, Core } from '@fadroma/agent'
+import { Connection, SigningConnection, Agent, Compute } from '@fadroma/agent'
+import type { Address, CodeId, Message, Token } from '@fadroma/agent'
 import { Amino } from '@hackbg/cosmjs-esm'
-import type { CWConnection, CWAgent } from './cw-connection'
-
-type Connection = {
-  chainId?: string,
-  api: CosmWasmClient|Promise<CosmWasmClient>
-}
-
-export type SigningConnection = {
-  log:      Core.Console,
-  chainId?: string,
-  address:  string,
-  fees?:    any,
-  api:      SigningCosmWasmClient|Promise<SigningCosmWasmClient>
-}
+import type { CWChain, CWConnection } from './cw-connection'
+import type { CWAgent, CWSigningConnection } from './cw-identity'
 
 export async function fetchCodeInfo (
-  conn: CWConnection,
-  args: Parameters<Chain.Connection["fetchCodeInfoImpl"]>[0]
+  chain: CWConnection, args: Parameters<Connection["fetchCodeInfoImpl"]>[0]
 ):
-  Promise<Record<Deploy.CodeId, Deploy.UploadedCode>>
+  Promise<Record<Compute.CodeId, Compute.UploadedCode>>
 {
   throw new Error('unimplemented!')
   return {}
@@ -45,10 +32,9 @@ export async function fetchCodeInfo (
 }
 
 export async function fetchCodeInstances (
-  conn: CWConnection,
-  args: Parameters<Chain.Connection["fetchCodeInstancesImpl"]>[0]
+  chain: CWConnection, args: Parameters<Connection["fetchCodeInstancesImpl"]>[0]
 ):
-  Promise<Record<Deploy.CodeId, Record<Chain.Address, Chain.Contract>>>
+  Promise<Record<Compute.CodeId, Record<Address, Compute.Contract>>>
 {
   throw new Error('unimplemented!')
   return {}
@@ -58,8 +44,7 @@ export async function fetchCodeInstances (
 }
 
 export async function fetchContractInfo (
-  conn: CWConnection,
-  args: Parameters<Chain.Connection["fetchContractInfoImpl"]>[0]
+  chain: CWConnection, args: Parameters<Connection["fetchContractInfoImpl"]>[0]
 ):
   Promise<{
     [address in keyof typeof args["contracts"]]: InstanceType<typeof args["contracts"][address]>
@@ -77,13 +62,12 @@ export async function fetchContractInfo (
 }
 
 export async function getCodes (
-  { chainId, api }: Connection
+  chain: CWConnection
 ) {
-  api = await Promise.resolve(api)
-  const codes: Record<CodeId, Deploy.UploadedCode> = {}
-  const results = await api.getCodes()
+  const codes: Record<CodeId, Compute.UploadedCode> = {}
+  const results = await chain.api.getCodes()
   for (const { id, checksum, creator } of results||[]) {
-    codes[id!] = new Deploy.UploadedCode({
+    codes[id!] = new Compute.UploadedCode({
       chainId:  chainId,
       codeId:   String(id),
       codeHash: checksum,
@@ -94,35 +78,28 @@ export async function getCodes (
 }
 
 export async function getCodeId (
-  { api }: Connection,
-  address: Address
+  { api }: Pick<CWConnection, 'api'>, address: Address
 ): Promise<CodeId> {
-  api = await Promise.resolve(api)
   const { codeId } = await api.getContract(address)
   return String(codeId)
 }
 
 export async function getContractsByCodeId (
-  { api }: Connection,
-  id: CodeId
+  { api }: Pick<CWConnection, 'api'>, id: CodeId
 ) {
-  api = await Promise.resolve(api)
   const addresses = await api.getContracts(Number(id))
   return addresses.map(address=>({address}))
 }
 
 export async function getCodeHashOfAddress (
-  connection: Connection,
-  address: Address
+  { api }: Pick<CWConnection, 'api'>, address: Address
 ) {
-  const api = await Promise.resolve(connection.api)
   const {codeId} = await api.getContract(address)
-  return getCodeHashOfCodeId(connection, String(codeId))
+  return getCodeHashOfCodeId({ api }, String(codeId))
 }
 
 export async function getCodeHashOfCodeId (
-  { api }: Connection,
-  codeId: CodeId
+  { api }: Pick<CWConnection, 'api'>, codeId: CodeId
 ) {
   api = await Promise.resolve(api)
   const {checksum} = await api.getCodeDetails(Number(codeId))
@@ -130,20 +107,17 @@ export async function getCodeHashOfCodeId (
 }
 
 export async function getLabel (
-  { api }: Connection,
-  address: Address
+  { api }: Pick<CWConnection, 'api'>, address: Address
 ) {
   if (!address) {
     throw new Error('chain.getLabel: no address')
   }
-  api = await Promise.resolve(api)
   const {label} = await api.getContract(address)
   return label
 }
 
 export async function query <T> (
-  { api }: Connection,
-  options: Parameters<Chain.Connection["queryImpl"]>[0]
+  { api }: Pick<CWConnection, 'api'>, options: Parameters<Connection["queryImpl"]>[0]
 ): Promise<T> {
   api = await Promise.resolve(api)
   if (!options.address) {
@@ -156,15 +130,11 @@ export async function query <T> (
 }
 
 export async function upload (
-  { address, chainId, fees, api }: SigningConnection,
-  options: Parameters<Chain.Agent["uploadImpl"]>[0]
+  { api, address }: Pick<CWSigningConnection, 'api'|'address'>,
+  options: Parameters<SigningConnection["uploadImpl"]>[0]
 ) {
   if (!address) {
     throw new Error("can't upload contract without sender address")
-  }
-  api = await Promise.resolve(api)
-  if (!(api?.upload)) {
-    throw new Error("can't upload contract with an unauthenticated agent")
   }
   const result = await api.upload(
     address!,
@@ -183,8 +153,7 @@ export async function upload (
 }
 
 export async function instantiate (
-  { api, address, chainId }: SigningConnection,
-  options: Parameters<Chain.Agent["instantiateImpl"]>[0]
+  agent: CWSigningConnection, options: Parameters<SigningConnection["instantiateImpl"]>[0]
 ) {
   if (!this.address) {
     throw new Error("can't instantiate contract without sender address")
@@ -201,7 +170,7 @@ export async function instantiate (
     options.initFee as Amino.StdFee || 'auto',
     { admin: address, funds: options.initSend, memo: options.initMemo }
   )
-  return new Deploy.ContractInstance({
+  return new Compute.ContractInstance({
     codeId:   options.codeId,
     codeHash: options.codeHash,
     label:    options.label,
@@ -214,12 +183,11 @@ export async function instantiate (
     initFee:  options.initFee || 'auto',
     initSend: options.initSend,
     initMemo: options.initMemo
-  }) as Deploy.ContractInstance & { address: Address }
+  }) as Compute.ContractInstance & { address: Address }
 }
 
 export async function execute (
-  { api, address, chainId }: SigningConnection,
-  options: Parameters<Chain.Agent["executeImpl"]>[0]
+  agent: CWSigningConnection, options: Parameters<SigningConnection["executeImpl"]>[0]
 ) {
   if (!address) {
     throw new Error("can't execute transaction without sender address")

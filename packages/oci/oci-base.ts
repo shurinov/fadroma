@@ -1,7 +1,5 @@
-import { Core } from '@fadroma/agent'
+import { Error, Console, bold } from '@fadroma/agent'
 import type Dockerode from 'dockerode'
-
-export const { assign, bold } = Core
 
 /** APIs from dockerode in use. */
 export type DockerHandle = Pick<Dockerode,
@@ -18,7 +16,7 @@ export type DockerHandle = Pick<Dockerode,
     |'followProgress'>
 }
 
-class OCIError extends Core.Error {
+class OCIError extends Error {
   static NoDockerode = this.define('NoDockerode',
     ()=>'Dockerode API handle not set'
   )
@@ -53,7 +51,7 @@ class OCIError extends Core.Error {
   )
 }
 
-class OCIConsole extends Core.Console {
+class OCIConsole extends Console {
   label = '@fadroma/oci'
 
   ensuring = () =>

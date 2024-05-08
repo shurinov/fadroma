@@ -1,40 +1,25 @@
 import type { CosmWasmClient, SigningCosmWasmClient } from '@hackbg/cosmjs-esm'
-import type { Address, Token, Chain } from '@fadroma/agent'
-import { Core } from '@fadroma/agent'
-
-type Connection = {
-  api: CosmWasmClient|Promise<CosmWasmClient>
-}
+import type { Address, Token, Chain, Connection, SigningConnection } from '@fadroma/agent'
+import type { CWChain, CWConnection } from './cw-connection'
+import type { CWAgent, CWSigningConnection } from './cw-identity'
 
 export async function fetchBalance (
-  { api }:  Connection,
-  balances: Parameters<Chain.Connection["fetchBalanceImpl"]>[0]
+  connection: CWConnection, balances: Parameters<Connection["fetchBalanceImpl"]>[0]
 ) {
-  api = await Promise.resolve(api)
   if (!address) {
     throw new Error('getBalance: need address')
   }
-  const { amount } = await api.getBalance(address, token)
+  const { amount } = await connection.api.getBalance(address, token)
   return amount
 }
 
-type SigningConnection = {
-  address: Address,
-  log: Core.Console
-  api: SigningCosmWasmClient|Promise<SigningCosmWasmClient>
-}
-
 export async function send (
-  { api, address }: SigningConnection,
+  { api, address }: CWSigningConnection,
   { outputs
   , sendFee = 'auto'
   , sendMemo
-  , parallel }: Parameters<Chain.Agent["sendImpl"]>[0]
+  , parallel }: Parameters<SigningConnection["sendImpl"]>[0]
 ) {
-  api = await Promise.resolve(api)
-  if (!(api?.sendTokens)) {
-    throw new Error("can't send tokens with an unauthenticated agent")
-  }
   return api.sendTokens(
     address!,
     recipient as string,

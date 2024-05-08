@@ -3,7 +3,7 @@ import type { APIMode } from '../devnet-base'
 import type * as Platform from '../devnet-platform'
 import * as OCI from '@fadroma/oci'
 import * as CW from '@fadroma/cw'
-import { Chain, Token } from '@fadroma/agent'
+import { Connection, Identity, Token } from '@fadroma/agent'
 
 export type Version = `${5|6}.0`
 
@@ -26,8 +26,8 @@ export function version (platformVersion: Version, baseImage: string, baseSha256
   return {
     platformName,
     platformVersion,
-    Connection:   CW.OKP4.Connection as { new (...args: unknown[]): Chain.Connection },
-    Identity:     CW.OKP4.MnemonicIdentity as { new (...args: unknown[]): Chain.Identity },
+    Connection:   CW.OKP4.Connection as { new (...args: unknown[]): Connection },
+    Identity:     CW.OKP4.MnemonicIdentity as { new (...args: unknown[]): Identity },
     gasToken:     new Token.Native('uknow'),
     nodeBinary:   'okp4d',
     bech32Prefix: 'okp4',

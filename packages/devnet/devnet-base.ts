@@ -1,6 +1,6 @@
 import portManager, { waitPort } from '@hackbg/port'
 import { Path, SyncFS, FileFormat } from '@hackbg/file'
-import { Core, Program, Chain, Token } from '@fadroma/agent'
+import { timestamp, assign, Console, Compute, Connection, Identity, Backend, Token } from '@fadroma/agent'
 import type { Address, CodeId, Uint128 } from '@fadroma/agent'
 import * as OCI from '@fadroma/oci'
 import * as Impl from './devnet-impl'
@@ -21,7 +21,7 @@ export const {
   name: string, version: string
 }
 
-export const console = new Core.Console(`${packageName} ${packageVersion}`)
+export const console = new Console(`${packageName} ${packageVersion}`)
 
 /** Identifiers of supported API endpoints.
   * These are different APIs exposed by a node at different ports.
@@ -59,7 +59,7 @@ export class DevnetContainerConfig {
   /** Initial accounts. */
   genesisAccounts: Record<Address, number|bigint|Uint128> = {}
   /** Initial uploads. */
-  genesisUploads:  Record<CodeId, Partial<Program.CompiledCode>>  = {}
+  genesisUploads:  Record<CodeId, Partial<Compute.CompiledCode>>  = {}
   /** If set, overrides the script that launches the devnet in the container. */
   initScript:      Path = new SyncFS.File(packageRoot, 'dockerfiles', 'devnet.init.mjs')
   /** Function that waits for port to open after launching container.
@@ -83,7 +83,7 @@ export class DevnetContainerConfig {
   exitHandler?:    (...args: any)=>void
 
   constructor (options: Partial<DevnetContainerConfig> = {}) {
-    Core.assign(this, options, [
+    assign(this, options, [
       'chainId',
       'container',
       'gasToken',
@@ -144,13 +144,13 @@ export class DevnetContainerConfig {
 /** A private local instance of a network,
   * running in a container managed by @fadroma/oci. */
 export default class DevnetContainer<
-  C extends Chain.Connection,
-  I extends Chain.Identity,
+  C extends Connection,
+  I extends Identity,
 > extends DevnetContainerConfig
-  implements Chain.Backend
+  implements Backend
 {
   /** Logger. */
-  log = new Core.Console('Devnet')
+  log = new Console('Devnet')
   constructor (options: Partial<Omit<DevnetContainer<C, I>, 'container'> & {
     container: Partial<Omit<OCI.Container, 'image'> & {
       image: Partial<OCI.Image>
@@ -170,7 +170,7 @@ export default class DevnetContainer<
     Impl.initState(this, options)
     Impl.initDynamicUrl(this)
     Impl.initContainer(this)
-    Core.assign(this, options, [ 'Connection', 'Identity' ])
+    assign(this, options, [ 'Connection', 'Identity' ])
   }
   declare container: OCI.Container
   /** Connection class for this devnet. */
@@ -196,11 +196,11 @@ export default class DevnetContainer<
   /** Get info for named genesis account, including the mnemonic */
   async getIdentity (
     name: string|{ name?: string }
-  ): Promise<Partial<Chain.Identity> & { mnemonic: string }> {
+  ): Promise<Partial<Identity> & { mnemonic: string }> {
     return Impl.getIdentity(this, name)
   }
   /** Export the contents of the devnet as a container image. */
-  async export (repository: string = this.chainId, tag: string = Core.timestamp()) {
+  async export (repository: string = this.chainId, tag: string = timestamp()) {
     const container = await this.container
     if (!container) {
       throw new Error("can't export: no container")

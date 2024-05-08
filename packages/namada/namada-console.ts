@@ -1,4 +1,4 @@
-import { Core } from '@fadroma/agent'
+import { Console, bold } from '@fadroma/agent'
 import type { Transaction } from './namada-tx-base'
 import type { VoteProposal } from './namada-gov-tx'
 import * as Sections from './namada-tx-section'
@@ -6,7 +6,7 @@ import type {
   Validator
 } from './namada-pos'
 
-export class NamadaConsole extends Core.Console {
+export class NamadaConsole extends Console {
 
   printTx (
     {
@@ -14,21 +14,21 @@ export class NamadaConsole extends Core.Console {
     }: Partial<Transaction> = {},
     indent = 0
   ) {
-    this.log('-', Core.bold(`${txType} transaction:`))
-      .log('  Chain ID:  ', Core.bold(chainId))
-      .log('  Timestamp: ', Core.bold(timestamp))
-      .log('  Expiration:', Core.bold(expiration))
-      .log('  Code hash: ', Core.bold(codeHash))
-      .log('  Data hash: ', Core.bold(dataHash))
-      .log('  Memo hash: ', Core.bold(memoHash))
-      .log('  Sections:  ', Core.bold(sections?.length))
+    this.log('-', bold(`${txType} transaction:`))
+      .log('  Chain ID:  ', bold(chainId))
+      .log('  Timestamp: ', bold(timestamp))
+      .log('  Expiration:', bold(expiration))
+      .log('  Code hash: ', bold(codeHash))
+      .log('  Data hash: ', bold(dataHash))
+      .log('  Memo hash: ', bold(memoHash))
+      .log('  Sections:  ', bold(sections?.length))
   }
 
   printTxSections (
     sections: Array<Partial<Sections.Section>> = [],
     indent = 0
   ) {
-    console.log(Core.bold('  Sections:  '))
+    console.log(bold('  Sections:  '))
     for (const section of sections) {
       this.printTxSection(section)
     }
@@ -206,28 +206,28 @@ export class NamadaConsole extends Core.Console {
 
   printValidator (validator: Validator) {
     return this
-      .log('Validator:      ', Core.bold(validator.namadaAddress))
-      .log('  Address:      ', Core.bold(validator.address))
-      .log('  Public key:   ', Core.bold(validator.publicKey))
-      .log('  State:        ', Core.bold(Object.keys(validator.state as object)[0]))
-      .log('  Stake:        ', Core.bold(validator.stake))
-      .log('  Voting power: ', Core.bold(validator.votingPower))
-      .log('  Priority:     ', Core.bold(validator.proposerPriority))
-      .log('  Commission:   ', Core.bold(validator.commission.commissionRate))
-      .log('    Max change: ', Core.bold(validator.commission.maxCommissionChangePerEpoch), 'per epoch')
-      .log('Email:          ', Core.bold(validator.metadata?.email||''))
-      .log('Website:        ', Core.bold(validator.metadata?.website||''))
-      .log('Discord:        ', Core.bold(validator.metadata?.discordHandle||''))
-      .log('Avatar:         ', Core.bold(validator.metadata?.avatar||''))
-      .log('Description:    ', Core.bold(validator.metadata?.description||''))
+      .log('Validator:      ', bold(validator.namadaAddress))
+      .log('  Address:      ', bold(validator.address))
+      .log('  Public key:   ', bold(validator.publicKey))
+      .log('  State:        ', bold(Object.keys(validator.state as object)[0]))
+      .log('  Stake:        ', bold(validator.stake))
+      .log('  Voting power: ', bold(validator.votingPower))
+      .log('  Priority:     ', bold(validator.proposerPriority))
+      .log('  Commission:   ', bold(validator.commission.commissionRate))
+      .log('    Max change: ', bold(validator.commission.maxCommissionChangePerEpoch), 'per epoch')
+      .log('Email:          ', bold(validator.metadata?.email||''))
+      .log('Website:        ', bold(validator.metadata?.website||''))
+      .log('Discord:        ', bold(validator.metadata?.discordHandle||''))
+      .log('Avatar:         ', bold(validator.metadata?.avatar||''))
+      .log('Description:    ', bold(validator.metadata?.description||''))
   }
 
   printVoteProposal (proposal: VoteProposal) {
-    return this.log(Core.bold('  Decoded VoteProposal:'))
-      .log('    Proposal ID:', Core.bold(proposal.id))
-      .log('    Vote:       ', Core.bold(JSON.stringify(proposal.vote)))
-      .log('    Voter:      ', Core.bold(JSON.stringify(proposal.voter)))
-      .log('    Delegations:', Core.bold(JSON.stringify(proposal.delegations)))
+    return this.log(bold('  Decoded VoteProposal:'))
+      .log('    Proposal ID:', bold(proposal.id))
+      .log('    Vote:       ', bold(JSON.stringify(proposal.vote)))
+      .log('    Voter:      ', bold(JSON.stringify(proposal.voter)))
+      .log('    Delegations:', bold(JSON.stringify(proposal.delegations)))
   }
 
 }

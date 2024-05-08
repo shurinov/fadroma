@@ -16,30 +16,36 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **/
 
-import type { ChainId } from '@fadroma/agent'
-import { ScrtConnection, ScrtBatch } from './scrt-connection'
-import { ScrtIdentity } from './scrt-identity'
+import { ScrtChain } from './scrt-chain'
 import faucets from './scrt-faucets'
 
+export * as SecretJS from '@hackbg/secretjs-esm'
+
 export {
-  ScrtError   as Error,
-  ScrtConsole as Console,
+  ScrtError             as Error,
+  ScrtConsole           as Console,
 } from './scrt-base'
 export {
-  ScrtConnection as Connection,
-  ScrtBatch      as Batch,
-} from './scrt-connection'
+  ScrtChain             as Chain,
+} from './scrt-chain'
 export {
-  ScrtIdentity         as Identity,
-  ScrtSignerIdentity   as SignerIdentity,
-  ScrtMnemonicIdentity as MnemonicIdentity,
+  ScrtBatch             as Batch,
+} from './scrt-tx'
+export {
+  ScrtAgent             as Agent,
+  ScrtIdentity          as Identity,
+  ScrtSignerIdentity    as SignerIdentity,
+  ScrtMnemonicIdentity  as MnemonicIdentity,
 } from './scrt-identity'
-export { default as faucets } from './scrt-faucets'
-export * as Mocknet from './scrt-mocknet'
-export * as Snip20 from './snip-20'
-export * as Snip24 from './snip-24'
-export * as Snip721 from './snip-721'
-export * as SecretJS from '@hackbg/secretjs-esm'
+export {
+  default               as faucets
+} from './scrt-faucets'
+
+export * as Mocknet from './mocknet/scrt-mocknet'
+
+export * as Snip20 from './snip/snip-20'
+export * as Snip24 from './snip/snip-24'
+export * as Snip721 from './snip/snip-721'
 
 export const chainIds = {
   mainnet: 'secret-4',
@@ -57,9 +63,9 @@ export const mainnets = new Set([
 ])
 
 /** Connect to the Secret Network Mainnet. */
-export function mainnet (options: Partial<ScrtConnection> = {}): ScrtConnection {
-  return new ScrtConnection({
-    chainId: chainIds.mainnet, url: pickRandom(mainnets), ...options||{}
+export function mainnet (options: Partial<ScrtChain> = {}): Promise<ScrtChain> {
+  return ScrtChain.connect({
+    chainId: chainIds.mainnet, urls: [...mainnets], ...options||{}
   })
 }
 
@@ -69,9 +75,9 @@ export const testnets = new Set([
 ])
 
 /** Connect to the Secret Network Testnet. */
-export function testnet (options: Partial<ScrtConnection> = {}): ScrtConnection {
-  return new ScrtConnection({
-    chainId: chainIds.testnet, url: pickRandom(testnets), ...options||{}
+export function testnet (options: Partial<ScrtChain> = {}): Promise<ScrtChain> {
+  return ScrtChain.connect({
+    chainId: chainIds.testnet, urls: [...testnets], ...options||{}
   })
 }
 

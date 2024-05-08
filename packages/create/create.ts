@@ -2,9 +2,7 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>. **/
 import type { ChainId } from '@fadroma/agent'
-import { Core, Deploy } from '@fadroma/agent'
-const { Error, bold, timestamp, Bip39, Bip39EN } = Core
-const { Deployment, ContractCode } = Deploy
+import { Error, bold, timestamp, Bip39, Bip39EN, Compute } from '@fadroma/agent'
 
 import type { Path } from '@hackbg/file'
 import { SyncFS, FileFormat } from '@hackbg/file'
@@ -279,11 +277,11 @@ export class Project extends ProjectDirectory {
     }
     return console
   }
-  createDeployment (): Deploy.Deployment {
+  createDeployment (): Compute.Deployment {
     console.warn('createDeployment: not implemented')
-    return new Deployment()
+    return new Compute.Deployment()
   }
-  async getDeployment (): Promise<Deploy.Deployment> {
+  async getDeployment (): Promise<Compute.Deployment> {
     const packageJson = new SyncFS.File(this.path, 'package.json').setFormat(FileFormat.JSON)
     if (!packageJson.exists()) {
       throw new Error(`Could not find ${packageJson.short}`)

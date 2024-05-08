@@ -1,5 +1,4 @@
 import * as Namada from './namada'
-import { Core } from '@fadroma/agent'
 import { NamadaConsole } from './namada-console'
 import init, { Decode } from './pkg/fadroma_namada.js'
 import { readFileSync } from 'node:fs'
@@ -30,10 +29,10 @@ export default async function main () {
     //block = await connection.getBlock(Number(height))
     //height = block.header.height
     //console.log()
-      //.log('Block:', Core.bold(block.header.height))
-      //.log('ID:   ', Core.bold(block.id))
-      //.log('Time: ', Core.bold(block.header.time))
-      //.log(Core.bold('Transactions:'))
+      //.log('Block:', bold(block.header.height))
+      //.log('ID:   ', bold(block.id))
+      //.log('Time: ', bold(block.header.time))
+      //.log(bold('Transactions:'))
     //for (const tx of block.txsDecoded) {
       //console.printTx(tx)
       //console.printTxSections(tx.sections)

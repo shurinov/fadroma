@@ -4,7 +4,7 @@ import type { APIMode } from '../devnet-base'
 import type * as Platform from '../devnet-platform'
 import * as OCI from '@fadroma/oci'
 import * as Scrt from '@fadroma/scrt'
-import { Chain, Token } from '@fadroma/agent'
+import { Connection, Identity, Token } from '@fadroma/agent'
 import { Path } from '@hackbg/file'
 
 export type Version = `1.${9|10|11|12}`
@@ -38,8 +38,8 @@ export function version (platformVersion: Version, baseImage: string, baseSha256
   return {
     platformName,
     platformVersion,
-    Connection:   Scrt.Connection as { new (...args: unknown[]): Chain.Connection },
-    Identity:     Scrt.MnemonicIdentity as { new (...args: unknown[]): Chain.Identity },
+    Connection:   Scrt.Connection as { new (...args: unknown[]): Connection },
+    Identity:     Scrt.MnemonicIdentity as { new (...args: unknown[]): Identity },
     gasToken:     new Token.Native('uscrt'),
     nodePortMode: 'http' as APIMode,
     bech32Prefix: 'scrt',

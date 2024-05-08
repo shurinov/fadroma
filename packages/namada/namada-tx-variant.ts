@@ -1,4 +1,4 @@
-import { Core } from '@fadroma/agent'
+import { assign } from '@fadroma/agent'
 import { Transaction } from './namada-tx-base'
 
 class NamadaUndecodedTransaction extends Transaction {
@@ -6,7 +6,7 @@ class NamadaUndecodedTransaction extends Transaction {
   error!: Error
   constructor (properties: Partial<NamadaUndecodedTransaction> = {}) {
     super()
-    Core.assign(this, properties, [ "data", "error" ])
+    assign(this, properties, [ "data", "error" ])
   }
 }
 
@@ -33,7 +33,7 @@ class NamadaWrapperTransaction extends Transaction {
   //declare unshieldSectionHash: string|null
   //constructor (header: object, details: object, sections: object[]) {
     //super(header, sections)
-    //Core.assignCamelCase(this, details, wrapperTransactionFields.map(x=>x[0] as string))
+    //assignCamelCase(this, details, wrapperTransactionFields.map(x=>x[0] as string))
     //this.txType = 'Wrapper'
   //}
 
@@ -68,7 +68,7 @@ class NamadaProtocolTransaction extends Transaction {
       //|'ValSetUpdateVext'
   //constructor (header: object, details: object, sections: object[]) {
     //super(header, sections)
-    //Core.assignCamelCase(this, details, protocolTransactionFields.map(x=>x[0] as string))
+    //assignCamelCase(this, details, protocolTransactionFields.map(x=>x[0] as string))
     //this.txType = 'Protocol'
   //}
 

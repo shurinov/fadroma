@@ -1,2 +1,2 @@
-import { Core } from '@fadroma/agent'
-export default class DevnetError extends Core.Error {}
+import { Error } from '@fadroma/agent'
+export default class DevnetError extends Error {}

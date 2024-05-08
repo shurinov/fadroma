@@ -2,8 +2,8 @@ import { hideProperties as hide } from '@hackbg/hide'
 import { Writable, Transform } from 'node:stream'
 import { basename, dirname } from 'node:path'
 import Docker from 'dockerode'
-import { Core, Chain, Deploy } from '@fadroma/agent'
-import { Error, Console, assign, bold } from './oci-base'
+import { assign, bold, colors, randomColor, Chain, Connection, Agent, SigningConnection, Compute } from '@fadroma/agent'
+import { Error, Console } from './oci-base'
 import type { DockerHandle } from './oci-base'
 import * as Mock from './oci-mock'
 import { toDockerodeOptions, waitStream, defaultSocketPath } from './oci-impl'
@@ -12,7 +12,9 @@ export { Mock, Error, Console }
 
 export const console = new Console('@fadroma/oci')
 
-class OCIConnection extends Chain.Connection {
+class OCI extends Chain {}
+
+class OCIConnection extends Connection {
   static mock (callback?: Function) {
     return new this({ api: Mock.mockDockerode(callback) })
   }
@@ -31,7 +33,7 @@ class OCIConnection extends Chain.Connection {
     } else {
       throw new Error('invalid docker engine configuration')
     }
-    super(properties as Partial<Chain.Connection>)
+    super(properties as Partial<Connection>)
   }
 
   declare api: DockerHandle
@@ -90,7 +92,7 @@ class OCIConnection extends Chain.Connection {
   }
 }
 
-class OCIAgent extends Chain.Agent {
+class OCISigningConnection extends SigningConnection {
   protected override async sendImpl (_) {
     throw new Error('send: not applicable')
   }
@@ -221,8 +223,8 @@ class OCIImage extends Deploy.ContractTemplate {
       throw new Error.NoName('pull')
     }
     const seed = this.name
-    const tagColor = Core.randomColor({ luminosity: 'dark', seed })
-    this.log.label = Core.colors.bgHex(tagColor).whiteBright(` ${seed} `)
+    const tagColor = randomColor({ luminosity: 'dark', seed })
+    this.log.label = colors.bgHex(tagColor).whiteBright(` ${seed} `)
     const log = this.log
     await new Promise<void>((ok, fail)=>{
       api.pull(name, async (err: any, stream: any) => {
@@ -250,8 +252,8 @@ class OCIImage extends Deploy.ContractTemplate {
     }
     const { name, engine: { api } } = this
     const seed = name || this.dockerfile
-    const tagColor = Core.randomColor({ luminosity: 'dark', seed })
-    this.log.label = Core.colors.bgHex(tagColor).whiteBright(` ${seed} `)
+    const tagColor = randomColor({ luminosity: 'dark', seed })
+    this.log.label = colors.bgHex(tagColor).whiteBright(` ${seed} `)
     const dockerfile = basename(this.dockerfile)
     const context = dirname(this.dockerfile)
     const src = [dockerfile, ...this.inputFiles||[]]
@@ -592,14 +594,14 @@ export const toLabel = (
   {id, shortId, name}: {id?: string, shortId?: string, name?: string}
 ) => {
   let label = ''
-  const idColor = Core.randomColor({ luminosity: 'dark', seed: id })
-  label += Core.colors.bgHex(idColor).whiteBright(` ${shortId||id} `)
+  const idColor = randomColor({ luminosity: 'dark', seed: id })
+  label += colors.bgHex(idColor).whiteBright(` ${shortId||id} `)
   label += ' '
   if (name) {
-    const tagColor = Core.randomColor({ luminosity: 'dark', seed: name })
-    label += Core.colors.bgHex(tagColor).whiteBright(` ${name} `)
+    const tagColor = randomColor({ luminosity: 'dark', seed: name })
+    label += colors.bgHex(tagColor).whiteBright(` ${name} `)
   } else {
-    label += Core.colors.bgHex(idColor).whiteBright(` `)
+    label += colors.bgHex(idColor).whiteBright(` `)
   }
   return label
 }

@@ -1,4 +1,4 @@
-import { Core } from '@fadroma/cw'
+import { assign } from '@fadroma/agent'
 
 export class InitProposal {
   static noun = 'Proposal Init'
@@ -10,7 +10,7 @@ export class InitProposal {
   votingEndEpoch!:   bigint
   graceEpoch!:       bigint
   constructor (properties: Partial<InitProposal> = {}) {
-    Core.assign(this, properties, [
+    assign(this, properties, [
       "id",
       "content",
       "author",
@@ -29,7 +29,7 @@ export class VoteProposal {
   voter!:       unknown
   delegations!: unknown[]
   constructor (properties: Partial<VoteProposal> = {}) {
-    Core.assign(this, properties, [
+    assign(this, properties, [
       "id",
       "vote",
       "voter",

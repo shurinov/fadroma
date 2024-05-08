@@ -3,14 +3,13 @@ import { fileURLToPath } from 'node:url'
 import { readFileSync } from 'node:fs'
 import ok from 'node:assert'
 import { SyncFS, FileFormat, withTmpDir } from '@hackbg/file'
-import { Core, Chain, Deploy } from '@fadroma/agent'
-const { bold, Console } = Core
+import { Console, bold, Chain, Compute, Connection, Identity, Backend } from '@fadroma/agent'
 
 //@ts-ignore
 export const here      = dirname(fileURLToPath(import.meta.url))
 export const workspace = resolve(here)
 export const fixture   = (...args: string[]) => resolve(here, ...args)
-export const log       = new Core.Console('Fadroma Testing')
+export const log       = new Console('Fadroma Testing')
 export const nullWasm = readFileSync(fixture('empty.wasm'))
 export const mnemonics = [
   'canoe argue shrimp bundle drip neglect odor ribbon method spice stick pilot produce actual recycle deposit year crawl praise royal enlist option scene spy',
@@ -41,7 +40,7 @@ export const tmpDir = () => {
   return x
 }
 
-export class TestProjectDeployment extends Deploy.Deployment {
+export class TestProjectDeployment extends Compute.Deployment {
 
   t = this.template('t', {
     chainId:   'stub',
@@ -72,9 +71,9 @@ export class TestProjectDeployment extends Deploy.Deployment {
 }
 
 export async function testConnectionWithBackend <
-  A extends typeof Chain.Connection,
-  I extends typeof Chain.Identity,
-  B extends Chain.Backend,
+  A extends typeof Connection,
+  I extends typeof Identity,
+  B extends Backend,
 > (backend: B, { Connection, Identity, code, initMsg = null }: {
   Connection: A,
   Identity:   I,

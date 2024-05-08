@@ -1,7 +1,6 @@
 import { CLI } from '../cw-base'
 import { CWError as Error } from '../cw-base'
-import { CWBatch } from '../cw-batch'
-import { CWConnection } from '../cw-connection'
+import { CWChain, CWConnection } from '../cw-connection'
 import { CWMnemonicIdentity } from '../cw-identity'
 
 import { Objectarium, objectariumCodeIds } from './okp4-objectarium'
@@ -9,13 +8,17 @@ import { Cognitarium, cognitariumCodeIds } from './okp4-cognitarium'
 import { LawStone, lawStoneCodeIds } from './okp4-law-stone'
 
 import type { Uint128, Address, ChainId, CodeId } from '@fadroma/agent'
-import { Core, Chain, Token } from '@fadroma/agent'
+import { pickRandom, Chain, Token } from '@fadroma/agent'
 
 export * from './okp4-cognitarium'
 export * from './okp4-objectarium'
 export * from './okp4-law-stone'
 
 class OKP4CLI extends CLI {}
+
+class OKP4Chain extends CWChain {
+  declare connections: OKP4Connection[]
+}
 
 /** Connection for OKP4. */
 class OKP4Connection extends CWConnection {
@@ -101,7 +104,8 @@ export const testnets = new Set([ 'https://okp4-testnet-rpc.polkachu.com/' ])
 
 /** Connect to OKP4 in testnet mode. */
 export const testnet = (options: Partial<OKP4Connection> = {}): OKP4Connection => {
-  return new OKP4Connection({
-    chainId: chainIds.testnet, url: Core.pickRandom(testnets), ...options||{}
+  return OKP4Chain.connect({
+    chainId: chainIds.testnet,
+    urls: [...testnets], ...options||{}
   })
 }

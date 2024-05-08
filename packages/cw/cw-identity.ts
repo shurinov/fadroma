@@ -1,9 +1,9 @@
 import { Amino } from '@hackbg/cosmjs-esm'
-import type { Signing } from '@hackbg/cosmjs-esm'
-import { Core, Chain } from '@fadroma/agent'
-import { CWError as Error } from './cw-base'
-const {
+import type { SigningCosmWasmClient } from '@hackbg/cosmjs-esm'
+import {
   bold,
+  randomColor,
+  colors,
   Bip32,
   Bip39,
   Bip39EN,
@@ -12,15 +12,54 @@ const {
   RIPEMD160,
   SHA256,
   Secp256k1,
-  numberToBytesBE
-} = Core
+  numberToBytesBE,
+  Chain,
+  Agent,
+  Identity,
+  SigningConnection,
+  Batch
+} from '@fadroma/agent'
+import { CWError as Error } from './cw-base'
+import { CWBatch } from './cw-tx'
+import * as CWBank    from './cw-bank'
+import * as CWCompute from './cw-compute'
+import * as CWStaking from './cw-staking'
 
-export class CWIdentity extends Chain.Identity {
+export class CWAgent extends Agent {
+  declare connection: CWSigningConnection
+
+  override batch (): CWBatch {
+    return new CWBatch({ agent: this })
+  }
+}
+
+export class CWSigningConnection extends SigningConnection {
+  /** API connects asynchronously, so API handle is a promise. */
+  declare api: SigningCosmWasmClient
+
+  async sendImpl (...args: Parameters<SigningConnection["sendImpl"]>) {
+    return await CWBank.send(this, ...args)
+  }
+
+  async uploadImpl (...args: Parameters<SigningConnection["uploadImpl"]>) {
+    return await CWCompute.upload(this, ...args)
+  }
+
+  async instantiateImpl (...args: Parameters<SigningConnection["instantiateImpl"]>) {
+    return await CWCompute.instantiate(this, ...args)
+  }
+
+  async executeImpl <T> (...args: Parameters<SigningConnection["executeImpl"]>): Promise<T> {
+    return await CWCompute.execute(this, ...args) as T
+  }
+}
+
+export class CWIdentity extends Identity {
   declare signer: Signing.OfflineSigner
 }
 
 export class CWSignerIdentity extends CWIdentity {
-  constructor ({ signer, ...properties }: Partial<Chain.Identity & {
+  constructor ({ signer, ...properties }: Partial<Identity & {
     signer: Signing.OfflineSigner
   }>) {
     super(properties)
@@ -46,7 +85,7 @@ export class CWMnemonicIdentity extends CWIdentity {
     mnemonic,
     generateMnemonic = true,
     ...properties
-  }: Partial<Chain.Identity & {
+  }: Partial<Identity & {
     bech32Prefix:     string
     coinType:         number
     hdAccountIndex:   number
@@ -91,8 +130,8 @@ export class CWMnemonicIdentity extends CWIdentity {
         `address ${address} generated from mnemonic did not match ${this.address}`
       )
     }
-    const loggerColor = Core.randomColor({ luminosity: 'dark', seed: address })
-    this.log.label = Core.colors.whiteBright.bgHex(loggerColor)(` ${this.name||address} `)
+    const loggerColor = randomColor({ luminosity: 'dark', seed: address })
+    this.log.label = colors.whiteBright.bgHex(loggerColor)(` ${this.name||address} `)
     if (generatedMnemonic) {
       this.log.info('Generated mnemonic:', bold(mnemonic))
       this.log.warn('Generated mnemonic will not be displayed again.')
@@ -112,7 +151,7 @@ export class CWMnemonicIdentity extends CWIdentity {
         return {
           signed,
           signature: encodeSecp256k1Signature(pubkey, new Uint8Array([
-            ...Core.numberToBytesBE(r, 32), ...Core.numberToBytesBE(s, 32)
+            ...numberToBytesBE(r, 32), ...numberToBytesBE(s, 32)
           ])),
         }
       },

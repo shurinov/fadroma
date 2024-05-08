@@ -11,6 +11,7 @@
   ],
   "description": "Client library for Namada with WASM SDK",
   "dependencies": {
+    "@fadroma/agent":  "workspace:*",
     "@fadroma/cw":  "workspace:*",
     "@hackbg/cmds": "workspace:*",
     "@hackbg/borshest": "workspace:*"

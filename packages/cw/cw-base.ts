@@ -1,9 +1,9 @@
 import CLI from '@hackbg/cmds'
-import { Core } from '@fadroma/agent'
+import { Error, Console } from '@fadroma/agent'
 
-export class CWError extends Core.Error {}
+export class CWError extends Error {}
 
-export class CWConsole extends Core.Console { label = '@fadroma/cw' }
+export class CWConsole extends Console { label = '@fadroma/cw' }
 
 class CWBaseCLI extends CLI {
   constructor (...args: ConstructorParameters<typeof CLI>) {

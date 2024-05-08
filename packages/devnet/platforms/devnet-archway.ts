@@ -3,7 +3,7 @@ import type { APIMode } from '../devnet-base'
 import type * as Platform from '../devnet-platform'
 import * as OCI from '@fadroma/oci'
 import * as CW from '@fadroma/cw'
-import { Chain, Token } from '@fadroma/agent'
+import { Connection, Identity, Token } from '@fadroma/agent'
 
 export type Version = `4.0.3`
 
@@ -21,8 +21,8 @@ export function version (platformVersion: Version, baseImage: string, baseSha256
   return {
     platformName,
     platformVersion,
-    Connection:   CW.Archway.Connection as { new (...args: unknown[]): Chain.Connection },
-    Identity:     CW.Archway.MnemonicIdentity as { new (...args: unknown[]): Chain.Identity },
+    Connection:   CW.Archway.Connection as { new (...args: unknown[]): Connection },
+    Identity:     CW.Archway.MnemonicIdentity as { new (...args: unknown[]): Identity },
     gasToken:     new Token.Native('uarch'),
     nodeBinary:   'archwayd',
     bech32Prefix: 'archway',

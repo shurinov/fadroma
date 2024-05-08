@@ -1,5 +1,4 @@
 import { CLI } from '../cw-base'
-import { CWBatch } from '../cw-batch'
 import { CWConnection } from '../cw-connection'
 import { CWMnemonicIdentity } from '../cw-identity'
 

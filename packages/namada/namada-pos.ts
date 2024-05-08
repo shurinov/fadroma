@@ -1,5 +1,5 @@
 import type { Address } from '@fadroma/agent'
-import { Core } from '@fadroma/agent'
+import { Console, assign, base16 } from '@fadroma/agent'
 import { Staking } from '@fadroma/cw'
 import { decode, u8, u64, u256, array, set } from '@hackbg/borshest'
 
@@ -22,7 +22,7 @@ class PoSParameters {
   rewardsGainP!:                  bigint
   rewardsGainD!:                  bigint
   constructor (properties: Partial<PoSParameters> = {}) {
-    Core.assign(this, properties, [
+    assign(this, properties, [
       'maxProposalPeriod',
       'maxValidatorSlots',
       'pipelineLen',
@@ -51,7 +51,7 @@ class PoSValidatorMetadata {
   discordHandle!: string|null
   avatar!:        string|null
   constructor (properties: Partial<PoSValidatorMetadata>) {
-    Core.assign(this, properties, [
+    assign(this, properties, [
       'email',
       'description',
       'website',
@@ -118,7 +118,7 @@ class PoSValidator extends Staking.Validator {
       requests.push(() =>
         connection.abciQuery(`/vp/pos/validator/consensus_key/${this.namadaAddress}`)
         .then(binary => {
-          this.publicKey  = Core.base16.encode(binary.slice(1))
+          this.publicKey  = base16.encode(binary.slice(1))
         })
         .catch(e => connection.log.warn(
           `Failed to decode validator public key for ${this.namadaAddress}`
@@ -145,7 +145,7 @@ class PoSCommissionPair {
   commissionRate!:              bigint
   maxCommissionChangePerEpoch!: bigint
   constructor (properties: Partial<PoSCommissionPair> = {}) {
-    Core.assign(this, properties, [
+    assign(this, properties, [
       'commissionRate',
       'maxCommissionChangePerEpoch',
     ])
@@ -160,7 +160,7 @@ export {
 }
 
 type Connection = {
-  log: Core.Console,
+  log: Console,
   abciQuery: (path: string)=>Promise<Uint8Array>
   tendermintClient
   decode: {

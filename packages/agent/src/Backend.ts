@@ -1,0 +1,39 @@
+/** Fadroma. Copyright (C) 2023 Hack.bg. License: GNU AGPLv3 or custom.
+    You should have received a copy of the GNU Affero General Public License
+    along with this program. If not, see <http://www.gnu.org/licenses/>. **/
+import { Logged, assign } from './Util'
+import { Address, ChainId } from './Types'
+import * as Token from './Token'
+import type { Chain } from './Chain'
+import type { Agent } from './Agent'
+import type { Identity } from './Identity'
+
+/** Represents the backend of an [`Endpoint`](#abstract-class-endpoint), managed by us,
+  * such as:
+  *
+  *   * Local devnet RPC endpoint.
+  *   * Stub/mock implementation of chain.
+  *
+  * You shouldn't need to instantiate this class directly.
+  * Instead, see `Connection`, `Devnet`, and their subclasses. */
+export abstract class Backend extends Logged {
+  /** The chain ID that will be passed to the devnet node. */
+  chainId?:  ChainId
+  /** Denomination of base gas token for this chain. */
+  gasToken?: Token.Native
+
+  constructor (properties?: Partial<Backend>) {
+    super(properties)
+    assign(this, properties, ["chainId"])
+  }
+
+  abstract connect ():
+    Promise<Chain>
+  abstract connect (name: string):
+    Promise<Agent>
+  abstract connect (identity: Partial<Identity>):
+    Promise<Agent>
+
+  abstract getIdentity (name: string):
+    Promise<{ address?: Address, mnemonic?: string }>
+}

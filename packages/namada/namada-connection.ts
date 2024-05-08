@@ -48,20 +48,11 @@ export async function initDecoder (decoder: string|URL|Uint8Array) {
 
 export { Decode }
 
-export class NamadaBlock extends CW.Block {
-  txs:  TX.Transaction[]
-  time: string
-  constructor ({ hash, height, rawTxs, txs, time }: Partial<NamadaBlock> = {}) {
-    super({ hash, height, rawTxs })
-    this.txs = [...txs||[]]
-  }
-}
-
 export class NamadaConnection extends CW.Connection {
 
   decode = Decode
 
-  async doGetBlockInfo (wantedHeight?: number): Promise<NamadaBlock> {
+  async doGetBlockInfo (wantedHeight?: number): Promise<TX.NamadaBlock> {
     if (!this.url) {
       throw new CW.Error("Can't fetch block: missing connection URL")
     }
@@ -90,7 +81,7 @@ export class NamadaConnection extends CW.Connection {
         })
       }
     }
-    return new NamadaBlock({ time, height, hash: id, rawTxs: [], txs: txsDecoded })
+    return new TX.NamadaBlock({ time, height, hash: id, rawTxs: [], txs: txsDecoded })
   }
 
   getPGFParameters () {

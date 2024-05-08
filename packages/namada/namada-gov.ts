@@ -1,4 +1,4 @@
-import { Core } from '@fadroma/agent'
+import { assign } from '@fadroma/agent'
 import type { Address } from '@fadroma/agent'
 import { decode, u64 } from '@hackbg/borshest'
 
@@ -10,7 +10,7 @@ class GovernanceParameters {
   maxProposalContentSize!:  bigint
   minProposalGraceEpochs!:  bigint
   constructor (properties: Partial<GovernanceParameters> = {}) {
-    Core.assign(this, properties, [
+    assign(this, properties, [
       'minProposalFund',
       'maxProposalCodeSize',
       'minProposalVotingPeriod',
@@ -30,7 +30,7 @@ class GovernanceProposal {
   votingEndEpoch!:   bigint
   graceEpoch!:       bigint
   constructor (properties: Partial<GovernanceProposal> = {}) {
-    Core.assign(this, properties, [
+    assign(this, properties, [
       'id',
       'content',
       'author',
@@ -50,7 +50,7 @@ class GovernanceProposalResult {
   totalNayPower!:     bigint
   totalAbstainPower!: bigint
   constructor (properties: Partial<GovernanceProposalResult> = {}) {
-    Core.assign(this, properties, [
+    assign(this, properties, [
       'result',
       'tallyType',
       'totalVotingPower',
@@ -81,7 +81,7 @@ class GovernanceVote {
   delegator!: Address
   data!:      "Yay"|"Nay"|"Abstain"
   constructor (properties: Partial<GovernanceVote> = {}) {
-    Core.assign(this, properties, [
+    assign(this, properties, [
       'validator',
       'delegator',
       'data',
