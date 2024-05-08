@@ -2,7 +2,9 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>. **/
 
-import { Block, Batch, Transaction } from '../agent-tx'
+import { Block } from '../src/Block'
+import { Batch } from '../src/Batch'
+import { Transaction } from '../src/Transaction'
 import type { StubChain } from './stub-chain'
 import type { StubAgent } from './stub-identity'
 

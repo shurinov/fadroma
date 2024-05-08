@@ -17,23 +17,23 @@ import type { Identity } from './Identity'
   * You shouldn't need to instantiate this class directly.
   * Instead, see `Connection`, `Devnet`, and their subclasses. */
 export abstract class Backend extends Logged {
-  /** The chain ID that will be passed to the devnet node. */
-  chainId?:  ChainId
-  /** Denomination of base gas token for this chain. */
-  gasToken?: Token.Native
-
   constructor (properties?: Partial<Backend>) {
     super(properties)
     assign(this, properties, ["chainId"])
   }
 
-  abstract connect ():
-    Promise<Chain>
-  abstract connect (name: string):
-    Promise<Agent>
-  abstract connect (identity: Partial<Identity>):
-    Promise<Agent>
+  /** The chain ID that will be passed to the devnet node. */
+  chainId?:  ChainId
+  /** Denomination of base gas token for this chain. */
+  gasToken?: Token.Native
 
-  abstract getIdentity (name: string):
-    Promise<{ address?: Address, mnemonic?: string }>
+  //abstract connect ():
+    //Promise<Chain>
+  //abstract connect (name: string):
+    //Promise<Agent>
+  //abstract connect (identity: Partial<Identity>):
+    //Promise<Agent>
+
+  //abstract getIdentity (name: string):
+    //Promise<{ address?: Address, mnemonic?: string }>
 }

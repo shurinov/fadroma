@@ -1,9 +1,23 @@
 /** Fadroma. Copyright (C) 2023 Hack.bg. License: GNU AGPLv3 or custom.
     You should have received a copy of the GNU Affero General Public License
     along with this program. If not, see <http://www.gnu.org/licenses/>. **/
-import { Logged, assign, colors, randomColor, bold } from './Util'
+import {
+  Logged,
+  assign,
+  bold,
+  colors,
+  randomColor,
+} from './Util'
 import type {
-  Block, Address, CodeId, Token, Message, Store, Compute, ChainId, Uint128
+  Address,
+  Block,
+  ChainId,
+  CodeId,
+  Compute,
+  Message,
+  Store,
+  Token,
+  Uint128,
 } from '../index'
 
 /** Represents a remote API endpoint.
@@ -12,25 +26,11 @@ import type {
   *   to connect to the corresponding chain.
   * * Or, extend this class to implement support for new kinds of blockchains. */
 export abstract class Connection extends Logged {
-  /** Connection URL.
-    *
-    * The same chain may be accessible via different endpoints, so
-    * this property contains the URL to which requests are sent. */
-  url?: string
-  /** Instance of platform SDK. This must be provided in a subclass.
-    *
-    * Since most chain SDKs initialize asynchronously, this is usually a `Promise`
-    * that resolves to an instance of the underlying client class (e.g. `CosmWasmClient` or `SecretNetworkClient`).
-    *
-    * Since transaction and query methods are always asynchronous as well, well-behaved
-    * implementations of Fadroma Agent begin each method that talks to the chain with
-    * e.g. `const { api } = await this.api`, making sure an initialized platform SDK instance
-    * is available. */
-  api?: unknown
-  /** Setting this to false stops retries. */
-  alive: boolean = true
-
-  constructor (properties: Partial<Connection> = {}) {
+  constructor (
+    properties: ConstructorParameters<typeof Logged>[0]
+      & Pick<Connection, 'chainId'|'url'|'api'>
+      & Partial<Pick<Connection, 'alive'>>
+  ) {
     super(properties)
     assign(this, properties, ['alive', 'url', 'api'])
     this.log.label = [
@@ -43,6 +43,27 @@ export abstract class Connection extends Logged {
     const chainColor = randomColor({ luminosity: 'dark', seed: this.url })
     this.log.label = colors.bgHex(chainColor).whiteBright(` ${this.url} `)
   }
+
+  /** This must match the containing `Chain` object's chain ID. */
+  chainId: ChainId
+  /** Connection URL.
+    *
+    * The same chain may be accessible via different endpoints, so
+    * this property contains the URL to which requests are sent. */
+  url: string
+  /** Instance of platform SDK. This must be provided in a subclass.
+    *
+    * Since most chain SDKs initialize asynchronously, this is usually a `Promise`
+    * that resolves to an instance of the underlying client class (e.g. `CosmWasmClient` or `SecretNetworkClient`).
+    *
+    * Since transaction and query methods are always asynchronous as well, well-behaved
+    * implementations of Fadroma Agent begin each method that talks to the chain with
+    * e.g. `const { api } = await this.api`, making sure an initialized platform SDK instance
+    * is available. */
+  api: unknown
+  /** Setting this to false stops retries. */
+  alive: boolean = true
+
   get [Symbol.toStringTag] () {
     if (this.url) {
       const color = randomColor({ luminosity: 'dark', seed: this.url })

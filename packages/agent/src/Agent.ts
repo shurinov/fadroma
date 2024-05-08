@@ -10,22 +10,31 @@ import * as Compute from './Compute'
 
 /** Enables non-read-only transactions by binding an `Identity` to a `Connection`. */
 export abstract class Agent extends Logged {
-  constructor (properties: Partial<Agent>) {
+  constructor (
+    properties: ConstructorParameters<typeof Logged>[0]
+      & Pick<Agent, 'chain'|'identity'>
+      & Partial<Pick<Agent, 'fees'>>
+  ) {
     super()
     assign(this, properties, ["chain", "identity", "fees"])
   }
-  /** API adapter. */
-  connection: SigningConnection
+
   /** The connection that will broadcast the transactions. */
   chain:      Chain
+
   /** The identity that will sign the transactions. */
   identity:   Identity
+
   /** Default transaction fees. */
   fees?:      Token.FeeMap<'send'|'upload'|'init'|'exec'>
+
+  /** Get a signing connection to the RPC endpoint. */
+  abstract getConnection (): SigningConnection
 
   /** Construct a transaction batch that will be broadcast by this agent. */
   abstract batch (): Batch
 
+  /** Return the address of this agent. */
   get address (): Address|undefined {
     return this.identity?.address
   }
@@ -46,7 +55,7 @@ export abstract class Agent extends Logged {
       }
     }
     return await timed(
-      ()=>this.connection.sendImpl({ ...options||{}, outputs }),
+      ()=>this.getConnection().sendImpl({ ...options||{}, outputs }),
       ({elapsed})=>`Sent in ${bold(elapsed)}`
     )
   }
@@ -80,7 +89,7 @@ export abstract class Agent extends Logged {
     }
     this.log.debug(`Uploading ${bold((code as any).codeHash)}`)
     const result = await timed(
-      () => this.connection.uploadImpl({
+      () => this.getConnection().uploadImpl({
         ...options,
         binary: template
       }),
@@ -120,7 +129,7 @@ export abstract class Agent extends Logged {
     }
     const { codeId, codeHash } = contract
     const result = await timed(
-      () => into(options.initMsg).then(initMsg=>this.connection.instantiateImpl({
+      () => into(options.initMsg).then(initMsg=>this.getConnection().instantiateImpl({
         ...options,
         codeId,
         codeHash,
@@ -154,7 +163,7 @@ export abstract class Agent extends Logged {
     const { address } = contract
     let method = (typeof message === 'string') ? message : Object.keys(message||{})[0]
     return timed(
-      () => this.connection.executeImpl({
+      () => this.getConnection().executeImpl({
         ...contract as { address, codeHash },
         message,
         ...options

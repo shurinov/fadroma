@@ -1,33 +1,74 @@
 /** Fadroma. Copyright (C) 2023 Hack.bg. License: GNU AGPLv3 or custom.
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>. **/
-import { assign, randomBech32, base16, SHA256 } from '../agent-core'
-import type { Address } from '../agent-identity'
-import { Identity } from '../agent-identity'
-import type { ChainId } from '../agent-chain'
-import { Backend, Chain, Connection } from '../agent-chain'
-import type { CodeId, CodeHash } from '../agent-compute.browser'
-import { Contract, UploadedCode, ContractInstance } from '../agent-compute.browser'
-import * as Token from '../agent-token'
+import type { Address, ChainId, CodeId, CodeHash } from '../index'
+import { assign, randomBech32, base16, SHA256 } from '../src/Util'
+import { Identity } from '../src/Identity'
+import { Backend } from '../src/Backend'
+import { Chain } from '../src/Chain'
+import { Connection } from '../src/Connection'
+import { Contract, UploadedCode, ContractInstance } from '../src/Compute'
+import * as Token from '../src/Token'
 
 import { StubBatch, StubBlock } from './stub-tx'
-import { StubAgent } from './stub-identity'
+import { StubAgent, StubIdentity } from './stub-identity'
+import { StubBackend } from './stub-backend'
 
 export class StubChain extends Chain {
+  constructor (
+    properties: ConstructorParameters<typeof Chain>[0]
+      & Pick<StubChain, 'backend'>
+  ) {
+    super(properties)
+    assign(this, properties, ['backend'])
+    this.backend ??= new StubBackend({})
+  }
+
+  backend: StubBackend
+
+  authenticate (): Promise<StubAgent>
+  authenticate (mnemonic: string): Promise<StubAgent>
+  authenticate (identity: Identity): Promise<StubAgent>
   async authenticate (...args: unknown[]): Promise<StubAgent> {
-    return new StubAgent({ chain: this })
+    let identity: Identity
+    if (!args[0]) {
+      identity = new StubIdentity()
+    } else if (typeof args[0] === 'string') {
+      identity = new StubIdentity({ mnemonic: args[0] })
+    } else if (args[0] instanceof StubIdentity) {
+      identity = args[0]
+    } else if (typeof args[0] === 'object') {
+      identity = new StubIdentity(args[0])
+    } else {
+      throw Object.assign(new Error('Invalid arguments'), { args })
+    }
+    return new StubAgent({
+      chain: this,
+      identity
+    })
+  }
+
+  getConnection (): StubConnection {
+    return new StubConnection({
+      backend: this.backend,
+      chainId: this.chainId,
+      url:     'stub',
+      api:     {},
+    })
   }
 }
 
 export class StubConnection extends Connection {
-
-  backend: StubBackend
-
-  constructor (properties: Partial<StubConnection> = {}) {
+  constructor (
+    properties: ConstructorParameters<typeof Connection>[0]
+      & Pick<StubConnection, 'backend'>
+  ) {
     super(properties)
     assign(this, properties, ['backend'])
     this.backend ??= new StubBackend()
   }
+
+  backend: StubBackend
 
   override fetchHeightImpl () {
     return this.fetchBlockImpl().then(({height})=>height)
@@ -104,125 +145,5 @@ export class StubConnection extends Connection {
     ...args: Parameters<Connection["queryImpl"]>
   ): Promise<T> {
     return Promise.resolve({} as T)
-  }
-}
-
-export type StubAccount = { address: Address, mnemonic?: string }
-export type StubBalances = Record<string, bigint>
-export type StubInstance = { codeId: CodeId, address: Address, initBy: Address }
-export type StubUpload = {
-  chainId:   ChainId,
-  codeId:    CodeId,
-  codeHash:  CodeHash,
-  codeData:  Uint8Array,
-  instances: Set<Address>
-}
-
-export class StubBackend extends Backend {
-  gasToken   = new Token.Native('ustub')
-  prefix     = 'stub1'
-  chainId    = 'stub'
-  url        = 'http://stub'
-  alive      = true
-  lastCodeId = 0
-  accounts   = new Map<string, StubAccount>()
-  balances   = new Map<Address, StubBalances>()
-  uploads    = new Map<CodeId, StubUpload>()
-  instances  = new Map<Address, StubInstance>()
-
-  constructor (properties?: Partial<StubBackend & {
-    genesisAccounts: Record<string, string|number>
-  }>) {
-    super(properties as Partial<Backend>)
-    assign(this, properties, [
-      "chainId", "lastCodeId", "uploads", "instances", "gasToken", "prefix"
-    ])
-    for (const [name, balance] of Object.entries(properties?.genesisAccounts||{})) {
-      const address = randomBech32(this.prefix)
-      const balances = this.balances.get(address) || {}
-      balances[this.gasToken.denom] = BigInt(balance)
-      this.balances.set(address, balances)
-      this.accounts.set(name, { address })
-    }
-  }
-
-  connect ():
-    Promise<StubConnection>
-  connect (name: string):
-    Promise<StubAgent>
-  connect (identity: Partial<Identity>):
-    Promise<StubAgent>
-  async connect (...args: unknown[]): Promise<StubConnection|StubAgent> {
-    const connection = new StubConnection({
-      chainId:  this.chainId,
-      url:      'stub',
-      alive:    this.alive,
-      backend:  this,
-    })
-    if (!args[0]) {
-      return connection
-    }
-    if (typeof args[0] === 'string') {
-      return connection.authenticate(new Identity(await this.getIdentity(args[0])))
-    }
-    const parameter = args[0] as Partial<Identity> & { mnemonic?: string }
-    if (parameter.mnemonic && !parameter.address) {
-      parameter.address = `${this.prefix}${parameter.name}`
-      return connection.authenticate(new Identity(parameter))
-    }
-    throw new Error('invalid argument')
-  }
-
-  getIdentity (name: string): Promise<Identity> {
-    return Promise.resolve(new Identity({
-      name,
-      ...this.accounts.get(name)
-    }))
-  }
-
-  start (): Promise<this> {
-    this.alive = true
-    return Promise.resolve(this)
-  }
-
-  pause (): Promise<this> {
-    this.alive = false
-    return Promise.resolve(this)
-  }
-
-  import (...args: unknown[]): Promise<unknown> {
-    throw new Error("StubChainState#import: not implemented")
-  }
-
-  export (...args: unknown[]): Promise<unknown> {
-    throw new Error("StubChainState#export: not implemented")
-  }
-
-  async upload (codeData: Uint8Array) {
-    this.lastCodeId++
-    const codeId = String(this.lastCodeId)
-    const chainId = this.chainId
-    const codeHash = base16.encode(SHA256(codeData)).toLowerCase()
-    const upload = { codeId, chainId, codeHash, codeData, instances: new Set<string>() }
-    this.uploads.set(codeId, upload)
-    return upload
-  }
-
-  async instantiate (args: { initBy: Address, codeId: CodeId }):
-    Promise<ContractInstance & { address: Address }>
-  {
-    const { codeId, initBy } = args
-    const address = randomBech32(this.prefix)
-    const code = this.uploads.get(codeId)
-    if (!code) {
-      throw new Error(`invalid code id ${args.codeId}`)
-    }
-    code.instances.add(address)
-    this.instances.set(address, { address, codeId, initBy })
-    return new ContractInstance({ address, codeId }) as ContractInstance & { address: Address }
-  }
-
-  async execute (...args: unknown[]): Promise<unknown> {
-    throw new Error('not implemented')
   }
 }

@@ -24,7 +24,7 @@ import { _$_HACK_$_ } from './src/Agent'
 import { LocalCompiledCode } from './src/Compute.node'
 _$_HACK_$_.CompiledCode = LocalCompiledCode
 
-export * as Compute from './agent-compute.browser'
+export * as Compute from './src/Compute'
 
 import {
   Console,
@@ -34,7 +34,7 @@ import {
   randomBech32,
   randomBech32m,
   bold,
-} from './agent-core'
+} from './src/Util'
 
 import CLI from '@hackbg/cmds'
 

@@ -2,57 +2,75 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>. **/
 
+import type { Address } from '../index'
+import { assign } from '../src/Util'
 import { Agent } from '../src/Agent'
 import { Identity } from '../src/Identity'
 import { SigningConnection } from '../src/Connection'
-import type { Address } from '../index'
 import { ContractInstance, UploadedCode } from '../src/Compute'
 import { StubBatch } from './stub-tx'
-import type { StubChain, StubBackend } from './stub-chain'
+import type { StubChain } from './stub-chain'
+import type { StubBackend } from './stub-backend'
 
-export class StubIdentity extends Identity {}
+export class StubIdentity extends Identity {
+  constructor (properties: ConstructorParameters<typeof Identity>[0] & { mnemonic?: string } = {}) {
+    super(properties)
+  }
+}
 
 export class StubAgent extends Agent {
+
   declare chain: StubChain
-  declare connection: StubSigningConnection
+
+  getConnection (): StubSigningConnection {
+    return new StubSigningConnection({
+      address: this.identity.address,
+      backend: this.chain.backend
+    })
+  }
 
   batch (): StubBatch {
-    return new StubBatch({ agent: this })
+    return new StubBatch({
+      chain: this.chain,
+      agent: this
+    })
   }
 }
 
 export class StubSigningConnection extends SigningConnection {
+  constructor (properties: Pick<StubSigningConnection, 'backend'|'address'>) {
+    super()
+    assign(this, properties, ['backend', 'address'])
+  }
 
   backend: StubBackend
+
   address: Address
 
-  sendImpl (...args: Parameters<SigningConnection["sendImpl"]>): Promise<void> {
-    if (!this.address) {
-      throw new Error('not authenticated')
-    }
+  async sendImpl (...args: Parameters<SigningConnection["sendImpl"]>): Promise<void> {
     const { backend } = this
-    const senderBalances =
-      { ...backend.balances.get(this.address) || {}}
-    const recipientBalances =
-      { ...backend.balances.get(recipient) || {}}
-    for (const sum of sums) {
-      if (!Object.keys(senderBalances).includes(sum.denom)) {
-        throw new Error(`sender has no balance in ${sum.denom}`)
+    const { outputs } = args[0]
+    const senderBalances = { ...backend.balances.get(this.address) || {}}
+    for (const [recipient, sends] of Object.entries(outputs)) {
+      const recipientBalances =
+        { ...backend.balances.get(recipient) || {}}
+      for (const [denom, amount] of Object.entries(sends)) {
+        if (!Object.keys(senderBalances).includes(denom)) {
+          throw new Error(`sender has no balance in ${denom}`)
+        }
+        const amountN = BigInt(amount)
+        if (senderBalances[denom] < amountN) {
+          throw new Error(
+            `sender has insufficient balance in ${denom}: ${senderBalances[denom]} < ${amountN}`
+          )
+        }
+        senderBalances[denom] -= amountN
+        recipientBalances[denom] = (recipientBalances[denom] ?? 0n) + amountN
+        backend.balances.set(this.address, senderBalances)
+        backend.balances.set(recipient, recipientBalances)
+        // FIXME: revert balances on failure
       }
-      const amount = BigInt(sum.amount)
-      if (senderBalances[sum.denom] < amount) {
-        throw new Error(
-          `sender has insufficient balance in ${sum.denom}: ${senderBalances[sum.denom]} < ${amount}`
-        )
-      }
-      senderBalances[sum.denom] =
-        senderBalances[sum.denom] - amount
-      recipientBalances[sum.denom] =
-        (recipientBalances[sum.denom] ?? BigInt(0)) + amount
     }
-    backend.balances.set(this.address, senderBalances)
-    backend.balances.set(recipient, recipientBalances)
-    return Promise.resolve()
   }
 
   async uploadImpl (

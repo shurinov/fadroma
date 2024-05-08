@@ -3,6 +3,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>. **/
 export {
   StubBackend    as Backend,
+} from './stub-backend'
+export {
   StubChain      as Chain,
   StubConnection as Connection,
 } from './stub-chain'

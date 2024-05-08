@@ -17,24 +17,25 @@ import type {
 } from '../index'
 
 export abstract class Chain extends Logged {
-  constructor (properties: Partial<Chain> = {}) {
+  constructor (
+    properties: ConstructorParameters<typeof Logged>[0]
+      & Pick<Chain, 'chainId'>
+      & Partial<Pick<Chain, 'blockInterval'>>
+  ) {
     super(properties)
-    assign(this, properties, ['chainId', 'connections'])
+    assign(this, properties, ['chainId'])
   }
+
   /** Chain ID. This is a string that uniquely identifies a chain.
     * A project's mainnet and testnet have different chain IDs. */
-  chainId?: ChainId
-  /** RPC endpoints for this chain. */
-  connections: Connection[]
-  /** For now, this returns the first connection in the list.
-    * The idea is for broken connections to be moved to the bottom of the list
-    * (i.e. so that if a node has crashed, the script automatically tries the next one). */
-  get connection (): Connection {
-    if (!this.connections[0]) {
-      throw new Error(`no connections available to chain: ${this.chainId}`)
-    }
-    return this.connections[0]
-  }
+  chainId: ChainId
+
+  /** Time to ping for next block. */
+  blockInterval = 250
+
+  /** Get a connection to the API endpoint. */
+  abstract getConnection (): Connection
+
   /** Authenticate with a random identity. */
   abstract authenticate (): Promise<Agent>
   /** Authenticate with a mnemonic. */
@@ -45,11 +46,8 @@ export abstract class Chain extends Logged {
   /** Get the current block height. */
   get height (): Promise<number> {
     this.log.debug('Querying block height')
-    return this.connection.fetchHeightImpl()
+    return this.getConnection().fetchHeightImpl()
   }
-
-  /** Time to ping for next block. */
-  blockInterval = 250
 
   /** Wait until the block height increments, or until `this.alive` is set to false. */
   get nextBlock (): Promise<number> {
@@ -66,7 +64,7 @@ export abstract class Chain extends Logged {
       const t = + new Date()
       return new Promise(async (resolve, reject)=>{
         try {
-          while (this.connection.alive) {
+          while (this.getConnection().alive) {
             await new Promise(ok=>setTimeout(ok, this.blockInterval))
             this.log(
               `Waiting for block > ${bold(String(startingHeight))} ` +
@@ -100,17 +98,17 @@ export abstract class Chain extends Logged {
       if (typeof args[0] === 'object') {
         if ('height' in args[0]) {
           this.log.debug(`Querying block by height ${args[0].height}`)
-          return this.connection.fetchBlockImpl({ height: args[0].height as number })
+          return this.getConnection().fetchBlockImpl({ height: args[0].height as number })
         } else if ('hash' in args[0]) {
           this.log.debug(`Querying block by hash ${args[0].hash}`)
-          return this.connection.fetchBlockImpl({ hash: args[0].hash as string })
+          return this.getConnection().fetchBlockImpl({ hash: args[0].hash as string })
         }
       } else {
         throw new Error('Invalid arguments, pass {height:number} or {hash:string}')
       }
     } else {
       this.log.debug(`Querying latest block`)
-      return this.connection.fetchBlockImpl()
+      return this.getConnection().fetchBlockImpl()
     }
   }
 
@@ -198,7 +196,7 @@ export abstract class Chain extends Logged {
     if (args.length === 0) {
       this.log.debug('Querying all codes...')
       return timed(
-        ()=>this.connection.fetchCodeInfoImpl(),
+        ()=>this.getConnection().fetchCodeInfoImpl(),
         ({ elapsed, result }) => this.log.debug(
           `Queried in ${bold(elapsed)}: all codes`
         ))
@@ -209,7 +207,7 @@ export abstract class Chain extends Logged {
         const { parallel } = args[1] as { parallel?: boolean }
         this.log.debug(`Querying info about ${codeIds.length} code IDs...`)
         return timed(
-          ()=>this.connection.fetchCodeInfoImpl({ codeIds, parallel }),
+          ()=>this.getConnection().fetchCodeInfoImpl({ codeIds, parallel }),
           ({ elapsed, result }) => this.log.debug(
             `Queried in ${bold(elapsed)}: info about ${codeIds.length} code IDs`
           ))
@@ -218,7 +216,7 @@ export abstract class Chain extends Logged {
         const { parallel } = args[1] as { parallel?: boolean }
         this.log.debug(`Querying info about code id ${args[0]}...`)
         return timed(
-          ()=>this.connection.fetchCodeInfoImpl({ codeIds, parallel }),
+          ()=>this.getConnection().fetchCodeInfoImpl({ codeIds, parallel }),
           ({ elapsed }) => this.log.debug(
             `Queried in ${bold(elapsed)}: info about code id ${codeIds[0]}`
           ))
@@ -273,7 +271,7 @@ export abstract class Chain extends Logged {
       }
       this.log.debug(`Querying contracts with code ids ${Object.keys(codeIds).join(', ')}...`)
       return timed(
-        ()=>this.connection.fetchCodeInstancesImpl({ codeIds }),
+        ()=>this.getConnection().fetchCodeInstancesImpl({ codeIds }),
         ({elapsed})=>this.log.debug(`Queried in ${elapsed}ms`))
     }
     if (typeof args[0] === 'object') {
@@ -284,7 +282,7 @@ export abstract class Chain extends Logged {
       this.log.debug(`Querying contracts with code ids ${Object.keys(args[0]).join(', ')}...`)
       const codeIds = args[0] as { [id: CodeId]: typeof Compute.Contract }
       return timed(
-        ()=>this.connection.fetchCodeInstancesImpl({ codeIds }),
+        ()=>this.getConnection().fetchCodeInstancesImpl({ codeIds }),
         ({elapsed})=>this.log.debug(`Queried in ${elapsed}ms`))
     }
     if ((typeof args[0] === 'number')||(typeof args[0] === 'string')) {
@@ -292,7 +290,7 @@ export abstract class Chain extends Logged {
       this.log.debug(`Querying contracts with code id ${id}...`)
       const result = {}
       return timed(
-        ()=>this.connection.fetchCodeInstancesImpl({ codeIds: { [id]: $C } }),
+        ()=>this.getConnection().fetchCodeInstancesImpl({ codeIds: { [id]: $C } }),
         ({elapsed})=>this.log.debug(`Queried in ${elapsed}ms`))
     }
     throw new Error('Invalid arguments')
@@ -340,7 +338,7 @@ export abstract class Chain extends Logged {
     if (typeof args[0] === 'string') {
       this.log.debug(`Fetching contract ${args[0]}`)
       const contracts = await timed(
-        () => this.connection.fetchContractInfoImpl({
+        () => this.getConnection().fetchContractInfoImpl({
           contracts: { [args[0] as Address]: $C }
         }),
         ({ elapsed }) => this.log.debug(
@@ -361,7 +359,7 @@ export abstract class Chain extends Logged {
         contracts[address] = $C
       }
       const results = await timed(
-        ()=>this.connection.fetchContractInfoImpl({ contracts, parallel }),
+        ()=>this.getConnection().fetchContractInfoImpl({ contracts, parallel }),
         ({ elapsed }) => this.log.debug(
           `Fetched in ${bold(elapsed)}: ${addresses.length} contracts`
         ))
@@ -380,7 +378,7 @@ export abstract class Chain extends Logged {
       const addresses = Object.keys(args[0]) as Address[]
       this.log.debug(`Querying info about ${addresses.length} contracts`)
       const contracts = await timed(
-        ()=>this.connection.fetchContractInfoImpl({
+        ()=>this.getConnection().fetchContractInfoImpl({
           contracts: args[0] as { [address: Address]: typeof Compute.Contract },
           parallel 
         }),
@@ -405,7 +403,7 @@ export abstract class Chain extends Logged {
   query <T> (contract: Address|{ address: Address }, message: Message):
     Promise<T> {
     return timed(
-      ()=>this.connection.queryImpl({
+      ()=>this.getConnection().queryImpl({
         ...(typeof contract === 'string') ? { address: contract } : contract,
         message
       }),

@@ -3,9 +3,10 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>. **/
 import { Suite } from '@hackbg/ensuite'
 export default new Suite([
-  ['core',    ()=>import('./agent-core.test')],
-  ['chain',   ()=>import('./agent-chain.test')],
-  ['compute', ()=>import('./agent-compute.test')],
-  ['token',   ()=>import('./agent-token.test')],
+  ['core',    ()=>import('./test/agent-core.test')],
+  ['chain',   ()=>import('./test/agent-chain.test')],
+  ['compute', ()=>import('./test/agent-compute.test')],
+  ['token',   ()=>import('./test/agent-token.test')],
   //['stub',   ()=>import('./agent-stub.test')]
 ])
+

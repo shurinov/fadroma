@@ -9,17 +9,20 @@ import type { Chain, Transaction } from '../index'
   *
   * Contains zero or more transactions. */
 export abstract class Block {
-  /** Connection to the chain to which this block belongs. */
-  chain?: Chain
-  /** Monotonically incrementing ID of block. */
-  height: number
-  /** Content-dependent ID of block. */
-  hash:   string
 
   constructor (properties: Partial<Block> = {}) {
     assign(this, properties, ["chain", "height", "hash"])
     hideProperties(this, "chain")
   }
+
+  /** Connection to the chain to which this block belongs. */
+  chain?: Chain
+
+  /** Monotonically incrementing ID of block. */
+  height: number
+
+  /** Content-dependent ID of block. */
+  hash:   string
 
   async fetchTransactions ():
     Promise<Transaction[]>
@@ -28,5 +31,5 @@ export abstract class Block {
   async fetchTransactions (...args: unknown[]): Promise<unknown> {
     return []
   }
-}
 
+}

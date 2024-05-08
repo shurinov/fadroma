@@ -6,11 +6,19 @@ import type { Chain, Agent } from '../index'
 
 /** Builder object for batched transactions. */
 export class Batch extends Logged {
-  chain?: Chain
-  agent?: Agent
-  constructor (properties?: Partial<Batch>) {
+  constructor (
+    properties: ConstructorParameters<typeof Logged>[0]
+      & Pick<Batch, 'chain'|'agent'>
+  ) {
     super(properties)
   }
+
+  /** The chain targeted by the batch. */
+  chain: Chain
+
+  /** The agent that will broadcast the batch. */
+  agent: Agent
+
   /** Add an upload message to the batch. */
   upload (...args: Parameters<Agent["upload"]>): this {
     this.log.warn('upload: stub (not implemented)')
