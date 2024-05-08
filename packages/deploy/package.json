@@ -1,0 +1,5 @@
+{
+  "name": "@fadroma/deploy",
+  "type": "module",
+  "main": "deploy.ts"
+}

@@ -11,6 +11,8 @@ export class Batch extends Logged {
       & Pick<Batch, 'chain'|'agent'>
   ) {
     super(properties)
+    this.chain = properties.chain
+    this.agent = properties.agent
   }
 
   /** The chain targeted by the batch. */

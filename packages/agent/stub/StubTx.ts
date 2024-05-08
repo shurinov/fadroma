@@ -5,8 +5,8 @@
 import { Block } from '../src/Block'
 import { Batch } from '../src/Batch'
 import { Transaction } from '../src/Transaction'
-import type { StubChain } from './stub-chain'
-import type { StubAgent } from './stub-identity'
+import type { StubChain } from './StubChain'
+import type { StubAgent } from './StubIdentity'
 
 export class StubBlock extends Block {
   async getTransactionsById (): Promise<Record<string, Transaction>> {

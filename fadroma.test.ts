@@ -3,7 +3,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>. **/
 import { Suite } from '@hackbg/ensuite'
 export default new Suite([
-  ['agent',   () => import('./packages/agent/agent.test')],
+  ['agent',   () => import('./packages/agent/index.test')],
   ['stores',  () => import('./stores.test')],
   ['scrt',    () => import('./packages/scrt/scrt.test')],
   ['cw',      () => import('./packages/cw/cw.test')],

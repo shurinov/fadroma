@@ -2,8 +2,8 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>. **/
 import { Console } from '../src/Util'
-import type { SourceCode } from '../src/Compute'
-import { Compiler, CompiledCode } from '../src/Compute'
+import type { SourceCode } from '../src/compute/Source'
+import { Compiler, CompiledCode } from '../src/compute/Compile'
 
 /** A compiler that does nothing. Used for testing. */
 export class StubCompiler extends Compiler {

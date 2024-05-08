@@ -7,10 +7,11 @@ import { assign } from '../src/Util'
 import { Agent } from '../src/Agent'
 import { Identity } from '../src/Identity'
 import { SigningConnection } from '../src/Connection'
-import { ContractInstance, UploadedCode } from '../src/Compute'
-import { StubBatch } from './stub-tx'
-import type { StubChain } from './stub-chain'
-import type { StubBackend } from './stub-backend'
+import { Contract } from '../src/compute/Contract'
+import { UploadedCode } from '../src/compute/Upload'
+import { StubBatch } from './StubTx'
+import type { StubChain } from './StubChain'
+import type { StubBackend } from './StubBackend'
 
 export class StubIdentity extends Identity {
   constructor (properties: ConstructorParameters<typeof Identity>[0] & { mnemonic?: string } = {}) {
@@ -24,7 +25,7 @@ export class StubAgent extends Agent {
 
   getConnection (): StubSigningConnection {
     return new StubSigningConnection({
-      address: this.identity.address,
+      address: this.identity.address!,
       backend: this.chain.backend
     })
   }
@@ -40,7 +41,8 @@ export class StubAgent extends Agent {
 export class StubSigningConnection extends SigningConnection {
   constructor (properties: Pick<StubSigningConnection, 'backend'|'address'>) {
     super()
-    assign(this, properties, ['backend', 'address'])
+    this.backend = properties.backend
+    this.address = properties.address
   }
 
   backend: StubBackend
@@ -81,11 +83,14 @@ export class StubSigningConnection extends SigningConnection {
 
   async instantiateImpl (
     ...args: Parameters<SigningConnection["instantiateImpl"]>
-  ): Promise<ContractInstance & { address: Address }> {
-    return new ContractInstance(await this.backend.instantiate({
+  ): Promise<Contract & { address: Address }> {
+    if (!args[0].codeId) {
+      throw new Error("Missing code ID")
+    }
+    return new Contract(await this.backend.instantiate({
       initBy: this.address!,
       codeId: args[0].codeId
-    })) as ContractInstance & {
+    })) as Contract & {
       address: Address
     }
   }

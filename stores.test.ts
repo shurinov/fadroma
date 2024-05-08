@@ -1,13 +1,16 @@
 import { TestProjectDeployment } from './fixtures/fixtures'
 import { JSONFileUploadStore } from './fadroma'
-import { Stub } from '@fadroma/agent'
+import { Stub, Identity } from '@fadroma/agent'
 import { withTmpDir } from '@hackbg/file'
 export default async function testJSONFileStores () {
   await withTmpDir(async dir=>{
     const deployment = new TestProjectDeployment()
     await deployment.upload({
-      uploader:    new Stub.Agent({}),
-      uploadStore: new JSONFileUploadStore(dir)
+      uploadStore: new JSONFileUploadStore(dir),
+      uploader:    new Stub.Agent({
+        chain:     new Stub.Chain({ chainId: 'foo' }),
+        identity:  new Identity()
+      }),
     })
   })
 }

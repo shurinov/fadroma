@@ -1,9 +1,9 @@
 import type { Address, CodeId, ChainId, CodeHash } from '../index'
 import { Backend } from '../src/Backend'
-import * as Token from '../src/Token'
+import * as Token from '../src/dlt/Token'
 import { assign, randomBech32, base16, SHA256 } from '../src/Util'
 import { Identity } from '../src/Identity'
-import { ContractInstance } from '../src/Compute'
+import { Contract } from '../src/compute/Contract'
 
 export type StubAccount = { address: Address, mnemonic?: string }
 export type StubBalances = Record<string, bigint>
@@ -88,7 +88,7 @@ export class StubBackend extends Backend {
   }
 
   async instantiate (args: { initBy: Address, codeId: CodeId }):
-    Promise<ContractInstance & { address: Address }>
+    Promise<Contract & { address: Address }>
   {
     const { codeId, initBy } = args
     const address = randomBech32(this.prefix)
@@ -98,7 +98,7 @@ export class StubBackend extends Backend {
     }
     code.instances.add(address)
     this.instances.set(address, { address, codeId, initBy })
-    return new ContractInstance({ address, codeId }) as ContractInstance & { address: Address }
+    return new Contract({ address, codeId }) as Contract & { address: Address }
   }
 
   async execute (...args: unknown[]): Promise<unknown> {

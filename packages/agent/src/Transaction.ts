@@ -5,15 +5,20 @@ import type { Block } from './Block'
 import type { Chain } from './Chain'
 import type { Agent } from './Agent'
 import { Logged } from './Util'
-import * as Token from './Token'
+import * as Token from './dlt/Token'
 
 /** A transaction in a block on a chain. */
 export class Transaction {
-  block? :  Block
-  hash:     string
-  type:     unknown
-  data:     unknown
-  gasLimit: Token.Native[]
-  gasUsed:  Token.Native[]
-  status:   'Pending'|'Accepted'|'Rejected'
+  constructor (properties: Pick<Transaction, 'id'|'block'>) {
+    this.#block = properties.block
+    this.id = properties.id
+  }
+
+  #block?: Block
+  get block () {
+    return this.#block
+  }
+
+  id: string
+
 }

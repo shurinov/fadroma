@@ -1,8 +1,9 @@
 /** Fadroma. Copyright (C) 2023 Hack.bg. License: GNU AGPLv3 or custom.
     You should have received a copy of the GNU Affero General Public License
     along with this program. If not, see <http://www.gnu.org/licenses/>. **/
-import { Console, bold } from './Util'
-import { CompiledCode } from './Compute'
+
+import { Console, bold } from '../Util'
+import { CompiledCode } from './Compile'
 
 import { readFile } from 'node:fs/promises'
 import { fileURLToPath } from 'node:url'

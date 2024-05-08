@@ -7,19 +7,21 @@ import { Identity } from '../src/Identity'
 import { Backend } from '../src/Backend'
 import { Chain } from '../src/Chain'
 import { Connection } from '../src/Connection'
-import { Contract, UploadedCode, ContractInstance } from '../src/Compute'
-import * as Token from '../src/Token'
+import { Contract } from '../src/compute/Contract'
+import { UploadedCode } from '../src/compute/Upload'
+import * as Token from '../src/dlt/Token'
 
-import { StubBatch, StubBlock } from './stub-tx'
-import { StubAgent, StubIdentity } from './stub-identity'
-import { StubBackend } from './stub-backend'
+import { StubBatch, StubBlock } from './StubTx'
+import { StubAgent, StubIdentity } from './StubIdentity'
+import { StubBackend } from './StubBackend'
 
 export class StubChain extends Chain {
   constructor (
-    properties: ConstructorParameters<typeof Chain>[0]
-      & Pick<StubChain, 'backend'>
+    properties: Omit<ConstructorParameters<typeof Chain>[0], 'chainId'>
+      & Partial<Pick<ConstructorParameters<typeof Chain>[0], 'chainId'>>
+      & Partial<Pick<StubChain, 'backend'>> = {}
   ) {
-    super(properties)
+    super({ chainId: 'stub', ...properties })
     assign(this, properties, ['backend'])
     this.backend ??= new StubBackend({})
   }
@@ -50,32 +52,39 @@ export class StubChain extends Chain {
 
   getConnection (): StubConnection {
     return new StubConnection({
-      backend: this.backend,
-      chainId: this.chainId,
-      url:     'stub',
-      api:     {},
+      chain: this,
+      url:   'stub',
+      api:   {},
     })
   }
 }
 
 export class StubConnection extends Connection {
-  constructor (
-    properties: ConstructorParameters<typeof Connection>[0]
-      & Pick<StubConnection, 'backend'>
-  ) {
+  constructor (properties: ConstructorParameters<typeof Connection>[0]) {
     super(properties)
     assign(this, properties, ['backend'])
-    this.backend ??= new StubBackend()
   }
 
-  backend: StubBackend
+  get chain (): StubChain {
+    return super.chain as StubChain
+  }
+
+  get backend (): StubBackend {
+    return this.chain.backend
+  }
 
   override fetchHeightImpl () {
     return this.fetchBlockImpl().then(({height})=>height)
   }
 
-  override fetchBlockImpl () {
-    return Promise.resolve(new StubBlock({ height: + new Date() }))
+  override fetchBlockImpl (): Promise<StubBlock> {
+    const timestamp = new Date()
+    return Promise.resolve(new StubBlock({
+      chain:     this.chain,
+      id:        `stub${+timestamp}`,
+      height:    +timestamp,
+      timestamp: timestamp.toISOString()
+    }))
   }
 
   override fetchBalanceImpl (
@@ -93,6 +102,9 @@ export class StubConnection extends Connection {
   ):
     Promise<Record<string, UploadedCode>>
   {
+    if (!args[0]) {
+      throw new Error('Invalid argument')
+    }
     if (!args[0].codeIds) {
       return Promise.resolve(Object.fromEntries(
         [...this.backend.uploads.entries()].map(
@@ -100,7 +112,7 @@ export class StubConnection extends Connection {
         )
       ))
     } else {
-      const results = {}
+      const results: Record<string, UploadedCode> = {}
       for (const id of args[0].codeIds) {
         results[id] = new UploadedCode(this.backend.uploads.get(id))
       }
@@ -122,7 +134,7 @@ export class StubConnection extends Connection {
   ):
     Promise<Record<Address, Contract>>
   {
-    const results = {}
+    const results: Record<Address, Contract> = {}
     for (const address of Object.keys(args[0].contracts)) {
       const contract = this.backend.instances.get(address)
       if (!contract) {

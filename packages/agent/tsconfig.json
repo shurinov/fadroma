@@ -2,27 +2,35 @@
   "files": [
     "index.ts",
     "index.node.ts",
+    "commands.ts",
+
     "src/Agent.ts",
     "src/Backend.ts",
     "src/Batch.ts",
     "src/Block.ts",
     "src/Chain.ts",
-    "src/Compute.node.ts",
-    "src/Compute.ts",
     "src/Connection.ts",
-    "src/Governance.ts",
     "src/Identity.ts",
-    "src/Staking.ts",
-    "src/Store.ts",
-    "src/Token.ts",
     "src/Transaction.ts",
     "src/Types.ts",
     "src/Util.ts",
+
+    "src/compute/Source.ts",
+    "src/compute/Compile.ts",
+    "src/compute/Compile.node.ts",
+    "src/compute/Upload.ts",
+    "src/compute/Contract.ts",
+
+    "src/dlt/Bank.ts",
+    "src/dlt/Governance.ts",
+    "src/dlt/Staking.ts",
+    "src/dlt/Token.ts",
+
     "stub/stub.ts",
-    "stub/stub-chain.ts",
-    "stub/stub-compiler.ts",
-    "stub/stub-identity.ts",
-    "stub/stub-tx.ts"
+    "stub/StubChain.ts",
+    "stub/StubCompiler.ts",
+    "stub/StubIdentity.ts",
+    "stub/StubTx.ts"
   ],
   "include": [],
   "exclude": [ ".ubik", "*.dist.*", "node_modules" ],
@@ -31,8 +39,10 @@
     "module": "esnext",
     "moduleResolution": "node",
     "esModuleInterop": true,
+    "downlevelIteration": true,
     "allowSyntheticDefaultImports": true,
     "noEmitOnError": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "strict": true
   }
 }

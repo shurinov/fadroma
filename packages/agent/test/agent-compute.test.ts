@@ -2,9 +2,9 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>. **/
 import assert, { equal, deepEqual, rejects, throws } from 'node:assert'
-import { Contract } from '../agent-chain'
 import * as Stub from '../stub/stub'
 import {
+  Contract,
   SourceCode,
   RustSourceCode,
   CompiledCode as BaseCompiledCode,
@@ -12,14 +12,14 @@ import {
   ContractCode,
   ContractInstance,
   UploadedCode,
-} from '../agent-compute.browser'
+} from '../src/Compute'
 import {
   LocalCompiledCode as CompiledCode,
-} from '../agent-compute.node'
+} from '../src/Compute.node'
 import {
   UploadStore,
   DeployStore
-} from '../agent-store'
+} from '../src/Store'
 
 import { Suite } from '@hackbg/ensuite'
 export default new Suite([

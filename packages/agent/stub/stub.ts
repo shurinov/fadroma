@@ -3,19 +3,19 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>. **/
 export {
   StubBackend    as Backend,
-} from './stub-backend'
+} from './StubBackend'
 export {
   StubChain      as Chain,
   StubConnection as Connection,
-} from './stub-chain'
+} from './StubChain'
 export {
   StubAgent      as Agent,
   StubIdentity   as Identity,
-} from './stub-identity'
+} from './StubIdentity'
 export {
   StubBlock      as Block,
   StubBatch      as Batch,
-} from './stub-tx'
+} from './StubTx'
 export {
   StubCompiler   as Compiler,
-} from './stub-compiler'
+} from './StubCompiler'

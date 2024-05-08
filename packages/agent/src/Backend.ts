@@ -3,7 +3,7 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>. **/
 import { Logged, assign } from './Util'
 import { Address, ChainId } from './Types'
-import * as Token from './Token'
+import * as Token from './dlt/Token'
 import type { Chain } from './Chain'
 import type { Agent } from './Agent'
 import type { Identity } from './Identity'

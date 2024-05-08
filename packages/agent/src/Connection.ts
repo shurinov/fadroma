@@ -2,22 +2,11 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program. If not, see <http://www.gnu.org/licenses/>. **/
 import {
-  Logged,
-  assign,
-  bold,
-  colors,
-  randomColor,
+  Logged, assign, bold, colors, randomColor,
 } from './Util'
 import type {
-  Address,
-  Block,
-  ChainId,
-  CodeId,
-  Compute,
-  Message,
-  Store,
-  Token,
-  Uint128,
+  Address, Block, Chain, ChainId, CodeId, Message, Token, Uint128,
+  UploadStore, UploadedCode, Contract, Into
 } from '../index'
 
 /** Represents a remote API endpoint.
@@ -28,24 +17,33 @@ import type {
 export abstract class Connection extends Logged {
   constructor (
     properties: ConstructorParameters<typeof Logged>[0]
-      & Pick<Connection, 'chainId'|'url'|'api'>
+      & Pick<Connection, 'chain'|'url'|'api'>
       & Partial<Pick<Connection, 'alive'>>
   ) {
     super(properties)
-    assign(this, properties, ['alive', 'url', 'api'])
+    this.#chain  = properties.chain
+    this.url     = properties.url
+    this.alive   = properties.alive || true
+    this.api     = properties.api
     this.log.label = [
       this.constructor.name,
-      '(',
-      this[Symbol.toStringTag] ? `(${bold(this[Symbol.toStringTag])})` : null,
-      ')'
+      '(', this[Symbol.toStringTag] ? `(${bold(this[Symbol.toStringTag])})` : null, ')'
     ].filter(Boolean).join('')
     this.log.label = new.target.constructor.name
     const chainColor = randomColor({ luminosity: 'dark', seed: this.url })
     this.log.label = colors.bgHex(chainColor).whiteBright(` ${this.url} `)
   }
 
-  /** This must match the containing `Chain` object's chain ID. */
-  chainId: ChainId
+  #chain: Chain
+  /** Chain to which this connection points. */
+  get chain (): Chain {
+    return this.chain
+  }
+  /** ID of chain to which this connection points. */
+  get chainId (): ChainId {
+    return this.chain.chainId
+  }
+
   /** Connection URL.
     *
     * The same chain may be accessible via different endpoints, so
@@ -86,10 +84,10 @@ export abstract class Connection extends Logged {
   abstract fetchCodeInfoImpl (parameters?: {
     codeIds?:  CodeId[]
     parallel?: boolean
-  }): Promise<Record<CodeId, Compute.UploadedCode>>
+  }): Promise<Record<CodeId, UploadedCode>>
   /** Chain-specific implementation of fetchCodeInstances. */
   abstract fetchCodeInstancesImpl (parameters: {
-    codeIds:   { [id: CodeId]: typeof Compute.Contract },
+    codeIds:   { [id: CodeId]: typeof Contract },
     parallel?: boolean
   }): Promise<{
     [codeId in keyof typeof parameters["codeIds"]]:
@@ -97,9 +95,9 @@ export abstract class Connection extends Logged {
   }>
   /** Chain-specific implementation of fetchContractInfo. */
   abstract fetchContractInfoImpl (parameters: {
-    contracts: { [address: Address]: typeof Compute.Contract },
+    contracts: { [address: Address]: typeof Contract },
     parallel?: boolean
-  }): Promise<Record<Address, Compute.Contract>>
+  }): Promise<Record<Address, Contract>>
   /** Chain-specific implementation of query. */
   abstract queryImpl <T> (parameters: {
     address:   Address
@@ -121,16 +119,16 @@ export abstract class SigningConnection {
   abstract uploadImpl (parameters: {
     binary:       Uint8Array,
     reupload?:    boolean,
-    uploadStore?: Store.UploadStore,
+    uploadStore?: UploadStore,
     uploadFee?:   Token.ICoin[]|'auto',
     uploadMemo?:  string
-  }): Promise<Partial<Compute.UploadedCode & {
+  }): Promise<Partial<UploadedCode & {
     chainId: ChainId,
     codeId:  CodeId
   }>>
   /** Chain-specific implementation of contract instantiation. */
-  abstract instantiateImpl (parameters: Partial<Compute.ContractInstance>):
-    Promise<Compute.ContractInstance & { address: Address }>
+  abstract instantiateImpl (parameters: Partial<Contract> & { initMsg: Into<Message> }):
+    Promise<Contract & { address: Address }>
   /** Chain-specific implementation of contract transaction. */
   abstract executeImpl <T> (parameters: {
     address:   Address

@@ -21,7 +21,7 @@ export * from './fadroma.browser'
 
 // And more!
 import type { ChainId, CodeHash } from '@fadroma/agent'
-import { Core, Chain, Program, Deploy, Store } from '@fadroma/agent'
+import { Console, bold, timestamp, Chain, Store } from '@fadroma/agent'
 import { getProject, ProjectPrompter } from '@fadroma/create'
 import Commands from '@hackbg/cmds'
 import { FileFormat } from '@hackbg/file'
@@ -30,7 +30,7 @@ import { SyncFS } from '@hackbg/file'
 import { fileURLToPath } from 'node:url'
 import { basename } from 'node:path'
 
-const console = new Core.Console('@hackbg/fadroma')
+const console = new Console('@hackbg/fadroma')
 
 export default function main (...args: any) {
   console.debug('Running main...')
@@ -174,7 +174,7 @@ export async function runScript (context?: { project?: Project, script?: string,
   if (typeof main === 'function') {
     return main(project, ...args||[])
   } else {
-    console.error(`The default export of ${Core.bold(scriptPath.short)} is not a function`)
+    console.error(`The default export of ${bold(scriptPath.short)} is not a function`)
     process.exit(1)
   }
 }
@@ -224,14 +224,14 @@ export function exportDeployment (
   // If passed a directory, generate file name
   const exportPath = new SyncFS.Path(path)
   const exportFile = exportPath.isDirectory()
-    ? new SyncFS.File(exportPath, `${deployment.name}_@_${Core.timestamp()}.json`)
+    ? new SyncFS.File(exportPath, `${deployment.name}_@_${timestamp()}.json`)
     : new SyncFS.File(exportPath)
   // Serialize and write the deployment.
   const state = deployment.serialize()
   exportFile.setFormat(FileFormat.JSON).makeParent().save(state)
   console.log(
     'saved', Object.keys(state).length,
-    'contracts to', Core.bold(exportFile.short)
+    'contracts to', bold(exportFile.short)
   )
 }
 
@@ -260,12 +260,12 @@ export class JSONFileUploadStore extends Store.UploadStore {
       const uploaded = receipt.load() as { codeId: string }
       if (uploaded.codeId) {
         this.log(
-          'loading code id', Core.bold(String(uploaded.codeId)),
-          'from', Core.bold(receipt.shortPath)
+          'loading code id', bold(String(uploaded.codeId)),
+          'from', bold(receipt.shortPath)
         )
         super.set(codeHash, uploaded)
       } else {
-        this.log.warn('no codeId field found in', Core.bold(receipt.shortPath))
+        this.log.warn('no codeId field found in', bold(receipt.shortPath))
       }
     }
     return super.get(codeHash)
@@ -310,9 +310,9 @@ export class JSONFileDeployStore extends Store.DeployStore {
       const state = receipt.load()
       this.log(
         'loading code id',
-        Core.bold(name),
+        bold(name),
         'from',
-        Core.bold(receipt.shortPath)
+        bold(receipt.shortPath)
       )
       super.set(name, state)
     }

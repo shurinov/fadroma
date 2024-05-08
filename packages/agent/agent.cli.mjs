@@ -18,7 +18,7 @@ const CLI = await import("./agent.dist.js").catch(async e=>{
   new Console().debug('Compiling TypeScript...')
   await import("@ganesha/esbuild")
   const t0 = performance.now()
-  const module = await import("./agent.ts")
+  const module = await import("./commands.ts")
   new Console().debug('Compiled TypeScript in', ((performance.now() - t0)/1000).toFixed(3)+'s')
   return module
 }).then(module=>module.default)

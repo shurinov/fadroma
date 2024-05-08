@@ -487,9 +487,6 @@ importers:
 
   packages/cw:
     dependencies:
-      '@fadroma/agent':
-        specifier: workspace:*
-        version: link:../agent
       '@hackbg/borshest':
         specifier: workspace:*
         version: link:../../toolbox/borshest
@@ -505,6 +502,10 @@ importers:
       borsher:
         specifier: ^1.2.1
         version: 1.2.1
+    devDependencies:
+      '@fadroma/agent':
+        specifier: workspace:*
+        version: link:../agent
 
   packages/devnet:
     dependencies:
@@ -551,6 +552,9 @@ importers:
 
   packages/namada:
     dependencies:
+      '@fadroma/agent':
+        specifier: workspace:*
+        version: link:../agent
       '@fadroma/cw':
         specifier: workspace:*
         version: link:../cw
