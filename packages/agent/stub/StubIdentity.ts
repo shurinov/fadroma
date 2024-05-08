@@ -20,7 +20,6 @@ export class StubIdentity extends Identity {
 }
 
 export class StubAgent extends Agent {
-
   declare chain: StubChain
 
   getConnection (): StubSigningConnection {
@@ -31,10 +30,7 @@ export class StubAgent extends Agent {
   }
 
   batch (): StubBatch {
-    return new StubBatch({
-      chain: this.chain,
-      agent: this
-    })
+    return new StubBatch({ agent: this })
   }
 }
 

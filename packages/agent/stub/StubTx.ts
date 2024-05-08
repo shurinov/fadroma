@@ -18,7 +18,6 @@ export class StubBlock extends Block {
 }
 
 export class StubBatch extends Batch {
-  declare chain: StubChain
   declare agent: StubAgent
   messages: object[] = []
 

@@ -6,15 +6,16 @@ import type { CWAgent } from './cw-identity'
 
 export class CWBlock extends Block {
   rawTxs: Uint8Array[]
-  constructor ({ hash, height, rawTxs }: Partial<CWBlock> = {}) {
-    super({ hash, height })
-    this.rawTxs = [...rawTxs||[]]
+  constructor (
+    properties: ConstructorParameters<typeof Block>[0] & Partial<Pick<CWBlock, 'rawTxs'>>
+  ) {
+    super(properties)
+    this.rawTxs = [...properties.rawTxs||[]]
   }
 }
 
 /** Transaction batch for CosmWasm-enabled chains. */
 export class CWBatch extends Batch {
-  declare chain: CWChain
   declare agent: CWAgent
 
   upload (

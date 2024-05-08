@@ -7,16 +7,16 @@ import type { Chain, Agent } from '../index'
 /** Builder object for batched transactions. */
 export class Batch extends Logged {
   constructor (
-    properties: ConstructorParameters<typeof Logged>[0]
-      & Pick<Batch, 'chain'|'agent'>
+    properties: ConstructorParameters<typeof Logged>[0] & Pick<Batch, 'agent'>
   ) {
     super(properties)
-    this.chain = properties.chain
     this.agent = properties.agent
   }
 
   /** The chain targeted by the batch. */
-  chain: Chain
+  get chain (): Chain {
+    return this.agent.chain
+  }
 
   /** The agent that will broadcast the batch. */
   agent: Agent

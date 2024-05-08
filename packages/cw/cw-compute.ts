@@ -1,5 +1,5 @@
 import type { CosmWasmClient, SigningCosmWasmClient } from '@hackbg/cosmjs-esm'
-import { Connection, SigningConnection, Agent, Compute } from '@fadroma/agent'
+import { Connection, SigningConnection, Agent, UploadedCode, Contract } from '@fadroma/agent'
 import type { Address, CodeId, Message, Token } from '@fadroma/agent'
 import { Amino } from '@hackbg/cosmjs-esm'
 import type { CWChain, CWConnection } from './cw-connection'
@@ -8,38 +8,38 @@ import type { CWAgent, CWSigningConnection } from './cw-identity'
 export async function fetchCodeInfo (
   chain: CWConnection, args: Parameters<Connection["fetchCodeInfoImpl"]>[0]
 ):
-  Promise<Record<Compute.CodeId, Compute.UploadedCode>>
+  Promise<Record<CodeId, UploadedCode>>
 {
   throw new Error('unimplemented!')
   return {}
     //const { ids = [] } = parameters || {}
     //if (!ids || ids.length === 0) {
-      //return Compute.getCodes(this)
+      //return getCodes(this)
     //} else if (ids.length === 1) {
-      //return Compute.getCodes(this, ids)
+      //return getCodes(this, ids)
     //} else {
       //throw new Error('CWConnection.fetchCodeInfo({ ids: [multiple] }): unimplemented!')
     //}
     //protected override fetchCodesImpl () {
-      //return Compute.getCodes(this)
+      //return getCodes(this)
     //}
     //protected override fetchCodeIdImpl (address: Address): Promise<CodeId> {
       //return getCodeId(this, address)
     //}
     //protected override fetchCodeHashOfCodeIdImpl (codeId: CodeId): Promise<CodeHash> {
-      //return Compute.getCodeHashOfCodeId(this, codeId)
+      //return getCodeHashOfCodeId(this, codeId)
     //}
 }
 
 export async function fetchCodeInstances (
   chain: CWConnection, args: Parameters<Connection["fetchCodeInstancesImpl"]>[0]
 ):
-  Promise<Record<Compute.CodeId, Record<Address, Compute.Contract>>>
+  Promise<Record<CodeId, Record<Address, Contract>>>
 {
   throw new Error('unimplemented!')
   return {}
     //protected override fetchContractsByCodeIdImpl (id: CodeId): Promise<Iterable<{address: Address}>> {
-      //return Compute.getContractsByCodeId(this, id)
+      //return getContractsByCodeId(this, id)
     //}
 }
 
@@ -52,22 +52,22 @@ export async function fetchContractInfo (
 {
   throw new Error('unimplemented!')
   return {}
-    //return Compute.getCodeId(this, address)
+    //return getCodeId(this, address)
     //protected override fetchCodeHashOfAddressImpl (address: Address): Promise<CodeHash> {
-      //return Compute.getCodeHashOfAddress(this, address)
+      //return getCodeHashOfAddress(this, address)
     //}
     //protected override fetchLabelImpl (address: Address): Promise<string> {
-      //return Compute.getLabel(this, address)
+      //return getLabel(this, address)
     //}
 }
 
 export async function getCodes (
   chain: CWConnection
 ) {
-  const codes: Record<CodeId, Compute.UploadedCode> = {}
+  const codes: Record<CodeId, UploadedCode> = {}
   const results = await chain.api.getCodes()
   for (const { id, checksum, creator } of results||[]) {
-    codes[id!] = new Compute.UploadedCode({
+    codes[id!] = new UploadedCode({
       chainId:  chainId,
       codeId:   String(id),
       codeHash: checksum,
@@ -130,7 +130,7 @@ export async function query <T> (
 }
 
 export async function upload (
-  { api, address }: Pick<CWSigningConnection, 'api'|'address'>,
+  { api, address }: CWSigningConnection,
   options: Parameters<SigningConnection["uploadImpl"]>[0]
 ) {
   if (!address) {
@@ -153,15 +153,9 @@ export async function upload (
 }
 
 export async function instantiate (
-  agent: CWSigningConnection, options: Parameters<SigningConnection["instantiateImpl"]>[0]
+  { address, api }: CWSigningConnection,
+  options: Parameters<SigningConnection["instantiateImpl"]>[0]
 ) {
-  if (!this.address) {
-    throw new Error("can't instantiate contract without sender address")
-  }
-  api = await Promise.resolve(api)
-  if (!(api?.instantiate)) {
-    throw new Error("can't instantiate contract without authorizing the agent")
-  }
   const result = await (api as SigningCosmWasmClient).instantiate(
     address!,
     Number(options.codeId),
@@ -170,7 +164,7 @@ export async function instantiate (
     options.initFee as Amino.StdFee || 'auto',
     { admin: address, funds: options.initSend, memo: options.initMemo }
   )
-  return new Compute.ContractInstance({
+  return new Contract({
     codeId:   options.codeId,
     codeHash: options.codeHash,
     label:    options.label,
@@ -183,19 +177,12 @@ export async function instantiate (
     initFee:  options.initFee || 'auto',
     initSend: options.initSend,
     initMemo: options.initMemo
-  }) as Compute.ContractInstance & { address: Address }
+  }) as Contract & { address: Address }
 }
 
 export async function execute (
-  agent: CWSigningConnection, options: Parameters<SigningConnection["executeImpl"]>[0]
+  { address, api }: CWSigningConnection, options: Parameters<SigningConnection["executeImpl"]>[0]
 ) {
-  if (!address) {
-    throw new Error("can't execute transaction without sender address")
-  }
-  api = await Promise.resolve(api)
-  if (!(api?.execute)) {
-    throw new Error("can't execute transaction without authorizing the agent")
-  }
   return api.execute(
     address!,
     options.address,

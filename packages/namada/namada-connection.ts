@@ -68,20 +68,13 @@ export class NamadaConnection extends CW.Connection {
       txs: Partial<TX.Transaction[]>[]
       header: { height: number, time: string }
     }
-    const txsDecoded: TX.Transaction[] = []
-    for (const i in txs) {
-      try {
-        txsDecoded[i] = TX.Transaction.fromDecoded(txs[i] as any)
-      } catch (error) {
-        console.error(error)
-        console.warn(`Failed to decode transaction #${i} in block ${height}, see above for details.`)
-        txsDecoded[i] = new TX.Transactions.Undecoded({
-          data: txs[i] as any,
-          error: error as any
-        })
-      }
-    }
-    return new TX.NamadaBlock({ time, height, hash: id, rawTxs: [], txs: txsDecoded })
+    return new TX.NamadaBlock({
+      id,
+      height,
+      time,
+      rawTxs: [],
+      txs: decodeTxs(txs, height)
+    })
   }
 
   getPGFParameters () {
@@ -174,4 +167,21 @@ export class NamadaMnemonicIdentity extends CW.MnemonicIdentity {
   constructor (properties?: { mnemonic?: string } & Partial<CW.MnemonicIdentity>) {
     super({ ...defaults, ...properties||{} })
   }
+}
+
+function decodeTxs (txs, height) {
+  const txsDecoded: TX.Transaction[] = []
+  for (const i in txs) {
+    try {
+      txsDecoded[i] = TX.Transaction.fromDecoded(txs[i] as any)
+    } catch (error) {
+      console.error(error)
+      console.warn(`Failed to decode transaction #${i} in block ${height}, see above for details.`)
+      txsDecoded[i] = new TX.Transactions.Undecoded({
+        data: txs[i] as any,
+        error: error as any
+      })
+    }
+  }
+  return txsDecoded
 }

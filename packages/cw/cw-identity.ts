@@ -1,5 +1,5 @@
 import { Amino } from '@hackbg/cosmjs-esm'
-import type { SigningCosmWasmClient } from '@hackbg/cosmjs-esm'
+import type { Signing, SigningCosmWasmClient } from '@hackbg/cosmjs-esm'
 import {
   bold,
   randomColor,
@@ -19,6 +19,7 @@ import {
   SigningConnection,
   Batch
 } from '@fadroma/agent'
+import type { Address } from '@fadroma/agent'
 import { CWError as Error } from './cw-base'
 import { CWBatch } from './cw-tx'
 import * as CWBank    from './cw-bank'
@@ -26,16 +27,21 @@ import * as CWCompute from './cw-compute'
 import * as CWStaking from './cw-staking'
 
 export class CWAgent extends Agent {
-  declare connection: CWSigningConnection
-
   override batch (): CWBatch {
     return new CWBatch({ agent: this })
+  }
+
+  #connection: CWSigningConnection
+  getConnection (): CWSigningConnection {
+    return this.#connection
   }
 }
 
 export class CWSigningConnection extends SigningConnection {
   /** API connects asynchronously, so API handle is a promise. */
   declare api: SigningCosmWasmClient
+
+  address: Address
 
   async sendImpl (...args: Parameters<SigningConnection["sendImpl"]>) {
     return await CWBank.send(this, ...args)

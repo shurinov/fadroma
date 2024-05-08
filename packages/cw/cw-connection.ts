@@ -1,4 +1,4 @@
-import { bold, assign, Chain, Connection, Compute } from '@fadroma/agent'
+import { bold, assign, Chain, Connection } from '@fadroma/agent'
 import type { Address, Message, CodeId, CodeHash, Token } from '@fadroma/agent'
 import { CWAgent } from './cw-identity'
 import type { CWIdentity, CWMnemonicIdentity, CWSignerIdentity } from './cw-identity'
@@ -19,18 +19,28 @@ export class CWChain extends Chain {
       'hdAccountIndex'
     ])
   }
+
   /** The bech32 prefix for the account's address  */
   bech32Prefix?:    string
   /** The coin type in the HD derivation path */
   coinType?:        number
   /** The account index in the HD derivation path */
   hdAccountIndex?:  number
+
+  #connection: CWConnection
+  getConnection (): CWConnection {
+    return this.#connection
+  }
+
+  async authenticate (...args): Promise<CWAgent> {
+    return new CWAgent({ chain: this })
+  }
 }
 
 /** Generic agent for CosmWasm-enabled chains. */
 export class CWConnection extends Connection {
   /** API connects asynchronously, so API handle is a promise. */
-  declare api:      CosmWasmClient
+  declare api: CosmWasmClient
 
   constructor (properties: Partial<CWConnection>) {
     super(properties)

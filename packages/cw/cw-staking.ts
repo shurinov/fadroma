@@ -1,4 +1,4 @@
-import { Core } from '@fadroma/agent'
+import { base16, SHA256 } from '@fadroma/agent'
 import type { Address } from '@fadroma/agent'
 import { Amino, Proto } from '@hackbg/cosmjs-esm'
 import type { CWConnection } from './cw-connection'
@@ -35,7 +35,7 @@ export async function getValidators <V extends typeof CWValidator> (
   const result: Array<InstanceType<V>> = []
   for (const { address, pubkey, votingPower, proposerPriority } of validators) {
     const info = new Validator({
-      address: Core.base16.encode(address),
+      address: base16.encode(address),
       publicKey: pubkey.data,
       votingPower,
       proposerPriority,
@@ -61,7 +61,7 @@ class CWValidator {
     proposerPriority?: string|number|bigint
   } = {}) {
     if ((publicKey instanceof Uint8Array)||(publicKey instanceof Array)) {
-      publicKey = Core.base16.encode(new Uint8Array(publicKey))
+      publicKey = base16.encode(new Uint8Array(publicKey))
     }
     this.publicKey = publicKey!
     this.address = address!
@@ -74,10 +74,10 @@ class CWValidator {
   }
 
   get publicKeyBytes () {
-    return Core.base16.decode(this.publicKey)
+    return base16.decode(this.publicKey)
   }
   get publicKeyHash () {
-    return Core.base16.encode(Core.SHA256(this.publicKeyBytes).slice(0, 20))
+    return base16.encode(SHA256(this.publicKeyBytes).slice(0, 20))
   }
 
   async fetchDetails (connection: { abciQuery }): Promise<this> {
