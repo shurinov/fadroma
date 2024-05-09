@@ -1,5 +1,5 @@
+import type { ChainId } from '@fadroma/agent'
 import * as CW from '@fadroma/cw'
-import init, { Decode } from './pkg/fadroma_namada.js'
 import {
   getTotalStaked,
   getStakingParameters,
@@ -27,32 +27,121 @@ import {
   isPGFSteward
 } from "./namada-pgf"
 import * as TX from './namada-tx'
+import {
+  Decode,
+  decodeTxs,
+  initDecoder,
+} from './namada-decode'
 
-export async function connect (optionsWithDecoder: ConstructorParameters<typeof NamadaConnection>[0] & {
-  decoder: string|URL|Uint8Array
-}) {
-  let { decoder, ...options } = optionsWithDecoder
-  if (decoder) {
-    await initDecoder(decoder)
+export class Namada extends CW.Chain {
+
+  static async connect (
+    properties: ({ url: string|URL }|{ urls: Iterable<string|URL> }) & {
+      chainId?: ChainId
+      decoder?: string|URL|Uint8Array
+    }
+  ): Promise<Namada> {
+    if (properties.decoder) {
+      await initDecoder(properties.decoder)
+    }
+    return await super.connect(properties) as Namada
   }
-  return new NamadaConnection(options)
-}
 
-export async function initDecoder (decoder: string|URL|Uint8Array) {
-  if (decoder instanceof Uint8Array) {
-    await init(decoder)
-  } else if (decoder) {
-    await init(await fetch(decoder))
+  static get Connection () {
+    return NamadaConnection
+  }
+
+  getConnection (): NamadaConnection {
+    return this.connections[0] as NamadaConnection
+  }
+
+  authenticate (...args: unknown[]): never {
+    throw new Error('Transacting on Namada is currently not supported.')
+  }
+
+  getPGFParameters () {
+    return getPGFParameters(this.getConnection())
+  }
+
+  getPGFStewards () {
+    return getPGFStewards(this.getConnection())
+  }
+
+  getPGFFundings () {
+    return getPGFFundings(this.getConnection())
+  }
+
+  isPGFSteward (address: string) {
+    return isPGFSteward(this.getConnection())
+  }
+
+  getStakingParameters () {
+    return getStakingParameters(this.getConnection())
+  }
+
+  getValidatorAddresses () {
+    return getValidatorAddresses(this.getConnection())
+  }
+
+  getValidators (options?: {
+    details?:         boolean,
+    pagination?:      [number, number]
+    allStates?:       boolean,
+    addresses?:       string[],
+    parallel?:        boolean,
+    parallelDetails?: boolean,
+  }) {
+    return getValidators(this.getConnection(), options)
+  }
+
+  getValidatorsConsensus () {
+    return getValidatorsConsensus(this.getConnection())
+  }
+
+  getValidatorsBelowCapacity () {
+    return getValidatorsBelowCapacity(this.getConnection())
+  }
+
+  getValidator (address: string) {
+    return getValidator(this.getConnection(), address)
+  }
+
+  getDelegations (address: string) {
+    return getDelegations(this.getConnection(), address)
+  }
+
+  getDelegationsAt (address: string, epoch?: number) {
+    return getDelegationsAt(this.getConnection(), address, epoch)
+  }
+
+  getGovernanceParameters () {
+    return getGovernanceParameters(this.getConnection())
+  }
+
+  getProposalCount () {
+    return getProposalCount(this.getConnection())
+  }
+
+  getProposalInfo (id: number) {
+    return getProposalInfo(this.getConnection(), id)
+  }
+
+  getCurrentEpoch () {
+    return getCurrentEpoch(this.getConnection())
+  }
+
+  getTotalStaked () {
+    return getTotalStaked(this.getConnection())
+  }
+
+  getValidatorStake (address: string) {
+    return getValidatorStake(this.getConnection(), address)
   }
 }
-
-export { Decode }
 
 export class NamadaConnection extends CW.Connection {
-
   decode = Decode
-
-  async doGetBlockInfo (wantedHeight?: number): Promise<TX.NamadaBlock> {
+  async fetchBlockInfoImpl (wantedHeight?: number): Promise<TX.NamadaBlock> {
     if (!this.url) {
       throw new CW.Error("Can't fetch block: missing connection URL")
     }
@@ -69,119 +158,12 @@ export class NamadaConnection extends CW.Connection {
       header: { height: number, time: string }
     }
     return new TX.NamadaBlock({
+      chain: this.chain,
       id,
       height,
-      time,
-      rawTxs: [],
-      txs: decodeTxs(txs, height)
+      timestamp: time,
+      transactions: decodeTxs(txs, height),
+      rawTransactions: [],
     })
   }
-
-  getPGFParameters () {
-    return getPGFParameters(this)
-  }
-
-  getPGFStewards () {
-    return getPGFStewards(this)
-  }
-
-  getPGFFundings () {
-    return getPGFFundings(this)
-  }
-
-  isPGFSteward (address: string) {
-    return isPGFSteward(this)
-  }
-
-  getStakingParameters () {
-    return getStakingParameters(this)
-  }
-
-  getValidatorAddresses () {
-    return getValidatorAddresses(this)
-  }
-
-  getValidators (options?: {
-    details?:         boolean,
-    pagination?:      [number, number]
-    allStates?:       boolean,
-    addresses?:       string[],
-    parallel?:        boolean,
-    parallelDetails?: boolean,
-  }) {
-    return getValidators(this, options)
-  }
-
-  getValidatorsConsensus () {
-    return getValidatorsConsensus(this)
-  }
-
-  getValidatorsBelowCapacity () {
-    return getValidatorsBelowCapacity(this)
-  }
-
-  getValidator (address: string) {
-    return getValidator(this, address)
-  }
-
-  getDelegations (address: string) {
-    return getDelegations(this, address)
-  }
-
-  getDelegationsAt (address: string, epoch?: number) {
-    return getDelegationsAt(this, address, epoch)
-  }
-
-  getGovernanceParameters () {
-    return getGovernanceParameters(this)
-  }
-
-  getProposalCount () {
-    return getProposalCount(this)
-  }
-
-  getProposalInfo (id: number) {
-    return getProposalInfo(this, id)
-  }
-
-  getCurrentEpoch () {
-    return getCurrentEpoch(this)
-  }
-
-  getTotalStaked () {
-    return getTotalStaked(this)
-  }
-
-  getValidatorStake (address: string) {
-    return getValidatorStake(this, address)
-  }
-}
-
-const defaults = {
-  coinType:       118,
-  bech32Prefix:   'tnam', 
-  hdAccountIndex: 0,
-}
-
-export class NamadaMnemonicIdentity extends CW.MnemonicIdentity {
-  constructor (properties?: { mnemonic?: string } & Partial<CW.MnemonicIdentity>) {
-    super({ ...defaults, ...properties||{} })
-  }
-}
-
-function decodeTxs (txs, height) {
-  const txsDecoded: TX.Transaction[] = []
-  for (const i in txs) {
-    try {
-      txsDecoded[i] = TX.Transaction.fromDecoded(txs[i] as any)
-    } catch (error) {
-      console.error(error)
-      console.warn(`Failed to decode transaction #${i} in block ${height}, see above for details.`)
-      txsDecoded[i] = new TX.Transactions.Undecoded({
-        data: txs[i] as any,
-        error: error as any
-      })
-    }
-  }
-  return txsDecoded
 }

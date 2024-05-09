@@ -9,10 +9,15 @@ import { Block } from '@fadroma/cw'
 import { Transaction } from './namada-tx-base'
 
 export class NamadaBlock extends Block {
-  txs:  Transaction[]
-  time: string
-  constructor ({ hash, height, rawTxs, txs, time }: Partial<NamadaBlock> = {}) {
-    super({ hash, height, rawTxs })
-    this.txs = [...txs||[]]
+  constructor ({
+    transactions, rawTransactions, ...properties
+  }: ConstructorParameters<typeof Block>[0]
+    & Pick<NamadaBlock, 'transactions'|'rawTransactions'>
+  ) {
+    super(properties)
+    this.transactions = [...transactions||[]]
+    this.rawTransactions = rawTransactions
   }
+  transactions: Transaction[]
+  rawTransactions?: unknown[]
 }

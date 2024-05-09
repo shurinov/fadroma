@@ -1,9 +1,9 @@
 import type { Address } from '@fadroma/agent'
-import { Console, assign, base16 } from '@fadroma/agent'
+import { Console, assign, base16, optionallyParallel} from '@fadroma/agent'
 import { Staking } from '@fadroma/cw'
 import { decode, u8, u64, u256, array, set } from '@hackbg/borshest'
 
-class PoSParameters {
+class NamadaPoSParameters {
   maxProposalPeriod!:             bigint
   maxValidatorSlots!:             bigint
   pipelineLen!:                   bigint
@@ -21,7 +21,7 @@ class PoSParameters {
   livenessThreshold!:             bigint
   rewardsGainP!:                  bigint
   rewardsGainD!:                  bigint
-  constructor (properties: Partial<PoSParameters> = {}) {
+  constructor (properties: Partial<NamadaPoSParameters> = {}) {
     assign(this, properties, [
       'maxProposalPeriod',
       'maxValidatorSlots',
@@ -44,13 +44,13 @@ class PoSParameters {
   }
 }
 
-class PoSValidatorMetadata {
+class NamadaValidatorMetadata {
   email!:         string
   description!:   string|null
   website!:       string|null
   discordHandle!: string|null
   avatar!:        string|null
-  constructor (properties: Partial<PoSValidatorMetadata>) {
+  constructor (properties: Partial<NamadaValidatorMetadata>) {
     assign(this, properties, [
       'email',
       'description',
@@ -61,11 +61,11 @@ class PoSValidatorMetadata {
   }
 }
 
-class PoSValidator extends Staking.Validator {
+class NamadaValidator extends Staking.Validator {
   static fromNamadaAddress = (namadaAddress: string) => Object.assign(new this({}), { namadaAddress })
   namadaAddress!: Address
-  metadata!:      PoSValidatorMetadata
-  commission!:    PoSCommissionPair
+  metadata!:      NamadaValidatorMetadata
+  commission!:    NamadaCommissionPair
   state!:         unknown
   stake!:         bigint
   async fetchDetails (connection: Connection, options?: { parallel?: boolean }) {
@@ -79,7 +79,7 @@ class PoSValidator extends Staking.Validator {
       () => connection.abciQuery(`/vp/pos/validator/metadata/${this.namadaAddress}`)
         .then(binary => {
           if (binary[0] === 1) {
-            this.metadata = new PoSValidatorMetadata(connection.decode.pos_validator_metadata(binary.slice(1)))
+            this.metadata = new NamadaValidatorMetadata(connection.decode.pos_validator_metadata(binary.slice(1)))
           }
         })
         .catch(e => connection.log.warn(
@@ -88,7 +88,7 @@ class PoSValidator extends Staking.Validator {
       () => connection.abciQuery(`/vp/pos/validator/commission/${this.namadaAddress}`)
         .then(binary => {
           if (binary[0] === 1) {
-            this.commission = new PoSCommissionPair(connection.decode.pos_commission_pair(binary.slice(1)))
+            this.commission = new NamadaCommissionPair(connection.decode.pos_commission_pair(binary.slice(1)))
           }
         })
         .catch(e => connection.log.warn(
@@ -141,10 +141,10 @@ class PoSValidator extends Staking.Validator {
   }
 }
 
-class PoSCommissionPair {
+class NamadaCommissionPair {
   commissionRate!:              bigint
   maxCommissionChangePerEpoch!: bigint
-  constructor (properties: Partial<PoSCommissionPair> = {}) {
+  constructor (properties: Partial<NamadaCommissionPair> = {}) {
     assign(this, properties, [
       'commissionRate',
       'maxCommissionChangePerEpoch',
@@ -153,10 +153,10 @@ class PoSCommissionPair {
 }
 
 export {
-  PoSParameters        as Parameters,
-  PoSValidatorMetadata as ValidatorMetadata,
-  PoSValidator         as Validator,
-  PoSCommissionPair    as CommissionPair,
+  NamadaPoSParameters     as Parameters,
+  NamadaValidatorMetadata as ValidatorMetadata,
+  NamadaValidator         as Validator,
+  NamadaCommissionPair    as CommissionPair,
 }
 
 type Connection = {
@@ -167,9 +167,9 @@ type Connection = {
     address                (binary: Uint8Array): string
     addresses              (binary: Uint8Array): string[]
     address_to_amount      (binary: Uint8Array): object
-    pos_parameters         (binary: Uint8Array): Partial<PoSParameters>
-    pos_validator_metadata (binary: Uint8Array): Partial<PoSValidatorMetadata>
-    pos_commission_pair    (binary: Uint8Array): Partial<PoSCommissionPair>
+    pos_parameters         (binary: Uint8Array): Partial<NamadaPoSParameters>
+    pos_validator_metadata (binary: Uint8Array): Partial<NamadaValidatorMetadata>
+    pos_commission_pair    (binary: Uint8Array): Partial<NamadaCommissionPair>
     pos_validator_state    (binary: Uint8Array): string
     pos_validator_set      (binary: Uint8Array): Array<{
       address:     string,
@@ -180,7 +180,7 @@ type Connection = {
 
 export async function getStakingParameters (connection: Connection) {
   const binary = await connection.abciQuery("/vp/pos/pos_params")
-  return new PoSParameters(connection.decode.pos_parameters(binary))
+  return new NamadaPoSParameters(connection.decode.pos_parameters(binary))
 }
 
 export async function getTotalStaked (connection: Connection) {
@@ -208,7 +208,7 @@ export async function getValidators (
       const [page, perPage] = options.pagination
       addresses = addresses.slice((page - 1)*perPage, page*perPage)
     }
-    const validators = addresses.map(address=>PoSValidator.fromNamadaAddress(address))
+    const validators = addresses.map(address=>NamadaValidator.fromNamadaAddress(address))
     if (options.details) {
       if (options.parallel && !options.pagination) {
         throw new Error("set parallel=false or pagination, so as not to bombard the node")
@@ -229,8 +229,8 @@ export async function getValidators (
       throw new Error("addresses option is only for caching with allStates")
     }
     return Staking.getValidators(connection, {
-      ...options, Validator: PoSValidator
-    }) as unknown as Promise<PoSValidator[]>
+      ...options, Validator: NamadaValidator
+    }) as unknown as Promise<NamadaValidator[]>
   }
 }
 
@@ -238,12 +238,6 @@ export async function getValidatorAddresses (connection: Connection): Promise<Ad
   const binary = await connection.abciQuery("/vp/pos/validator/addresses")
   return connection.decode.addresses(binary)
 }
-
-const addrSetSchema = set(array(21, u8))
-
-const byBondedStake = (a, b)=> (a.bondedStake > b.bondedStake) ? -1
-  : (a.bondedStake < b.bondedStake) ?  1
-  : 0
 
 export async function getValidatorsConsensus (connection: Connection) {
   const binary = await connection.abciQuery("/vp/pos/validator_set/consensus")
@@ -255,8 +249,12 @@ export async function getValidatorsBelowCapacity (connection: Connection) {
   return connection.decode.pos_validator_set(binary).sort(byBondedStake)
 }
 
+const byBondedStake = (a, b)=> (a.bondedStake > b.bondedStake) ? -1
+  : (a.bondedStake < b.bondedStake) ?  1
+  : 0
+
 export async function getValidator (connection: Connection, address: Address) {
-  return await PoSValidator.fromNamadaAddress(address).fetchDetails(connection)
+  return await NamadaValidator.fromNamadaAddress(address).fetchDetails(connection)
 }
 
 export async function getValidatorStake (connection: Connection, address: Address) {
@@ -279,15 +277,4 @@ export async function getDelegationsAt (
   }
   const binary = await connection.abciQuery(query)
   return connection.decode.address_to_amount(binary) as Record<string, bigint>
-}
-
-async function optionallyParallel <T> (parallel: boolean, thunks: Array<()=>Promise<T>>) {
-  if (parallel) {
-    return await Promise.all(thunks.map(thunk=>thunk()))
-  }
-  const results = []
-  for (const thunk of thunks) {
-    results.push(await thunk())
-  }
-  return results
 }
