@@ -12,8 +12,8 @@
   "scripts": {
     "doc":   "typedoc --disableGit --sourceLinkTemplate 'https://github.com/hackbg/fadroma/tree/v2/{path}#L{line}' --json docs.json && ./docs.ts",
     "check": "tsc --noEmit",
-    "test":  "time ensuite agent.test.ts",
-    "cov":   "time ensuite-cov -r text -r lcov -- agent.test.ts",
+    "test":  "time ensuite index.test.ts",
+    "cov":   "time ensuite-cov -r text -r lcov -- index.test.ts",
     "clean": "rm -rf .ubik *.dist.*",
 
     "release":        "time sh -c 'pnpm clean && pnpm i && pnpm check && pnpm cov all && ubik release --otp 123123'",
