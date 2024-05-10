@@ -24,11 +24,16 @@ export class CWChain extends Chain {
       connections: [],
       bech32Prefix: 'tnam'
     })
-    const connections: CWConnection[] = urls.map(async (url: string|URL)=>new this.Connection({
+    const connections: CWConnection[] = urls.filter(Boolean).map(async (url: string|URL)=>new this.Connection({
       api: await CosmWasmClient.connect(String(url)),
       chain,
       url: String(url)
     }))
+    if (connections.length === 0) {
+      new Console(this.constructor.name).warn(
+        'No connection URLs provided. RPC operations will fail.'
+      )
+    }
     chain.connections = await Promise.all(connections)
     return chain
   }
@@ -53,6 +58,9 @@ export class CWChain extends Chain {
 
   connections: CWConnection[]
   getConnection (): CWConnection {
+    if (!this.connections[0]) {
+      throw new Error('No active connection.')
+    }
     return this.connections[0]
   }
 

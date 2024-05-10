@@ -35,6 +35,9 @@ import {
 
 export class Namada extends CW.Chain {
 
+  decode = Decode
+
+  /** Connect to Namada over one or more endpoints. */
   static async connect (
     properties: ({ url: string|URL }|{ urls: Iterable<string|URL> }) & {
       chainId?: ChainId
@@ -43,9 +46,34 @@ export class Namada extends CW.Chain {
   ): Promise<Namada> {
     if (properties.decoder) {
       await initDecoder(properties.decoder)
+    } else {
+      new CW.Console('Namada').warn(
+        "You didn't provide the 'decoder' property; trying to decode Namada objects will fail."
+      )
     }
     return await super.connect(properties) as Namada
   }
+
+  /** Connect to Namada using `testnetChainId` and `testnetUrls`. */
+  static testnet (properties: Parameters<typeof Namada["connect"]>[0]) {
+    return this.connect({
+      chainId: properties.chainId || Namada.testnetChainId,
+      urls: (properties as any).url
+        ? [(properties as any).url]
+        : ((properties as any).urls || [...Namada.testnetUrls]),
+    })
+  }
+
+  /** Default chain ID of testnet. */
+  static testnetChainId = 'shielded-expedition.88f17d1d14'
+
+  /** Default RPC endpoints for testnet. */
+  static testnetUrls = new Set([
+    'https://namada-testnet-rpc.itrocket.net',
+    'https://namada-rpc.stake-machine.com',
+    'https://namadarpc.songfi.xyz',
+    'https://rpc.testnet.one',
+  ])
 
   static get Connection () {
     return NamadaConnection
@@ -140,7 +168,12 @@ export class Namada extends CW.Chain {
 }
 
 export class NamadaConnection extends CW.Connection {
-  decode = Decode
+  get chain (): Namada {
+    return super.chain as unknown as Namada
+  }
+  get decode () {
+    return this.chain.decode
+  }
   async fetchBlockInfoImpl (wantedHeight?: number): Promise<TX.NamadaBlock> {
     if (!this.url) {
       throw new CW.Error("Can't fetch block: missing connection URL")
