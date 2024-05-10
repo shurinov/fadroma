@@ -68,7 +68,7 @@ export async function getCodes (
   const results = await chain.api.getCodes()
   for (const { id, checksum, creator } of results||[]) {
     codes[id!] = new UploadedCode({
-      chainId:  chainId,
+      chainId:  chain.chainId,
       codeId:   String(id),
       codeHash: checksum,
       uploadBy: creator
@@ -130,7 +130,7 @@ export async function query <T> (
 }
 
 export async function upload (
-  { api, address }: CWSigningConnection,
+  { chainId, address, api }: CWSigningConnection,
   options: Parameters<SigningConnection["uploadImpl"]>[0]
 ) {
   if (!address) {
@@ -139,7 +139,7 @@ export async function upload (
   const result = await api.upload(
     address!,
     options.binary,
-    fees?.upload || 'auto',
+    options.uploadFee as Amino.StdFee || 'auto',
     "Uploaded by Fadroma"
   )
   return {
@@ -153,7 +153,7 @@ export async function upload (
 }
 
 export async function instantiate (
-  { address, api }: CWSigningConnection,
+  { chain, address, api }: CWSigningConnection,
   options: Parameters<SigningConnection["instantiateImpl"]>[0]
 ) {
   const result = await (api as SigningCosmWasmClient).instantiate(
@@ -165,18 +165,17 @@ export async function instantiate (
     { admin: address, funds: options.initSend, memo: options.initMemo }
   )
   return new Contract({
+    chain,
     codeId:   options.codeId,
     codeHash: options.codeHash,
     label:    options.label,
-    initMsg:  options.initMsg,
-    chainId:  chainId,
     address:  result.contractAddress,
-    initTx:   result.transactionHash,
-    initGas:  result.gasUsed,
+    //initTx:   result.transactionHash,
+    //initGas:  result.gasUsed,
     initBy:   address,
-    initFee:  options.initFee || 'auto',
-    initSend: options.initSend,
-    initMemo: options.initMemo
+    //initFee:  options.initFee || 'auto',
+    //initSend: options.initSend,
+    //initMemo: options.initMemo
   }) as Contract & { address: Address }
 }
 

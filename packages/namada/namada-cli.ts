@@ -6,7 +6,7 @@ import {
 } from './namada-console'
 import {
   NamadaMnemonicIdentity
-} from './namada-connection'
+} from './namada-identity'
 import Namada from './namada'
 
 /** Namada CLI commands. */
@@ -277,7 +277,12 @@ export default class NamadaCLI extends CLI {
       process.exit(1)
     }
     const namada = await Namada.connect({ url })
-    const {proposal, votes, result} = await namada.getProposalInfo(Number(number))
+    const proposalInfo = await namada.getProposalInfo(Number(number))
+    if (!proposalInfo) {
+      this.log.error(`No proposal #${number}`)
+      process.exit(1)
+    }
+    const {proposal, votes, result} = proposalInfo
     this.log
       .log()
       .log('Proposal:   ', bold(number))
@@ -336,7 +341,12 @@ export default class NamadaCLI extends CLI {
       process.exit(1)
     }
     const namada = await Namada.connect({ url })
-    const {proposal, votes, result} = await namada.getProposalInfo(Number(number))
+    const proposalInfo = await namada.getProposalInfo(Number(number))
+    if (!proposalInfo) {
+      this.log.error(`No proposal #${number}`)
+      process.exit(1)
+    }
+    const {proposal, votes, result} = proposalInfo
     this.log
       .log()
       .log('Proposal:   ', bold(number))
@@ -386,7 +396,7 @@ export default class NamadaCLI extends CLI {
       height = Number(height)
     }
     const namada = await Namada.connect({ url })
-    const block = await namada.fetchBlock({ height })
+    const block = await namada.fetchBlock({ height: height! })
     this.log.log()
       .log('Block:', bold(block.height))
       .log('ID:   ', bold(block.id))
@@ -410,13 +420,13 @@ export default class NamadaCLI extends CLI {
     let block
     do {
       block = await namada.fetchBlock({ height: Number(height) })
-      height = block.header.height
+      height = block.height
       this.log.log()
-        .log('Block:', bold(block.header.height))
+        .log('Block:', bold(block.height))
         .log('ID:   ', bold(block.id))
-        .log('Time: ', bold(block.header.time))
+        .log('Time: ', bold(block.timestamp))
         .log(bold('Transactions:'))
-      for (const tx of block.txsDecoded) {
+      for (const tx of block.transactions) {
         this.log.log(tx)
       }
       height--

@@ -26,3 +26,14 @@ export async function timed <T> (
   })
   return result
 }
+
+export async function optionallyParallel <T> (parallel: boolean|undefined, thunks: Array<()=>Promise<T>>) {
+  if (parallel) {
+    return await Promise.all(thunks.map(thunk=>thunk()))
+  }
+  const results = []
+  for (const thunk of thunks) {
+    results.push(await thunk())
+  }
+  return results
+}

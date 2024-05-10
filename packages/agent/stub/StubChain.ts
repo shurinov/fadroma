@@ -51,11 +51,7 @@ export class StubChain extends Chain {
   }
 
   getConnection (): StubConnection {
-    return new StubConnection({
-      chain: this,
-      url:   'stub',
-      api:   {},
-    })
+    return new StubConnection({ chain: this, url: 'stub', })
   }
 }
 
@@ -80,21 +76,22 @@ export class StubConnection extends Connection {
   override fetchBlockImpl (): Promise<StubBlock> {
     const timestamp = new Date()
     return Promise.resolve(new StubBlock({
-      chain:     this.chain,
-      id:        `stub${+timestamp}`,
-      height:    +timestamp,
-      timestamp: timestamp.toISOString()
+      chain:        this.chain,
+      id:           `stub${+timestamp}`,
+      height:       +timestamp,
+      timestamp:    timestamp.toISOString(),
+      transactions: []
     }))
   }
 
   override fetchBalanceImpl (
     ...args: Parameters<Connection["fetchBalanceImpl"]>
-  ): Promise<string> {
+  ) {
     throw new Error('unimplemented!')
     //token ??= this.defaultDenom
     //const balance = (this.backend.balances.get(address!)||{})[token] ?? 0
     //return Promise.resolve(String(balance))
-    return Promise.resolve('')
+    return Promise.resolve({})
   }
 
   override fetchCodeInfoImpl (

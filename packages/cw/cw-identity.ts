@@ -27,10 +27,15 @@ import * as CWCompute from './cw-compute'
 import * as CWStaking from './cw-staking'
 
 export class CWAgent extends Agent {
+  constructor (properties: ConstructorParameters<typeof Agent>[0] & {
+    connection: CWSigningConnection
+  }) {
+    super(properties)
+    this.#connection = properties.connection
+  }
   override batch (): CWBatch {
     return new CWBatch({ agent: this })
   }
-
   #connection: CWSigningConnection
   getConnection (): CWSigningConnection {
     return this.#connection
@@ -38,10 +43,16 @@ export class CWAgent extends Agent {
 }
 
 export class CWSigningConnection extends SigningConnection {
+  constructor (
+    properties: ConstructorParameters<typeof SigningConnection>[0]
+      & Pick<CWSigningConnection, 'api'>
+  ) {
+    super(properties)
+    this.api = properties.api
+  }
+
   /** API connects asynchronously, so API handle is a promise. */
   declare api: SigningCosmWasmClient
-
-  address: Address
 
   async sendImpl (...args: Parameters<SigningConnection["sendImpl"]>) {
     return await CWBank.send(this, ...args)

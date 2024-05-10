@@ -1,32 +1,17 @@
 /** Fadroma. Copyright (C) 2023 Hack.bg. License: GNU AGPLv3 or custom.
     You should have received a copy of the GNU Affero General Public License
     along with this program. If not, see <http://www.gnu.org/licenses/>. **/
-import {
-  Logged, assign, bold, timed
-} from './Util'
-import {
-  fetchBalance
-} from './dlt/Bank'
-import {
-  Contract,
-  fetchCodeInstances,
-  query
-} from './compute/Contract'
-import {
-  UploadedCode,
-  fetchCodeInfo,
-} from './compute/Upload'
-import {
-  Block,
-  fetchBlock,
-  nextBlock
-} from './Block'
+import { Logged, assign, bold, timed } from './Util'
+import { fetchBalance } from './dlt/Bank'
+import { Contract, fetchCodeInstances, query } from './compute/Contract'
+import { UploadedCode, fetchCodeInfo, } from './compute/Upload'
+import { Block, fetchBlock, nextBlock } from './Block'
+import { Connection } from './Connection'
 import type {
   Address,
   Agent,
   ChainId,
   CodeId,
-  Connection,
   Identity,
   Message,
   Token,
@@ -34,6 +19,11 @@ import type {
 } from '../index'
 
 export abstract class Chain extends Logged {
+
+  static get Connection () {
+    return Connection
+  }
+
   constructor (
     properties: ConstructorParameters<typeof Logged>[0]
       & Pick<Chain, 'chainId'>
@@ -50,15 +40,11 @@ export abstract class Chain extends Logged {
   /** Time to ping for next block. */
   blockInterval = 250
 
-  /** Get a connection to the API endpoint. */
+  /** Get a read-only connection to the API endpoint. */
   abstract getConnection (): Connection
 
-  /** Authenticate with a random identity. */
-  abstract authenticate (): Promise<Agent>
-  /** Authenticate with a mnemonic. */
-  abstract authenticate (mnemonic: string): Promise<Agent>
-  /** Authenticate with the provided identity. */
-  abstract authenticate (identity: Identity): Promise<Agent>
+  /** Authenticate to the chain, obtaining an Agent instance that can send transactions. */
+  abstract authenticate (properties?: { mnemonic: string }|Identity): Promise<Agent>
 
   /** Get the current block height. */
   get height (): Promise<number> {

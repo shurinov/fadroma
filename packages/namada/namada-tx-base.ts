@@ -3,7 +3,19 @@ import * as Sections from './namada-tx-section'
 
 class NamadaTransaction {
 
-  static fromDecoded = ({ sections, ...header }) => new this({
+  static fromDecoded = ({ sections, ...header }: {
+    sections: Array<
+      | Partial<Sections.Data>
+      | Partial<Sections.ExtraData>
+      | Partial<Sections.Code>
+      | Partial<Sections.Signature>
+      | Partial<Sections.Ciphertext>
+      | Partial<Sections.MaspBuilder>
+      | Partial<Sections.Header>
+      | Partial<Sections.MaspTx>
+      | Partial<Sections.Unknown>
+    >
+  }) => new this({
     ...header,
     sections: sections.map(section=>{
       switch (section.type) {

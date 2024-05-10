@@ -10,14 +10,13 @@ import { Transaction } from './namada-tx-base'
 
 export class NamadaBlock extends Block {
   constructor ({
-    transactions, rawTransactions, ...properties
+    rawTransactions, ...properties
   }: ConstructorParameters<typeof Block>[0]
-    & Pick<NamadaBlock, 'transactions'|'rawTransactions'>
+    & Pick<NamadaBlock, 'rawTransactions'>
   ) {
     super(properties)
-    this.transactions = [...transactions||[]]
     this.rawTransactions = rawTransactions
   }
-  transactions: Transaction[]
+  declare transactions: Transaction[]
   rawTransactions?: unknown[]
 }

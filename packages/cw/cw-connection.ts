@@ -1,7 +1,6 @@
 import { bold, assign, Chain, Connection } from '@fadroma/agent'
-import type { Address, Message, CodeId, CodeHash, Token } from '@fadroma/agent'
-import { CWAgent } from './cw-identity'
-import type { CWIdentity, CWMnemonicIdentity, CWSignerIdentity } from './cw-identity'
+import type { Address, Message, CodeId, CodeHash, Token, ChainId } from '@fadroma/agent'
+import { CWAgent, CWSigningConnection, CWIdentity, CWMnemonicIdentity, CWSignerIdentity } from './cw-identity'
 import { CWConsole as Console, CWError as Error } from './cw-base'
 import { CWBlock, CWBatch } from './cw-tx'
 import * as CWBank    from './cw-bank'
@@ -11,42 +10,92 @@ import { Amino, Proto, CosmWasmClient, SigningCosmWasmClient } from '@hackbg/cos
 import type { Block } from '@hackbg/cosmjs-esm'
 
 export class CWChain extends Chain {
-  constructor (properties: Partial<CWChain> = {}) {
+
+  static get Connection () {
+    return CWConnection
+  }
+
+  static async connect (
+    properties: { chainId?: ChainId }&({ url: string|URL }|{ urls: Iterable<string|URL> })
+  ): Promise<CWChain> {
+    const { chainId, url, urls = [ url ] } = properties as any
+    const chain = new this({
+      chainId,
+      connections: [],
+      bech32Prefix: 'tnam'
+    })
+    const connections: CWConnection[] = urls.map(async (url: string|URL)=>new this.Connection({
+      api: await CosmWasmClient.connect(String(url)),
+      chain,
+      url: String(url)
+    }))
+    chain.connections = await Promise.all(connections)
+    return chain
+  }
+
+  constructor (
+    properties: ConstructorParameters<typeof Chain>[0]
+      & Pick<CWChain, 'coinType'|'bech32Prefix'|'hdAccountIndex'|'connections'>
+  ) {
     super(properties)
-    assign(this, properties, [
-      'coinType',
-      'bech32Prefix',
-      'hdAccountIndex'
-    ])
+    this.coinType       = properties.coinType
+    this.bech32Prefix   = properties.bech32Prefix
+    this.hdAccountIndex = properties.hdAccountIndex
+    this.connections    = properties.connections
   }
 
   /** The bech32 prefix for the account's address  */
-  bech32Prefix?:    string
+  bech32Prefix:     string
   /** The coin type in the HD derivation path */
   coinType?:        number
   /** The account index in the HD derivation path */
   hdAccountIndex?:  number
 
-  #connection: CWConnection
+  connections: CWConnection[]
   getConnection (): CWConnection {
-    return this.#connection
+    return this.connections[0]
   }
 
-  async authenticate (...args): Promise<CWAgent> {
-    return new CWAgent({ chain: this })
+  async authenticate (
+    ...args: Parameters<Chain["authenticate"]>
+  ): Promise<CWAgent> {
+    let identity: CWIdentity
+    if (!args[0]) {
+      identity = new CWMnemonicIdentity({})
+    } else if (typeof (args[0] as any).mnemonic === 'string') {
+      identity = new CWMnemonicIdentity({
+        mnemonic: (args[0] as any).mnemonic
+      })
+    } else if (args[0] instanceof CWIdentity) {
+      identity = args[0]
+    } else if (typeof args[0] === 'object') {
+      identity = new CWIdentity(args[0] as Partial<CWIdentity>)
+    } else {
+      throw Object.assign(new Error('Invalid arguments'), { args })
+    }
+    return new CWAgent({
+      chain: this,
+      identity,
+      connection: new CWSigningConnection({
+        chain: this,
+        identity,
+        api: await SigningCosmWasmClient.connectWithSigner(
+          this.getConnection().url,
+          identity.signer,
+        )
+      })
+    })
   }
 }
 
-/** Generic agent for CosmWasm-enabled chains. */
+/** Read-only client for CosmWasm-enabled chains. */
 export class CWConnection extends Connection {
   /** API connects asynchronously, so API handle is a promise. */
   declare api: CosmWasmClient
 
-  constructor (properties: Partial<CWConnection>) {
+  constructor (properties: ConstructorParameters<typeof Connection>[0] & { api: CosmWasmClient }) {
     super(properties)
-    assign(this, properties, [
-      'api',
-    ])
+    this.api = properties.api
     //if (!this.url) {
       //throw new Error('No connection URL.')
     //}
@@ -62,10 +111,6 @@ export class CWConnection extends Connection {
     //}
   }
 
-  override authenticate (identity: CWIdentity): CWAgent {
-    return new CWAgent({ connection: this, identity })
-  }
-
   /** Handle to the API's internal query client. */
   get queryClient (): Promise<ReturnType<CosmWasmClient["getQueryClient"]>> {
     return Promise.resolve(this.api).then(api=>(api as any)?.queryClient)
@@ -76,7 +121,7 @@ export class CWConnection extends Connection {
     return Promise.resolve(this.api).then(api=>(api as any)?.tmClient)
   }
 
-  abciQuery (path, params = new Uint8Array()) {
+  abciQuery (path: string, params = new Uint8Array()) {
     return this.queryClient.then(async client=>{
       this.log.debug('ABCI query:', path)
       const { value } = await client!.queryAbci(path, params)
@@ -88,20 +133,26 @@ export class CWConnection extends Connection {
     Promise<CWBlock>
   {
     const api = await this.api
-    if ((parameter as { height })?.height) {
-      const { id, header, txs } = await api.getBlock((parameter as { height }).height)
+    if ((parameter as { height: number })?.height) {
+      const { id, header, txs } = await api.getBlock((parameter as { height: number }).height)
       return new CWBlock({
-        hash:   id,
+        chain: this.chain,
+        id,
         height: header.height,
+        timestamp: header.time,
+        transactions: [],
         rawTxs: txs as Uint8Array[],
       })
-    } else if ((parameter as { hash })?.hash) {
+    } else if ((parameter as { hash: string })?.hash) {
       throw new Error('CWConnection.fetchBlock({ hash }): unimplemented!')
     } else {
       const { id, header, txs } = await api.getBlock()
       return new CWBlock({
-        hash:   id,
+        chain: this.chain,
+        id,
         height: header.height,
+        timestamp: header.time,
+        transactions: [],
         rawTxs: txs as Uint8Array[],
       })
     }
@@ -146,6 +197,9 @@ export class CWConnection extends Connection {
     return Promise.all([
       this.queryClient,
       this.tendermintClient
-    ]).then(()=>new CWStaking.Validator({ address }).fetchDetails(this))
+    ]).then(()=>new CWStaking.Validator({
+      chain: this.chain,
+      address
+    }).fetchDetails())
   }
 }

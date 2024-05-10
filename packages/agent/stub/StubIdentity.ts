@@ -24,8 +24,8 @@ export class StubAgent extends Agent {
 
   getConnection (): StubSigningConnection {
     return new StubSigningConnection({
-      address: this.identity.address!,
-      backend: this.chain.backend
+      chain:    this.chain,
+      identity: this.identity,
     })
   }
 
@@ -35,15 +35,12 @@ export class StubAgent extends Agent {
 }
 
 export class StubSigningConnection extends SigningConnection {
-  constructor (properties: Pick<StubSigningConnection, 'backend'|'address'>) {
-    super()
-    this.backend = properties.backend
-    this.address = properties.address
+  get chain (): StubChain {
+    return super.chain as unknown as StubChain
   }
-
-  backend: StubBackend
-
-  address: Address
+  get backend (): StubBackend {
+    return this.chain.backend
+  }
 
   async sendImpl (...args: Parameters<SigningConnection["sendImpl"]>): Promise<void> {
     const { backend } = this

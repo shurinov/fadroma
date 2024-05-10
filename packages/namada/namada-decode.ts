@@ -1,8 +1,8 @@
 import * as TX from './namada-tx'
 import init, { Decode } from './pkg/fadroma_namada.js'
 
-export function decodeTxs (txs, height): TX.Transaction[] {
-  const txsDecoded = []
+export function decodeTxs (txs: unknown[], height: number|bigint): TX.Transaction[] {
+  const txsDecoded: TX.Transaction[] = []
   for (const i in txs) {
     try {
       txsDecoded[i] = TX.Transaction.fromDecoded(txs[i] as any)

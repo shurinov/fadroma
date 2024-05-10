@@ -6,13 +6,15 @@ import type { Address } from './Types'
 
 /** A cryptographic identity. */
 export class Identity extends Logged {
-  constructor (properties?: Partial<Identity>) {
+  constructor (
+    properties: ConstructorParameters<typeof Logged>[0] & Pick<Identity, 'name'|'address'> = {}
+  ) {
     super(properties)
     assign(this, properties, ['name', 'address'])
   }
   /** Display name. */
-  name?:    Address
-  /** Unique identifier. */
+  name?: Address
+  /** Address of account. */
   address?: Address
   /** Sign some data with the identity's private key. */
   sign (doc: any): unknown {

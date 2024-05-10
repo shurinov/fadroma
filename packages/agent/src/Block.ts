@@ -1,7 +1,7 @@
 /** Fadroma. Copyright (C) 2023 Hack.bg. License: GNU AGPLv3 or custom.
     You should have received a copy of the GNU Affero General Public License
     along with this program. If not, see <http://www.gnu.org/licenses/>. **/
-import { bold } from './Util'
+import { assign, bold } from './Util'
 import type { Chain, Transaction } from '../index'
 
 /** The building block of a blockchain, as obtained by
@@ -9,22 +9,24 @@ import type { Chain, Transaction } from '../index'
   *
   * Contains zero or more transactions. */
 export abstract class Block {
-  constructor (properties: Pick<Block, 'chain'|'height'|'id'|'timestamp'>) {
-    this.#chain    = properties.chain
-    this.height    = properties.height
-    this.id        = properties.id
-    this.timestamp = properties.timestamp
+  constructor (
+    properties: Pick<Block, 'chain'|'height'|'id'|'timestamp'|'transactions'>
+  ) {
+    this.#chain = properties.chain
+    assign(this, properties, [ "id", "height", "timestamp", "transactions" ])
   }
 
   #chain: Chain
   get chain () { return this.#chain }
 
   /** Unique ID of block. */
-  id:         string
+  id!:           string
   /** Monotonically incrementing ID of block. */
-  height:     number
+  height!:       number
   /** Timestamp of block */
-  timestamp?: string
+  timestamp?:    string
+  /** Transactions in block */
+  transactions!: unknown[]
 }
 
 export async function fetchBlock (chain: Chain, ...args: Parameters<Chain["fetchBlock"]>):

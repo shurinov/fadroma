@@ -16,8 +16,18 @@ export * from './okp4-law-stone'
 
 class OKP4CLI extends CLI {}
 
-class OKP4Chain extends CWChain {
+export default class OKP4Chain extends CWChain {
+
+  /** Connect to OKP4 in testnet mode. */
+  static testnet (options: Partial<OKP4Connection> = {}): Promise<OKP4Chain> {
+    return OKP4Chain.connect({
+      chainId: chainIds.testnet,
+      urls: [...testnets], ...options||{}
+    })
+  }
+
   declare connections: OKP4Connection[]
+
 }
 
 /** Connection for OKP4. */
@@ -26,16 +36,17 @@ class OKP4Connection extends CWConnection {
   /** Default denomination of gas token. */
   static gasToken = new Token.Native('uknow')
 
-  /** Transaction fees for this agent. */
-  fees = {
-    upload: OKP4Connection.gasToken.fee(10000000),
-    init:   OKP4Connection.gasToken.fee(1000000),
-    exec:   OKP4Connection.gasToken.fee(1000000),
-    send:   OKP4Connection.gasToken.fee(1000000),
-  }
-
-  constructor (options: Partial<OKP4Connection>) {
-    super({ ...defaults, ...options } as Partial<CWConnection>)
+  constructor (properties: ConstructorParameters<typeof CWConnection>[0]) {
+    super({
+      ...defaults,
+      //fees: {
+        //upload: OKP4Connection.gasToken.fee(10000000),
+        //init:   OKP4Connection.gasToken.fee(1000000),
+        //exec:   OKP4Connection.gasToken.fee(1000000),
+        //send:   OKP4Connection.gasToken.fee(1000000),
+      //},
+      ...properties
+    })
   }
 
   /** Get clients for all Cognitarium instances, keyed by address. */
@@ -86,11 +97,18 @@ class OKP4Connection extends CWConnection {
 
 class OKP4MnemonicIdentity extends CWMnemonicIdentity {
   constructor (properties?: { mnemonic?: string } & Partial<CWMnemonicIdentity>) {
-    super({ ...defaults, ...properties||{} })
+    super({
+      ...defaults,
+      ...properties||{}
+    })
   }
 }
 
-const defaults = { coinType: 118, bech32Prefix: 'okp4', hdAccountIndex: 0, }
+const defaults = {
+  coinType: 118,
+  bech32Prefix: 'okp4',
+  hdAccountIndex: 0,
+}
 
 export {
   OKP4CLI              as CLI,
@@ -101,11 +119,3 @@ export {
 export const chainIds = { testnet: 'okp4-nemeton-1', }
 
 export const testnets = new Set([ 'https://okp4-testnet-rpc.polkachu.com/' ])
-
-/** Connect to OKP4 in testnet mode. */
-export const testnet = (options: Partial<OKP4Connection> = {}): OKP4Connection => {
-  return OKP4Chain.connect({
-    chainId: chainIds.testnet,
-    urls: [...testnets], ...options||{}
-  })
-}

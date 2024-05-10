@@ -2,6 +2,8 @@ import type { Address } from '@fadroma/agent'
 import { Console, assign, base16, optionallyParallel} from '@fadroma/agent'
 import { Staking } from '@fadroma/cw'
 import { decode, u8, u64, u256, array, set } from '@hackbg/borshest'
+import { NamadaConnection } from './namada-connection'
+import type { Namada } from './namada-connection'
 
 class NamadaPoSParameters {
   maxProposalPeriod!:             bigint
@@ -45,30 +47,37 @@ class NamadaPoSParameters {
 }
 
 class NamadaValidatorMetadata {
+  constructor (
+    properties: Pick<NamadaValidatorMetadata, 'email'|'description'|'website'|'discordHandle'|'avatar'>
+  ) {
+    assign(this, properties, [ 'email', 'description', 'website', 'discordHandle', 'avatar', ])
+  }
   email!:         string
   description!:   string|null
   website!:       string|null
   discordHandle!: string|null
   avatar!:        string|null
-  constructor (properties: Partial<NamadaValidatorMetadata>) {
-    assign(this, properties, [
-      'email',
-      'description',
-      'website',
-      'discordHandle',
-      'avatar',
-    ])
-  }
 }
 
 class NamadaValidator extends Staking.Validator {
-  static fromNamadaAddress = (namadaAddress: string) => Object.assign(new this({}), { namadaAddress })
+  constructor (properties: Omit<ConstructorParameters<typeof Staking.Validator>[0], 'chain'> & {
+    chain:         Namada,
+    namadaAddress: string
+  }) {
+    super(properties)
+    this.namadaAddress = properties.namadaAddress
+  }
+  get chain (): Namada {
+    return super.chain as unknown as Namada
+  }
   namadaAddress!: Address
   metadata!:      NamadaValidatorMetadata
   commission!:    NamadaCommissionPair
   state!:         unknown
   stake!:         bigint
-  async fetchDetails (connection: Connection, options?: { parallel?: boolean }) {
+  async fetchDetails (options?: { parallel?: boolean }) {
+
+    const connection = this.chain.getConnection()
 
     if (!this.namadaAddress) {
       const addressBinary = await connection.abciQuery(`/vp/pos/validator_by_tm_addr/${this.address}`)
@@ -76,15 +85,20 @@ class NamadaValidator extends Staking.Validator {
     }
 
     const requests: Array<()=>Promise<unknown>> = [
+
       () => connection.abciQuery(`/vp/pos/validator/metadata/${this.namadaAddress}`)
         .then(binary => {
           if (binary[0] === 1) {
-            this.metadata = new NamadaValidatorMetadata(connection.decode.pos_validator_metadata(binary.slice(1)))
+            this.metadata = new NamadaValidatorMetadata(
+              connection.decode.pos_validator_metadata(binary.slice(1)) as
+                ConstructorParameters<typeof NamadaValidatorMetadata>[0]
+            )
           }
         })
         .catch(e => connection.log.warn(
           `Failed to decode validator metadata for ${this.namadaAddress}`
         )),
+
       () => connection.abciQuery(`/vp/pos/validator/commission/${this.namadaAddress}`)
         .then(binary => {
           if (binary[0] === 1) {
@@ -94,6 +108,7 @@ class NamadaValidator extends Staking.Validator {
         .catch(e => connection.log.warn(
           `Failed to decode validator commission pair for ${this.namadaAddress}`
         )),
+
       () => connection.abciQuery(`/vp/pos/validator/state/${this.namadaAddress}`)
         .then(binary => {
           if (binary[0] === 1) {
@@ -103,6 +118,7 @@ class NamadaValidator extends Staking.Validator {
         .catch(e => connection.log.warn(
           `Failed to decode validator state for ${this.namadaAddress}`
         )),
+
       () => connection.abciQuery(`/vp/pos/validator/stake/${this.namadaAddress}`)
         .then(binary => {
           if (binary[0] === 1) {
@@ -112,6 +128,7 @@ class NamadaValidator extends Staking.Validator {
         .catch(e => connection.log.warn(
           `Failed to decode validator stake for ${this.namadaAddress}`
         )),
+
     ]
 
     if (this.namadaAddress && !this.publicKey) {
@@ -159,37 +176,18 @@ export {
   NamadaCommissionPair    as CommissionPair,
 }
 
-type Connection = {
-  log: Console,
-  abciQuery: (path: string)=>Promise<Uint8Array>
-  tendermintClient
-  decode: {
-    address                (binary: Uint8Array): string
-    addresses              (binary: Uint8Array): string[]
-    address_to_amount      (binary: Uint8Array): object
-    pos_parameters         (binary: Uint8Array): Partial<NamadaPoSParameters>
-    pos_validator_metadata (binary: Uint8Array): Partial<NamadaValidatorMetadata>
-    pos_commission_pair    (binary: Uint8Array): Partial<NamadaCommissionPair>
-    pos_validator_state    (binary: Uint8Array): string
-    pos_validator_set      (binary: Uint8Array): Array<{
-      address:     string,
-      bondedStake: bigint,
-    }>
-  }
-}
-
-export async function getStakingParameters (connection: Connection) {
+export async function getStakingParameters (connection: NamadaConnection) {
   const binary = await connection.abciQuery("/vp/pos/pos_params")
   return new NamadaPoSParameters(connection.decode.pos_parameters(binary))
 }
 
-export async function getTotalStaked (connection: Connection) {
+export async function getTotalStaked (connection: NamadaConnection) {
   const binary = await connection.abciQuery("/vp/pos/total_stake")
   return decode(u64, binary)
 }
 
 export async function getValidators (
-  connection: Connection,
+  chain: Namada,
   options: Partial<Parameters<typeof Staking.getValidators>[1]> & {
     addresses?:       string[],
     allStates?:       boolean,
@@ -198,6 +196,7 @@ export async function getValidators (
     interval?:        number,
   } = {}
 ) {
+  const connection = chain.getConnection()
   if (options.allStates) {
     let { addresses } = options
     addresses ??= await getValidatorAddresses(connection)
@@ -208,12 +207,16 @@ export async function getValidators (
       const [page, perPage] = options.pagination
       addresses = addresses.slice((page - 1)*perPage, page*perPage)
     }
-    const validators = addresses.map(address=>NamadaValidator.fromNamadaAddress(address))
+    const validators = addresses.map(namadaAddress=>new NamadaValidator({
+      chain,
+      address: '',
+      namadaAddress
+    }))
     if (options.details) {
       if (options.parallel && !options.pagination) {
-        throw new Error("set parallel=false or pagination, so as not to bombard the node")
+        throw new Error("set pagination or parallel=false, so as not to bombard the node")
       }
-      const thunks = validators.map(validator=>()=>validator.fetchDetails(connection, {
+      const thunks = validators.map(validator=>()=>validator.fetchDetails({
         parallel: options?.parallelDetails
       }))
       if (options?.parallel) {
@@ -234,41 +237,48 @@ export async function getValidators (
   }
 }
 
-export async function getValidatorAddresses (connection: Connection): Promise<Address[]> {
+export async function getValidatorAddresses (connection: NamadaConnection): Promise<Address[]> {
   const binary = await connection.abciQuery("/vp/pos/validator/addresses")
   return connection.decode.addresses(binary)
 }
 
-export async function getValidatorsConsensus (connection: Connection) {
+export async function getValidatorsConsensus (connection: NamadaConnection) {
   const binary = await connection.abciQuery("/vp/pos/validator_set/consensus")
   return connection.decode.pos_validator_set(binary).sort(byBondedStake)
 }
 
-export async function getValidatorsBelowCapacity (connection: Connection) {
+export async function getValidatorsBelowCapacity (connection: NamadaConnection) {
   const binary = await connection.abciQuery("/vp/pos/validator_set/below_capacity")
   return connection.decode.pos_validator_set(binary).sort(byBondedStake)
 }
 
-const byBondedStake = (a, b)=> (a.bondedStake > b.bondedStake) ? -1
+const byBondedStake = (
+  a: { bondedStake: number|bigint },
+  b: { bondedStake: number|bigint },
+)=> (a.bondedStake > b.bondedStake) ? -1
   : (a.bondedStake < b.bondedStake) ?  1
   : 0
 
-export async function getValidator (connection: Connection, address: Address) {
-  return await NamadaValidator.fromNamadaAddress(address).fetchDetails(connection)
+export async function getValidator (chain: Namada, namadaAddress: Address) {
+  return await new NamadaValidator({
+    chain,
+    address: '',
+    namadaAddress
+  }).fetchDetails()
 }
 
-export async function getValidatorStake (connection: Connection, address: Address) {
+export async function getValidatorStake (connection: NamadaConnection, address: Address) {
   const totalStake = await connection.abciQuery(`/vp/pos/validator/stake/${address}`)
   return decode(u256, totalStake)
 }
 
-export async function getDelegations (connection: Connection, address: Address) {
+export async function getDelegations (connection: NamadaConnection, address: Address) {
   const binary = await connection.abciQuery(`/vp/pos/delegations/${address}`)
   return connection.decode.addresses(binary)
 }
 
 export async function getDelegationsAt (
-  connection: Connection, address: Address, epoch?: number
+  connection: NamadaConnection, address: Address, epoch?: number
 ): Promise<Record<string, bigint>> {
   let query = `/vp/pos/delegations_at/${address}`
   epoch = Number(epoch)

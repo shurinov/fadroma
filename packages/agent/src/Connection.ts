@@ -6,7 +6,7 @@ import {
 } from './Util'
 import type {
   Address, Block, Chain, ChainId, CodeId, Message, Token, Uint128,
-  UploadStore, UploadedCode, Contract, Into
+  UploadStore, UploadedCode, Contract, Into, Identity
 } from '../index'
 
 /** Represents a remote API endpoint.
@@ -17,14 +17,12 @@ import type {
 export abstract class Connection extends Logged {
   constructor (
     properties: ConstructorParameters<typeof Logged>[0]
-      & Pick<Connection, 'chain'|'url'|'api'>
+      & Pick<Connection, 'chain'|'url'>
       & Partial<Pick<Connection, 'alive'>>
   ) {
     super(properties)
-    this.#chain  = properties.chain
-    this.url     = properties.url
-    this.alive   = properties.alive || true
-    this.api     = properties.api
+    this.#chain = properties.chain
+    assign(this, properties, [ "url", "alive" ])
     this.log.label = [
       this.constructor.name,
       '(', this[Symbol.toStringTag] ? `(${bold(this[Symbol.toStringTag])})` : null, ')'
@@ -33,7 +31,12 @@ export abstract class Connection extends Logged {
     const chainColor = randomColor({ luminosity: 'dark', seed: this.url })
     this.log.label = colors.bgHex(chainColor).whiteBright(` ${this.url} `)
   }
-
+  get [Symbol.toStringTag] () {
+    if (this.url) {
+      const color = randomColor({ luminosity: 'dark', seed: this.url })
+      return colors.bgHex(color).whiteBright(this.url)
+    }
+  }
   #chain: Chain
   /** Chain to which this connection points. */
   get chain (): Chain {
@@ -43,31 +46,14 @@ export abstract class Connection extends Logged {
   get chainId (): ChainId {
     return this.chain.chainId
   }
-
   /** Connection URL.
     *
     * The same chain may be accessible via different endpoints, so
     * this property contains the URL to which requests are sent. */
-  url: string
-  /** Instance of platform SDK. This must be provided in a subclass.
-    *
-    * Since most chain SDKs initialize asynchronously, this is usually a `Promise`
-    * that resolves to an instance of the underlying client class (e.g. `CosmWasmClient` or `SecretNetworkClient`).
-    *
-    * Since transaction and query methods are always asynchronous as well, well-behaved
-    * implementations of Fadroma Agent begin each method that talks to the chain with
-    * e.g. `const { api } = await this.api`, making sure an initialized platform SDK instance
-    * is available. */
-  api: unknown
+  url!: string
   /** Setting this to false stops retries. */
   alive: boolean = true
 
-  get [Symbol.toStringTag] () {
-    if (this.url) {
-      const color = randomColor({ luminosity: 'dark', seed: this.url })
-      return colors.bgHex(color).whiteBright(this.url)
-    }
-  }
   /** Chain-specific implementation of fetchBlock. */
   abstract fetchBlockImpl (parameters?:
     { height: number }|{ hash: string }
@@ -77,9 +63,9 @@ export abstract class Connection extends Logged {
     Promise<number>
   /** Chain-specific implementation of fetchBalance. */
   abstract fetchBalanceImpl (parameters: {
-    token?:   string,
-    address?: string
-  }): Promise<string|number|bigint>
+    addresses: Record<Address, string[]>,
+    parallel?: boolean
+  }): Promise<Record<Address, Record<string, Uint128>>>
   /** Chain-specific implementation of fetchCodeInfo. */
   abstract fetchCodeInfoImpl (parameters?: {
     codeIds?:  CodeId[]
@@ -108,6 +94,25 @@ export abstract class Connection extends Logged {
 
 /** Extend this class and implement the abstract methods to add support for a new kind of chain. */
 export abstract class SigningConnection {
+  constructor (properties: { chain: Chain, identity: Identity }) {
+    this.#chain    = properties.chain
+    this.#identity = properties.identity
+  }
+  #chain: Chain
+  /** Chain to which this connection points. */
+  get chain (): Chain {
+    return this.#chain
+  }
+  get chainId (): ChainId {
+    return this.chain.chainId
+  }
+  #identity: Identity
+  get identity (): Identity {
+    return this.#identity
+  }
+  get address (): Address {
+    return this.identity.address!
+  }
   /** Chain-specific implementation of native token transfer. */
   abstract sendImpl (parameters: {
     outputs:   Record<Address, Record<string, Uint128>>,
@@ -120,14 +125,19 @@ export abstract class SigningConnection {
     binary:       Uint8Array,
     reupload?:    boolean,
     uploadStore?: UploadStore,
-    uploadFee?:   Token.ICoin[]|'auto',
+    uploadFee?:   Token.IFee
     uploadMemo?:  string
   }): Promise<Partial<UploadedCode & {
     chainId: ChainId,
     codeId:  CodeId
   }>>
   /** Chain-specific implementation of contract instantiation. */
-  abstract instantiateImpl (parameters: Partial<Contract> & { initMsg: Into<Message> }):
+  abstract instantiateImpl (parameters: Partial<Contract> & {
+    initMsg:   Into<Message>
+    initFee?:  Token.IFee
+    initSend?: Token.ICoin[]
+    initMemo?: string
+  }):
     Promise<Contract & { address: Address }>
   /** Chain-specific implementation of contract transaction. */
   abstract executeImpl <T> (parameters: {

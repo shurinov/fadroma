@@ -10,15 +10,20 @@
     "okp4/okp4-objectarium.ts"
   ],
   "include": [],
-  "exclude": [ ".ubik", "*.dist.*", "node_modules" ],
+  "exclude": [
+    ".ubik",
+    "*.dist.*",
+    "node_modules"
+  ],
   "compilerOptions": {
-    "target": "esnext",
-    "module": "esnext",
-    "moduleResolution": "node",
-    "esModuleInterop": true,
+    "target":                       "esnext",
+    "module":                       "esnext",
+    "moduleResolution":             "node",
+    "esModuleInterop":              true,
     "allowSyntheticDefaultImports": true,
-    "noEmitOnError": true,
-    "skipLibCheck": true,
-    "experimentalDecorators": true
+    "noEmitOnError":                true,
+    "skipLibCheck":                 true,
+    "experimentalDecorators":       true,
+    "strict":                       true
   }
 }

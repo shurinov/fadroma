@@ -83,6 +83,10 @@ export class Namada extends CW.Chain {
     return getValidatorAddresses(this.getConnection())
   }
 
+  getValidator (address: string) {
+    return getValidator(this, address)
+  }
+
   getValidators (options?: {
     details?:         boolean,
     pagination?:      [number, number]
@@ -91,7 +95,7 @@ export class Namada extends CW.Chain {
     parallel?:        boolean,
     parallelDetails?: boolean,
   }) {
-    return getValidators(this.getConnection(), options)
+    return getValidators(this, options)
   }
 
   getValidatorsConsensus () {
@@ -100,10 +104,6 @@ export class Namada extends CW.Chain {
 
   getValidatorsBelowCapacity () {
     return getValidatorsBelowCapacity(this.getConnection())
-  }
-
-  getValidator (address: string) {
-    return getValidator(this.getConnection(), address)
   }
 
   getDelegations (address: string) {
