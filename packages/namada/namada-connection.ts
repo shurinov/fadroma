@@ -174,29 +174,36 @@ export class NamadaConnection extends CW.Connection {
   get decode () {
     return this.chain.decode
   }
-  async fetchBlockInfoImpl (wantedHeight?: number): Promise<TX.NamadaBlock> {
+  override async fetchBlockImpl (parameter?: { height: number }|{ hash: string }): Promise<TX.NamadaBlock> {
     if (!this.url) {
       throw new CW.Error("Can't fetch block: missing connection URL")
     }
-    // Fetch block and results as undecoded JSON
-    const [block, results] = await Promise.all([
-      fetch(`${this.url}/block?height=${wantedHeight||''}`)
-        .then(response=>response.text()),
-      fetch(`${this.url}/block_results?height=${wantedHeight||''}`)
-        .then(response=>response.text()),
-    ])
-    const { id, txs, header: { height, time } } = this.decode.block(block, results) as {
-      id: string,
-      txs: Partial<TX.Transaction[]>[]
-      header: { height: number, time: string }
+    if ((!parameter) || ('height' in parameter)) {
+      const wantedHeight = parameter?.height || ''
+      // Fetch block and results as undecoded JSON
+      const [block, results] = await Promise.all([
+        fetch(`${this.url}/block?height=${wantedHeight}`)
+          .then(response=>response.text()),
+        fetch(`${this.url}/block_results?height=${wantedHeight}`)
+          .then(response=>response.text()),
+      ])
+      const { id, txs, header: { height, time } } = this.decode.block(block, results) as {
+        id: string,
+        txs: Partial<TX.Transaction[]>[]
+        header: { height: number, time: string }
+      }
+      return new TX.NamadaBlock({
+        chain: this.chain,
+        id,
+        height,
+        timestamp: time,
+        transactions: decodeTxs(txs, height),
+        rawTransactions: [],
+      })
+    } else if ('hash' in parameter) {
+      throw new Error('NamadaConnection.fetchBlock({ hash }): unimplemented!')
+    } else {
+      throw new Error('Pass { height } or { hash }')
     }
-    return new TX.NamadaBlock({
-      chain: this.chain,
-      id,
-      height,
-      timestamp: time,
-      transactions: decodeTxs(txs, height),
-      rawTransactions: [],
-    })
   }
 }
