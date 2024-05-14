@@ -40,7 +40,7 @@ export abstract class Connection extends Logged {
   #chain: Chain
   /** Chain to which this connection points. */
   get chain (): Chain {
-    return this.chain
+    return this.#chain
   }
   /** ID of chain to which this connection points. */
   get chainId (): ChainId {
