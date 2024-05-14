@@ -466,6 +466,9 @@ importers:
       '@fadroma/agent':
         specifier: workspace:*
         version: link:../agent
+      '@fadroma/deploy':
+        specifier: workspace:*
+        version: link:../deploy
       '@hackbg/cmds':
         specifier: workspace:*
         version: link:../../toolbox/cmds
@@ -506,6 +509,8 @@ importers:
       '@fadroma/agent':
         specifier: workspace:*
         version: link:../agent
+
+  packages/deploy: {}
 
   packages/devnet:
     dependencies:
