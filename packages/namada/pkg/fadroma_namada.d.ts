@@ -225,8 +225,8 @@ export interface InitOutput {
   readonly decode_tx_content_update_steward_commission: (a: number, b: number, c: number) => void;
   readonly decode_tx_content_vote_proposal: (a: number, b: number, c: number) => void;
   readonly decode_tx_content_withdraw: (a: number, b: number, c: number) => void;
-  readonly decode_tx_content_unjail_validator: (a: number, b: number, c: number) => void;
   readonly decode_tx_content_unbond: (a: number, b: number, c: number) => void;
+  readonly decode_tx_content_unjail_validator: (a: number, b: number, c: number) => void;
   readonly decode_tx_content_resign_steward: (a: number, b: number, c: number) => void;
   readonly __wbindgen_add_to_stack_pointer: (a: number) => number;
   readonly __wbindgen_malloc: (a: number, b: number) => number;
