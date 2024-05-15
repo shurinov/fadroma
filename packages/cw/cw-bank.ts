@@ -1,6 +1,6 @@
-import { optionallyParallel } from '@fadroma/agent'
+import { optionallyParallel } from '@hackbg/fadroma'
 import type { CosmWasmClient, SigningCosmWasmClient } from '@hackbg/cosmjs-esm'
-import type { Address, Token, Chain, Connection, SigningConnection } from '@fadroma/agent'
+import type { Address, Token, Chain, Connection, SigningConnection } from '@hackbg/fadroma'
 import type { CWChain, CWConnection } from './cw-connection'
 import type { CWAgent, CWSigningConnection } from './cw-identity'
 

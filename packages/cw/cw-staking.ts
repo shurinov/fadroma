@@ -1,5 +1,5 @@
-import { base16, SHA256, Validator } from '@fadroma/agent'
-import type { Address } from '@fadroma/agent'
+import { base16, SHA256, Validator } from '@hackbg/fadroma'
+import type { Address } from '@hackbg/fadroma'
 import { Amino, Proto } from '@hackbg/cosmjs-esm'
 import type { CWChain, CWConnection } from './cw-connection'
 

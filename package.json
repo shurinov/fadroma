@@ -1,12 +1,12 @@
 {
   "name": "@hackbg/fadroma",
   "type": "module",
-  "main": "fadroma.ts",
-  "browser": "fadroma.browser.ts",
+  "main": "index.node.ts",
+  "browser": "index.ts",
   "version": "2.0.0-rc.24",
   "license": "AGPL-3.0-only",
-  "keywords": [ "cosmwasm", "scrt", "secret network", "interchain" ],
-  "description": "CosmWasm dApp framework.",
+  "keywords": [ "cosmwasm", "scrt", "secret network", "interchain", "tendermint", "namada", "cosmos" ],
+  "description": "Universal client for several distributed computing networks.",
   "repository": { "type": "git", "url": "https://github.com/hackbg/fadroma" },
   "bin": { "fadroma": "fadroma.cli.mjs" },
   "files": [
@@ -18,6 +18,7 @@
     "MAINTAINERS.md",
     "README.md",
     "*.ts",
+    "!*.test.*",
     "Dockerfile",
     "assets/banner2.svg"
   ],
@@ -25,47 +26,59 @@
     "build":          "./fadroma.cli.cjs build",
     "check":          "tsc --noEmit",
     "ci":             "node --version && npm --version && pnpm --version && pwd && ls -al && pnpm cloc && pnpm clean && pnpm check && pnpm cov all && pnpm ubik --dry compile && ls -al",
+    "clean":          "rm -rf .ubik *.dist.*",
     "cloc":           "cloc --verbose=2 --fullpath --not-match-d=node_modules --not-match-f=pnpm-lock.yaml --exclude-dir=.github,.husky,ensuite,cosmjs-esm,secretjs-esm,coverage,state .",
-    "cov":            "ensuite-cov fadroma.test.ts",
+    "cov":            "time ensuite-cov -r text -r lcov -- index.test.ts",
     "cov:fast":       "ensuite-cov fadroma.test.ts --parallel",
+    "doc":            "typedoc --disableGit --sourceLinkTemplate 'https://github.com/hackbg/fadroma/tree/v2/{path}#L{line}' --json docs.json && ./docs.ts",
     "docs:dev":       "ensuite-dev",
     "docs:render":    "ensuite-render",
     "docs:typedoc":   "typedoc",
     "fadroma":        "FADROMA_PROJECT=./examples fadroma",
     "prepare":        "husky install",
     "repl":           "./fadroma.cli.cjs repl",
-    "test":           "ensuite fadroma.test.ts",
+    "test":           "time ensuite index.test.ts",
     "test:fast":      "ensuite fadroma.test.ts --parallel",
-    "clean":          "rm -rf .ubik *.dist.*",
-    "release":        "pnpm clean && pnpm i && pnpm check && pnpm cov all && ubik release --otp 123123",
-    "release:fast":   "pnpm clean && pnpm i && pnpm check && ubik release --otp 123123",
-    "release:faster": "pnpm clean && pnpm i && ubik release --otp 123123"
+
+    "release":        "time sh -c 'pnpm clean && pnpm i && pnpm check && pnpm cov all && ubik release --otp 123123'",
+    "release:fast":   "time sh -c 'pnpm clean && pnpm i && pnpm check && ubik release --otp 123123'",
+    "release:faster": "time sh -c 'pnpm clean && pnpm i && ubik release --otp 123123 --no-git-checks'"
   },
   "dependencies": {
-    "@fadroma/agent":  "workspace:*",
-    "@fadroma/cw":     "workspace:*",
-    "@fadroma/scrt":   "workspace:*",
-    "@fadroma/create": "workspace:*",
-    "@fadroma/deploy": "workspace:*",
 
+    "@hackbg/4mat": "workspace:*",
     "@hackbg/cmds": "workspace:*",
     "@hackbg/conf": "workspace:*",
+    "@hackbg/dump": "workspace:*",
     "@hackbg/file": "workspace:*",
+    "@hackbg/hide": "workspace:*",
+    "@hackbg/into": "workspace:*",
     "@hackbg/logs": "workspace:*",
+    "@hackbg/oops": "workspace:*",
     "@hackbg/port": "workspace:*",
     "@hackbg/repo": "workspace:*",
 
-    "case": "^1.6.3",
-    "dotenv": "^16.3.1",
+    "case":    "^1.6.3",
+    "dotenv":  "^16.3.1",
     "prompts": "^2.4.2"
   },
   "peerDependencies": {
-    "@hackbg/ganesha": "*"
+    "@hackbg/ganesha": "*",
+    "@fadroma/cw":     "workspace:*",
+    "@fadroma/scrt":   "workspace:*",
+    "@fadroma/namada": "workspace:*",
+    "@fadroma/create": "workspace:*",
+    "@fadroma/deploy": "workspace:*",
+    "@fadroma/stub":   "workspace:*"
   },
   "peerDependenciesMeta": {
-    "@hackbg/ganesha": {
-      "optional": true
-    }
+    "@hackbg/ganesha": { "optional": true },
+    "@fadroma/cw":     { "optional": true },
+    "@fadroma/scrt":   { "optional": true },
+    "@fadroma/namada": { "optional": true },
+    "@fadroma/create": { "optional": true },
+    "@fadroma/deploy": { "optional": true },
+    "@fadroma/stub":   { "optional": true }
   },
   "devDependencies": {
     "@hackbg/docs": "workspace:^",
@@ -78,8 +91,16 @@
     "@fadroma/oci":      "workspace:^",
 
     "@hackbg/ensuite":  "workspace:^",
-    "@ganesha/esbuild": "workspace:^",
     "@hackbg/ubik":     "workspace:^",
+    "@hackbg/ganesha":  "*",
+    "@ganesha/esbuild": "workspace:^",
+
+    "@fadroma/cw":     "workspace:*",
+    "@fadroma/scrt":   "workspace:*",
+    "@fadroma/namada": "workspace:*",
+    "@fadroma/create": "workspace:*",
+    "@fadroma/deploy": "workspace:*",
+    "@fadroma/stub":   "workspace:*",
 
     "@hackbg/dump": "workspace:^",
 

@@ -1,7 +1,7 @@
 import { packageRoot } from './package'
 import type * as Devnets from './devnet'
 import DevnetContainer from './devnet-base'
-import { randomBech32, Token } from '@fadroma/agent'
+import { randomBech32, Token } from '@hackbg/fadroma'
 import * as OCI from '@fadroma/oci'
 import { ok, equal, deepEqual, throws, rejects } from 'node:assert'
 import { getuid, getgid } from 'node:process'

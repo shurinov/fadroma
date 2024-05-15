@@ -1,0 +1,10 @@
+{
+  "name": "@fadroma/stub",
+  "main": "stub.ts",
+  "peerDependencies": {
+    "@hackbg/fadroma": "workspace:*"
+  },
+  "devDependencies": {
+    "@hackbg/fadroma": "workspace:*"
+  }
+}

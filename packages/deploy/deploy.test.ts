@@ -7,7 +7,7 @@ import {
   DeployStore
 } from './deploy'
 
-import { Stub } from '@fadroma/agent'
+import { Stub } from '@hackbg/fadroma'
 
 import { Suite } from '@hackbg/ensuite'
 export default new Suite([

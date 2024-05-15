@@ -30,7 +30,7 @@ Here's how this pattern can be described as a `Deployment` in your project's `ap
 ```typescript
 // api.ts
 
-import { Deployment, Client } from '@fadroma/agent'
+import { Deployment, Client } from '@hackbg/fadroma'
 
 export default class FactoryDeployment extends Deployment {
 

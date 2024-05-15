@@ -1,5 +1,5 @@
 import CLI from '@hackbg/cmds'
-import { Error, Console } from '@fadroma/agent'
+import { Error, Console } from '@hackbg/fadroma'
 
 export class CWError extends Error {}
 

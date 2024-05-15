@@ -1,15 +1,11 @@
 /** Fadroma. Copyright (C) 2023 Hack.bg. License: GNU AGPLv3 or custom.
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>. **/
-import type { Address, ChainId, CodeId, CodeHash } from '../index'
-import { assign, randomBech32, base16, SHA256 } from '../src/Util'
-import { Identity } from '../src/Identity'
-import { Backend } from '../src/Backend'
-import { Chain } from '../src/Chain'
-import { Connection } from '../src/Connection'
-import { Contract } from '../src/compute/Contract'
-import { UploadedCode } from '../src/compute/Upload'
-import * as Token from '../src/dlt/Token'
+import type { Address, ChainId, CodeId, CodeHash } from '@hackbg/fadroma'
+import {
+  assign, randomBech32, base16, SHA256,
+  Identity, Backend, Chain, Connection, Contract, UploadedCode, Token,
+} from '@hackbg/fadroma'
 
 import { StubBatch, StubBlock } from './StubTx'
 import { StubAgent, StubIdentity } from './StubIdentity'

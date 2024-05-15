@@ -1,5 +1,5 @@
-import { bold, assign, Chain, Connection } from '@fadroma/agent'
-import type { Address, Message, CodeId, CodeHash, Token, ChainId } from '@fadroma/agent'
+import { bold, assign, Chain, Connection } from '@hackbg/fadroma'
+import type { Address, Message, CodeId, CodeHash, Token, ChainId } from '@hackbg/fadroma'
 import { CWAgent, CWSigningConnection, CWIdentity, CWMnemonicIdentity, CWSignerIdentity } from './cw-identity'
 import { CWConsole as Console, CWError as Error } from './cw-base'
 import { CWBlock, CWBatch } from './cw-tx'

@@ -1,5 +1,6 @@
 
 
+
 ### Uploading and instantiating contracts
 
 The **agent.upload(...)** uploads a contract binary to the chain.
@@ -60,7 +61,7 @@ what contracts to deploy:
 ```typescript
 // in your project's api.ts:
 
-import { Deployment } from '@fadroma/agent'
+import { Deployment } from '@hackbg/fadroma'
 
 export class DeploymentA extends Deployment {
 
@@ -165,7 +166,7 @@ The `Contract` class describes an individual smart contract instance and uniquel
 within the `Deployment`.
 
 ```typescript
-import { Contract } from '@fadroma/agent'
+import { Contract } from '@hackbg/fadroma'
 
 new Contract({
   repository: 'REPO',
@@ -202,7 +203,7 @@ When obtaining instances from a `Deployment`, their `agent` property is provided
 from `deployment.agent`.
 
 ```typescript
-import { Agent } from '@fadroma/agent'
+import { Agent } from '@hackbg/fadroma'
 assert(deployment.a.agent instanceof Agent)
 assert.equal(deployment.a.agent, deployment.agent)
 ```

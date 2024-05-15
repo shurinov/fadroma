@@ -1,8 +1,8 @@
-import { Compute } from '@hackbg/fadroma'
+import { Deployment } from '@fadroma/deploy'
 
 export default function main (state) {
 
-  return new Compute.Deployment(state)
+  return new Deployment(state)
     .addContract("cw-null", {
       language:   'rust',
       sourcePath: '..',

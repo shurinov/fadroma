@@ -1,4 +1,4 @@
-import type { ChainId } from '@fadroma/agent'
+import type { ChainId } from '@hackbg/fadroma'
 import * as CW from '@fadroma/cw'
 import {
   getTotalStaked,

@@ -2,8 +2,8 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>. **/
 import { Path, FileFormat, SyncFS, XDG } from '@hackbg/file'
-import type { CodeId, ChainId, Address, Uint128 } from '@fadroma/agent'
-import { bold, colors } from '@fadroma/agent'
+import type { CodeId, ChainId, Address, Uint128 } from '@hackbg/fadroma'
+import { bold, colors } from '@hackbg/fadroma'
 import CLI from '@hackbg/cmds'
 import * as OCI from '@fadroma/oci'
 import { packageName, packageVersion } from './devnet-base'

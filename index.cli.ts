@@ -1,3 +1,4 @@
+
 import CLI from '@hackbg/cmds'
 import { bold, bech32, bech32m, randomBech32m, base16 } from './src/Util'
 

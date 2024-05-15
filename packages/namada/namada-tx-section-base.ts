@@ -1,4 +1,4 @@
-import { assign } from '@fadroma/agent'
+import { assign } from '@hackbg/fadroma'
 
 export class Section {
   static noun = 'Section'

@@ -1,4 +1,4 @@
-import { bold, colors, UploadedCode } from '@fadroma/agent'
+import { bold, colors, UploadedCode } from '@hackbg/fadroma'
 import { DeployStore } from '@fadroma/deploy'
 import { SyncFS, FileFormat } from '@hackbg/file'
 import type { Path } from '@hackbg/file'

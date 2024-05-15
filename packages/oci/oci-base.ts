@@ -1,4 +1,4 @@
-import { Error, Console, bold } from '@fadroma/agent'
+import { Error, Console, bold } from '@hackbg/fadroma'
 import type Dockerode from 'dockerode'
 
 /** APIs from dockerode in use. */

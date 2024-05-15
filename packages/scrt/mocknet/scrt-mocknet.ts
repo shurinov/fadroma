@@ -6,8 +6,9 @@ import type {
   Message,
   SigningConnection,
   Identity
-} from '@fadroma/agent'
-import { Chain, Batch, Stub, Token, Contract } from '@fadroma/agent'
+} from '@hackbg/fadroma'
+import { Chain, Batch, Token, Contract } from '@hackbg/fadroma'
+import * as Stub from '@fadroma/stub'
 import { ScrtMnemonicIdentity } from '../scrt-identity'
 import {
   ScrtConsole as Console,
@@ -52,7 +53,7 @@ class ScrtMocknetConnection extends Stub.Connection {
     return Promise.resolve({})
   }
 
-  protected queryImpl <Q> ({ address, message }: { address: Address, message: Message }): Promise<Q> {
+  override queryImpl <Q> ({ address, message }: { address: Address, message: Message }): Promise<Q> {
     return (this.backend as ScrtMocknetBackend)
       .getContract({address})
       .query({ msg: message })

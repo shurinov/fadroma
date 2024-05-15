@@ -1,5 +1,5 @@
-import { assign } from '@fadroma/agent'
-import type { Address } from '@fadroma/agent'
+import { assign } from '@hackbg/fadroma'
+import type { Address } from '@hackbg/fadroma'
 import { decode, u64 } from '@hackbg/borshest'
 
 class GovernanceParameters {

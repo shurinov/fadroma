@@ -11,7 +11,7 @@ See [/ops/build.md](../ops/build.md).
 
 ## Upload API
 
-The client package, `@fadroma/agent`, exposes a base `Uploader` class,
+The client package, `@hackbg/fadroma`, exposes a base `Uploader` class,
 which the global `fetch` method to obtain code from any supported URL
 (`file:///` or otherwise).
 

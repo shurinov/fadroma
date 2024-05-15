@@ -2,8 +2,8 @@ import portManager, { waitPort } from '@hackbg/port'
 import { Path, SyncFS, FileFormat } from '@hackbg/file'
 import {
   timestamp, assign, Console, CompiledCode, Connection, Identity, Backend, Token
-} from '@fadroma/agent'
-import type { Address, CodeId, Uint128 } from '@fadroma/agent'
+} from '@hackbg/fadroma'
+import type { Address, CodeId, Uint128 } from '@hackbg/fadroma'
 import * as OCI from '@fadroma/oci'
 import * as Impl from './devnet-impl'
 import type * as Platform from './devnet-platform'

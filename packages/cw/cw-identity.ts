@@ -18,8 +18,8 @@ import {
   Identity,
   SigningConnection,
   Batch
-} from '@fadroma/agent'
-import type { Address } from '@fadroma/agent'
+} from '@hackbg/fadroma'
+import type { Address } from '@hackbg/fadroma'
 import { CWError as Error } from './cw-base'
 import { CWBatch } from './cw-tx'
 import * as CWBank    from './cw-bank'

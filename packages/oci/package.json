@@ -16,7 +16,7 @@
     "@hackbg/oops":   "workspace:^",
     "@hackbg/file":   "workspace:^",
     "@hackbg/hide":   "workspace:^",
-    "@fadroma/agent": "workspace:*"
+    "@hackbg/fadroma": "workspace:*"
   },
   "devDependencies": {
     "@types/dockerode": "^3.3.23",

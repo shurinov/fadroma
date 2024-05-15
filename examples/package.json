@@ -3,7 +3,8 @@
   "private": "true",
   "main": "example.ts",
   "dependencies": {
-    "@hackbg/fadroma": "link:.."
+    "@hackbg/fadroma": "link:..",
+    "@fadroma/deploy": "link:../packages/deploy"
   },
   "devDependencies": {
   },

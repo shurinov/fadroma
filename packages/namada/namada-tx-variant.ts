@@ -1,4 +1,4 @@
-import { assign } from '@fadroma/agent'
+import { assign } from '@hackbg/fadroma'
 import { Transaction } from './namada-tx-base'
 
 class NamadaUndecodedTransaction extends Transaction {

@@ -1,5 +1,5 @@
 import { ok, throws, rejects, deepEqual, equal } from 'node:assert'
-import { Token } from '@fadroma/agent'
+import { Token } from '@hackbg/fadroma'
 import * as Devnet from '@fadroma/devnet'
 import { fixture, testConnectionWithBackend } from '@fadroma/fixtures'
 import * as CW from './cw'

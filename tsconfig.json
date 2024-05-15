@@ -4,6 +4,8 @@
     "*.dist.*",
     "node_modules",
     "toolbox/ganesha",
+    "toolbox/fork",
+    "toolbox/docs",
     "packages/cosmjs-esm",
     "packages/secretjs-esm"
   ],
@@ -15,6 +17,9 @@
     "allowSyntheticDefaultImports": true,
     "noEmitOnError":                true,
     "skipLibCheck":                 true,
-    "experimentalDecorators":       true
+    "experimentalDecorators":       true,
+    "downlevelIteration":           true,
+    "skipLibCheck":                 true,
+    "strict":                       true
   }
 }

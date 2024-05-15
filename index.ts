@@ -36,6 +36,5 @@ export { Compiler, CompiledCode }        from './src/compute/Compile'
 export { UploadedCode, UploadStore }     from './src/compute/Upload'
 export { Contract }                      from './src/compute/Contract'
 
-export * as Stub                         from './stub/stub'
 export *                                 from './src/Types'
 export *                                 from './src/Util'

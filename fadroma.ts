@@ -20,8 +20,8 @@
 export * from './fadroma.browser'
 
 // And more!
-import type { ChainId, CodeHash, Connection, Agent } from '@fadroma/agent'
-import { Console, bold, timestamp, Chain, UploadedCode, UploadStore, Compiler } from '@fadroma/agent'
+import type { ChainId, CodeHash, Connection, Agent } from '@hackbg/fadroma'
+import { Console, bold, timestamp, Chain, UploadedCode, UploadStore, Compiler } from '@hackbg/fadroma'
 import { Deployment, DeployStore } from '@fadroma/deploy'
 import { getProject, ProjectPrompter } from '@fadroma/create'
 import Commands from '@hackbg/cmds'

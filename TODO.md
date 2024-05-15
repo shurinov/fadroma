@@ -20,3 +20,10 @@
     * separate doc comments from attribute macros in the parser?
   * Time travel: rewind/force next block
   * Spawn terminals with different secretcli configs for hammer tuning
+* Backend/Endpoint
+* Template -> ContractVersion
+* connection.contract(address) -> Contract
+* connection.code(codeId) -> ContractCode
+* connection.code(codeId).fetchInstances() -> ContractCode
+* sendMany
+* use relative paths in links to source

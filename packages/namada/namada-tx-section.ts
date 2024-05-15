@@ -1,4 +1,4 @@
-import { assign } from '@fadroma/agent'
+import { assign } from '@hackbg/fadroma'
 import type { Fields } from '@hackbg/borshest'
 import { Section } from './namada-tx-section-base'
 

@@ -1,9 +1,8 @@
 import { ok, equal, throws } from 'node:assert'
-import { Core } from '@fadroma/agent'
+import { Console } from '@hackbg/fadroma'
 import * as OCI from '@fadroma/oci'
 import * as Impl from './devnet-impl'
 import { DevnetContainerConfig } from './devnet-base'
-const { Console } = Core
 
 export default async () => {
 

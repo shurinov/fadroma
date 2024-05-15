@@ -1,6 +1,6 @@
 import {
   bold, Chain, Batch, Block, CodeId, CodeHash, Address, TxHash, ChainId, Label
-} from '@fadroma/agent'
+} from '@hackbg/fadroma'
 import { MsgStoreCode, MsgInstantiateContract, MsgExecuteContract } from '@hackbg/secretjs-esm'
 
 export class ScrtBlock extends Block {}

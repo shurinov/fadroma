@@ -3,7 +3,7 @@
   "main": "fixtures.ts",
   "dependencies": {
     "@hackbg/file": "workspace:*",
-    "@fadroma/agent": "workspace:*",
+    "@hackbg/fadroma": "workspace:*",
     "@fadroma/deploy": "workspace:*"
   }
 }

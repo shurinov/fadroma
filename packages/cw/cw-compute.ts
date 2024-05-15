@@ -1,6 +1,6 @@
 import type { CosmWasmClient, SigningCosmWasmClient } from '@hackbg/cosmjs-esm'
-import { Connection, SigningConnection, Agent, UploadedCode, Contract } from '@fadroma/agent'
-import type { Address, CodeId, Message, Token } from '@fadroma/agent'
+import { Connection, SigningConnection, Agent, UploadedCode, Contract } from '@hackbg/fadroma'
+import type { Address, CodeId, Message, Token } from '@hackbg/fadroma'
 import { Amino } from '@hackbg/cosmjs-esm'
 import type { CWChain, CWConnection } from './cw-connection'
 import type { CWAgent, CWSigningConnection } from './cw-identity'

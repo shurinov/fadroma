@@ -45,7 +45,7 @@ echo "{}" > connect/newchain/package.json
   "type": "module",
   "main": "newchain.ts",
   "dependencies": {
-    "@fadroma/agent": "..."
+    "@hackbg/fadroma": "..."
   },
   "peerDependencies": {
     "newchainjs": "^1.2.3"
@@ -93,12 +93,12 @@ that would be 1 or 3 connector modules is an open-ended question.
 ## Implementing the Fadroma Agent API
 
 Having set up your connector package, you should now implement the
-`Chain`, `Agent`, and `Batch` classes defined by `@fadroma/agent`:
+`Chain`, `Agent`, and `Batch` classes defined by `@hackbg/fadroma`:
 
 ```typescript
 // in connect/newchain/newchain.ts
 // (or e.g. connect/cw/cw-newchain.ts if using @cosmjs/stargate)
-import { Chain, Agent, Batch, bindChainSupport } from '@fadroma/agent'
+import { Chain, Agent, Batch, bindChainSupport } from '@hackbg/fadroma'
 ```
 
 `Chain` should be a stateless representation for the whole chain

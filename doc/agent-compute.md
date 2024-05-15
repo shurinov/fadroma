@@ -52,7 +52,7 @@ you need an `agent`, an `address`, and a `codeHash`:
 Example:
 
 ```typescript
-import { Client } from '@fadroma/agent'
+import { Client } from '@hackbg/fadroma'
 
 class MyClient extends Client {
 
@@ -124,7 +124,7 @@ assert.ok(client.meta instanceof Contract)
 Fetching metadata:
 
 ```typescript
-import { fetchLabel } from '@fadroma/agent'
+import { fetchLabel } from '@hackbg/fadroma'
 
 await fetchCodeId(client, agent)
 await fetchLabel(client, agent)

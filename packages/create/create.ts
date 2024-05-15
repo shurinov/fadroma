@@ -1,8 +1,8 @@
 /** Fadroma. Copyright (C) 2023 Hack.bg. License: GNU AGPLv3 or custom.
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>. **/
-import type { ChainId } from '@fadroma/agent'
-import { Error, bold, timestamp, Bip39, Bip39EN } from '@fadroma/agent'
+import type { ChainId } from '@hackbg/fadroma'
+import { Error, bold, timestamp, Bip39, Bip39EN } from '@hackbg/fadroma'
 import type { Deployment } from '@fadroma/deploy'
 
 import type { Path } from '@hackbg/file'

@@ -3,7 +3,7 @@ import { fileURLToPath } from 'node:url'
 import { readFileSync } from 'node:fs'
 import ok from 'node:assert'
 import { SyncFS, FileFormat, withTmpDir } from '@hackbg/file'
-import { Console, bold, Chain, Connection, Identity, Backend } from '@fadroma/agent'
+import { Console, bold, Chain, Connection, Identity, Backend } from '@hackbg/fadroma'
 import { Deployment } from '@fadroma/deploy'
 
 //@ts-ignore

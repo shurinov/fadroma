@@ -3,7 +3,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>. **/
 import {
   bold, colors, randomColor, assign, Compiler, RustSourceCode, CompiledCode, Console
-} from '@fadroma/agent'
+} from '@hackbg/fadroma'
 import * as OCI from '@fadroma/oci'
 
 import { Config } from '@hackbg/conf'

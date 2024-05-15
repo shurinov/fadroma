@@ -8,10 +8,10 @@ import {
   CompiledCode,
   UploadStore, UploadedCode,
   Contract,
-} from '@fadroma/agent'
+} from '@hackbg/fadroma'
 import type {
   Name, CodeId, CodeHash, Address, Agent, ChainId, Label, Into, Token, TxHash, Compiler, Message
-} from '@fadroma/agent'
+} from '@hackbg/fadroma'
 
 /** A collection of contracts. */
 export class Deployment extends Map<Name, DeploymentUnit> {

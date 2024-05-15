@@ -1,6 +1,6 @@
 import { Suite } from '@hackbg/ensuite'
 import * as OCI from './oci'
-import { Core } from '@fadroma/agent'
+import { Core } from '@hackbg/fadroma'
 import * as assert from 'node:assert'
 import { resolve, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'

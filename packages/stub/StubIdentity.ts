@@ -2,13 +2,8 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>. **/
 
-import type { Address } from '../index'
-import { assign } from '../src/Util'
-import { Agent } from '../src/Agent'
-import { Identity } from '../src/Identity'
-import { SigningConnection } from '../src/Connection'
-import { Contract } from '../src/compute/Contract'
-import { UploadedCode } from '../src/compute/Upload'
+import type { Address } from '@hackbg/fadroma'
+import { assign, Agent, Identity, SigningConnection, Contract, UploadedCode } from '@hackbg/fadroma'
 import { StubBatch } from './StubTx'
 import type { StubChain } from './StubChain'
 import type { StubBackend } from './StubBackend'

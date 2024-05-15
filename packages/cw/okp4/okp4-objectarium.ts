@@ -1,5 +1,5 @@
-import type { CodeId } from '@fadroma/agent'
-import { Contract } from '@fadroma/agent'
+import type { CodeId } from '@hackbg/fadroma'
+import { Contract } from '@hackbg/fadroma'
 
 export type ObjectariumVersion = string
 

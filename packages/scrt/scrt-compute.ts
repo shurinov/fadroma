@@ -1,6 +1,6 @@
 import type { TxResponse } from '@hackbg/secretjs-esm'
-import { Chain, Agent, Connection, Address, UploadedCode, Contract } from '@fadroma/agent'
-import type { CodeId, SigningConnection } from '@fadroma/agent'
+import { Chain, Agent, Connection, Address, UploadedCode, Contract } from '@hackbg/fadroma'
+import type { CodeId, SigningConnection } from '@hackbg/fadroma'
 import { bold, withIntoError } from './scrt-base'
 import faucets from './scrt-faucets'
 import type { ScrtChain, ScrtConnection } from './scrt-chain'
@@ -12,9 +12,9 @@ export async function fetchCodeInfo (
   Promise<Record<CodeId, UploadedCode>>
 {
   const { chainId } = chain
-  const connection = chain.getConnection() as ScrtConnection
+  const { api } = chain.getConnection() as ScrtConnection
   const result: Record<CodeId, UploadedCode> = {}
-  await withIntoError(connection.api.query.compute.codes({})).then(({code_infos})=>{
+  await withIntoError(api.query.compute.codes({})).then(({code_infos})=>{
     for (const { code_id, code_hash, creator } of code_infos||[]) {
       if (!args.codeIds || args.codeIds.includes(code_id)) {
         result[code_id!] = new UploadedCode({
@@ -35,7 +35,7 @@ export async function fetchCodeInstances (
   Promise<Record<CodeId, Record<Address, Contract>>>
 {
   const { chainId } = chain
-  const connection = chain.getConnection() as ScrtConnection
+  const { api } = chain.getConnection() as ScrtConnection
   if (args.parallel) {
     chain.log.warn('fetchCodeInstances in parallel: not implemented')
   }
@@ -43,11 +43,11 @@ export async function fetchCodeInstances (
   for (const [codeId, Contract] of Object.entries(args.codeIds)) {
     let codeHash
     const instances = {}
-    await withIntoError(this.api.query.compute.codeHashByCodeId({ code_id: codeId }))
+    await withIntoError(api.query.compute.codeHashByCodeId({ code_id: codeId }))
       .then(({code_hash})=>codeHash = code_hash)
-    await withIntoError(this.api.query.compute.contractsByCodeId({ code_id: codeId }))
+    await withIntoError(api.query.compute.contractsByCodeId({ code_id: codeId }))
       .then(({contract_infos})=>{
-        for (const { contract_address, contract_info: { label, creator } } of contract_infos) {
+        for (const { contract_address, contract_info: { label, creator } } of contract_infos!) {
           result[contract_address] = new Contract({
             chain,
             codeId,

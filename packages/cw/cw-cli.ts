@@ -1,4 +1,4 @@
-import { bold } from '@fadroma/agent'
+import { bold } from '@hackbg/fadroma'
 import CLI from '@hackbg/cmds'
 import * as Chains from './cw-chains'
 import { CWConnection } from './cw-connection'

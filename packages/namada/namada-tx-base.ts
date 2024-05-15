@@ -1,4 +1,4 @@
-import { assign } from '@fadroma/agent'
+import { assign } from '@hackbg/fadroma'
 import * as Sections from './namada-tx-section'
 
 class NamadaTransaction {

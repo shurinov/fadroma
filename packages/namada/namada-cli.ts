@@ -1,5 +1,5 @@
 import CLI from '@hackbg/cmds'
-import { bold, pickRandom } from '@fadroma/agent'
+import { bold, pickRandom } from '@hackbg/fadroma'
 import { brailleDump } from '@hackbg/dump'
 import {
   NamadaConsole

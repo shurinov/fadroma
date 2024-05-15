@@ -1,6 +1,6 @@
 /** Index of inner transaction content. */
 
-import { assign } from '@fadroma/agent'
+import { assign } from '@hackbg/fadroma'
 import {
   InitProposal,
   VoteProposal

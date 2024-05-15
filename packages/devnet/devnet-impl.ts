@@ -3,7 +3,7 @@
   * i.e. not accessible at all outside the package. */
 import portManager from '@hackbg/port'
 import { Path, SyncFS, FileFormat, XDG } from '@hackbg/file'
-import { bold, colors, randomColor, randomBase16, Connection, Identity, Console } from '@fadroma/agent'
+import { bold, colors, randomColor, randomBase16, Connection, Identity, Console } from '@hackbg/fadroma'
 import * as OCI from '@fadroma/oci'
 import Error from './devnet-error'
 import type { default as DevnetContainer } from './devnet-base'

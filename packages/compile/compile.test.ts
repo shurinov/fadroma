@@ -4,7 +4,7 @@
 import assert, { deepEqual, throws } from 'node:assert'
 import { dirname } from 'node:path'
 import { DotGit } from '@hackbg/repo'
-import { Compiler } from '@fadroma/agent'
+import { Compiler } from '@hackbg/fadroma'
 import { Deployment } from '@fadroma/deploy'
 import * as OCI from '@fadroma/oci'
 import { getCompiler, RawLocalRustCompiler, ContainerizedLocalRustCompiler } from './compile'

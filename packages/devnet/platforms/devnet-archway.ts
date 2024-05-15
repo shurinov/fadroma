@@ -3,7 +3,7 @@ import type { APIMode } from '../devnet-base'
 import type * as Platform from '../devnet-platform'
 import * as OCI from '@fadroma/oci'
 import * as CW from '@fadroma/cw'
-import { Connection, Identity, Token } from '@fadroma/agent'
+import { Connection, Identity, Token } from '@hackbg/fadroma'
 
 export type Version = `4.0.3`
 

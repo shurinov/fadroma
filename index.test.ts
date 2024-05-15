@@ -9,4 +9,3 @@ export default new Suite([
   ['token',   ()=>import('./test/agent-token.test')],
   //['stub',   ()=>import('./agent-stub.test')]
 ])
-

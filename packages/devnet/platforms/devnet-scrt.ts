@@ -4,7 +4,7 @@ import type { APIMode } from '../devnet-base'
 import type * as Platform from '../devnet-platform'
 import * as OCI from '@fadroma/oci'
 import * as Scrt from '@fadroma/scrt'
-import { Connection, Identity, Token } from '@fadroma/agent'
+import { Connection, Identity, Token } from '@hackbg/fadroma'
 import { Path } from '@hackbg/file'
 
 export type Version = `1.${9|10|11|12}`

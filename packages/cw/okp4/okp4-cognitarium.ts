@@ -1,5 +1,5 @@
-import type { CodeId, Uint128 } from '@fadroma/agent'
-import { Contract } from '@fadroma/agent'
+import type { CodeId, Uint128 } from '@hackbg/fadroma'
+import { Contract } from '@hackbg/fadroma'
 
 export type CognitariumVersion = string
 

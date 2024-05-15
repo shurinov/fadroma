@@ -15,7 +15,7 @@
     "@hackbg/cmds": "workspace:^",
     "@hackbg/port": "workspace:^",
 
-    "@fadroma/agent": "workspace:*",
+    "@hackbg/fadroma": "workspace:*",
     "@fadroma/scrt":  "workspace:*",
     "@fadroma/cw":    "workspace:*",
     "@fadroma/oci":   "workspace:*"

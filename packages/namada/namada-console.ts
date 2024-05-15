@@ -1,4 +1,4 @@
-import { Console, bold } from '@fadroma/agent'
+import { Console, bold } from '@hackbg/fadroma'
 import type { Transaction } from './namada-tx-base'
 import type { VoteProposal } from './namada-gov-tx'
 import * as Sections from './namada-tx-section'

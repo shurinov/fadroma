@@ -1,9 +1,7 @@
-import type { Address, CodeId, ChainId, CodeHash } from '../index'
-import { Backend } from '../src/Backend'
-import * as Token from '../src/dlt/Token'
-import { assign, randomBech32, base16, SHA256 } from '../src/Util'
-import { Identity } from '../src/Identity'
-import { Contract } from '../src/compute/Contract'
+import type { Address, CodeId, ChainId, CodeHash } from '@hackbg/fadroma'
+import {
+  Backend, Token, assign, randomBech32, base16, SHA256, Identity, Contract
+} from '@hackbg/fadroma'
 
 export type StubAccount = { address: Address, mnemonic?: string }
 export type StubBalances = Record<string, bigint>

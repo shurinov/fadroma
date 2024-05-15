@@ -7,8 +7,8 @@ import { Objectarium, objectariumCodeIds } from './okp4-objectarium'
 import { Cognitarium, cognitariumCodeIds } from './okp4-cognitarium'
 import { LawStone, lawStoneCodeIds } from './okp4-law-stone'
 
-import type { Uint128, Address, ChainId, CodeId } from '@fadroma/agent'
-import { pickRandom, Chain, Token } from '@fadroma/agent'
+import type { Uint128, Address, ChainId, CodeId } from '@hackbg/fadroma'
+import { pickRandom, Chain, Token } from '@hackbg/fadroma'
 
 export * from './okp4-cognitarium'
 export * from './okp4-objectarium'

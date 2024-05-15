@@ -8,7 +8,7 @@
     "@hackbg/logs": "workspace:*",
     "@hackbg/cmds": "workspace:*",
 
-    "@fadroma/agent": "workspace:*",
+    "@hackbg/fadroma": "workspace:*",
     "@fadroma/oci":   "workspace:*"
   },
   "scripts": {

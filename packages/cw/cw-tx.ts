@@ -1,6 +1,6 @@
-import { Block, Batch } from '@fadroma/agent'
+import { Block, Batch } from '@hackbg/fadroma'
 import { CWError as Error } from './cw-base'
-import { Chain } from '@fadroma/agent'
+import { Chain } from '@hackbg/fadroma'
 import type { CWChain, CWConnection } from './cw-connection'
 import type { CWAgent } from './cw-identity'
 

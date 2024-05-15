@@ -1,5 +1,5 @@
-import type { CodeId, Address } from '@fadroma/agent'
-import { Contract } from '@fadroma/agent'
+import type { CodeId, Address } from '@hackbg/fadroma'
+import { Contract } from '@hackbg/fadroma'
 
 export type LawStoneVersion = string
 

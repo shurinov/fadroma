@@ -2,16 +2,16 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>. **/
 import assert, { equal, throws, rejects } from 'node:assert'
-import { Error } from '../src/Util'
 import {
+  Error,
   Chain,
   Connection,
   Backend,
   Identity,
   Batch,
-} from '../index'
+} from '@hackbg/fadroma'
 import { fixture } from '@fadroma/fixtures'
-import * as Stub from '../stub/stub'
+import * as Stub from '@fadroma/stub'
 
 import { Suite } from '@hackbg/ensuite'
 export default new Suite([

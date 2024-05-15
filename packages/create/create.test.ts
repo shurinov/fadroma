@@ -2,8 +2,8 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>. **/
 import assert from 'node:assert'
-import type { ChainId } from '@fadroma/agent'
-import { Error, bold, timestamp, Bip39, Bip39EN, Stub } from '@fadroma/agent'
+import type { ChainId } from '@hackbg/fadroma'
+import { Error, bold, timestamp, Bip39, Bip39EN, Stub } from '@hackbg/fadroma'
 
 import { tmpDir, TestProjectDeployment } from '@fadroma/fixtures'
 import * as Projects from './create'
