@@ -187,7 +187,7 @@ export class NamadaConnection extends CW.Connection {
         fetch(`${this.url}/block_results?height=${wantedHeight}`)
           .then(response=>response.text()),
       ])
-      const { id, txs, header: { height, time } } = this.decode.block(block, results) as {
+      const { id, txs, header } = this.decode.block(block, results) as {
         id: string,
         txs: Partial<TX.Transaction[]>[]
         header: { height: number, time: string }
@@ -195,9 +195,10 @@ export class NamadaConnection extends CW.Connection {
       return new TX.NamadaBlock({
         chain: this.chain,
         id,
-        height,
-        timestamp: time,
-        transactions: decodeTxs(txs, height),
+        header,
+        height: header.height,
+        timestamp: header.time,
+        transactions: decodeTxs(txs, header.height),
         rawTransactions: [],
       })
     } else if ('hash' in parameter) {
