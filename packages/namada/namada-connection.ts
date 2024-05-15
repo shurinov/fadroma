@@ -199,6 +199,8 @@ export class NamadaConnection extends CW.Connection {
         height: header.height,
         timestamp: header.time,
         transactions: decodeTxs(txs, header.height),
+        blockRaw: block,
+        resultsRaw: results,
         rawTransactions: [],
       })
     } else if ('hash' in parameter) {
