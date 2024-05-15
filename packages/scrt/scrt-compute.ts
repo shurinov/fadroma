@@ -13,7 +13,7 @@ export async function fetchCodeInfo (
 {
   const { chainId } = chain
   const connection = chain.getConnection() as ScrtConnection
-  const result = {}
+  const result: Record<CodeId, UploadedCode> = {}
   await withIntoError(connection.api.query.compute.codes({})).then(({code_infos})=>{
     for (const { code_id, code_hash, creator } of code_infos||[]) {
       if (!args.codeIds || args.codeIds.includes(code_id)) {
@@ -39,7 +39,7 @@ export async function fetchCodeInstances (
   if (args.parallel) {
     chain.log.warn('fetchCodeInstances in parallel: not implemented')
   }
-  const result = {}
+  const result: Record<CodeId, Record<Address, Contract>> = {}
   for (const [codeId, Contract] of Object.entries(args.codeIds)) {
     let codeHash
     const instances = {}
@@ -108,7 +108,7 @@ export async function upload (
   conn: ScrtAgent,
   args: Parameters<SigningConnection["uploadImpl"]>[0]
 ) {
-  const api = conn.getConnection().api
+  const { api, address, fees, log } = conn.getConnection()
   const { gasToken } = conn.connection.constructor as typeof ScrtConnection
 
   const result: {
@@ -119,16 +119,14 @@ export async function upload (
     arrayLog
     transactionHash
     gasUsed
-  } = await withIntoError(
-    this.api!.tx.compute.storeCode({
-      sender:         this.address!,
-      wasm_byte_code: args.binary,
-      source:         "",
-      builder:        ""
-    }, {
-      gasLimit:       Number(this.fees.upload?.amount[0].amount) || undefined
-    })
-  )
+  } = await withIntoError(api.tx.compute.storeCode({
+    sender:         address,
+    wasm_byte_code: args.binary,
+    source:         "",
+    builder:        ""
+  }, {
+    gasLimit:       Number(fees.upload?.amount[0].amount) || undefined
+  }))
 
   const {
     code,
@@ -138,18 +136,18 @@ export async function upload (
   } = result
 
   if (code !== 0) {
-    this.log.error(
+    log.error(
       `Upload failed with code ${bold(code)}:`,
       bold(message ?? rawLog ?? ''),
       ...details
     )
-    if (message === `account ${this.address} not found`) {
-      this.log.info(`If this is a new account, send it some ${gasToken} first.`)
-      if (faucets[this.conn.chainId!]) {
-        this.log.info(`Available faucets\n `, [...faucets[this.conn.chainId!]].join('\n  '))
+    if (message === `account ${address} not found`) {
+      log.info(`If this is a new account, send it some ${gasToken} first.`)
+      if (faucets[conn.chain.chainId]) {
+        log.info(`Available faucets\n `, [...faucets[conn.chain.chainId]].join('\n  '))
       }
     }
-    this.log.error(`Upload failed`, { result })
+    log.error(`Upload failed`, { result })
     throw new Error('upload failed')
   }
 
@@ -159,15 +157,15 @@ export async function upload (
     ?.find((log: Log) => log.type === "message" && log.key === "code_id")
     ?.value
   if (!codeId) {
-    this.log.error(`Code ID not found in result`, { result })
+    log.error(`Code ID not found in result`, { result })
     throw new Error('upload failed')
   }
-  const { codeHash } = await this.conn.fetchCodeInfo(codeId)
+  const { codeHash } = await conn.chain.fetchCodeInfo(codeId)
   return new UploadedCode({
-    chainId:   this.conn.chainId,
+    chainId:   conn.chain.chainId,
     codeId,
     codeHash,
-    uploadBy:  this.address,
+    uploadBy:  address,
     uploadTx:  result.transactionHash,
     uploadGas: result.gasUsed
   })
@@ -177,12 +175,9 @@ export async function instantiate (
   conn: ScrtSigningConnection,
   args: Parameters<SigningConnection["instantiateImpl"]>[0]
 ) {
-  if (!this.address) {
-    throw new Error("agent has no address")
-  }
-
+  const { chain, api, address, log, fees } = conn
   const parameters = {
-    sender:     this.address,
+    sender:     conn.address,
     code_id:    Number(args.codeId),
     code_hash:  args.codeHash,
     label:      args.label!,
@@ -191,14 +186,14 @@ export async function instantiate (
     memo:       args.initMemo
   }
   const instantiateOptions = {
-    gasLimit: Number(this.fees.init?.amount[0].amount) || undefined
+    gasLimit: Number(fees.init?.amount[0].amount) || undefined
   }
   const result: { code, arrayLog, transactionHash, gasUsed } = await withIntoError(
-    this.api.tx.compute.instantiateContract(parameters, instantiateOptions)
+    conn.api.tx.compute.instantiateContract(parameters, instantiateOptions)
   )
 
   if (result.code !== 0) {
-    this.log.error('Init failed:', {
+    log.error('Init failed:', {
       parameters,
       instantiateOptions,
       result
@@ -206,27 +201,25 @@ export async function instantiate (
     throw new Error(`init of code id ${args.codeId} failed`)
   }
 
-  type Log = { type: string, key: string }
-  const address = result.arrayLog!
-    .find((log: Log) => log.type === "message" && log.key === "contract_address")
-    ?.value!
-
   return new Contract({
-    chainId:  this.conn.chainId,
-    address,
+    chain,
+    address:  result.arrayLog!.find(
+      ({ type, key }: { type: string, key: string }) =>
+        type === "message" && key === "contract_address"
+    )?.value!,
     codeHash: args.codeHash,
-    initBy:   this.address,
+    initBy:   address,
     initTx:   result.transactionHash,
     initGas:  result.gasUsed,
     label:    args.label,
-  }) as Contract & { address: Chain.Address }
+  }) as Contract & { address: Address }
 }
 
 export async function execute (
   conn: ScrtSigningConnection,
   args: Parameters<SigningConnection["executeImpl"]>[0] & { preSimulate?: boolean }
 ) {
-  const api = await Promise.resolve(conn.api)
+  const { api, log, address } = conn
 
   const tx = {
     sender:           conn.address!,
@@ -241,20 +234,20 @@ export async function execute (
   }
 
   if (args?.preSimulate) {
-    this.log.info('Simulating transaction...')
+    log.info('Simulating transaction...')
     let simResult
     try {
       simResult = await api.tx.compute.executeContract.simulate(tx, txOpts)
     } catch (e) {
-      this.log.error(e)
-      this.log.warn('TX simulation failed:', tx, 'from', this)
+      log.error(e)
+      log.warn('TX simulation failed:', tx, 'from', address)
     }
     const gas_used = simResult?.gas_info?.gas_used
     if (gas_used) {
-      this.log.info('Simulation used gas:', gas_used)
+      log.info('Simulation used gas:', gas_used)
       const gas = Math.ceil(Number(gas_used) * 1.1)
       // Adjust gasLimit up by 10% to account for gas estimation error
-      this.log.info('Setting gas to 110% of that:', gas)
+      log.info('Setting gas to 110% of that:', gas)
       txOpts.gasLimit = gas
     }
   }

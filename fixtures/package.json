@@ -1,4 +1,9 @@
 {
   "name": "@fadroma/fixtures",
-  "main": "fixtures.ts"
+  "main": "fixtures.ts",
+  "dependencies": {
+    "@hackbg/file": "workspace:*",
+    "@fadroma/agent": "workspace:*",
+    "@fadroma/deploy": "workspace:*"
+  }
 }

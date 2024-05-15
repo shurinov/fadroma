@@ -38,19 +38,16 @@ class OCIConnection extends Connection {
 
   declare api: DockerHandle
 
-  protected override async fetchHeightImpl () {
+  protected override async fetchHeightImpl (): Promise<never> {
     throw new Error('fetchHeightImpl: not applicable')
-    return + new Date()
   }
 
-  protected override async fetchBlockImpl () {
+  protected override async fetchBlockImpl (): Promise<never> {
     throw new Error('fetchBlockImpl: not applicable')
-    return {}
   }
 
-  protected override async fetchBalanceImpl () {
+  protected override async fetchBalanceImpl (): Promise<never> {
     throw new Error('fetchBalanceImpl: not applicable')
-    return 0
   }
 
   protected override async fetchContractInfoImpl (containerId: string): Promise<string> {
@@ -74,9 +71,8 @@ class OCIConnection extends Connection {
       .map(container=>({ address: container.Id, codeId: imageId, container }))
   }
 
-  protected override async queryImpl <T> ({ address, message }) {
+  protected override async queryImpl <T> ({ address, message }): Promise<never> {
     throw new Error('doQuery (inspect image): not implemented')
-    return {} as T
   }
 
   image (
@@ -121,6 +117,7 @@ class OCIImage extends Deploy.ContractTemplate {
     hide(this, 'log')
   }
 
+  name:        string
   declare log: Console
   engine:      OCIConnection|null
   dockerfile:  string|null = null
@@ -321,6 +318,7 @@ class OCIContainer extends Deploy.ContractInstance {
   }
 
   id?:         string
+  name:        string
   engine:      OCIConnection|null
   image:       OCIImage
   entrypoint?: ContainerCommand

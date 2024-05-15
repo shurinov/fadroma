@@ -3,19 +3,15 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>. **/
 import { Path, FileFormat, SyncFS, XDG } from '@hackbg/file'
 import type { CodeId, ChainId, Address, Uint128 } from '@fadroma/agent'
-import { Core, Program } from '@fadroma/agent'
+import { bold, colors } from '@fadroma/agent'
 import CLI from '@hackbg/cmds'
 import * as OCI from '@fadroma/oci'
 import { packageName, packageVersion } from './devnet-base'
 import DevnetContainer from './devnet-base'
 import platforms from './devnet-platform'
 
-const { bold, colors } = Core
-
 export * as Platform from './devnet-platform'
-export {
-  DevnetContainer as Container
-}
+export { DevnetContainer as Container }
 
 /** Commands exposed by Fadroma Devnet. */
 export default class DevnetCLI extends CLI {

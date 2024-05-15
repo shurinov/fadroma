@@ -2,14 +2,16 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>. **/
 
-import { Console, Logged, assign, bold, hideProperties, timestamp, } from '../Util'
-import { SourceCode, RustSourceCode, } from './Source'
-import { CompiledCode } from './Compile'
-import { UploadStore, UploadedCode } from './Upload'
-import { Contract } from './Contract'
+import {
+  Console, Logged, assign, bold, hideProperties, timestamp,
+  SourceCode, RustSourceCode,
+  CompiledCode,
+  UploadStore, UploadedCode,
+  Contract,
+} from '@fadroma/agent'
 import type {
   Name, CodeId, CodeHash, Address, Agent, ChainId, Label, Into, Token, TxHash, Compiler, Message
-} from '../../index'
+} from '@fadroma/agent'
 
 /** A collection of contracts. */
 export class Deployment extends Map<Name, DeploymentUnit> {

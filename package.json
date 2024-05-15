@@ -46,6 +46,7 @@
     "@fadroma/cw":     "workspace:*",
     "@fadroma/scrt":   "workspace:*",
     "@fadroma/create": "workspace:*",
+    "@fadroma/deploy": "workspace:*",
 
     "@hackbg/cmds": "workspace:*",
     "@hackbg/conf": "workspace:*",

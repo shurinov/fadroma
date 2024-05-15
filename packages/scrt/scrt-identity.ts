@@ -11,24 +11,7 @@ import * as ScrtStaking from './scrt-staking'
 import * as ScrtGovernance from './scrt-governance'
 
 export class ScrtAgent extends Agent {
-  api: SecretNetworkClient
-  declare chain:      ScrtChain
-  declare connection: ScrtSigningConnection
-  declare identity:   ScrtIdentity
-
-  override batch (): ScrtBatch {
-    return new ScrtBatch({ agent: this })
-  }
-
-  /** Set permissive fees by default. */
-  fees = {
-    upload: ScrtConnection.gasToken.fee(10000000),
-    init:   ScrtConnection.gasToken.fee(10000000),
-    exec:   ScrtConnection.gasToken.fee(1000000),
-    send:   ScrtConnection.gasToken.fee(1000000),
-  }
-
-  constructor (properties: Partial<ScrtAgent> = {}) {
+  constructor (properties: ConstructorParameters<typeof Agent>[0]) {
     super(properties)
     if (!(this.identity instanceof ScrtIdentity)) {
       if (!(typeof this.identity === 'object')) {
@@ -47,6 +30,24 @@ export class ScrtAgent extends Agent {
     this.api = this.identity.getApi({ chainId, url }) 
   }
 
+  declare chain:      ScrtChain
+  declare identity:   ScrtIdentity
+  #connection: ScrtSigningConnection
+  override getConnection () {
+    return this.#connection
+  }
+  override batch (): ScrtBatch {
+    return new ScrtBatch({ agent: this })
+  }
+
+  /** Set permissive fees by default. */
+  fees = {
+    upload: ScrtConnection.gasToken.fee(10000000),
+    init:   ScrtConnection.gasToken.fee(10000000),
+    exec:   ScrtConnection.gasToken.fee(1000000),
+    send:   ScrtConnection.gasToken.fee(1000000),
+  }
+
   async setMaxGas (): Promise<this> {
     const { gas } = await this.chain.fetchLimits()
     const max = ScrtConnection.gasToken.fee(gas)
@@ -55,7 +56,7 @@ export class ScrtAgent extends Agent {
   }
 
   get account (): ReturnType<SecretNetworkClient['query']['auth']['account']> {
-    return this.api.query.auth.account({ address: this.address })
+    return this.getConnection().api.query.auth.account({ address: this.address })
   }
 
   async getNonce (): Promise<{ accountNumber: number, sequence: number }> {
@@ -70,13 +71,14 @@ export class ScrtAgent extends Agent {
     if (!codeHash) {
       throw new Error("can't encrypt message without code hash")
     }
-    const { encryptionUtils } = await Promise.resolve(this.api) as any
+    const { encryptionUtils } = this.getConnection().api as any
     const encrypted = await encryptionUtils.encrypt(codeHash, msg as object)
     return base64.encode(encrypted)
   }
 }
 
 export class ScrtSigningConnection extends SigningConnection {
+  api: SecretNetworkClient
   async sendImpl (...args: Parameters<SigningConnection["sendImpl"]>) {
     return await ScrtBank.send(this, ...args)
   }

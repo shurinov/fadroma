@@ -17,6 +17,9 @@ importers:
       '@fadroma/cw':
         specifier: workspace:*
         version: link:packages/cw
+      '@fadroma/deploy':
+        specifier: workspace:*
+        version: link:packages/deploy
       '@fadroma/scrt':
         specifier: workspace:*
         version: link:packages/scrt
@@ -112,7 +115,17 @@ importers:
         specifier: ^5.3.3
         version: 5.3.3
 
-  fixtures: {}
+  fixtures:
+    dependencies:
+      '@fadroma/agent':
+        specifier: workspace:*
+        version: link:../packages/agent
+      '@fadroma/deploy':
+        specifier: workspace:*
+        version: link:../packages/deploy
+      '@hackbg/file':
+        specifier: workspace:*
+        version: link:../toolbox/file
 
   packages/agent:
     dependencies:

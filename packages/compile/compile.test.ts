@@ -4,14 +4,15 @@
 import assert, { deepEqual, throws } from 'node:assert'
 import { dirname } from 'node:path'
 import { DotGit } from '@hackbg/repo'
-import { Program, Deploy } from '@fadroma/agent'
+import { Compiler } from '@fadroma/agent'
+import { Deployment } from '@fadroma/deploy'
 import * as OCI from '@fadroma/oci'
 import { getCompiler, RawLocalRustCompiler, ContainerizedLocalRustCompiler } from './compile'
 import { packageRoot } from './package'
 
 const sourcePath = dirname(packageRoot)
 
-class TestBuildDeployment extends Deploy.Deployment {
+class TestBuildDeployment extends Deployment {
 
   a = this.contract('null-a', {
     language: 'rust', sourcePath, cargoToml: 'examples/contracts/cw-null/Cargo.toml'
@@ -60,7 +61,7 @@ export async function testBuild () {
     const compiler = getCompiler({ useContainer })
     assert(compiler)
     compiler[Symbol.toStringTag as unknown as keyof typeof compiler]
-    assert(compiler instanceof Program.Compiler)
+    assert(compiler instanceof Compiler)
 
     const deployment = new TestBuildDeployment()
     await deployment.build({ compiler })

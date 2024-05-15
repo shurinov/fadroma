@@ -5,21 +5,27 @@ import assert, { equal, deepEqual, rejects, throws } from 'node:assert'
 import * as Stub from '../stub/stub'
 import {
   Contract,
+} from '../src/compute/Contract'
+import {
   SourceCode,
   RustSourceCode,
+} from '../src/compute/Source'
+import {
+  LocalCompiledCode as CompiledCode,
+} from '../src/compute/Compile.node'
+import {
+  UploadStore
+} from '../src/Upload'
+import {
   CompiledCode as BaseCompiledCode,
-  Deployment,
   ContractCode,
   ContractInstance,
   UploadedCode,
 } from '../src/Compute'
 import {
-  LocalCompiledCode as CompiledCode,
-} from '../src/Compute.node'
-import {
-  UploadStore,
+  Deployment,
   DeployStore
-} from '../src/Store'
+} from '@fadroma/deploy'
 
 import { Suite } from '@hackbg/ensuite'
 export default new Suite([
@@ -212,12 +218,9 @@ export async function testCodeUnits () {
     ()=>new ContractCode({ compiler: new Stub.Compiler() }).compile())
 
   const source1 = new SourceCode()
-  assert(
-    source1[Symbol.toStringTag])
-  assert(
-    !source1.canFetch)
-  assert(
-    !source1.canCompile)
+  assert(source1[Symbol.toStringTag])
+  assert(!source1.status().canFetch)
+  assert(!source1.status().canCompile)
   deepEqual(source1.serialize(), {
     sourceOrigin: undefined,
     sourceRef:    undefined,
@@ -226,19 +229,14 @@ export async function testCodeUnits () {
   })
 
   source1.sourceOrigin = 'foo'
-  assert(
-    source1.canFetch)
-  assert(
-    source1.canCompile)
+  assert(source1.status().canFetch)
+  assert(source1.status().canCompile)
 
   source1.sourceOrigin = undefined
   source1.sourcePath = 'foo'
-  assert(
-    !source1.canFetch)
-  assert(
-    source1.canCompile)
-  rejects(
-    ()=>new ContractCode({ source: source1 }).compile())
+  assert(!source1.status().canFetch)
+  assert(source1.status().canCompile)
+  rejects(()=>new ContractCode({ source: source1 }).compile())
 
   assert(
     await new ContractCode({ source: source1, compiler: new Stub.Compiler() })
@@ -249,9 +247,9 @@ export async function testCodeUnits () {
   assert(
     rustSource1[Symbol.toStringTag])
   assert(
-    !rustSource1.canFetch)
+    !rustSource1.status().canFetch)
   assert(
-    !rustSource1.canCompile)
+    !rustSource1.status().canCompile)
   deepEqual(rustSource1.serialize(), {
     sourceOrigin:   undefined,
     sourceRef:      undefined,
@@ -264,24 +262,19 @@ export async function testCodeUnits () {
   })
 
   rustSource1.sourceOrigin = 'foo'
-  assert(
-    rustSource1.canFetch)
-  assert(
-    !rustSource1.canCompile)
+  assert(rustSource1.status().canFetch)
+  assert(!rustSource1.status().canCompile)
 
   rustSource1.sourceOrigin = undefined
   rustSource1.sourcePath = 'foo'
-  assert(
-    !rustSource1.canFetch)
-  assert(
-    !rustSource1.canCompile)
+  assert(!rustSource1.status().canFetch)
+  assert(!rustSource1.status().canCompile)
 
   rustSource1.cargoToml = 'foo'
-  assert(
-    rustSource1.canCompile)
+  assert(rustSource1.status().canCompile)
 
-  rustSource1.canFetch
-  rustSource1.canCompileInfo
+  rustSource1.status().canFetch
+  rustSource1.status().canCompileInfo
 
   const compiled1 = new CompiledCode()
   deepEqual(compiled1.serialize(), {

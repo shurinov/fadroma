@@ -23,7 +23,7 @@ export abstract class Agent extends Logged {
     this.identity = properties.identity
     this.fees     = properties.fees
   }
-  /** The connection that will broadcast the transactions. */
+  /** The chain on which this agent operates. */
   chain:      Chain
   /** The identity that will sign the transactions. */
   identity:   Identity

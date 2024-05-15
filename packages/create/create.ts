@@ -3,6 +3,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>. **/
 import type { ChainId } from '@fadroma/agent'
 import { Error, bold, timestamp, Bip39, Bip39EN } from '@fadroma/agent'
+import type { Deployment } from '@fadroma/deploy'
 
 import type { Path } from '@hackbg/file'
 import { SyncFS, FileFormat } from '@hackbg/file'

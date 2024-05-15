@@ -20,8 +20,9 @@
 export * from './fadroma.browser'
 
 // And more!
-import type { ChainId, CodeHash } from '@fadroma/agent'
-import { Console, bold, timestamp, Chain, Store } from '@fadroma/agent'
+import type { ChainId, CodeHash, Connection, Agent } from '@fadroma/agent'
+import { Console, bold, timestamp, Chain, UploadedCode, UploadStore, Compiler } from '@fadroma/agent'
+import { Deployment, DeployStore } from '@fadroma/deploy'
 import { getProject, ProjectPrompter } from '@fadroma/create'
 import Commands from '@hackbg/cmds'
 import { FileFormat } from '@hackbg/file'
@@ -95,7 +96,7 @@ export default function main (...args: any) {
       })))
     .addCommand(
       {name: 'select', info: `activate another deployment`, args: ''},
-      async (name?: string): Promise<Deploy.Deployment|undefined> => selectDeployment(
+      async (name?: string): Promise<Deployment|undefined> => selectDeployment(
         getProject().root,
         name
       ))
@@ -115,19 +116,19 @@ export default function main (...args: any) {
 
 type Project = { // FIXME
   root: any
-  getDeployment(): Promise<Deploy.Deployment>
+  getDeployment(): Promise<Deployment>
   logStatus(): unknown
 }
 
-export function getConnection (): Chain.Connection {
+export function getConnection (): Connection {
   throw new Error('not implemented')
 }
 
-export function getAgent (): Chain.Agent {
+export function getAgent (): Agent {
   throw new Error('not implemented')
 }
 
-export function getCompiler (pkg = "@fadroma/compile"): Promise<Program.Compiler> {
+export function getCompiler (pkg = "@fadroma/compile"): Promise<Compiler> {
   return import(pkg).catch(e=>{
     console.error(
       "Failed to import @fadroma/compile.\n ",
@@ -144,19 +145,19 @@ export function getCompiler (pkg = "@fadroma/compile"): Promise<Program.Compiler
   })
 }
 
-export function getUploadStore (path?: string|Path): Store.UploadStore {
+export function getUploadStore (path?: string|Path): UploadStore {
   if (path) {
     return new JSONFileUploadStore(path)
   } else {
-    return new Store.UploadStore()
+    return new UploadStore()
   }
 }
 
-export function getDeployStore (path?: string): Store.DeployStore {
+export function getDeployStore (path?: string): DeployStore {
   if (path) {
     return new JSONFileDeployStore(path)
   } else {
-    return new Store.DeployStore()
+    return new DeployStore()
   }
 }
 
@@ -194,7 +195,7 @@ export async function runRepl (context?: { project?: Project, script?: string, a
 
 export async function selectDeployment (
   cwd: string|Path, name?: string, store: string|Store.DeployStore = getDeployStore()
-): Promise<Deploy.Deployment> {
+): Promise<Deployment> {
   if (typeof store === 'string') {
     store = getDeployStore(store)
   }
@@ -209,11 +210,11 @@ export async function selectDeployment (
   if (!state) {
     throw new Error(`no deployment ${name} in store`)
   }
-  return Deploy.Deployment.fromSnapshot(state)
+  return Deployment.fromSnapshot(state)
 }
 
 export function exportDeployment (
-  cwd: string|Path, deployment?: Deploy.Deployment, path?: string|Path
+  cwd: string|Path, deployment?: Deployment, path?: string|Path
 ) {
   if (!deployment) {
     throw new Error("deployment not found")
@@ -236,7 +237,7 @@ export function exportDeployment (
 }
 
 /** Directory containing upload receipts, e.g. `state/$CHAIN/upload`. */
-export class JSONFileUploadStore extends Store.UploadStore {
+export class JSONFileUploadStore extends UploadStore {
   dir: SyncFS.Directory
 
   constructor (dir: string|Path) {
@@ -248,7 +249,7 @@ export class JSONFileUploadStore extends Store.UploadStore {
     return `${this.dir?.short??'-'}`
   }
 
-  get (codeHash: CodeHash|{ codeHash: CodeHash }): Deploy.UploadedCode|undefined {
+  get (codeHash: CodeHash|{ codeHash: CodeHash }): UploadedCode|undefined {
     if (typeof codeHash === 'object') {
       codeHash = codeHash.codeHash
     }
@@ -273,7 +274,7 @@ export class JSONFileUploadStore extends Store.UploadStore {
 
   set (
     codeHash: CodeHash|{ codeHash: CodeHash },
-    value: Partial<Deploy.UploadedCode>
+    value: Partial<UploadedCode>
   ): this {
     if (typeof codeHash === 'object') {
       codeHash = codeHash.codeHash
@@ -289,7 +290,7 @@ export class JSONFileUploadStore extends Store.UploadStore {
 }
 
 /** Directory containing deploy receipts, e.g. `state/$CHAIN/deploy`. */
-export class JSONFileDeployStore extends Store.DeployStore {
+export class JSONFileDeployStore extends DeployStore {
   /** Root directory of deploy store. */
   dir: SyncFS.Directory
   /** Name of symlink pointing to active deployment, without extension. */
@@ -304,7 +305,7 @@ export class JSONFileDeployStore extends Store.DeployStore {
     return `${this.dir?.short??'-'}`
   }
 
-  get (name: Deploy.Name): Deploy.DeploymentState|undefined {
+  get (name: Name): DeploymentState|undefined {
     const receipt = this.dir.file(`${name}.json`).setFormat(FileFormat.JSON)
     if (receipt.exists()) {
       const state = receipt.load()
@@ -319,8 +320,8 @@ export class JSONFileDeployStore extends Store.DeployStore {
     return super.get(name)
   }
 
-  set (name: Deploy.Name, state: Partial<Deploy.Deployment>|Deploy.DeploymentState): this {
-    if (state instanceof Deploy.Deployment) state = state.serialize()
+  set (name: Name, state: Partial<Deployment>|DeploymentState): this {
+    if (state instanceof Deployment) state = state.serialize()
     const receipt = new SyncFS.File(this.dir, `${name}.json`).setFormat(FileFormat.JSON)
     this.log('writing', receipt.shortPath)
     receipt.save(state)

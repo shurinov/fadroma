@@ -1,4 +1,5 @@
-import { Core, Deploy, Store } from '@fadroma/agent'
+import { bold, colors, UploadedCode } from '@fadroma/agent'
+import { DeployStore } from '@fadroma/deploy'
 import { SyncFS, FileFormat } from '@hackbg/file'
 import type { Path } from '@hackbg/file'
 
@@ -13,8 +14,6 @@ import { console } from './package'
 import type { Project } from './create'
 
 export const NOT_INSTALLED = 'not installed'
-
-const { bold, colors } = Core
 
 export class SystemTools {
   constructor (readonly verbose: boolean = true) {}
@@ -371,7 +370,7 @@ export class Prompter {
 
 export class ProjectPrompter extends Prompter {
 
-  deployment (store: Store.DeployStore & { root?: Path }): Promise<string|undefined> {
+  deployment (store: DeployStore & { root?: Path }): Promise<string|undefined> {
     const label = store.root
       ? `Select a deployment from ${store.root.short}:`
       : `Select a deployment:`
@@ -425,7 +424,7 @@ export class ProjectPrompter extends Prompter {
       choice('One workspace plus scripts.',      Infinity),
     ])
 
-  contractCrates = (name: string): Promise<Record<string, Partial<Deploy.UploadedCode>>> =>
+  contractCrates = (name: string): Promise<Record<string, Partial<UploadedCode>>> =>
     this.untilDone({}, state => {
       const message = [
         `Project ${name} contains ${Object.keys(state).length} contract(s):\n`,
