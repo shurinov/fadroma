@@ -1,6 +1,8 @@
 import portManager, { waitPort } from '@hackbg/port'
 import { Path, SyncFS, FileFormat } from '@hackbg/file'
-import { timestamp, assign, Console, Compute, Connection, Identity, Backend, Token } from '@fadroma/agent'
+import {
+  timestamp, assign, Console, CompiledCode, Connection, Identity, Backend, Token
+} from '@fadroma/agent'
 import type { Address, CodeId, Uint128 } from '@fadroma/agent'
 import * as OCI from '@fadroma/oci'
 import * as Impl from './devnet-impl'
@@ -59,7 +61,7 @@ export class DevnetContainerConfig {
   /** Initial accounts. */
   genesisAccounts: Record<Address, number|bigint|Uint128> = {}
   /** Initial uploads. */
-  genesisUploads:  Record<CodeId, Partial<Compute.CompiledCode>>  = {}
+  genesisUploads:  Record<CodeId, Partial<CompiledCode>>  = {}
   /** If set, overrides the script that launches the devnet in the container. */
   initScript:      Path = new SyncFS.File(packageRoot, 'dockerfiles', 'devnet.init.mjs')
   /** Function that waits for port to open after launching container.

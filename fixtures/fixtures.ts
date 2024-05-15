@@ -3,7 +3,8 @@ import { fileURLToPath } from 'node:url'
 import { readFileSync } from 'node:fs'
 import ok from 'node:assert'
 import { SyncFS, FileFormat, withTmpDir } from '@hackbg/file'
-import { Console, bold, Chain, Compute, Connection, Identity, Backend } from '@fadroma/agent'
+import { Console, bold, Chain, Connection, Identity, Backend } from '@fadroma/agent'
+import { Deployment } from '@fadroma/deploy'
 
 //@ts-ignore
 export const here      = dirname(fileURLToPath(import.meta.url))
@@ -40,7 +41,7 @@ export const tmpDir = () => {
   return x
 }
 
-export class TestProjectDeployment extends Compute.Deployment {
+export class TestProjectDeployment extends Deployment {
 
   t = this.template('t', {
     chainId:   'stub',

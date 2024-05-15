@@ -3,7 +3,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>. **/
 import assert from 'node:assert'
 import type { ChainId } from '@fadroma/agent'
-import { Error, bold, timestamp, Bip39, Bip39EN, Compute, Stub } from '@fadroma/agent'
+import { Error, bold, timestamp, Bip39, Bip39EN, Stub } from '@fadroma/agent'
 
 import { tmpDir, TestProjectDeployment } from '@fadroma/fixtures'
 import * as Projects from './create'
@@ -97,12 +97,12 @@ export async function testProjectCreate () {
 
 export async function testDeployment () {
   const deployment = new TestProjectDeployment()
-  assert.ok(deployment.t instanceof Compute.ContractTemplate)
+  assert.ok(deployment.t instanceof ContractTemplate)
   await deployment.deploy({
     uploader: new Stub.Agent({}),
     deployer: new Stub.Agent({}),
   })
   assert.ok([deployment.a1, deployment.a2, deployment.a3, ...Object.values(deployment.b)].every(
-    c=>c instanceof Compute.ContractInstance
+    c=>c instanceof ContractInstance
   ))
 }

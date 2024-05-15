@@ -1,6 +1,14 @@
-import type { ChainId, CodeHash, CodeId, Address, Message } from '@fadroma/agent'
-import { Core, Chain, Batch, Stub, Token, Deploy } from '@fadroma/agent'
-import { ScrtMnemonicIdentity } from './scrt-identity'
+import type {
+  ChainId,
+  CodeHash,
+  CodeId,
+  Address,
+  Message,
+  SigningConnection,
+  Identity
+} from '@fadroma/agent'
+import { Chain, Batch, Stub, Token, Contract } from '@fadroma/agent'
+import { ScrtMnemonicIdentity } from '../scrt-identity'
 import {
   ScrtConsole as Console,
   base16,
@@ -15,14 +23,16 @@ import {
   Secp256k1,
   Ed25519,
   SHA256
-} from './scrt-base'
+} from '../scrt-base'
 import { Wallet } from '@hackbg/secretjs-esm'
 
 /** Chain instance containing a local mocknet. */
 class ScrtMocknetConnection extends Stub.Connection {
   static gasToken = new Token.Native('umock')
 
-  declare backend: ScrtMocknetBackend
+  get backend (): ScrtMocknetBackend {
+    return super.backend as unknown as ScrtMocknetBackend
+  }
 
   constructor (options: Partial<ScrtMocknetConnection> = {}) {
     super({ chainId: 'mocknet', ...options })
@@ -42,7 +52,7 @@ class ScrtMocknetConnection extends Stub.Connection {
     return Promise.resolve({})
   }
 
-  protected queryImpl <Q> ({ address, message }): Promise<Q> {
+  protected queryImpl <Q> ({ address, message }: { address: Address, message: Message }): Promise<Q> {
     return (this.backend as ScrtMocknetBackend)
       .getContract({address})
       .query({ msg: message })
@@ -53,17 +63,17 @@ export { ScrtMocknetConnection as Connection }
 
 class ScrtMocknetAgent extends Stub.Agent {
 
-  protected instantiateImpl (...args: Parameters<Stub.Agent["instantiateImpl"]>) {
-    return this.connection.backend.instantiate({
+  protected instantiateImpl (...args: Parameters<SigningConnection["instantiateImpl"]>) {
+    return this.getConnection().backend.instantiate({
       ...args[0] as typeof args[0] & { codeId: CodeId },
-      creator: this.address!
-    }) as Promise<Deploy.ContractInstance & { address: Address }>
+      initBy: this.address!
+    }) as Promise<Contract & { address: Address }>
   }
 
-  protected async executeImpl <T> (...args: Parameters<Stub.Agent["executeImpl"]>):
+  protected async executeImpl <T> (...args: Parameters<SigningConnection["executeImpl"]>):
     Promise<T>
   {
-    return await this.connection.backend.execute(this.address!, ...args) as T
+    return await this.getConnection().backend.execute(this.address!, ...args) as T
   }
 
 }
@@ -185,20 +195,20 @@ class ScrtMocknetBackend extends Stub.Backend {
     return upload
   }
 
-  //async instantiate (codeId: CodeId, options: unknown): Promise<Partial<ContractInstance> & {
+  //async instantiate (codeId: CodeId, options: unknown): Promise<Partial<Contract> & {
   async instantiate (args: {
-    creator:   Address
     codeId:    CodeId
     codeHash:  CodeHash
     label:     string
+    initBy:    Address
     initMsg:   Message
     initSend?: unknown[]
-    initFee?
-    initMemo?
+    initFee?:  unknown
+    initMemo?: unknown
   }):
-    Promise<Deploy.ContractInstance & { address: Address }>
+    Promise<Contract & { address: Address }>
   {
-    const { creator, codeId, codeHash, label, initSend, initMsg, initFee } = args
+    const { initBy, codeId, codeHash, label, initSend, initMsg, initFee } = args
     if (!codeId) {
       throw new Error('missing code id')
     }
@@ -220,21 +230,21 @@ class ScrtMocknetBackend extends Stub.Backend {
     const contract = await new ScrtMocknetContract(this, properties)
     const {imports, refresh} = contract.makeImports()
     contract.runtime = await WebAssembly.instantiate(wasmModule, imports)
-    const response = contract.init({ sender: creator, msg })
+    const response = contract.init({ sender: initBy, msg })
     const {messages} = parseResult(response, 'instantiate', address)
     this.contracts[address] = contract
     await this.passCallbacks(cosmWasmVersion, address, messages)
     code.instances.add(address)
-    this.instances.set(address, { address, codeId, creator })
-    return new Deploy.ContractInstance({
-      chainId:  this.chainId,
+    this.instances.set(address, { address, codeId, initBy })
+    return new Contract({
+      chain:    this.chain,
       address:  address!,
       codeId,
       codeHash: codeHash!,
       label:    label!,
-      initBy:   creator,
+      initBy:   initBy,
       initTx:   ''
-    }) as Deploy.ContractInstance & { address: string }
+    }) as Contract & { address: string }
   }
 
   getContract (address?: Address|{ address: Address }) {
@@ -253,7 +263,7 @@ class ScrtMocknetBackend extends Stub.Backend {
 
   async execute (
     sender: Address,
-    { address }: Partial<Deploy.ContractInstance>,
+    { address }: Partial<Contract>,
     message: Message,
     options?: {
       execSend?: unknown,
@@ -299,7 +309,7 @@ class ScrtMocknetBackend extends Stub.Backend {
       if (instantiate) {
         const { code_id: codeId, callback_code_hash: codeHash, label, msg, send } = instantiate
         //@ts-ignore
-        const instance = await this.instantiate(sender, new ContractInstance({
+        const instance = await this.instantiate(sender, new Contract({
           codeHash,
           codeId,
           label,
@@ -343,7 +353,7 @@ class ScrtMocknetBackend extends Stub.Backend {
       if (instantiate) {
         const { code_id: codeId, code_hash: codeHash, label, msg, send } = instantiate
         //@ts-ignore
-        const instance = await this.instantiate(sender, new ContractInstance({
+        const instance = await this.instantiate(sender, new Contract({
           codeHash,
           codeId,
           label,
@@ -376,7 +386,7 @@ class ScrtMocknetBackend extends Stub.Backend {
     }
   }
 
-  getIdentity (name: string): Promise<Chain.Identity> {
+  getIdentity (name: string): Promise<Identity> {
     return Promise.resolve(new ScrtMnemonicIdentity({
       name,
       ...this.accounts.get(name)

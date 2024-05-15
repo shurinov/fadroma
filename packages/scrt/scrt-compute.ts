@@ -1,22 +1,23 @@
 import type { TxResponse } from '@hackbg/secretjs-esm'
-import { Compute, Chain, Agent, Connection, Address } from '@fadroma/agent'
-import type { CodeId } from '@fadroma/agent'
+import { Chain, Agent, Connection, Address, UploadedCode, Contract } from '@fadroma/agent'
+import type { CodeId, SigningConnection } from '@fadroma/agent'
 import { bold, withIntoError } from './scrt-base'
 import faucets from './scrt-faucets'
 import type { ScrtChain, ScrtConnection } from './scrt-chain'
 import type { ScrtAgent, ScrtSigningConnection } from './scrt-identity'
 
 export async function fetchCodeInfo (
-  chain: ScrtConnection, args: Parameters<Connection["fetchCodeInfoImpl"]>[0]
+  chain: ScrtChain, args: Parameters<Connection["fetchCodeInfoImpl"]>[0]
 ):
-  Promise<Record<CodeId, Compute.UploadedCode>>
+  Promise<Record<CodeId, UploadedCode>>
 {
-  const { chainId, connection } = chain
+  const { chainId } = chain
+  const connection = chain.getConnection() as ScrtConnection
   const result = {}
   await withIntoError(connection.api.query.compute.codes({})).then(({code_infos})=>{
     for (const { code_id, code_hash, creator } of code_infos||[]) {
       if (!args.codeIds || args.codeIds.includes(code_id)) {
-        result[code_id!] = new Compute.UploadedCode({
+        result[code_id!] = new UploadedCode({
           chainId,
           codeId:   code_id,
           codeHash: code_hash,
@@ -29,11 +30,12 @@ export async function fetchCodeInfo (
 }
 
 export async function fetchCodeInstances (
-  chain: ScrtConnection, args: Parameters<Connection["fetchCodeInstancesImpl"]>[0]
+  chain: ScrtChain, args: Parameters<Connection["fetchCodeInstancesImpl"]>[0]
 ):
-  Promise<Record<CodeId, Record<Address, Compute.Contract>>>
+  Promise<Record<CodeId, Record<Address, Contract>>>
 {
-  const { chainId, connection } = chain
+  const { chainId } = chain
+  const connection = chain.getConnection() as ScrtConnection
   if (args.parallel) {
     chain.log.warn('fetchCodeInstances in parallel: not implemented')
   }
@@ -62,14 +64,14 @@ export async function fetchCodeInstances (
 }
 
 export async function fetchContractInfo (
-  conn: ScrtConnection,
+  conn: ScrtChain,
   args: Parameters<Connection["fetchContractInfoImpl"]>[0]
 ):
   Promise<{
     [address in keyof typeof args["contracts"]]: InstanceType<typeof args["contracts"][address]>
   }>
 {
-  const api = await Promise.resolve(conn.api)
+  const api = await Promise.resolve(conn.getConnection().api)
   const { chainId } = conn
   if (args.parallel) {
     conn.log.warn('fetchContractInfo in parallel: not implemented')
@@ -103,11 +105,10 @@ export async function query (
 }
 
 export async function upload (
-  conn: ScrtSigningConnection,
-  args: Parameters<Agent["uploadImpl"]>[0]
+  conn: ScrtAgent,
+  args: Parameters<SigningConnection["uploadImpl"]>[0]
 ) {
-
-  const api = await Promise.resolve(conn.api)
+  const api = conn.getConnection().api
   const { gasToken } = conn.connection.constructor as typeof ScrtConnection
 
   const result: {
@@ -162,7 +163,7 @@ export async function upload (
     throw new Error('upload failed')
   }
   const { codeHash } = await this.conn.fetchCodeInfo(codeId)
-  return new Compute.UploadedCode({
+  return new UploadedCode({
     chainId:   this.conn.chainId,
     codeId,
     codeHash,
@@ -174,7 +175,7 @@ export async function upload (
 
 export async function instantiate (
   conn: ScrtSigningConnection,
-  args: Parameters<Agent["instantiateImpl"]>[0]
+  args: Parameters<SigningConnection["instantiateImpl"]>[0]
 ) {
   if (!this.address) {
     throw new Error("agent has no address")
@@ -210,7 +211,7 @@ export async function instantiate (
     .find((log: Log) => log.type === "message" && log.key === "contract_address")
     ?.value!
 
-  return new Compute.ContractInstance({
+  return new Contract({
     chainId:  this.conn.chainId,
     address,
     codeHash: args.codeHash,
@@ -218,12 +219,12 @@ export async function instantiate (
     initTx:   result.transactionHash,
     initGas:  result.gasUsed,
     label:    args.label,
-  }) as Compute.ContractInstance & { address: Chain.Address }
+  }) as Contract & { address: Chain.Address }
 }
 
 export async function execute (
   conn: ScrtSigningConnection,
-  args: Parameters<Agent["executeImpl"]>[0] & { preSimulate?: boolean }
+  args: Parameters<SigningConnection["executeImpl"]>[0] & { preSimulate?: boolean }
 ) {
   const api = await Promise.resolve(conn.api)
 

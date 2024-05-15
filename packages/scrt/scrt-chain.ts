@@ -3,17 +3,17 @@ import { Chain, Connection, Token } from '@fadroma/agent'
 import type { ChainId } from '@fadroma/agent'
 import { ScrtAgent } from './scrt-identity'
 import { ScrtBlock } from './scrt-tx'
-import * as Bank from './scrt-bank'
-import * as Compute from './scrt-compute'
-import * as Staking from './scrt-staking'
-import * as Governance from './scrt-governance'
+import * as ScrtBank from './scrt-bank'
+import * as ScrtCompute from './scrt-compute'
+import * as ScrtStaking from './scrt-staking'
+import * as ScrtGovernance from './scrt-governance'
 
 export class ScrtChain extends Chain {
 
   declare connections: ScrtConnection[]
 
-  get connection (): ScrtConnection {
-    return super.connection as ScrtConnection
+  getConnection (): ScrtConnection {
+    return this.connections[0]
   }
 
   static async connect ({ chainId, urls }: {
@@ -33,6 +33,8 @@ export class ScrtChain extends Chain {
         api:      new SecretNetworkClient(),
         identity: null,
       })
+    } else {
+      throw new Error("unimplemented!")
     }
   }
 
@@ -93,28 +95,28 @@ export class ScrtConnection extends Connection {
   override async fetchBalanceImpl (
     ...args: Parameters<Connection["fetchBalanceImpl"]>
   ) {
-    return await Bank.fetchBalance(this, ...args)
+    return await ScrtBank.fetchBalance(this, ...args)
   }
 
   override async fetchCodeInfoImpl (
     ...args: Parameters<Connection["fetchCodeInfoImpl"]>
   ) {
-    return await Compute.fetchCodeInfo(this, ...args)
+    return await ScrtCompute.fetchCodeInfo(this, ...args)
   }
 
   override async fetchCodeInstancesImpl (
     ...args: Parameters<Connection["fetchCodeInstancesImpl"]>
   ) {
-    return await Compute.fetchCodeInstances(this, ...args)
+    return await ScrtCompute.fetchCodeInstances(this, ...args)
   }
 
   override async fetchContractInfoImpl (
     ...args: Parameters<Connection["fetchContractInfoImpl"]>
   ) {
-    return await Compute.fetchContractInfo(this, ...args)
+    return await ScrtCompute.fetchContractInfo(this, ...args)
   }
 
   override async queryImpl <T> (parameters): Promise<T> {
-    return await Compute.query(this, parameters) as T
+    return await ScrtCompute.query(this, parameters) as T
   }
 }

@@ -1,7 +1,9 @@
 /** Fadroma. Copyright (C) 2023 Hack.bg. License: GNU AGPLv3 or custom.
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>. **/
-import { bold, Compute, Console } from '@fadroma/agent'
+import {
+  bold, colors, randomColor, assign, Compiler, RustSourceCode, CompiledCode, Console
+} from '@fadroma/agent'
 import * as OCI from '@fadroma/oci'
 
 import { Config } from '@hackbg/conf'
@@ -16,15 +18,13 @@ import { randomBytes } from 'node:crypto'
 
 import { packageRoot, console } from './package'
 
-export const Compiler = Compute.Compiler
-
 export function getCompiler ({
   config = new Config(),
   useContainer = !config.getFlag('FADROMA_BUILD_RAW', ()=>false),
   ...options
 }: |({ useContainer?: false } & Partial<RawLocalRustCompiler>)
    |({ useContainer:  true  } & Partial<ContainerizedLocalRustCompiler>) = {}
-): Compute.Compiler { // class dispatch, ever awkward
+): Compiler { // class dispatch, ever awkward
   if (useContainer) {
     return new ContainerizedLocalRustCompiler({
       config, ...options as Partial<ContainerizedLocalRustCompiler>
@@ -117,7 +117,7 @@ export abstract class LocalRustCompiler extends ConfiguredCompiler {
   /** Version of Rust toolchain to use. */
   toolchain: string|null = this.config.getString('FADROMA_RUST', ()=>'')
   /** Default Git reference from which to build sources. */
-  revision: string = Compute.HEAD
+  revision: string = HEAD
   /** Owner uid that is set on build artifacts. */
   buildUid?: number = (process.getuid ? process.getuid() : undefined) // process.env.FADROMA_BUILD_UID
   /** Owner gid that is set on build artifacts. */
@@ -134,7 +134,7 @@ export abstract class LocalRustCompiler extends ConfiguredCompiler {
   }
 
   /** @returns a fully populated RustSourceCode from the original. */
-  protected resolveSource (source: string|Partial<Compute.RustSourceCode>): Partial<Compute.RustSourceCode> {
+  protected resolveSource (source: string|Partial<RustSourceCode>): Partial<RustSourceCode> {
     if (typeof source === 'string') {
       source = { cargoCrate: source }
     }
@@ -145,7 +145,7 @@ export abstract class LocalRustCompiler extends ConfiguredCompiler {
   }
 
   /** Compile a single contract. */
-  async build (contract: string|Partial<Compute.RustSourceCode>): Promise<Compute.CompiledCode> {
+  async build (contract: string|Partial<RustSourceCode>): Promise<CompiledCode> {
     return (await this.buildMany([contract]))[0]
   }
 
@@ -154,14 +154,14 @@ export abstract class LocalRustCompiler extends ConfiguredCompiler {
     * and have it build all the crates from that combination in sequence,
     * reusing the container's internal intermediate build cache. */
   async buildMany (
-    contracts: (string|(Partial<Compute.RustSourceCode>))[],
+    contracts: (string|(Partial<RustSourceCode>))[],
     // options: { parallel?: boolean } // TODO
-  ): Promise<Compute.CompiledCode[]> {
-    const results: Compute.CompiledCode[] = []
+  ): Promise<CompiledCode[]> {
+    const results: CompiledCode[] = []
     // Group contracts by source root, source ref, and cargo workspace.
     const batches = this.collectBatches(contracts.map(
       x => (typeof x === 'string') ? { sourcePath: x } : x
-    ) as Partial<Compute.RustSourceCode>[])
+    ) as Partial<RustSourceCode>[])
     // Run each root/ref pair in a container, executing one or more cargo build commands.
     for (const [root, refs] of Object.entries(batches)) {
       for (const [ref, batch] of Object.entries(refs)) {
@@ -177,7 +177,7 @@ export abstract class LocalRustCompiler extends ConfiguredCompiler {
     return results
   }
 
-  protected collectBatches (contracts: Array<Partial<Compute.RustSourceCode>>): CompileBatches {
+  protected collectBatches (contracts: Array<Partial<RustSourceCode>>): CompileBatches {
     // Batch by sourcePath, then by sourceRef, then group by workspace
     const batches: CompileBatches = {}
     // Assign each contract to its appropriate branch and group
@@ -227,14 +227,14 @@ export abstract class LocalRustCompiler extends ConfiguredCompiler {
     * If it does, don't rebuild it but return it from there. */
   protected tryGetCached (
     outputDir: string,
-    { sourceRef, cargoCrate }: Partial<Compute.RustSourceCode>
-  ): Compute.CompiledCode|null {
+    { sourceRef, cargoCrate }: Partial<RustSourceCode>
+  ): CompiledCode|null {
     if (this.caching && cargoCrate) {
       const location = new SyncFS.File(
-        outputDir, codePathName(cargoCrate, sourceRef||Compute.HEAD)
+        outputDir, codePathName(cargoCrate, sourceRef||HEAD)
       )
       if (location.exists()) {
-        return new Compute.CompiledCode({
+        return new CompiledCode({
           codePath: location.url,
           codeHash: location.sha256()
         })
@@ -247,20 +247,20 @@ export abstract class LocalRustCompiler extends ConfiguredCompiler {
     outputDir, sourceRef, tasks,
   }: {
     outputDir: string, sourceRef: string, tasks: Set<CompileTask>
-  }): Promise<Record<number, Compute.CompiledCode>> {
-    const results: Record<number, Compute.CompiledCode> = {}
+  }): Promise<Record<number, CompiledCode>> {
+    const results: Record<number, CompiledCode> = {}
     for (const task of tasks) {
       if ((task as CompileWorkspaceTask).cargoWorkspace) {
         for (const { buildIndex, cargoCrate } of (task as CompileWorkspaceTask).cargoCrates) {
           const wasmName = `${sanitize(cargoCrate)}@${sanitize(sourceRef)}.wasm`
-          const compiled = await new Compute.LocalCompiledCode({
+          const compiled = await new LocalCompiledCode({
             codePath: new Path(outputDir, wasmName).absolute
           }).computeHash()
           results[buildIndex] = compiled
         }
       } else if ((task as CompileCrateTask).cargoCrate) {
         const wasmName = `${sanitize((task as CompileCrateTask).cargoCrate)}@${sanitize(sourceRef)}.wasm`
-        const compiled = await new Compute.LocalCompiledCode({
+        const compiled = await new LocalCompiledCode({
           codePath: new Path(outputDir, wasmName).absolute
         }).computeHash()
         results[(task as CompileCrateTask).buildIndex] = compiled
@@ -279,7 +279,7 @@ export abstract class LocalRustCompiler extends ConfiguredCompiler {
   }
 
   protected abstract buildBatch (batch: CompileBatch):
-    Promise<Record<number, Compute.CompiledCode>>
+    Promise<Record<number, CompiledCode>>
 
   protected logStart (sourcePath: string, sourceRef: string, tasks: Set<CompileTask>) {
     this.log.log(
@@ -298,7 +298,7 @@ export class RawLocalRustCompiler extends LocalRustCompiler {
 
   protected async buildBatch (
     batch: CompileBatch, options: { outputDir?: string, buildScript?: string|Path } = {}
-  ): Promise<Record<number, Compute.CompiledCode>> {
+  ): Promise<Record<number, CompiledCode>> {
     const { sourcePath, sourceRef, tasks } = batch
     const safeRef  = sanitize(sourceRef)
     const { outputDir = this.outputDir.absolute, buildScript = this.script } = options
@@ -414,7 +414,7 @@ export class ContainerizedLocalRustCompiler extends LocalRustCompiler {
       buildScript = this.script
     }: { outputDir?: string, buildScript?: string|Path } = {}
 
-  ): Promise<Record<number, Compute.CompiledCode>> {
+  ): Promise<Record<number, CompiledCode>> {
     const safeRef = sanitize(sourceRef)
     if (!buildScript) {
       throw new Error('missing build script')
@@ -508,7 +508,7 @@ export class ContainerizedLocalRustCompiler extends LocalRustCompiler {
 
   protected getLogStream (revision: string, cb: (data: string)=>void) {
     let log = new Console(`compiling in container(${bold(this.buildImage.name)})`)
-    if (revision && revision !== Compute.HEAD) {
+    if (revision && revision !== HEAD) {
       log = log.sub(`(from ${bold(revision)})`)
     }
     // This stream collects the output from the build container, i.e. the build logs.

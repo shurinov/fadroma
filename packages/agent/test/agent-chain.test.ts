@@ -9,7 +9,6 @@ import {
   Backend,
   Identity,
   Batch,
-  Compute
 } from '../index'
 import { fixture } from '@fadroma/fixtures'
 import * as Stub from '../stub/stub'
@@ -83,7 +82,7 @@ export async function testAuth () {
   await agent.chain.fetchCodeInstances('1')
   rejects(agent.chain.fetchCodeInstances(null as any))
   await agent.chain.fetchCodeInstances(['1', '2'])
-  await agent.chain.fetchCodeInstances({'1': Compute.Contract, '2': Compute.Contract})
+  await agent.chain.fetchCodeInstances({'1': Contract, '2': Contract})
 
   await agent.execute('stub', {}, {})
   await agent.execute('stub', 'method', {})
@@ -123,10 +122,10 @@ export async function testClient () {
   await client.query({foo: 'bar'})
   await client.execute({foo: 'bar'})
   await agent.chain.fetchContractInfo('addr')
-  assert(new Compute.Contract({ address: 'addr' }))
-  assert.throws(()=>new Compute.Contract({}).query({}))
-  assert.throws(()=>new Compute.Contract({ agent }).query({}))
-  assert.throws(()=>new Compute.Contract({}).execute({}))
-  assert.throws(()=>new Compute.Contract({ agent }).execute({}))
-  assert.throws(()=>new Compute.Contract({ agent: {} as any }).execute({}))
+  assert(new Contract({ address: 'addr' }))
+  assert.throws(()=>new Contract({}).query({}))
+  assert.throws(()=>new Contract({ agent }).query({}))
+  assert.throws(()=>new Contract({}).execute({}))
+  assert.throws(()=>new Contract({ agent }).execute({}))
+  assert.throws(()=>new Contract({ agent: {} as any }).execute({}))
 }
