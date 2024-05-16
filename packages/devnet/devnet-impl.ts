@@ -123,7 +123,7 @@ export function initContainer (
     devnet.container.engine = devnet.container.image.engine = new OCI.Connection()
   }
 
-  const defineGetter = (name, get) => Object.defineProperty(devnet, name, {
+  const defineGetter = (name: string, get: () => any) => Object.defineProperty(devnet, name, {
     enumerable: true, configurable: true, get
   })
   defineGetter('created', () => {

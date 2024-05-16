@@ -1,6 +1,6 @@
 import { Suite } from '@hackbg/ensuite'
 import * as OCI from './oci'
-import { Core } from '@hackbg/fadroma'
+import { randomBase16 } from '@hackbg/fadroma'
 import * as assert from 'node:assert'
 import { resolve, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -28,7 +28,7 @@ export async function testContainerEngine () {
 
   console.log('Build...')
   await image.build()
-  const container = image.container(`test-hello-${Core.randomBase16()}`)
+  const container = image.container(`test-hello-${randomBase16()}`)
   assert.ok(container instanceof OCI.Container)
   assert.equal(container.image, image)
   assert.equal(await container.exists(), false)

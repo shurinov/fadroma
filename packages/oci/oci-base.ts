@@ -91,4 +91,5 @@ class OCIConsole extends Console {
 export {
   OCIConsole as Console,
   OCIError as Error,
+  bold
 }

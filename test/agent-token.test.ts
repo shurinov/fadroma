@@ -4,7 +4,7 @@
 import assert from 'node:assert'
 import {
   Token, Fungible, NonFungible, Native, Custom, Coin, Fee, Pair, Amount, Swap
-} from '../agent-token'
+} from '../src/dlt/Token'
 
 class MyFungible extends Fungible {
   get id () {

@@ -1,5 +1,5 @@
 import { SecretNetworkClient } from '@hackbg/secretjs-esm'
-import { Chain, Connection, Token } from '@hackbg/fadroma'
+import { Chain, Connection, Token, base16 } from '@hackbg/fadroma'
 import type { ChainId } from '@hackbg/fadroma'
 import { ScrtAgent } from './scrt-identity'
 import { ScrtBlock } from './scrt-tx'
@@ -81,8 +81,8 @@ export class ScrtConnection extends Connection {
         block: { header, data, evidence, last_commit } = {}
       } = await this.api.query.tendermint.getLatestBlock({})
       return new ScrtBlock({
-        hash:   base16.encode(hash),
-        height: Number(header.height)
+        hash:   hash ? base16.encode(hash) : undefined,
+        height: Number(header?.height)
       })
     }
   }
@@ -116,7 +116,7 @@ export class ScrtConnection extends Connection {
     return await ScrtCompute.fetchContractInfo(this, ...args)
   }
 
-  override async queryImpl <T> (parameters): Promise<T> {
+  override async queryImpl <T> (parameters: Parameters<Connection["queryImpl"]>[0]): Promise<T> {
     return await ScrtCompute.query(this, parameters) as T
   }
 }

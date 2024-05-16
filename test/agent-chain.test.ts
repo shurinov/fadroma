@@ -9,6 +9,7 @@ import {
   Backend,
   Identity,
   Batch,
+  Contract,
 } from '@hackbg/fadroma'
 import { fixture } from '@fadroma/fixtures'
 import * as Stub from '@fadroma/stub'

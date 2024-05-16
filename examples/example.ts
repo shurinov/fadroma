@@ -1,6 +1,7 @@
 import { Deployment } from '@fadroma/deploy'
+import type { DeploymentState } from '@fadroma/deploy'
 
-export default function main (state) {
+export default function main (state: DeploymentState) {
 
   return new Deployment(state)
     .addContract("cw-null", {

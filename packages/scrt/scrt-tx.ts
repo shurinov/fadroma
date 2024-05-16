@@ -3,7 +3,9 @@ import {
 } from '@hackbg/fadroma'
 import { MsgStoreCode, MsgInstantiateContract, MsgExecuteContract } from '@hackbg/secretjs-esm'
 
-export class ScrtBlock extends Block {}
+export class ScrtBlock extends Block {
+  hash: string
+}
 
 export class ScrtBatch extends Batch {
   /** Messages to encrypt. */

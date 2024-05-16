@@ -2,9 +2,9 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>. **/
 import assert from 'node:assert'
-import { Console, Error, assign, into, intoArray, intoRecord } from '../agent-core'
-
+import { Console, Error, assign, into, intoArray, intoRecord } from '@hackbg/fadroma'
 import { Suite } from '@hackbg/ensuite'
+
 export default new Suite([
   ['collections', testCollections],
   ['assign',      testAssign],
@@ -12,18 +12,13 @@ export default new Suite([
 
 export async function testCollections () {
   assert.equal(await into(1), 1)
-
   assert.equal(await into(Promise.resolve(1)), 1)
-
   assert.equal(await into(()=>1), 1)
-
   assert.equal(await into(async ()=>1), 1)
-
   assert.deepEqual(
     await intoArray([1, ()=>1, Promise.resolve(1), async () => 1]),
     [1, 1, 1, 1]
   )
-
   assert.deepEqual(await intoRecord({
     ready:   1,
     getter:  () => 2,

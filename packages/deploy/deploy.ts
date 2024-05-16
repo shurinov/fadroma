@@ -385,7 +385,7 @@ export class ContractInstance extends DeploymentUnit {
     compiler = this.compiler,
     rebuild  = false,
     ...initOptions
-  }: Parameters<this["upload"]>[0] & Parameters<Agent["instantiate"]>[1] & {
+  }: Parameters<this["upload"]>[0] & Parameters<Agent["instantiate"]>[0] & {
     deployer?: Address|{ instantiate: Agent["instantiate"] }
     redeploy?: boolean
   } = {}): Promise<ContractInstance & {

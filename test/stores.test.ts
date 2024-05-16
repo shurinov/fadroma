@@ -1,6 +1,7 @@
-import { TestProjectDeployment } from './fixtures/fixtures'
-import { JSONFileUploadStore } from './fadroma'
-import { Stub, Identity } from '@hackbg/fadroma'
+import { TestProjectDeployment } from '@fadroma/fixtures'
+import { JSONFileUploadStore } from '../fadroma'
+import { Identity } from '@hackbg/fadroma'
+import * as Stub from '@fadroma/stub'
 import { withTmpDir } from '@hackbg/file'
 export default async function testJSONFileStores () {
   await withTmpDir(async dir=>{

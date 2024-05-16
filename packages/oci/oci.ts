@@ -89,26 +89,24 @@ class OCIConnection extends Connection {
 }
 
 class OCISigningConnection extends SigningConnection {
-  protected override async sendImpl (_) {
+  override async sendImpl (_: never): Promise<never> {
     throw new Error('send: not applicable')
   }
 
-  protected override async uploadImpl (_) {
+  override async uploadImpl (_: never): Promise<never> {
     throw new Error('upload (load/import image): not implemented')
-    return {}
   }
 
-  protected override async instantiateImpl (_) {
+  override async instantiateImpl (_: never): Promise<never> {
     throw new Error('instantiate (create container): not implemented')
   }
 
-  protected override async executeImpl <T> () {
+  override async executeImpl <T> (_: never): Promise<never> {
     throw new Error('execute (run in container): not implemented')
-    return {} as T
   }
 }
 
-class OCIImage extends Deploy.ContractTemplate {
+class OCIImage extends ContractTemplate {
 
   constructor (properties: Partial<OCIImage> = {}) {
     super(properties)
@@ -190,13 +188,13 @@ class OCIImage extends Deploy.ContractTemplate {
       try {
         await this.assertExists()
         this.log.imageExists()
-      } catch (e1) {
+      } catch (e1: any) {
         if (e1.statusCode !== 404) return reject(e1)
         // if image doesn't exist locally, try pulling it
         try {
           this.log.notCachedPulling()
           await this.pull()
-        } catch (e2) {
+        } catch (e2: any) {
           this.log.error(e2)
           if (!this.dockerfile) {
             const NO_FILE  = `Unavailable and no Dockerfile provided; can't proceed.`
@@ -307,7 +305,7 @@ class OCIImage extends Deploy.ContractTemplate {
 }
 
 /** Interface to a Docker container. */
-class OCIContainer extends Deploy.ContractInstance {
+class OCIContainer extends ContractInstance {
 
   constructor (properties: Partial<OCIContainer> = {}) {
     super(properties)

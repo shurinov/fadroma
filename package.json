@@ -29,7 +29,7 @@
     "clean":          "rm -rf .ubik *.dist.*",
     "cloc":           "cloc --verbose=2 --fullpath --not-match-d=node_modules --not-match-f=pnpm-lock.yaml --exclude-dir=.github,.husky,ensuite,cosmjs-esm,secretjs-esm,coverage,state .",
     "cov":            "time ensuite-cov -r text -r lcov -- index.test.ts",
-    "cov:fast":       "ensuite-cov fadroma.test.ts --parallel",
+    "cov:fast":       "ensuite-cov index.test.ts --parallel",
     "doc":            "typedoc --disableGit --sourceLinkTemplate 'https://github.com/hackbg/fadroma/tree/v2/{path}#L{line}' --json docs.json && ./docs.ts",
     "docs:dev":       "ensuite-dev",
     "docs:render":    "ensuite-render",
@@ -38,7 +38,7 @@
     "prepare":        "husky install",
     "repl":           "./fadroma.cli.cjs repl",
     "test":           "time ensuite index.test.ts",
-    "test:fast":      "ensuite fadroma.test.ts --parallel",
+    "test:fast":      "ensuite index.test.ts --parallel",
 
     "release":        "time sh -c 'pnpm clean && pnpm i && pnpm check && pnpm cov all && ubik release --otp 123123'",
     "release:fast":   "time sh -c 'pnpm clean && pnpm i && pnpm check && ubik release --otp 123123'",

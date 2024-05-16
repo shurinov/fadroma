@@ -16,7 +16,7 @@ export async function fetchCodeInfo (
   const result: Record<CodeId, UploadedCode> = {}
   await withIntoError(api.query.compute.codes({})).then(({code_infos})=>{
     for (const { code_id, code_hash, creator } of code_infos||[]) {
-      if (!args.codeIds || args.codeIds.includes(code_id)) {
+      if (!args?.codeIds || args.codeIds.includes(code_id!)) {
         result[code_id!] = new UploadedCode({
           chainId,
           codeId:   code_id,
@@ -41,14 +41,15 @@ export async function fetchCodeInstances (
   }
   const result: Record<CodeId, Record<Address, Contract>> = {}
   for (const [codeId, Contract] of Object.entries(args.codeIds)) {
-    let codeHash
+    let codeHash: string
     const instances = {}
     await withIntoError(api.query.compute.codeHashByCodeId({ code_id: codeId }))
       .then(({code_hash})=>codeHash = code_hash)
     await withIntoError(api.query.compute.contractsByCodeId({ code_id: codeId }))
       .then(({contract_infos})=>{
         for (const { contract_address, contract_info: { label, creator } } of contract_infos!) {
-          result[contract_address] = new Contract({
+          result[codeId] ??= {}
+          result[codeId][contract_address!] = new Contract({
             chain,
             codeId,
             codeHash,

@@ -2,7 +2,7 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>. **/
 import assert, { equal, deepEqual, rejects, throws } from 'node:assert'
-import * as Stub from '../stub/stub'
+import * as Stub from '@fadroma/stub'
 import {
   Contract,
 } from '../src/compute/Contract'
@@ -11,18 +11,18 @@ import {
   RustSourceCode,
 } from '../src/compute/Source'
 import {
+  CompiledCode as BaseCompiledCode,
+} from '../src/compute/Compile'
+import {
   LocalCompiledCode as CompiledCode,
 } from '../src/compute/Compile.node'
 import {
+  UploadedCode,
   UploadStore
-} from '../src/Upload'
+} from '../src/compute/Upload'
 import {
-  CompiledCode as BaseCompiledCode,
   ContractCode,
   ContractInstance,
-  UploadedCode,
-} from '../src/Compute'
-import {
   Deployment,
   DeployStore
 } from '@fadroma/deploy'
@@ -43,7 +43,7 @@ export async function testDeploymentUnits () {
   equal(
     await contract.deploy(), contract)
   assert(
-    contract.connect(new Stub.Connection()) instanceof Contract)
+    contract.connect(new Stub.Connection({})) instanceof Contract)
   rejects(
     ()=>new ContractInstance({
       uploaded: { codeId: 123 } as any,

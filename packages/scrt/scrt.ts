@@ -27,6 +27,7 @@ export {
 } from './scrt-base'
 export {
   ScrtChain             as Chain,
+  ScrtConnection        as Connection,
 } from './scrt-chain'
 export {
   ScrtBatch             as Batch,
