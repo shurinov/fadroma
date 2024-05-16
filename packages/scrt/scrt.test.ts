@@ -34,9 +34,9 @@ export async function testScrtChain () {
   ok(await Scrt.testnet() instanceof Scrt.Chain)
   const backend = new Devnet.Container(Devnet.Platform.Scrt.versions['1.12'])
   const { alice, bob, guest } = await testConnectionWithBackend(backend, {
-    Chain:    Scrt.Chain,
-    Identity: Scrt.MnemonicIdentity,
-    code:     fixture('scrt-null.wasm'),
+    Connection: Scrt.Connection,
+    Identity:   Scrt.MnemonicIdentity,
+    code:       fixture('scrt-null.wasm'),
   })
   //const batch = () => alice.batch()
     //.instantiate('id', {

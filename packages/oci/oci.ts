@@ -2,7 +2,9 @@ import { hideProperties as hide } from '@hackbg/hide'
 import { Writable, Transform } from 'node:stream'
 import { basename, dirname } from 'node:path'
 import Docker from 'dockerode'
-import { assign, bold, colors, randomColor, Chain, Connection, Agent, SigningConnection } from '@hackbg/fadroma'
+import {
+  assign, bold, colors, randomColor, Chain, Connection, Agent, SigningConnection, Contract
+} from '@hackbg/fadroma'
 import { Error, Console } from './oci-base'
 import type { DockerHandle } from './oci-base'
 import * as Mock from './oci-mock'
@@ -12,17 +14,29 @@ export { Mock, Error, Console }
 
 export const console = new Console('@fadroma/oci')
 
-class OCI extends Chain {}
+class OCI extends Chain {
+  #connection: OCIConnection
+  getConnection (): OCIConnection {
+    return this.#connection
+  }
+  async authenticate (): Promise<OCIAgent> {
+    return new OCIAgent({ chain: this })
+  }
+}
 
 class OCIConnection extends Connection {
   static mock (callback?: Function) {
-    return new this({ api: Mock.mockDockerode(callback) })
+    return new this({
+      api: Mock.mockDockerode(callback)
+    })
   }
 
   /** By default, creates an instance of Dockerode
     * connected to env `DOCKER_HOST`. You can also pass
     * your own Dockerode instance or socket path. */
-  constructor (properties: Partial<OCIConnection> = {}) {
+  constructor (
+    properties: ConstructorParameters<typeof Connection>[0] & { api?: string|DockerHandle }
+  ) {
     properties = { ...properties }
     if (!properties.api) {
       properties.api = new Docker({ socketPath: defaultSocketPath })
@@ -33,31 +47,31 @@ class OCIConnection extends Connection {
     } else {
       throw new Error('invalid docker engine configuration')
     }
-    super(properties as Partial<Connection>)
+    super(properties)
   }
 
   declare api: DockerHandle
 
-  protected override async fetchHeightImpl (): Promise<never> {
+  override async fetchHeightImpl (): Promise<never> {
     throw new Error('fetchHeightImpl: not applicable')
   }
 
-  protected override async fetchBlockImpl (): Promise<never> {
+  override async fetchBlockImpl (): Promise<never> {
     throw new Error('fetchBlockImpl: not applicable')
   }
 
-  protected override async fetchBalanceImpl (): Promise<never> {
+  override async fetchBalanceImpl (): Promise<never> {
     throw new Error('fetchBalanceImpl: not applicable')
   }
 
-  protected override async fetchContractInfoImpl (containerId: string): Promise<string> {
+  override async fetchContractInfoImpl ({ contracts }): Promise<Record<string, OCIContainer>> {
     const container = await this.api.getContainer(containerId)
     const info = await container.inspect()
     return info.Image
   }
 
   /** Returns list of container images. */
-  protected override async fetchCodeInfoImpl () {
+  override async fetchCodeInfoImpl () {
     return (await this.api.listImages())
       .reduce((images, image)=>Object.assign(images, {
         [image.Id]: image
@@ -65,13 +79,13 @@ class OCIConnection extends Connection {
   }
 
   /** Returns list of containers from a given image. */
-  protected override async fetchCodeInstancesImpl (imageId) {
+  override async fetchCodeInstancesImpl (imageId) {
     return (await this.api.listContainers())
       .filter(container=>container.Image === imageId)
       .map(container=>({ address: container.Id, codeId: imageId, container }))
   }
 
-  protected override async queryImpl <T> ({ address, message }): Promise<never> {
+  override async queryImpl <T> ({ address, message }: never): Promise<never> {
     throw new Error('doQuery (inspect image): not implemented')
   }
 
@@ -87,6 +101,8 @@ class OCIConnection extends Connection {
     return new OCIContainer({ engine: this, id })
   }
 }
+
+class OCIAgent extends Agent {}
 
 class OCISigningConnection extends SigningConnection {
   override async sendImpl (_: never): Promise<never> {
@@ -305,7 +321,7 @@ class OCIImage extends ContractTemplate {
 }
 
 /** Interface to a Docker container. */
-class OCIContainer extends ContractInstance {
+class OCIContainer extends Contract {
 
   constructor (properties: Partial<OCIContainer> = {}) {
     super(properties)
@@ -329,6 +345,9 @@ class OCIContainer extends ContractInstance {
   get api (): Docker.Container {
     if (!this.engine || !this.engine.api) {
       throw new Error.NoDockerode()
+    }
+    if (!this.id) {
+      throw new Error.NoContainerID()
     }
     return this.engine.api.getContainer(this.id)
   }

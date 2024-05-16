@@ -44,7 +44,7 @@ export async function fetchCodeInstances (
     let codeHash: string
     const instances = {}
     await withIntoError(api.query.compute.codeHashByCodeId({ code_id: codeId }))
-      .then(({code_hash})=>codeHash = code_hash)
+      .then(({code_hash})=>codeHash = code_hash!)
     await withIntoError(api.query.compute.contractsByCodeId({ code_id: codeId }))
       .then(({contract_infos})=>{
         for (const { contract_address, contract_info: { label, creator } } of contract_infos!) {
@@ -106,21 +106,14 @@ export async function query (
 }
 
 export async function upload (
-  conn: ScrtAgent,
+  agent: ScrtAgent,
   args: Parameters<SigningConnection["uploadImpl"]>[0]
 ) {
-  const { api, address, fees, log } = conn.getConnection()
-  const { gasToken } = conn.connection.constructor as typeof ScrtConnection
+  const connection = agent.getConnection()
+  const { api, address, fees, log } = connection
+  const { gasToken } = ScrtConnection
 
-  const result: {
-    code
-    message
-    details
-    rawLog
-    arrayLog
-    transactionHash
-    gasUsed
-  } = await withIntoError(api.tx.compute.storeCode({
+  const result = await withIntoError(api.tx.compute.storeCode({
     sender:         address,
     wasm_byte_code: args.binary,
     source:         "",
@@ -134,7 +127,7 @@ export async function upload (
     message,
     details = [],
     rawLog
-  } = result
+  } = result as typeof result & { message?: any, details?: any[] }
 
   if (code !== 0) {
     log.error(
@@ -144,8 +137,9 @@ export async function upload (
     )
     if (message === `account ${address} not found`) {
       log.info(`If this is a new account, send it some ${gasToken} first.`)
-      if (faucets[conn.chain.chainId]) {
-        log.info(`Available faucets\n `, [...faucets[conn.chain.chainId]].join('\n  '))
+      const chainId = agent.chain.chainId
+      if (faucets[chainId]) {
+        log.info(`Available faucets\n `, [...faucets[chainId]].join('\n  '))
       }
     }
     log.error(`Upload failed`, { result })
@@ -161,9 +155,9 @@ export async function upload (
     log.error(`Code ID not found in result`, { result })
     throw new Error('upload failed')
   }
-  const { codeHash } = await conn.chain.fetchCodeInfo(codeId)
+  const { codeHash } = await agent.chain.fetchCodeInfo(codeId)
   return new UploadedCode({
-    chainId:   conn.chain.chainId,
+    chainId:   agent.chain.chainId,
     codeId,
     codeHash,
     uploadBy:  address,
@@ -189,8 +183,8 @@ export async function instantiate (
   const instantiateOptions = {
     gasLimit: Number(fees.init?.amount[0].amount) || undefined
   }
-  const result: { code, arrayLog, transactionHash, gasUsed } = await withIntoError(
-    conn.api.tx.compute.instantiateContract(parameters, instantiateOptions)
+  const result = await withIntoError(
+    api.tx.compute.instantiateContract(parameters, instantiateOptions)
   )
 
   if (result.code !== 0) {

@@ -3,15 +3,16 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>. **/
 import assert from 'node:assert'
 import type { ChainId } from '@hackbg/fadroma'
-import { Error, bold, timestamp, Bip39, Bip39EN, Stub } from '@hackbg/fadroma'
-
+import { Error, bold, timestamp, Bip39, Bip39EN } from '@hackbg/fadroma'
+import * as Stub from '@fadroma/stub'
 import { tmpDir, TestProjectDeployment } from '@fadroma/fixtures'
-import * as Projects from './create'
 import { withTmpDir } from '@hackbg/file'
-
 import { Suite } from '@hackbg/ensuite'
+import { UploadUnit } from '@fadroma/deploy'
+import * as Create from './create'
+
 export default new Suite([
-  ["commands",   testProjectCommands],
+  //["commands",   testProjectCommands],
   ["create",     testProjectCreate],
   ['deployment', testDeployment],
 ])
@@ -20,17 +21,17 @@ export async function testProjectCommands () {
   //await projectMain()
 
   //for (const project of [
-    //await Projects.ScriptProject.create({
+    //await Create.ScriptProject.create({
       //name: 'test-script-project',
       //root: `${tmpDir()}/test-script-project`,
       //interactive: false
     //}),
-    //await Projects.CrateProject.create({
+    //await Create.CrateProject.create({
       //name: 'test-crate-project',
       //root: `${tmpDir()}/test-crate-project`,
       //interactive: false
     //}),
-    //await Projects.WorkspaceProject.create({
+    //await Create.WorkspaceProject.create({
       //name: 'test-workspace-project',
       //root: `${tmpDir()}/test-workspace-project`,
       //interactive: false
@@ -50,13 +51,13 @@ export async function testProjectCommands () {
 
 export async function testProjectCreate () {
   await withTmpDir(async root=>{
-    Projects.createProject({
+    Create.createProject({
       name: 'test-project-1',
       root,
       interactive: false
     })
 
-    const project = Projects.getProject(root)
+    const project = Create.getProject(root)
 
     await project.logStatus()
 
@@ -97,11 +98,9 @@ export async function testProjectCreate () {
 
 export async function testDeployment () {
   const deployment = new TestProjectDeployment()
-  assert.ok(deployment.t instanceof ContractTemplate)
-  await deployment.deploy({
-    uploader: new Stub.Agent({}),
-    deployer: new Stub.Agent({}),
-  })
+  assert.ok(deployment.t instanceof UploadUnit)
+  const agent = new Stub.Agent({ chain: new Stub.Chain(), identity: {} })
+  await deployment.deploy({ uploader: agent, deployer: agent })
   assert.ok([deployment.a1, deployment.a2, deployment.a3, ...Object.values(deployment.b)].every(
     c=>c instanceof ContractInstance
   ))

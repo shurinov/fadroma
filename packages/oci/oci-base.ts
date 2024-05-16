@@ -32,6 +32,9 @@ class OCIError extends Error {
   static NoImage = this.define('NoImage',
     ()=>'No image specified'
   )
+  static NoContainerID = this.define('NoContainerID',
+    ()=>'No container ID specified'
+  )
   static NoContainer = this.define('NoContainer',
     ()=>'No container'
   )

@@ -1,5 +1,5 @@
 import { TestProjectDeployment } from '@fadroma/fixtures'
-import { JSONFileUploadStore } from '../fadroma'
+import { JSONFileUploadStore } from '@fadroma/deploy'
 import { Identity } from '@hackbg/fadroma'
 import * as Stub from '@fadroma/stub'
 import { withTmpDir } from '@hackbg/file'

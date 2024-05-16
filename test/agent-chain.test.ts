@@ -24,21 +24,21 @@ export default new Suite([
 ])
 
 export async function testHeight () {
-  const connection = new Stub.Chain()
-  assert(await connection.height)
-  assert(await connection.nextBlock)
-  Object.defineProperty(connection, 'height', { configurable: true, get () {
+  const chain = new Stub.Chain()
+  assert(await chain.height)
+  assert(await chain.nextBlock)
+  Object.defineProperty(chain, 'height', { configurable: true, get () {
     return Promise.resolve('NaN')
   } })
-  assert.equal(await connection.nextBlock, NaN)
-  Object.defineProperty(connection, 'height', { configurable: true, get () {
-    Object.defineProperty(connection, 'height', { configurable: true, get () {
+  assert.equal(await chain.nextBlock, NaN)
+  Object.defineProperty(chain, 'height', { configurable: true, get () {
+    Object.defineProperty(chain, 'height', { configurable: true, get () {
       throw new Error('yeet')
     } })
     return Promise.resolve(0)
   } })
-  assert.rejects(()=>connection.nextBlock)
-  assert(await connection.query('', {}))
+  assert.rejects(()=>chain.nextBlock)
+  assert(await chain.query('', {}))
 }
 
 export async function testCodes () {
@@ -49,18 +49,18 @@ export async function testCodes () {
     address: 'stub1instancefoo',
     initBy:  'stub1instancefoo'
   })
-  const connection = new Stub.Chain({ backend })
-  const { codeId, codeHash } = await connection.fetchContractInfo('stub1abs')
+  const chain = new Stub.Chain({ backend })
+  const { codeId, codeHash } = await chain.fetchContractInfo('stub1abs')
   assert.equal(codeId,   "123")
   assert.equal(codeHash, "abc")
-  assert.equal((await connection.fetchCodeInfo('123')).codeHash, "abc")
+  assert.equal((await chain.fetchCodeInfo('123')).codeHash, "abc")
 }
 
 export async function testAuth () {
   throws(()=>new Identity().sign(''))
   const identity = new Identity({ name: 'foo', address: 'foo1bar' })
   const agent = await new Stub.Chain().authenticate(identity)
-  //assert.equal(connection[Symbol.toStringTag], 'stub (mocknet): testing1')
+  //assert.equal(chain[Symbol.toStringTag], 'stub (mocknet): testing1')
   assert(agent instanceof Stub.Connection)
   assert(agent.identity?.address)
   assert(agent.identity?.name)
@@ -75,9 +75,9 @@ export async function testAuth () {
 
   await agent.instantiate('1', { label: 'foo', initMsg: 'bar' })
   await agent.instantiate({ codeId: '2' }, { label: 'foo', initMsg: {} })
-  rejects(()=>agent.instantiate('foo', {}))
-  rejects(()=>agent.instantiate('', {}))
-  rejects(()=>agent.instantiate('1', { label: 'foo' }))
+  rejects(()=>agent.instantiate('foo', {} as any))
+  rejects(()=>agent.instantiate('', {} as any))
+  rejects(()=>agent.instantiate('1', { label: 'foo' } as any))
   rejects(()=>agent.instantiate('1', { initMsg: {} }))
 
   await agent.chain.fetchCodeInstances('1')
@@ -102,12 +102,12 @@ export async function testAuth () {
 }
 
 export async function testBatch () {
-  const connection = await new Stub.Chain().authenticate(new Identity())
-  const batch = connection.batch()
+  const agent = await new Stub.Chain().authenticate(new Identity())
+  const batch = agent.batch()
     .upload({})
     .upload({})
-    .instantiate({}, {})
-    .instantiate({}, {})
+    .instantiate({}, { label: 'foo', initMsg: '' })
+    .instantiate({}, { label: 'bar', initMsg: {} })
     .execute({}, {})
     .execute({}, {})
   assert(batch instanceof Batch)

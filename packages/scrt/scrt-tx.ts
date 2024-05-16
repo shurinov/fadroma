@@ -26,7 +26,7 @@ export class ScrtBatch extends Batch {
 
   instantiate (
     code:    Parameters<Batch["instantiate"]>[0],
-    options: Parameters<Batch["instantiate"]>[1]
+    options: Parameters<Batch["instantiate"]>[1],
   ) {
     this.messages.push(new MsgInstantiateContract({
       //callback_code_hash: '',

@@ -54,13 +54,13 @@ export class Namada extends CW.Chain {
     return await super.connect(properties) as Namada
   }
 
-  /** Connect to Namada using `testnetChainId` and `testnetUrls`. */
+  /** Connect to Namada using `testnetChainId` and `testnetURLs`. */
   static testnet (properties: Parameters<typeof Namada["connect"]>[0]) {
     return this.connect({
       chainId: properties.chainId || Namada.testnetChainId,
       urls: (properties as any).url
         ? [(properties as any).url]
-        : ((properties as any).urls || [...Namada.testnetUrls]),
+        : ((properties as any).urls || [...Namada.testnetURLs]),
     })
   }
 
@@ -68,7 +68,7 @@ export class Namada extends CW.Chain {
   static testnetChainId = 'shielded-expedition.88f17d1d14'
 
   /** Default RPC endpoints for testnet. */
-  static testnetUrls = new Set([
+  static testnetURLs = new Set([
     'https://namada-testnet-rpc.itrocket.net',
     'https://namada-rpc.stake-machine.com',
     'https://namadarpc.songfi.xyz',

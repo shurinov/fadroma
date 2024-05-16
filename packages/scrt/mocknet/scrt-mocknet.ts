@@ -35,8 +35,8 @@ class ScrtMocknetConnection extends Stub.Connection {
     return super.backend as unknown as ScrtMocknetBackend
   }
 
-  constructor (options: Partial<ScrtMocknetConnection> = {}) {
-    super({ chainId: 'mocknet', ...options })
+  constructor (options: ConstructorParameters<typeof Stub.Connection>[0]) {
+    super({ ...options })
     this.log.label += ` (${this.chainId})`
   }
 
@@ -401,11 +401,11 @@ class ScrtMocknetBackend extends Stub.Backend {
       alive:    this.alive,
       backend:  this,
     })
-    if (parameter) {
-      if (typeof parameter === 'string') {
-        parameter = await this.getIdentity(parameter)
+    if (args[0]) {
+      if (typeof args[0] === 'string') {
+        args[0] = await this.getIdentity(args[0])
       }
-      return connection.authenticate(new ScrtMnemonicIdentity(parameter))
+      return connection.authenticate(new ScrtMnemonicIdentity(args[0]))
       throw new Error("unimplemented!")
     } else {
       return connection

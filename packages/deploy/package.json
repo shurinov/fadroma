@@ -1,5 +1,9 @@
 {
   "name": "@fadroma/deploy",
   "type": "module",
-  "main": "deploy.ts"
+  "main": "deploy.node.ts",
+  "browser": "deploy.ts",
+  "scripts": {
+    "check": "time tsc --noEmit"
+  }
 }

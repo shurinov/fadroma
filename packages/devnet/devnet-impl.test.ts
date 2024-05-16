@@ -104,7 +104,7 @@ export default async () => {
             logs: async () => {
               return {
                 off () {},
-                on (event, callback) {
+                on (event: any, callback: any) {
                   if (event === 'data') {
                     setTimeout(()=>{
                       callback('mock-ready')

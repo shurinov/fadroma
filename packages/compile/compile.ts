@@ -18,6 +18,8 @@ import { randomBytes } from 'node:crypto'
 
 import { packageRoot, console } from './package'
 
+export const HEAD = 'HEAD'
+
 export function getCompiler ({
   config = new Config(),
   useContainer = !config.getFlag('FADROMA_BUILD_RAW', ()=>false),
@@ -524,7 +526,4 @@ export class ContainerizedLocalRustCompiler extends LocalRustCompiler {
     if (this.quiet) buildLogStream.on('data', cb)
     return buildLogStream
   }
-}
-
-export default function main (...args: any) {
 }

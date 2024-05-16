@@ -43,14 +43,16 @@ export abstract class Agent extends Logged {
   /** Send one or more kinds of native tokens to one or more recipients. */
   async send (
     outputs:  Record<Address, Record<string, Uint128>>,
-    options?: Omit<Parameters<SigningConnection["sendImpl"]>[0], 'outputs'>
+    options?: Omit<Parameters<SigningConnection["sendImpl"]>[0],
+      'outputs'>
   ): Promise<unknown> {
     return send(this, outputs, options)
   }
   /** Upload a contract's code, generating a new code id/hash pair. */
   async upload (
     code:     string|URL|Uint8Array|Partial<CompiledCode>,
-    options?: Omit<Parameters<SigningConnection["uploadImpl"]>[0], 'binary'>,
+    options?: Omit<Parameters<SigningConnection["uploadImpl"]>[0],
+      'binary'>,
   ): Promise<UploadedCode & {
     chainId: ChainId,
     codeId:  CodeId
@@ -60,7 +62,10 @@ export abstract class Agent extends Logged {
   /** Instantiate a new program from a code id, label and init message. */
   async instantiate (
     contract: CodeId|Partial<UploadedCode>,
-    options:  Partial<Contract> & { initMsg: Into<Message> }
+    options:  Partial<Contract> & {
+      initMsg:   Into<Message>,
+      initSend?: Token.Native[]
+    }
   ): Promise<Contract & {
     address: Address,
   }> {
@@ -70,7 +75,8 @@ export abstract class Agent extends Logged {
   async execute <T> (
     contract: Address|Partial<Contract>,
     message:  Message,
-    options?: Omit<Parameters<SigningConnection["executeImpl"]>[0], 'address'|'codeHash'|'message'>
+    options?: Omit<Parameters<SigningConnection["executeImpl"]>[0],
+      'address'|'codeHash'|'message'>
   ): Promise<T> {
     return await execute(this, contract, message, options) as T
   }

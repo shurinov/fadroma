@@ -37,3 +37,6 @@ export {
 } from './cw-identity'
 export * from './cw-chains'
 export * as Staking from './cw-staking'
+
+import { CWChain } from './cw-connection'
+export const connect = CWChain.connect

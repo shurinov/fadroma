@@ -2,7 +2,10 @@ import { withIntoError } from './scrt-base'
 import type { ScrtConnection } from './scrt-chain'
 import type { ScrtSigningConnection } from './scrt-identity'
 
-export async function fetchBalance ({ api }: ScrtConnection, parameters) {
+export async function fetchBalance ({ api }: ScrtConnection, parameters):
+  Record<string, Record<string, string>>
+{
+  const result = {}
   return (await withIntoError(api.query.bank.balance({
     address,
     denom

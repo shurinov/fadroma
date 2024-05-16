@@ -21,8 +21,8 @@ import {
   UploadStore
 } from '../src/compute/Upload'
 import {
-  ContractCode,
-  ContractInstance,
+  ContractLifecycle,
+  InstantiateUnit,
   Deployment,
   DeployStore
 } from '@fadroma/deploy'
@@ -39,25 +39,22 @@ export default new Suite([
 ])
 
 export async function testDeploymentUnits () {
-  const contract = new ContractInstance({ address: 'present' })
-  equal(
-    await contract.deploy(), contract)
-  assert(
-    contract.connect(new Stub.Connection({})) instanceof Contract)
-  rejects(
-    ()=>new ContractInstance({
-      uploaded: { codeId: 123 } as any,
-    }).deploy())
-  rejects(
-    ()=>new ContractInstance({
-      uploaded: { codeId: 123 } as any,
-      deployer: 'onlyaddress'
-    }).deploy())
-  rejects(
-    ()=>new ContractInstance({
-      uploaded: { codeId: 123 } as any,
-      deployer: { instantiate: ((...args: any) => Promise.resolve({ isValid: () => false })) } as any
-    }).deploy())
+  const contract = new InstantiateUnit({ address: 'present' })
+  equal(await contract.deploy(), contract)
+
+  assert(contract.connect(new Stub.Connection({
+    chain: new Stub.Chain(),
+    url: 'stub'
+  })) instanceof Contract)
+  rejects(()=>new InstantiateUnit({ uploaded: { codeId: 123 } as any }).deploy())
+  rejects(()=>new InstantiateUnit({
+    uploaded: { codeId: 123 } as any,
+    deployer: 'onlyaddress'
+  }).deploy())
+  rejects(()=>new InstantiateUnit({
+    uploaded: { codeId: 123 } as any,
+    deployer: { instantiate: ((...args: any) => Promise.resolve({ isValid: () => false })) } as any
+  }).deploy())
 }
 
 export async function testDeployment () {
@@ -65,7 +62,7 @@ export async function testDeployment () {
   const uploadStore = new UploadStore()
   const deployStore = new DeployStore()
   const compiler = new Stub.Compiler()
-  const uploader = new Stub.Agent({})
+  const uploader = new Stub.Agent({ chain: new Stub.Chain({ chainId: 'stub' }), identity: {} })
   const deployer = uploader
 
   class MyBuildableDeployment extends Deployment {
@@ -110,14 +107,10 @@ export async function testDeployment () {
 
   new MyDeployment().serialize()
 
-  assert(
-    MyDeployment.fromSnapshot(new MyDeployment().serialize()))
-  throws(
-    ()=>new MyDeployment().set('foo', {} as any))
-  assert(
-    await new MyDeployment().upload({ compiler, uploader }))
-  assert(
-    await new MyDeployment().deploy({ compiler, uploader, deployer }))
+  assert(MyDeployment.fromSnapshot(new MyDeployment().serialize()))
+  throws(()=>new MyDeployment().set('foo', {} as any))
+  assert(await new MyDeployment().upload({ compiler, uploader }))
+  assert(await new MyDeployment().deploy({ compiler, uploader, deployer }))
 }
 
 export async function testUploadStore () {
@@ -144,14 +137,14 @@ export async function testDeployStore () {
 }
 export async function testCodeContract () {
 
-  rejects(()=>new ContractCode({
+  rejects(()=>new ContractLifecycle({
     //@ts-ignore
     source: { canCompile: false },
     //@ts-ignore
     compiler: {}
   }).compile())
 
-  rejects(()=>new ContractCode({
+  rejects(()=>new ContractLifecycle({
     //@ts-ignore
     source: { canCompile: true },
   }).compile({
@@ -159,7 +152,7 @@ export async function testCodeContract () {
     compiler: { build: () => Promise.resolve({ canUpload: false }) }
   }))
 
-  rejects(()=>new ContractCode({
+  rejects(()=>new ContractLifecycle({
     //@ts-ignore
     compiled: { canUpload: true },
   }).upload({
@@ -167,7 +160,7 @@ export async function testCodeContract () {
     uploader: false
   }))
 
-  rejects(()=>new ContractCode({
+  rejects(()=>new ContractLifecycle({
     //@ts-ignore
     compiled: { canUpload: true },
   }).upload({
@@ -175,7 +168,7 @@ export async function testCodeContract () {
     uploader: { upload: () => Promise.resolve({ canInstantiate: false }) }
   }))
 
-  //const contract1 = new ContractCode({
+  //const contract1 = new ContractLifecycle({
     //source:   new SourceCode(),
     //compiled: new CompiledCode(),
     //uploaded: new UploadedCode()
@@ -188,9 +181,9 @@ export async function testCodeContract () {
   //const validSource = new class extends SourceCode { isValid () { return true } }
   //const invalidSource = new class extends SourceCode { isValid () { return false } }
   //const brokenCompiler: any = { build: () => Promise.resolve({ isValid: () => false }) }
-  //rejects(()=>new ContractCode({source: validSource}).compile({compiler: brokenCompiler}))
-  //rejects(()=>new ContractCode({source: invalidSource}).compile({compiler: new Stub.Compiler()}))
-  //assert(new ContractCode({ source: validSource }).compile({ compiler: new Stub.Compiler() }))
+  //rejects(()=>new ContractLifecycle({source: validSource}).compile({compiler: brokenCompiler}))
+  //rejects(()=>new ContractLifecycle({source: invalidSource}).compile({compiler: new Stub.Compiler()}))
+  //assert(new ContractLifecycle({ source: validSource }).compile({ compiler: new Stub.Compiler() }))
   //// can't upload missing code
   //rejects(()=>contract1.upload())
   //rejects(()=>contract1.upload({uploader: new Stub.Connection()}))
@@ -213,9 +206,9 @@ export async function testCodeCompiler () {
 
 export async function testCodeUnits () {
   rejects(
-    ()=>new ContractCode({ }).compile())
+    ()=>new ContractLifecycle({ }).compile())
   rejects(
-    ()=>new ContractCode({ compiler: new Stub.Compiler() }).compile())
+    ()=>new ContractLifecycle({ compiler: new Stub.Compiler() }).compile())
 
   const source1 = new SourceCode()
   assert(source1[Symbol.toStringTag])
@@ -236,20 +229,17 @@ export async function testCodeUnits () {
   source1.sourcePath = 'foo'
   assert(!source1.status().canFetch)
   assert(source1.status().canCompile)
-  rejects(()=>new ContractCode({ source: source1 }).compile())
+  rejects(()=>new ContractLifecycle({ source: source1 }).compile())
 
-  assert(
-    await new ContractCode({ source: source1, compiler: new Stub.Compiler() })
-      .compile() instanceof BaseCompiledCode
-  )
+  assert(await new ContractLifecycle({
+    source: source1,
+    compiler: new Stub.Compiler()
+  }).compile() instanceof BaseCompiledCode)
 
   const rustSource1 = new RustSourceCode()
-  assert(
-    rustSource1[Symbol.toStringTag])
-  assert(
-    !rustSource1.status().canFetch)
-  assert(
-    !rustSource1.status().canCompile)
+  assert(rustSource1[Symbol.toStringTag])
+  assert(!rustSource1.status().canFetch)
+  assert(!rustSource1.status().canCompile)
   deepEqual(rustSource1.serialize(), {
     sourceOrigin:   undefined,
     sourceRef:      undefined,

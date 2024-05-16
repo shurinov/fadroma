@@ -1,1 +1,23 @@
-{}
+{
+  "name": "@fadroma/cli",
+  "dependencies": {
+    "@hackbg/cmds": "workspace:*"
+  },
+  "peerDependencies": {
+    "@hackbg/fadroma": "workspace:*",
+    "@fadroma/create": "workspace:*",
+    "@fadroma/cw":     "workspace:*",
+    "@fadroma/namada": "workspace:*"
+  },
+  "peerDependenciesMeta": {
+    "@fadroma/create": {
+      "optional": true
+    },
+    "@fadroma/cw": {
+      "optional": true
+    },
+    "@fadroma/namada": {
+      "optional": true
+    }
+  }
+}

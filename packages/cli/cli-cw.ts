@@ -1,7 +1,6 @@
 import { bold } from '@hackbg/fadroma'
 import CLI from '@hackbg/cmds'
-import * as Chains from './cw-chains'
-import { CWConnection } from './cw-connection'
+import * as CW from '@fadroma/cw'
 
 export default class CWCLI extends CLI {
 
@@ -10,11 +9,11 @@ export default class CWCLI extends CLI {
     this.log.label = ``
   }
 
-  archway   = this.commands('archway',   'commands for Archway',   new Chains.Archway.CLI())
-  axelar    = this.commands('axelar',    'commands for Axelar',    new Chains.Axelar.CLI())
-  injective = this.commands('injective', 'commands for Injective', new Chains.Injective.CLI())
-  okp4      = this.commands('okp4',      'commands for OKP4',      new Chains.OKP4.CLI())
-  osmosis   = this.commands('osmosis',   'commands for Osmosis',   new Chains.Osmosis.CLI())
+  archway   = this.commands('archway',   'commands for Archway',   new CW.Archway.CLI())
+  axelar    = this.commands('axelar',    'commands for Axelar',    new CW.Axelar.CLI())
+  injective = this.commands('injective', 'commands for Injective', new CW.Injective.CLI())
+  okp4      = this.commands('okp4',      'commands for OKP4',      new CW.OKP4.CLI())
+  osmosis   = this.commands('osmosis',   'commands for Osmosis',   new CW.Osmosis.CLI())
 
   check = this.command({
     name: 'check',
@@ -25,7 +24,7 @@ export default class CWCLI extends CLI {
       this.log.error(bold('Pass a RPC URL to connect.'))
       process.exit(1)
     }
-    const connection = new CWConnection({ url })
+    const connection = await CW.connect({ url })
     this.log.info(`Will exit with error code if not connected in ${timeout}s.`)
     const timer = setTimeout(()=>{
       this.log.error(`Failed to connect in ${timeout}s.`)
