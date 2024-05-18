@@ -22,7 +22,8 @@ export abstract class Connection extends Logged {
   ) {
     super(properties)
     this.#chain = properties.chain
-    assign(this, properties, [ "url", "alive" ])
+    this.url    = properties.url
+    this.alive  = properties.alive ?? true
     this.log.label = [
       this.constructor.name,
       '(', this[Symbol.toStringTag] ? `(${bold(this[Symbol.toStringTag])})` : null, ')'
@@ -50,7 +51,7 @@ export abstract class Connection extends Logged {
     *
     * The same chain may be accessible via different endpoints, so
     * this property contains the URL to which requests are sent. */
-  url!: string
+  url:   string
   /** Setting this to false stops retries. */
   alive: boolean = true
 

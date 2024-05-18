@@ -1,6 +1,6 @@
 import { ok, equal, throws } from 'node:assert'
 import { Console } from '@hackbg/fadroma'
-import * as OCI from '@fadroma/oci'
+import { OCI, OCIContainer, OCIImage } from '@fadroma/oci'
 import * as Impl from './devnet-impl'
 import { DevnetContainerConfig } from './devnet-base'
 
@@ -9,8 +9,7 @@ export default async () => {
   equal(Impl.initPort({ nodePortMode: 'http'    }).nodePort, 1317)
   equal(Impl.initPort({ nodePortMode: 'grpc'    }).nodePort, 9090)
   equal(Impl.initPort({ nodePortMode: 'grpcWeb' }).nodePort, 9091)
-  console.log(Impl.initPort({ nodePortMode: 'rpc'     }).nodePort, 26657)
-  process.exit(123)
+  equal(Impl.initPort({ nodePortMode: 'rpc'     }).nodePort, 26657)
   equal(Impl.initPort({ nodePortMode: 'rpc'     }).nodePort, 26657)
 
   equal(Impl.initChainId({
@@ -39,6 +38,8 @@ export default async () => {
     nodePort:     '1234'
   }).url, 'https://localhost:1234/')
 
+  const chain = OCI.mock()
+
   await Impl.createDevnetContainer({
     log:             new Console('createDevnetContainer'),
     chainId:         'mock',
@@ -50,11 +51,11 @@ export default async () => {
     platformVersion: undefined,
     genesisAccounts: undefined,
     onScriptExit:    undefined,
-    container:       Object.assign(new OCI.Container({
+    container:       Object.assign(new OCIContainer({
+      chain,
       id:            'mock-create',
-      engine:        OCI.Connection.mock(),
-      image:         new OCI.Image({
-        engine:      OCI.Connection.mock(),
+      image:         new OCIImage({
+        chain,
         name:        'mock'
       }),
     }), {
@@ -86,11 +87,11 @@ export default async () => {
     stateRoot:        undefined,
     stateFile:       { save (_) {} },
     onScriptExit:    undefined,
-    container:       Object.defineProperties(new OCI.Container({
+    container:       Object.defineProperties(new OCIContainer({
+      chain,
       id:            'mock-start',
-      engine:        OCI.Connection.mock(),
-      image:         new OCI.Image({
-        engine:      OCI.Connection.mock(),
+      image:         new OCIImage({
+        chain,
         name:        'mock'
       }),
     }), {
@@ -124,10 +125,10 @@ export default async () => {
   await Impl.pauseDevnetContainer({
     log:        new Console('pauseDevnetContainer'),
     running:    undefined,
-    container:  new OCI.Container({
+    container:  new OCIContainer({
       id:       'mock-pause',
-      image:    Object.assign(new OCI.Image({
-        engine: OCI.Connection.mock(),
+      image:    Object.assign(new OCIImage({
+        engine: OCIConnection.mock(),
         name:   'mock' 
       })),
     }),
@@ -139,11 +140,11 @@ export default async () => {
     log:        new Console('removeDevnetContainer'),
     stateRoot:  undefined,
     paused:     undefined,
-    container:  Object.defineProperties(new OCI.Container({
+    container:  Object.defineProperties(new OCIContainer({
+      chain,
       id:       'mock-remove',
-      engine:   OCI.Connection.mock(),
-      image:    new OCI.Image({
-        engine: OCI.Connection.mock(),
+      image:    new OCIImage({
+        engine: OCIConnection.mock(),
         name:   'mock'
       }),
     }), {

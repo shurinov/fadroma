@@ -6,7 +6,7 @@ import { Path, SyncFS, FileFormat, XDG } from '@hackbg/file'
 import { bold, colors, randomColor, randomBase16, Connection, Identity, Console } from '@hackbg/fadroma'
 import * as OCI from '@fadroma/oci'
 import Error from './devnet-error'
-import type { default as DevnetContainer } from './devnet-base'
+import type { DevnetContainer } from './devnet-base'
 import type { APIMode } from './devnet-base'
 import platforms from './devnet-platform'
 

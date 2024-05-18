@@ -1,5 +1,4 @@
 {
-  "bin": { "fadroma-cw": "cw.cli.mjs" },
   "name": "@fadroma/namada",
   "type": "module",
   "main": "namada.ts",

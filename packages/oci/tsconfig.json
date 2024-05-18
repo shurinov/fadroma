@@ -4,7 +4,9 @@
     "oci.test.ts",
     "oci-base.ts",
     "oci-mock.ts",
-    "oci-impl.ts"
+    "oci-impl.ts",
+    "oci-connection.ts",
+    "oci-program.ts"
   ],
   "include": [],
   "exclude": [ ".ubik", "*.dist.*", "node_modules" ],
@@ -15,6 +17,7 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "noEmitOnError": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "strict": true
   }
 }

@@ -1,15 +1,23 @@
 {
   "name": "@fadroma/cli",
+  "bin": { 
+    "fadroma": "cli-runner.mjs"
+  },
   "dependencies": {
     "@hackbg/cmds": "workspace:*"
   },
   "peerDependencies": {
+    "@hackbg/ganesha": "workspace:*",
     "@hackbg/fadroma": "workspace:*",
     "@fadroma/create": "workspace:*",
     "@fadroma/cw":     "workspace:*",
+    "@fadroma/devnet": "workspace:*",
     "@fadroma/namada": "workspace:*"
   },
   "peerDependenciesMeta": {
+    "@hackbg/ganesha": {
+      "optional": true
+    },
     "@fadroma/create": {
       "optional": true
     },
@@ -17,6 +25,9 @@
       "optional": true
     },
     "@fadroma/namada": {
+      "optional": true
+    },
+    "@fadroma/devnet": {
       "optional": true
     }
   }

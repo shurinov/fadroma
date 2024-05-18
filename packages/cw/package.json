@@ -1,5 +1,4 @@
 {
-  "bin": { "fadroma-cw": "cw.cli.mjs" },
   "name": "@fadroma/cw",
   "type": "module",
   "main": "cw.ts",

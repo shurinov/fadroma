@@ -4,7 +4,7 @@ import {
   timestamp, assign, Console, CompiledCode, Connection, Identity, Backend, Token
 } from '@hackbg/fadroma'
 import type { Address, CodeId, Uint128 } from '@hackbg/fadroma'
-import * as OCI from '@fadroma/oci'
+import { OCI, OCIContainer, OCIImage } from '@fadroma/oci'
 import * as Impl from './devnet-impl'
 import type * as Platform from './devnet-platform'
 import Error from './devnet-error'
@@ -45,7 +45,7 @@ export class DevnetContainerConfig {
   /** Version of devnet platform. */
   platformVersion: string
   /** Container instance of devnet. */
-  container?:      Partial<Omit<OCI.Container, 'image'> & { image: Partial<OCI.Image> }>
+  container?:      Partial<Omit<OCIContainer, 'image'> & { image: Partial<OCIImage> }>
   /** URL for connecting to a remote devnet. */
   url?:            string|URL
   /** The protocol of the API URL without the trailing colon. */
@@ -145,7 +145,7 @@ export class DevnetContainerConfig {
 
 /** A private local instance of a network,
   * running in a container managed by @fadroma/oci. */
-export default class DevnetContainer<
+export class DevnetContainer<
   C extends Connection,
   I extends Identity,
 > extends DevnetContainerConfig
@@ -154,8 +154,8 @@ export default class DevnetContainer<
   /** Logger. */
   log = new Console('Devnet')
   constructor (options: Partial<Omit<DevnetContainer<C, I>, 'container'> & {
-    container: Partial<Omit<OCI.Container, 'image'> & {
-      image: Partial<OCI.Image>
+    container: Partial<Omit<OCIContainer, 'image'> & {
+      image: Partial<OCIImage>
     }>
   }> = {}) {
     //const supported = Object.keys(new.target.v)
@@ -174,7 +174,7 @@ export default class DevnetContainer<
     Impl.initContainer(this)
     assign(this, options, [ 'Connection', 'Identity' ])
   }
-  declare container: OCI.Container
+  declare container: OCIContainer
   /** Connection class for this devnet. */
   Connection: { new (...args: unknown[]): C }
   /** Identity class for this devnet. */

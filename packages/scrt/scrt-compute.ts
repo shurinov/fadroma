@@ -106,12 +106,10 @@ export async function query (
 }
 
 export async function upload (
-  agent: ScrtAgent,
+  agent: ScrtSigningConnection,
   args: Parameters<SigningConnection["uploadImpl"]>[0]
 ) {
-  const connection = agent.getConnection()
-  const { api, address, fees, log } = connection
-  const { gasToken } = ScrtConnection
+  const { api, address, fees, log } = agent
 
   const result = await withIntoError(api.tx.compute.storeCode({
     sender:         address,
@@ -136,7 +134,7 @@ export async function upload (
       ...details
     )
     if (message === `account ${address} not found`) {
-      log.info(`If this is a new account, send it some ${gasToken} first.`)
+      log.info(`If this is a new account, send it some SCRT first.`)
       const chainId = agent.chain.chainId
       if (faucets[chainId]) {
         log.info(`Available faucets\n `, [...faucets[chainId]].join('\n  '))

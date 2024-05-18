@@ -26,12 +26,11 @@ export class ScrtAgent extends Agent {
         throw new Error('identity must be ScrtIdentity instance, { mnemonic }, or { encryptionUtils }')
       }
     }
-    const { chainId, url } = this.connection
-    this.api = this.identity.getApi({ chainId, url }) 
+    this.#connection = new ScrtSigningConnection({ chain: this.chain, identity: this.identity })
   }
 
-  declare chain:      ScrtChain
-  declare identity:   ScrtIdentity
+  declare chain:    ScrtChain
+  declare identity: ScrtIdentity
   #connection: ScrtSigningConnection
   override getConnection () {
     return this.#connection
@@ -78,7 +77,20 @@ export class ScrtAgent extends Agent {
 }
 
 export class ScrtSigningConnection extends SigningConnection {
+  constructor (
+    properties: Omit<ConstructorParameters<typeof SigningConnection>[0], 'identity'>
+      & { identity: ScrtIdentity, url: string|URL }
+  ) {
+    super(properties)
+    this.api = this.identity.getApi({
+      chainId: this.chain.chainId,
+      url:     properties.url
+    })
+  }
   api: SecretNetworkClient
+  get identity (): ScrtIdentity {
+    return super.identity as unknown as ScrtIdentity
+  }
   async sendImpl (...args: Parameters<SigningConnection["sendImpl"]>) {
     return await ScrtBank.send(this, ...args)
   }
@@ -108,7 +120,9 @@ export class ScrtSignerIdentity extends ScrtIdentity {
   }
   getApi ({chainId, url}: {chainId: ChainId, url: string|URL}): SecretNetworkClient {
     return new SecretNetworkClient({
-      chainId, url: url.toString(), encryptionUtils: this.encryptionUtils
+      chainId,
+      url: url.toString(),
+      encryptionUtils: this.encryptionUtils
     })
   }
 }
@@ -132,7 +146,10 @@ export class ScrtMnemonicIdentity extends ScrtIdentity {
   getApi ({chainId, url}: {chainId: ChainId, url: string|URL}): SecretNetworkClient {
     const {wallet} = this
     return new SecretNetworkClient({
-      chainId, url: url.toString(), wallet, walletAddress: wallet.address,
+      chainId,
+      url: url.toString(),
+      wallet,
+      walletAddress: wallet.address,
     })
   }
 }

@@ -2,7 +2,7 @@ import { packageRoot } from './package'
 import type * as Devnets from './devnet'
 import DevnetContainer from './devnet-base'
 import { randomBech32, Token } from '@hackbg/fadroma'
-import * as OCI from '@fadroma/oci'
+import { OCI, OCIImage, OCIContainer } from '@fadroma/oci'
 import { ok, equal, deepEqual, throws, rejects } from 'node:assert'
 import { getuid, getgid } from 'node:process'
 import { resolve } from 'node:path'
@@ -36,7 +36,7 @@ export async function testDevnetPlatform (
   ok(devnet.gasToken)
   ok(devnet.gasToken instanceof Token.Fungible)
   ok(typeof devnet.gasToken.denom === 'string')
-  ok((await devnet.container.image) instanceof OCI.Image)
+  ok((await devnet.container.image) instanceof OCIImage)
   const spawnEnv = Impl.containerEnvironment(devnet)
   deepEqual(spawnEnv.DAEMON,    spec.nodeBinary)
   deepEqual(spawnEnv.TOKEN,     spec.gasToken.denom)
@@ -57,7 +57,7 @@ export async function testDevnetPlatform (
   }, "devnet port binding is present")
   equal(await devnet.created, devnet)
   equal(devnet.url.toString(), `http://${devnet.nodeHost}:${devnet.nodePort}/`)
-  ok(devnet.container instanceof OCI.Container)
+  ok(devnet.container instanceof OCIContainer)
   equal(devnet.container.name, devnet.chainId)
   equal(await devnet.started, devnet)
   const agent = await devnet.connect({ name: user1 })

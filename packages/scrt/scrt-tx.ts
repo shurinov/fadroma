@@ -122,7 +122,7 @@ export class ScrtBatch extends Batch {
     const api = await Promise.resolve(this.chain!.api)
     const chainId  = this.chain!.chainId!
     const messages = this.messages
-    const limit    = Number(this.agent!.fees.exec?.amount[0].amount) || undefined
+    const limit    = Number(this.agent!.fees?.exec?.amount[0].amount) || undefined
     const gas      = messages.length * (limit || 0)
 
     const results: ScrtBatchResult[] = []
@@ -170,7 +170,7 @@ export class ScrtBatch extends Batch {
         }
       }
 
-    } catch (error) {
+    } catch (error: any) {
       this.log.br()
       this.log
         .error('submitting batch failed:')
