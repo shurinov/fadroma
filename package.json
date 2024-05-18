@@ -8,7 +8,6 @@
   "keywords": [ "cosmwasm", "scrt", "secret network", "interchain", "tendermint", "namada", "cosmos" ],
   "description": "Universal client for several distributed computing networks.",
   "repository": { "type": "git", "url": "https://github.com/hackbg/fadroma" },
-  "bin": { "fadroma": "fadroma.cli.mjs" },
   "files": [
     "!*",
     "LICENSE",
@@ -23,7 +22,6 @@
     "assets/banner2.svg"
   ],
   "scripts": {
-    "build":          "./fadroma.cli.cjs build",
     "check":          "tsc --noEmit",
     "ci":             "node --version && npm --version && pnpm --version && pwd && ls -al && pnpm cloc && pnpm clean && pnpm check && pnpm cov all && pnpm ubik --dry compile && ls -al",
     "clean":          "rm -rf .ubik *.dist.*",
@@ -36,7 +34,6 @@
     "docs:typedoc":   "typedoc",
     "fadroma":        "FADROMA_PROJECT=./examples fadroma",
     "prepare":        "husky install",
-    "repl":           "./fadroma.cli.cjs repl",
     "test":           "time ensuite index.test.ts",
     "test:fast":      "ensuite index.test.ts --parallel",
 

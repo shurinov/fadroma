@@ -1,6 +1,5 @@
-
+import { bold, bech32, bech32m, randomBech32m, base16 } from '@hackbg/fadroma'
 import CLI from '@hackbg/cmds'
-import { bold, bech32, bech32m, randomBech32m, base16 } from './src/Util'
 
 /** Base command line interface for Fadroma Agent. */
 export default class AgentCLI extends CLI {
@@ -133,4 +132,5 @@ export default class AgentCLI extends CLI {
   })
 
 }
+
 
