@@ -10,17 +10,23 @@ import { Transaction } from './namada-tx-base'
 
 export class NamadaBlock extends Block {
   constructor ({
-    header, rawTransactions, ...properties
+    header, rawTransactions, blockRaw, resultsRaw, ...properties
   }: ConstructorParameters<typeof Block>[0] & {
     header: object
+    blockRaw:string,
+    resultsRaw:string,
   }
     & Pick<NamadaBlock, 'rawTransactions'>
   ) {
     super(properties)
     this.rawTransactions = rawTransactions
     this.header = header
+    this.blockRaw = blockRaw
+    this.resultsRaw = resultsRaw
   }
   declare transactions: Transaction[]
   rawTransactions?: unknown[]
   header: object
+  blockRaw: string
+  resultsRaw: string
 }
