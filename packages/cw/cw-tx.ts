@@ -5,13 +5,16 @@ import type { CWChain, CWConnection } from './cw-connection'
 import type { CWAgent } from './cw-identity'
 
 export class CWBlock extends Block {
-  rawTxs: Uint8Array[]
   constructor (
-    properties: ConstructorParameters<typeof Block>[0] & Partial<Pick<CWBlock, 'rawTxs'>>
+    properties: ConstructorParameters<typeof Block>[0] & Partial<Pick<CWBlock, 'rawTransactions'>>
   ) {
     super(properties)
-    this.rawTxs = [...properties.rawTxs||[]]
+    if (properties.rawTransactions) {
+      this.rawTransactions = properties.rawTransactions
+    }
   }
+  /** Undecoded transactions. */
+  rawTransactions?: Uint8Array[]
 }
 
 /** Transaction batch for CosmWasm-enabled chains. */

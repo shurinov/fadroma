@@ -149,7 +149,7 @@ export class CWConnection extends Connection {
         height: header.height,
         timestamp: header.time,
         transactions: [],
-        rawTxs: txs as Uint8Array[],
+        rawTransactions: txs as Uint8Array[],
       })
     } else if ((parameter as { hash: string })?.hash) {
       throw new Error('CWConnection.fetchBlock({ hash }): unimplemented!')
@@ -161,7 +161,7 @@ export class CWConnection extends Connection {
         height: header.height,
         timestamp: header.time,
         transactions: [],
-        rawTxs: txs as Uint8Array[],
+        rawTransactions: txs as Uint8Array[],
       })
     }
   }

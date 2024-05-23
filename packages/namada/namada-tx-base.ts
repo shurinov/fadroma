@@ -3,7 +3,9 @@ import * as Sections from './namada-tx-section'
 
 class NamadaTransaction {
 
-  static fromDecoded = ({ sections, ...header }: {
+  static fromDecoded = ({ id, sections, type, ...header }: {
+    id: string,
+    type: 'Raw'|'Wrapper'|'Decrypted'|'Protocol',
     sections: Array<
       | Partial<Sections.Data>
       | Partial<Sections.ExtraData>
@@ -17,6 +19,8 @@ class NamadaTransaction {
     >
   }) => new this({
     ...header,
+    id,
+    txType: type,
     sections: sections.map(section=>{
       switch (section.type) {
         case 'Data':
@@ -41,6 +45,7 @@ class NamadaTransaction {
     })
   })
 
+  id!:         string
   chainId!:    string
   expiration!: string|null
   timestamp!:  string
@@ -53,6 +58,7 @@ class NamadaTransaction {
 
   constructor (properties: Partial<NamadaTransaction> = {}) {
     assign(this, properties, [
+      'id',
       'chainId',
       'expiration',
       'timestamp',

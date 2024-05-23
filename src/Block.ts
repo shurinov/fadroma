@@ -36,10 +36,16 @@ export async function fetchBlock (chain: Chain, ...args: Parameters<Chain["fetch
     if (typeof args[0] === 'object') {
       if ('height' in args[0]) {
         chain.log.debug(`Querying block by height ${args[0].height}`)
-        return chain.getConnection().fetchBlockImpl({ height: args[0].height as number })
+        return chain.getConnection().fetchBlockImpl({
+          raw:    args[0].raw,
+          height: args[0].height as number
+        })
       } else if ('hash' in args[0]) {
         chain.log.debug(`Querying block by hash ${args[0].hash}`)
-        return chain.getConnection().fetchBlockImpl({ hash: args[0].hash as string })
+        return chain.getConnection().fetchBlockImpl({
+          raw:  args[0].raw,
+          hash: args[0].hash as string,
+        })
       }
     } else {
       throw new Error('Invalid arguments, pass {height:number} or {hash:string}')

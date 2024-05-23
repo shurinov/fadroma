@@ -61,10 +61,10 @@ export abstract class Chain extends Logged {
   fetchBlock ():
     Promise<Block>
   /** Get info about the block with a specific height. */
-  fetchBlock ({ height }: { height: number }):
+  fetchBlock ({ height }: { height: number, raw?: boolean }):
     Promise<Block>
   /** Get info about the block with a specific hash. */
-  fetchBlock ({ hash }: { hash: string }):
+  fetchBlock ({ hash }: { hash: string, raw?: boolean }):
     Promise<Block>
   fetchBlock (...args: unknown[]): Promise<Block> {
     return fetchBlock(this, ...args as Parameters<Chain["fetchBlock"]>)

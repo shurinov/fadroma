@@ -174,7 +174,9 @@ export class NamadaConnection extends CW.Connection {
   get decode () {
     return this.chain.decode
   }
-  override async fetchBlockImpl (parameter?: { height: number }|{ hash: string }): Promise<TX.NamadaBlock> {
+  override async fetchBlockImpl (
+    parameter?: ({ height: number }|{ hash: string }) & { raw?: boolean }
+  ): Promise<TX.NamadaBlock> {
     if (!this.url) {
       throw new CW.Error("Can't fetch block: missing connection URL")
     }
@@ -188,21 +190,21 @@ export class NamadaConnection extends CW.Connection {
           .then(response=>response.text()),
       ])
       const { id, txs, header } = this.decode.block(block, results) as {
-        id: string,
-        txs: Partial<TX.Transaction[]>[]
-        header: { height: number, time: string }
+        id:     string,
+        txs:    Partial<TX.Transaction[]>[]
+        header: TX.NamadaBlock["header"]
       }
-      return new TX.NamadaBlock({
-        chain: this.chain,
+      return new TX.NamadaBlock(Object.assign({
         id,
         header,
-        height: header.height,
-        timestamp: header.time,
-        transactions: decodeTxs(txs, header.height),
-        blockRaw: block,
-        resultsRaw: results,
-        rawTransactions: [],
-      })
+        height:             Number(header.height),
+        timestamp:          header.time,
+        transactions:       decodeTxs(txs, header.height),
+        chain:              this.chain,
+      }, parameter?.raw ? {
+        rawBlockResponse:   block,
+        rawResultsResponse: results,
+      } : {}))
     } else if ('hash' in parameter) {
       throw new Error('NamadaConnection.fetchBlock({ hash }): unimplemented!')
     } else {
