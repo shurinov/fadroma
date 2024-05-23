@@ -35,13 +35,13 @@ export async function fetchBlock (chain: Chain, ...args: Parameters<Chain["fetch
   if (args[0]) {
     if (typeof args[0] === 'object') {
       if ('height' in args[0]) {
-        chain.log.debug(`Querying block by height ${args[0].height}`)
+        chain.log.debug(`Querying block with height ${args[0].height}`)
         return chain.getConnection().fetchBlockImpl({
           raw:    args[0].raw,
           height: args[0].height as number
         })
       } else if ('hash' in args[0]) {
-        chain.log.debug(`Querying block by hash ${args[0].hash}`)
+        chain.log.debug(`Querying block with hash ${args[0].hash}`)
         return chain.getConnection().fetchBlockImpl({
           raw:  args[0].raw,
           hash: args[0].hash as string,
