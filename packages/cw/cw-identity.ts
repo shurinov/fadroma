@@ -112,13 +112,13 @@ export class CWMnemonicIdentity extends CWIdentity {
     super(properties)
     // Validate input
     if (bech32Prefix === undefined) {
-      throw new Error('bech32Prefix is not set')
+      throw new Error('bech32Prefix not provided')
     }
     if (coinType === undefined) {
-      throw new Error('coinType is not set')
+      throw new Error('coinType not provided')
     }
     if (hdAccountIndex === undefined) {
-      throw new Error('hdAccountIndex is not set')
+      throw new Error('hdAccountIndex not provided')
     }
     this.bech32Prefix = bech32Prefix
     this.coinType = coinType

@@ -39,7 +39,7 @@ export class Namada extends CW.Chain {
 
   /** Connect to Namada over one or more endpoints. */
   static async connect (
-    properties: ({ url: string|URL }|{ urls: Iterable<string|URL> }) & {
+    properties: Parameters<typeof CW.Chain["connect"]>[0] & {
       chainId?: ChainId
       decoder?: string|URL|Uint8Array
     }
@@ -51,6 +51,8 @@ export class Namada extends CW.Chain {
         "You didn't provide the 'decoder' property; trying to decode Namada objects will fail."
       )
     }
+    properties ??= {} as any
+    properties.bech32Prefix ??= "tnam"
     return await super.connect(properties || {}) as Namada
   }
 

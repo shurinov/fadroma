@@ -16,13 +16,22 @@ export class CWChain extends Chain {
   }
 
   static async connect (
-    properties: { chainId?: ChainId }&({ url: string|URL }|{ urls: Iterable<string|URL> })
+    properties: ({ url: string|URL }|{ urls: Iterable<string|URL> }) & {
+      chainId?:        ChainId,
+      bech32Prefix?:   string
+      coinType?:       number,
+      hdAccountIndex?: number
+    }
   ): Promise<CWChain> {
-    const { chainId, url, urls = [ url ] } = (properties || {}) as any
+    const {
+      chainId, url, urls = [ url ], bech32Prefix, coinType, hdAccountIndex
+    } = (properties || {}) as any
     const chain = new this({
       chainId,
       connections: [],
-      bech32Prefix: 'tnam'
+      bech32Prefix,
+      coinType,
+      hdAccountIndex,
     })
     const connections: CWConnection[] = urls.filter(Boolean).map(async (url: string|URL)=>new this.Connection({
       api: await CosmWasmClient.connect(String(url)),
@@ -76,7 +85,10 @@ export class CWChain extends Chain {
       })
     } else if (typeof (args[0] as any).mnemonic === 'string') {
       identity = new CWMnemonicIdentity({
-        mnemonic: (args[0] as any).mnemonic
+        mnemonic: (args[0] as any).mnemonic,
+        bech32Prefix:   this.bech32Prefix,
+        coinType:       this.coinType,
+        hdAccountIndex: this.hdAccountIndex
       })
     } else if (args[0] instanceof CWIdentity) {
       identity = args[0]

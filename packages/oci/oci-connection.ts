@@ -139,8 +139,13 @@ export class OCIAgent extends Agent {
     connection: OCISigningConnection
   }) {
     super(properties)
-    this.#connection = properties.connection
+    this.#connection = properties.connection || new OCISigningConnection({
+      chain:    this.chain,
+      identity: properties.identity,
+      api:      this.chain.getConnection().api
+    })
   }
+  declare chain: OCI
   #connection: OCISigningConnection
   getConnection (): OCISigningConnection {
     return this.#connection
@@ -151,6 +156,26 @@ export class OCIAgent extends Agent {
 }
 
 export class OCISigningConnection extends SigningConnection {
+
+  /** By default, creates an instance of Dockerode
+    * connected to env `DOCKER_HOST`. You can also pass
+    * your own Dockerode instance or socket path. */
+  constructor (
+    properties: ConstructorParameters<typeof SigningConnection>[0] & { api?: string|DockerHandle }
+  ) {
+    properties = { ...properties }
+    if (!properties.api) {
+      properties.api = new Docker({ socketPath: defaultSocketPath })
+    } else if (typeof properties.api === 'object') {
+      properties.api = properties.api
+    } else if (typeof properties.api === 'string') {
+      properties.api = new Docker({ socketPath: properties.api })
+    } else {
+      throw new Error('invalid docker engine configuration')
+    }
+    super(properties)
+  }
+
   override async sendImpl (_: never): Promise<never> {
     throw new Error('send: not applicable')
   }

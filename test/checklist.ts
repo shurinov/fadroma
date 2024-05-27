@@ -20,89 +20,95 @@ let connectOptions = {}
 
 const tests: Array<[string, Function]> = [
 
-  ["connect", (platform: any) => {
+  ["Platform.connect", (platform: any) => {
     if (platform["connect"]) return OK
   }],
 
-  ["mocknet", (platform: any) => {
+  ["Platform.mocknet", (platform: any) => {
     if (platform["mocknet"]) return OK
   }],
 
-  ["devnet", (platform: any) => {
+  ["Platform.devnet", (platform: any) => {
     if (platform["devnet"]) return OK
   }],
 
-  ["testnet", (platform: any) => {
+  ["Platform.testnet", (platform: any) => {
+    if (platform === OCI) return NA
     if (platform["testnet"]) return OK
   }],
 
-  ["mainnet", (platform: any) => {
+  ["Platform.mainnet", (platform: any) => {
+    if (platform === OCI) return NA
     if (platform["mainnet"]) return OK
   }],
 
-  ["Chain", (platform: any) => {
+  ["Platform.Chain", (platform: any) => {
     if (platform["Chain"]) return OK
   }],
 
+  ["Platform.Agent", (platform: any) => {
+    if (platform["Agent"]) return OK
+  }],
+
   ["Chain#getConnection", async (platform: any) => {
-    const chain = await platform.connect()
+    const chain = await platform.connect(connectOptions)
     if (await chain.getConnection()) return OK
   }],
 
   ["Chain#height", async (platform: any) => {
     if (platform === OCI) return NA
-    const chain = await platform.connect()
+    const chain = await platform.connect(connectOptions)
     if (await chain["height"]) return OK
   }],
 
   ["Chain#nextBlock", async (platform: any) => {
     if (platform === OCI) return NA
-    const chain = await platform.connect()
+    const chain = await platform.connect(connectOptions)
     if (await chain["nextBlock"]) return OK
   }],
 
   ["Chain#fetchBlock", async (platform: any) => {
     if (platform === OCI) return NA
-    const chain = await platform.connect()
+    const chain = await platform.connect(connectOptions)
     if (await chain.fetchBlock()) return OK
   }],
 
   ["Chain#fetchBalance", async (platform: any) => {
     if (platform === OCI) return NA
-    const chain = await platform.connect()
+    const chain = await platform.connect(connectOptions)
     if (await chain.fetchBalance()) return OK
   }],
 
   ["Chain#fetchCodeInfo", async (platform: any) => {
-    const chain = await platform.connect()
+    const chain = await platform.connect(connectOptions)
     if (await chain.fetchCodeInfo()) return OK
   }],
 
   ["Chain#fetchCodeInstances", async (platform: any) => {
-    const chain = await platform.connect()
+    const chain = await platform.connect(connectOptions)
     if (await chain.fetchCodeInstances()) return OK
   }],
 
   ["Chain#fetchContractInfo", async (platform: any) => {
-    const chain = await platform.connect()
+    const chain = await platform.connect(connectOptions)
     if (await chain.fetchContractInfo()) return OK
   }],
 
   ["Chain#query", async (platform: any) => {
-    const chain = await platform.connect()
+    const chain = await platform.connect(connectOptions)
     if (await chain.query()) return OK
   }],
 
   ["Chain#authenticate", async (platform: any) => {
     if (platform === Namada) return NA
-    const chain = await platform.connect()
+    const chain = await platform.connect(connectOptions)
     const agent = await chain.authenticate()
     if (agent instanceof Agent) return OK
   }],
 
   ["Agent#getConnection", async (platform: any) => {
     if (platform === Namada) return NA
-    const chain = await platform.connect()
+    const chain = await platform.connect(connectOptions)
     const agent = await chain.authenticate()
     if (await agent.getConnection()) return OK
   }],
@@ -110,7 +116,7 @@ const tests: Array<[string, Function]> = [
   ["Agent#fetchBalance", async (platform: any) => {
     if (platform === Namada) return NA
     if (platform === OCI) return NA
-    const chain = await platform.connect()
+    const chain = await platform.connect(connectOptions)
     const agent = await chain.authenticate()
     if (await agent.fetchBalance()) return OK
   }],
@@ -118,28 +124,31 @@ const tests: Array<[string, Function]> = [
   ["Agent#send", async (platform: any) => {
     if (platform === Namada) return NA
     if (platform === OCI) return NA
-    const chain = await platform.connect()
+    const chain = await platform.connect(connectOptions)
     const agent = await chain.authenticate()
     if (await agent.send()) return OK
   }],
 
   ["Agent#upload", async (platform: any) => {
     if (platform === Namada) return NA
-    const chain = await platform.connect()
+    if (platform === OCI) return NI
+    const chain = await platform.connect(connectOptions)
     const agent = await chain.authenticate()
     if (await agent.upload({})) return OK
   }],
 
   ["Agent#instantiate", async (platform: any) => {
     if (platform === Namada) return NA
-    const chain = await platform.connect()
+    if (platform === OCI) return NI
+    const chain = await platform.connect(connectOptions)
     const agent = await chain.authenticate()
     if (await agent.instantiate({ codeId: '1', label: 'foo' })) return OK
   }],
 
   ["Agent#execute", async (platform: any) => {
     if (platform === Namada) return NA
-    const chain = await platform.connect()
+    if (platform === OCI) return NI
+    const chain = await platform.connect(connectOptions)
     const agent = await chain.authenticate()
     if (await agent.execute({ address: 'x' })) return OK
   }],
@@ -154,7 +163,7 @@ for (const [feature, test] of tests) {
   for (const [platformName, platform] of Object.entries(platforms)) {
     connectOptions = {}
     if (platform === CW) {
-      connectOptions = { bech32Prefix: 'test', coinType: '0' }
+      connectOptions = { bech32Prefix: 'test', coinType: 0, hdAccountIndex: 0 }
     }
     let color = NI
     try {

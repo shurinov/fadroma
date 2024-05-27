@@ -259,14 +259,18 @@ export async function execute (agent: Agent, ...args: Parameters<Agent["execute"
   const { address } = contract
   let method = (typeof message === 'string') ? message : Object.keys(message||{})[0]
   return timed(
-    () => agent.getConnection().executeImpl({
-      ...contract as { address: Address, codeHash: CodeHash },
-      message,
-      ...options
-    }),
-    ({ elapsed }) => agent.log.debug(
-      `Executed in ${bold(elapsed)}:`,
-      `tx ${bold(method||'(???)')} of ${bold(address)}`
-    )
+    function doExecute () {
+      return agent.getConnection().executeImpl({
+        ...contract as { address: Address, codeHash: CodeHash },
+        message,
+        ...options
+      })
+    },
+    function afterExecute ({ elapsed }) {
+      agent.log.debug(
+        `Executed in ${bold(elapsed)}:`,
+        `tx ${bold(method||'(???)')} of ${bold(address)}`
+      )
+    }
   )
 }
