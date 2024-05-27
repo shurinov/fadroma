@@ -53,6 +53,11 @@ export const chainIds = {
   testnet: 'pulsar-3',
 }
 
+export function connect (...args: Parameters<typeof ScrtChain["connect"]>) {
+  if (!args[0]) args[0] = {} as any
+  return ScrtChain.connect(...args)
+} 
+
 /** See https://docs.scrt.network/secret-network-documentation/development/resources-api-contract-addresses/connecting-to-the-network/mainnet-secret-4#api-endpoints */
 export const mainnets = new Set([
   'https://lcd.mainnet.secretsaturn.net',

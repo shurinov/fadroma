@@ -39,4 +39,7 @@ export * from './cw-chains'
 export * as Staking from './cw-staking'
 
 import { CWChain } from './cw-connection'
-export const connect = CWChain.connect
+
+export function connect (...args: Parameters<typeof CWChain.connect>) {
+  return CWChain.connect(...args)
+}

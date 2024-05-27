@@ -18,7 +18,7 @@ export class CWChain extends Chain {
   static async connect (
     properties: { chainId?: ChainId }&({ url: string|URL }|{ urls: Iterable<string|URL> })
   ): Promise<CWChain> {
-    const { chainId, url, urls = [ url ] } = properties as any
+    const { chainId, url, urls = [ url ] } = (properties || {}) as any
     const chain = new this({
       chainId,
       connections: [],
@@ -69,7 +69,11 @@ export class CWChain extends Chain {
   ): Promise<CWAgent> {
     let identity: CWIdentity
     if (!args[0]) {
-      identity = new CWMnemonicIdentity({})
+      identity = new CWMnemonicIdentity({
+        bech32Prefix:   this.bech32Prefix,
+        coinType:       this.coinType,
+        hdAccountIndex: this.hdAccountIndex
+      })
     } else if (typeof (args[0] as any).mnemonic === 'string') {
       identity = new CWMnemonicIdentity({
         mnemonic: (args[0] as any).mnemonic

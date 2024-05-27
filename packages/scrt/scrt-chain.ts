@@ -16,7 +16,7 @@ export class ScrtChain extends Chain {
     return this.connections[0]
   }
 
-  static async connect ({ chainId, urls }: {
+  static async connect ({ chainId, urls = [] }: {
     chainId: ChainId,
     urls:    (string|URL)[]
   }): Promise<ScrtChain> {
@@ -30,7 +30,7 @@ export class ScrtChain extends Chain {
     if (args.length === 0) {
       return new ScrtAgent({
         chain:    this,
-        api:      new SecretNetworkClient(),
+        api:      new SecretNetworkClient({}),
         identity: null,
       })
     } else {

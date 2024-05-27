@@ -44,14 +44,14 @@ export class Namada extends CW.Chain {
       decoder?: string|URL|Uint8Array
     }
   ): Promise<Namada> {
-    if (properties.decoder) {
+    if (properties?.decoder) {
       await initDecoder(properties.decoder)
     } else {
       new CW.Console('Namada').warn(
         "You didn't provide the 'decoder' property; trying to decode Namada objects will fail."
       )
     }
-    return await super.connect(properties) as Namada
+    return await super.connect(properties || {}) as Namada
   }
 
   /** Connect to Namada using `testnetChainId` and `testnetURLs`. */

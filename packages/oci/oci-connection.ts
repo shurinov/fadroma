@@ -17,6 +17,7 @@ export { Mock, Error, Console }
 export const console = new Console('@fadroma/oci')
 
 export class OCI extends Chain {
+
   static mock (callback?: Function) {
     return new this({
       chainId: 'mock',
