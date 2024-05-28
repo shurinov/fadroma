@@ -65,14 +65,11 @@ export class Namada extends CW.Chain {
   }
 
   /** Default chain ID of testnet. */
-  static testnetChainId = 'shielded-expedition.88f17d1d14'
+  static testnetChainId = 'luminara.902d53d31e224eebb8ca3'
 
   /** Default RPC endpoints for testnet. */
   static testnetURLs = new Set([
-    'https://namada-testnet-rpc.itrocket.net',
-    'https://namada-rpc.stake-machine.com',
-    'https://namadarpc.songfi.xyz',
-    'https://rpc.testnet.one',
+    'https://rpc.luminara.icu',
   ])
 
   static get Connection () {
