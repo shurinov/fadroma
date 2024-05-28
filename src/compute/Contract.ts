@@ -19,19 +19,19 @@ import {
   * to the contract's API. */
 export class Contract extends Logged {
   /** Connection to the chain on which this contract is deployed. */
-  chain?:      Chain
+  chain?:    Chain
   /** Connection to the chain on which this contract is deployed. */
-  agent?:      Agent
+  agent?:    Agent
   /** Code upload from which this contract is created. */
-  codeId?:     CodeId
+  codeId?:   CodeId
   /** The code hash uniquely identifies the contents of the contract code. */
-  codeHash?:   CodeHash
+  codeHash?: CodeHash
   /** The address uniquely identifies the contract instance. */
-  address?:    Address
+  address?:  Address
   /** The label is a human-friendly identifier of the contract. */
-  label?:      Label
+  label?:    Label
   /** The address of the account which instantiated the contract. */
-  initBy?:     Address
+  initBy?:   Address
 
   constructor (properties: Partial<Contract>) {
     super((typeof properties === 'string')?{}:properties)
@@ -95,9 +95,11 @@ export async function fetchCodeInstances (
         codeIds[codeId] = $C
       }
       chain.log.debug(`Querying contracts with code ids ${Object.keys(codeIds).join(', ')}...`)
-      return timed(
-        ()=>chain.getConnection().fetchCodeInstancesImpl({ codeIds }),
-        ({elapsed})=>chain.log.debug(`Queried in ${elapsed}ms`))
+      return timed(function doFetchCodeInstances () {
+        return chain.getConnection().fetchCodeInstancesImpl({ codeIds })
+      }, function afterFetchCodeInstances ({elapsed}) {
+        chain.log.debug(`Queried in ${elapsed}ms`)
+      })
     }
 
     if (typeof args[0] === 'object') {
@@ -107,18 +109,22 @@ export async function fetchCodeInstances (
       const result: Record<CodeId, Record<Address, Contract>> = {}
       chain.log.debug(`Querying contracts with code ids ${Object.keys(args[0]).join(', ')}...`)
       const codeIds = args[0] as { [id: CodeId]: typeof Contract }
-      return timed(
-        ()=>chain.getConnection().fetchCodeInstancesImpl({ codeIds }),
-        ({elapsed})=>chain.log.debug(`Queried in ${elapsed}ms`))
+      return timed(function doFetchCodeInstances () {
+        return chain.getConnection().fetchCodeInstancesImpl({ codeIds })
+      }, function afterFetchCodeInstances ({elapsed}) {
+        chain.log.debug(`Queried in ${elapsed}ms`)
+      })
     }
 
     if ((typeof args[0] === 'number')||(typeof args[0] === 'string')) {
       const id = args[0]
       chain.log.debug(`Querying contracts with code id ${id}...`)
       const result = {}
-      return timed(
-        ()=>chain.getConnection().fetchCodeInstancesImpl({ codeIds: { [id]: $C } }),
-        ({elapsed})=>chain.log.debug(`Queried in ${elapsed}ms`))
+      return timed(function doFetchCodeInstances () {
+        return chain.getConnection().fetchCodeInstancesImpl({ codeIds: { [id]: $C } })
+      }, function afterFetchCodeInstances ({elapsed}) {
+        chain.log.debug(`Queried in ${elapsed}ms`)
+      })
     }
 
     throw new Error('Invalid arguments')
@@ -140,13 +146,13 @@ export async function fetchContractInfo (
   // Fetch single contract
   if (typeof args[0] === 'string') {
     chain.log.debug(`Fetching contract ${args[0]}`)
-    const contracts = await timed(
-      () => chain.getConnection().fetchContractInfoImpl({
+    const contracts = await timed(function doFetchContractInfo () {
+      return chain.getConnection().fetchContractInfoImpl({
         contracts: { [args[0] as unknown as Address]: $C }
-      }),
-      ({ elapsed }) => chain.log.debug(
-        `Fetched in ${bold(elapsed)}: contract ${args[0]}`
-      ))
+      })
+    }, function afterFetchContractInfo ({ elapsed }) {
+      chain.log.debug(`Fetched in ${bold(elapsed)}: contract ${args[0]}`)
+    })
     if (custom) {
       return new $C(contracts[args[0]])
     } else {
@@ -161,11 +167,11 @@ export async function fetchContractInfo (
     for (const address of addresses) {
       contracts[address] = $C
     }
-    const results = await timed(
-      ()=>chain.getConnection().fetchContractInfoImpl({ contracts, parallel }),
-      ({ elapsed }) => chain.log.debug(
-        `Fetched in ${bold(elapsed)}: ${addresses.length} contracts`
-      ))
+    const results = await timed(function doFetchContractInfo () {
+      return chain.getConnection().fetchContractInfoImpl({ contracts, parallel })
+    }, function afterFetchContractInfo ({ elapsed }) {
+      chain.log.debug(`Fetched in ${bold(elapsed)}: ${addresses.length} contracts`)
+    })
     if (custom) {
       return addresses.map(address=>new $C(results[address]))
     } else {
@@ -180,14 +186,14 @@ export async function fetchContractInfo (
     }
     const addresses = Object.keys(args[0]) as Address[]
     chain.log.debug(`Querying info about ${addresses.length} contracts`)
-    const contracts = await timed(
-      ()=>chain.getConnection().fetchContractInfoImpl({
+    const contracts = await timed(function doFetchcontractInfo () {
+      return chain.getConnection().fetchContractInfoImpl({
         contracts: args[0] as { [address: Address]: typeof Contract },
         parallel 
-      }),
-      ({ elapsed }) => chain.log.debug(
-        `Queried in ${bold(elapsed)}: info about ${addresses.length} contracts`
-      ))
+      })
+    }, function afterFetchContractInfo ({ elapsed }) {
+      chain.log.debug(`Queried in ${bold(elapsed)}: info about ${addresses.length} contracts`)
+    })
     const result: Record<Address, unknown> = {}
     for (const address of addresses) {
       result[address] = new args[0][address](contracts[address])
@@ -199,15 +205,14 @@ export async function fetchContractInfo (
 
 export async function query (chain: Chain, ...args: Parameters<Chain["query"]>) {
   const [contract, message] = args
-  return timed(
-    ()=>chain.getConnection().queryImpl({
+  return timed(function doQuery () {
+    return chain.getConnection().queryImpl({
       ...(typeof contract === 'string') ? { address: contract } : contract,
       message
-    }),
-    ({ elapsed, result }) => chain.log.debug(
-      `Queried in ${bold(elapsed)}s: `, JSON.stringify(result)
-    )
-  )
+    })
+  }, function afterQuery ({ elapsed, result }) {
+    chain.log.debug(`Queried in ${bold(elapsed)}s: `, JSON.stringify(result))
+  })
 }
 
 export async function instantiate (agent: Agent, ...args: Parameters<Agent["instantiate"]>) {
@@ -228,19 +233,20 @@ export async function instantiate (agent: Agent, ...args: Parameters<Agent["inst
     throw new Error("can't instantiate contract without init message")
   }
   const { codeId, codeHash } = contract
-  const result = await timed(
-    () => into(options.initMsg).then(initMsg=>agent.getConnection().instantiateImpl({
+  const result = await timed(function doInstantiate () {
+    return into(options.initMsg).then(initMsg=>agent.getConnection().instantiateImpl({
       ...options,
       codeId,
       codeHash,
       initMsg
-    })),
-    ({ elapsed, result }) => agent.log.debug(
+    }))
+  }, function afterInstantiate ({ elapsed, result }) {
+    agent.log.debug(
       `Instantiated in ${bold(elapsed)}:`,
       `code id ${bold(String(codeId))} as `,
       `${bold(options.label)} (${result.address})`
     )
-  )
+  })
   return new Contract({
     ...options, ...result
   }) as Contract & {
@@ -258,19 +264,16 @@ export async function execute (agent: Agent, ...args: Parameters<Agent["execute"
   }
   const { address } = contract
   let method = (typeof message === 'string') ? message : Object.keys(message||{})[0]
-  return timed(
-    function doExecute () {
-      return agent.getConnection().executeImpl({
-        ...contract as { address: Address, codeHash: CodeHash },
-        message,
-        ...options
-      })
-    },
-    function afterExecute ({ elapsed }) {
-      agent.log.debug(
-        `Executed in ${bold(elapsed)}:`,
-        `tx ${bold(method||'(???)')} of ${bold(address)}`
-      )
-    }
-  )
+  return timed(function doExecute () {
+    return agent.getConnection().executeImpl({
+      ...contract as { address: Address, codeHash: CodeHash },
+      message,
+      ...options
+    })
+  }, function afterExecute ({ elapsed }) {
+    agent.log.debug(
+      `Executed in ${bold(elapsed)}:`,
+      `tx ${bold(method||'(???)')} of ${bold(address)}`
+    )
+  })
 }
