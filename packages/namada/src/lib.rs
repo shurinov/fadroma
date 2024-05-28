@@ -63,7 +63,7 @@ pub(crate) use namada::{
     tendermint::{
         account::Id as AccountId,
         block::Id as BlockId,
-        block::Header as BlockHeader,
+        block::header::Header as BlockHeader,
         block::Height as BlockHeight,
         block::header::Version as BlockVersion,
         chain::Id as ChainId,
@@ -79,12 +79,11 @@ pub(crate) use namada::{
     },
     tx::{
         Tx, Header as TxHeader,
-        Section, Data, Code, Signature, Signer, MaspBuilder,
+        Section, Data, Code, Authorization, Signer, MaspBuilder,
         data::{
             Fee,
             GasLimit,
             TxType,
-            DecryptedTx,
             WrapperTx,
             pos::{
                 BecomeValidator,

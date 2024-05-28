@@ -124,6 +124,12 @@ impl ToJS for Address {
     }
 }
 
+impl ToJS for Object {
+    fn to_js (&self) -> Result<JsValue, Error> {
+        Ok(self.into())
+    }
+}
+
 impl ToJS for Vec<Object> {
     fn to_js (&self) -> Result<JsValue, Error> {
         let array = Array::new();
@@ -177,8 +183,11 @@ impl ToJS for ProposalType {
     fn to_js (&self) -> Result<JsValue, Error> {
         let object = Object::new();
         match self {
-            Self::Default(hash) => {
+            Self::Default => {
                 Reflect::set(&object, &"type".into(), &"Default".into())?;
+            },
+            Self::DefaultWithWasm(hash) => {
+                Reflect::set(&object, &"type".into(), &"DefaultWithWasm".into())?;
                 Reflect::set(&object, &"hash".into(), &hash.to_js()?)?;
             },
             Self::PGFSteward(ops) => {
