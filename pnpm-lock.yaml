@@ -145,7 +145,11 @@ importers:
         specifier: workspace:*
         version: link:../toolbox/file
 
-  packages/cli: {}
+  packages/cli:
+    dependencies:
+      '@hackbg/cmds':
+        specifier: workspace:*
+        version: link:../../toolbox/cmds
 
   packages/compile:
     dependencies:
