@@ -186,7 +186,6 @@ export class NamadaConnection extends CW.Connection {
         fetch(`${this.url}/block_results?height=${wantedHeight}`)
           .then(response=>response.text()),
       ])
-      console.log(JSON.parse(block).result.block.data.txs)
       const { id, txs, header } = this.decode.block(block, results) as {
         id:     string,
         txs:    Partial<TX.Transaction[]>[]
