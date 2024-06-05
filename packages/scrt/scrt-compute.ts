@@ -7,12 +7,11 @@ import type { ScrtChain, ScrtConnection } from './scrt-chain'
 import type { ScrtAgent, ScrtSigningConnection } from './scrt-identity'
 
 export async function fetchCodeInfo (
-  chain: ScrtChain, args: Parameters<Connection["fetchCodeInfoImpl"]>[0]
+  { chainId, api }: ScrtConnection,
+  args: Parameters<Connection["fetchCodeInfoImpl"]>[0]
 ):
   Promise<Record<CodeId, UploadedCode>>
 {
-  const { chainId } = chain
-  const { api } = chain.getConnection() as ScrtConnection
   const result: Record<CodeId, UploadedCode> = {}
   await withIntoError(api.query.compute.codes({})).then(({code_infos})=>{
     for (const { code_id, code_hash, creator } of code_infos||[]) {
@@ -30,14 +29,13 @@ export async function fetchCodeInfo (
 }
 
 export async function fetchCodeInstances (
-  chain: ScrtChain, args: Parameters<Connection["fetchCodeInstancesImpl"]>[0]
+  { chainId, api, log }: ScrtConnection,
+  args: Parameters<Connection["fetchCodeInstancesImpl"]>[0]
 ):
   Promise<Record<CodeId, Record<Address, Contract>>>
 {
-  const { chainId } = chain
-  const { api } = chain.getConnection() as ScrtConnection
   if (args.parallel) {
-    chain.log.warn('fetchCodeInstances in parallel: not implemented')
+    log.warn('fetchCodeInstances in parallel: not implemented')
   }
   const result: Record<CodeId, Record<Address, Contract>> = {}
   for (const [codeId, Contract] of Object.entries(args.codeIds)) {
@@ -65,17 +63,15 @@ export async function fetchCodeInstances (
 }
 
 export async function fetchContractInfo (
-  conn: ScrtChain,
+  { chainId, api, log }: ScrtConnection,
   args: Parameters<Connection["fetchContractInfoImpl"]>[0]
 ):
   Promise<{
     [address in keyof typeof args["contracts"]]: InstanceType<typeof args["contracts"][address]>
   }>
 {
-  const api = await Promise.resolve(conn.getConnection().api)
-  const { chainId } = conn
   if (args.parallel) {
-    conn.log.warn('fetchContractInfo in parallel: not implemented')
+    log.warn('fetchContractInfo in parallel: not implemented')
   }
   throw new Error('unimplemented!')
   //protected override async fetchCodeHashOfAddressImpl (contract_address: Address): Promise<CodeHash> {

@@ -46,7 +46,7 @@ export class DevnetContainerConfig {
   platformVersion: string
   /** Container instance of devnet. */
   container?:      Partial<Omit<OCIContainer, 'image'> & { image: Partial<OCIImage> }>
-  /** URL for connecting to a remote devnet. */
+  /** RPC URL for connecting to the devnet. */
   url?:            string|URL
   /** The protocol of the API URL without the trailing colon. */
   nodeProtocol:    string = 'http'

@@ -1,8 +1,45 @@
 import { timed, bold } from '../Util'
-import type { Chain, Agent } from '../../index'
+import type { Chain, Agent, Address } from '../../index'
 
 export async function fetchBalance (chain: Chain, ...args: Parameters<Chain["fetchBalance"]>) {
-  throw new Error('unimplemented!')
+  const requests: Record<Address, string[]> = {}
+  if (args[0] && !(args[0] instanceof Array)) {
+    args[0] = [args[0]]
+  }
+  if (args[0]) {
+    for (const address of args[0] as Address[]) {
+      requests[address] ??= []
+      if (args[1] as any instanceof Array) {
+        for (const token of args[1]!) {
+          requests[address].push(token)
+        }
+      } else if (args[1]) {
+        requests[address].push(args[1])
+      }
+    }
+  }
+  return chain.getConnection().fetchBalanceImpl({
+    addresses: requests
+  })
+}
+
+export async function send (agent: Agent, ...args: Parameters<Agent["send"]>) {
+  const [outputs, options] = args
+  for (const [recipient, amounts] of Object.entries(outputs)) {
+    agent.log.debug(`Sending to ${bold(recipient)}:`)
+    for (const [token, amount] of Object.entries(amounts)) {
+      agent.log.debug(`  ${amount} ${token}`)
+    }
+  }
+  return await timed(
+    ()=>agent.getConnection().sendImpl({
+      ...options||{},
+      outputs
+    }),
+    ({elapsed})=>`Sent in ${bold(elapsed)}`
+  )
+}
+
   //[>* Get balance of current identity in main token. <]
   //get balance () {
     //if (!chain.identity?.address) {
@@ -61,21 +98,3 @@ export async function fetchBalance (chain: Chain, ...args: Parameters<Chain["fet
       //)
     //)
   //}
-}
-
-export async function send (agent: Agent, ...args: Parameters<Agent["send"]>) {
-  const [outputs, options] = args
-  for (const [recipient, amounts] of Object.entries(outputs)) {
-    agent.log.debug(`Sending to ${bold(recipient)}:`)
-    for (const [token, amount] of Object.entries(amounts)) {
-      agent.log.debug(`  ${amount} ${token}`)
-    }
-  }
-  return await timed(
-    ()=>agent.getConnection().sendImpl({
-      ...options||{},
-      outputs
-    }),
-    ({elapsed})=>`Sent in ${bold(elapsed)}`
-  )
-}

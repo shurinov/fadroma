@@ -6,6 +6,7 @@ import * as SN from '@fadroma/scrt'
 import * as CW from '@fadroma/cw'
 import * as Namada from '@fadroma/namada'
 import * as OCI from '@fadroma/oci'
+import * as Devnet from '@fadroma/devnet'
 
 const console = new Console('Checklist')
 
@@ -156,6 +157,11 @@ const tests: Array<[string, Function]> = [
 
 let table = ''
 const errors = []
+const devnets = {
+  SN: new Devnet.DevnetContainer(
+    Devnet.devnetPlatforms['scrt'].versions['1.12']
+  )
+}
 
 for (const [feature, test] of tests) {
 
@@ -168,6 +174,13 @@ for (const [feature, test] of tests) {
       connectOptions.bech32Prefix   = 'test'
       connectOptions.coinType       = 0
       connectOptions.hdAccountIndex = 0
+    }
+    if (platform === SN) {
+      const devnet = devnets['SN']
+      await devnet.created
+      await devnet.started
+      connectOptions.chainId = devnet.chainId
+      connectOptions.urls = [devnet.url]
     }
 
     let color = NI

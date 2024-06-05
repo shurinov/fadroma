@@ -135,10 +135,11 @@ export async function upload (agent: Agent, ...args: Parameters<Agent["upload"]>
 export async function fetchCodeInfo (
   chain: Chain, ...args: Parameters<Chain["fetchCodeInfo"]>|[]
 ) {
+  const connection = chain.getConnection()
   if (args.length === 0) {
     chain.log.debug('Querying all codes...')
     return timed(
-      ()=>chain.getConnection().fetchCodeInfoImpl(),
+      connection.fetchCodeInfoImpl.bind(connection),
       ({ elapsed, result }) => chain.log.debug(
         `Queried in ${bold(elapsed)}: all codes`
       ))
@@ -149,7 +150,7 @@ export async function fetchCodeInfo (
       const { parallel } = args[1] as { parallel?: boolean }
       chain.log.debug(`Querying info about ${codeIds.length} code IDs...`)
       return timed(
-        ()=>chain.getConnection().fetchCodeInfoImpl({ codeIds, parallel }),
+        connection.fetchCodeInfoImpl.bind(connection, { codeIds, parallel }),
         ({ elapsed, result }) => chain.log.debug(
           `Queried in ${bold(elapsed)}: info about ${codeIds.length} code IDs`
         ))
@@ -158,7 +159,7 @@ export async function fetchCodeInfo (
       const { parallel } = args[1] as { parallel?: boolean }
       chain.log.debug(`Querying info about code id ${args[0]}...`)
       return timed(
-        ()=>chain.getConnection().fetchCodeInfoImpl({ codeIds, parallel }),
+        connection.fetchCodeInfoImpl.bind(connection, { codeIds, parallel }),
         ({ elapsed }) => chain.log.debug(
           `Queried in ${bold(elapsed)}: info about code id ${codeIds[0]}`
         ))

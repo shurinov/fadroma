@@ -24,10 +24,13 @@ export class ScrtChain extends Chain {
     chainId: ChainId,
     urls:    (string|URL)[]
   }): Promise<ScrtChain> {
-    return new ScrtChain({
-      chainId,
-      connections: urls.map(url=>new ScrtConnection({ url: url.toString() }))
-    })
+    const chain = new ScrtChain({ chainId })
+    const connections = urls.map(url=>new ScrtConnection({
+      chain,
+      url: url.toString()
+    }))
+    chain.connections = connections
+    return chain
   }
 
   async authenticate (...args: unknown[]): Promise<ScrtAgent> {
@@ -83,12 +86,15 @@ export class ScrtConnection extends Connection {
 
   override async fetchBlockImpl (parameter?): Promise<ScrtBlock> {
     if (!parameter) {
-      const {
+      let {
         block_id: { hash, part_set_header } = {},
         block: { header, data, evidence, last_commit } = {}
       } = await this.api.query.tendermint.getLatestBlock({})
+      if (hash instanceof Uint8Array) {
+        hash = base16.encode(hash) as any
+      }
       return new ScrtBlock({
-        hash:   hash ? base16.encode(hash) : undefined,
+        hash:   hash as any,
         height: Number(header?.height)
       })
     }
