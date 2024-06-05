@@ -1,5 +1,5 @@
 import { Suite } from '@hackbg/ensuite'
-import OCI, { Container, Image } from './oci'
+import { OCI, OCIConnection, OCIContainer, OCIImage } from './oci'
 import { randomBase16 } from '@hackbg/fadroma'
 import * as assert from 'node:assert'
 import { resolve, dirname } from 'node:path'
@@ -13,8 +13,8 @@ export async function testContainerEngine () {
 
   const engine = new OCI({ chainId: 'test' })
   const image = engine.image('hello-world')
-  assert.ok(image instanceof Image)
-  assert.equal(image.engine, engine)
+  assert.ok(image instanceof OCIImage)
+  assert.ok(image.engine instanceof OCIConnection)
 
   console.log('Pull or build...')
   await image.pullOrBuild()
@@ -29,14 +29,14 @@ export async function testContainerEngine () {
   console.log('Build...')
   await image.build()
   const container = image.container(`test-hello-${randomBase16()}`)
-  assert.ok(container instanceof Container)
+  assert.ok(container instanceof OCIContainer)
   assert.equal(container.image, image)
-  assert.equal(await container.exists(), false)
 
   console.log('Create container...')
+  assert.equal(await container.exists(), false)
   await container.create()
-  assert.equal(await container.exists(), true)
   assert.ok(container.id)
+  assert.equal(await container.exists(), true)
   assert.equal(container.shortId, container.id.slice(0, 8))
   assert.equal(await container.isRunning(), false)
 

@@ -13,7 +13,11 @@ export class ScrtChain extends Chain {
   declare connections: ScrtConnection[]
 
   getConnection (): ScrtConnection {
-    return this.connections[0]
+    const [connection] = this.connections || []
+    if (!connection) {
+      throw new Error('No available connections.')
+    }
+    return connection
   }
 
   static async connect ({ chainId, urls = [] }: {
@@ -30,7 +34,10 @@ export class ScrtChain extends Chain {
     if (args.length === 0) {
       return new ScrtAgent({
         chain:    this,
-        api:      new SecretNetworkClient({}),
+        api:      new SecretNetworkClient({
+          chainId: this.chainId,
+          url:     this.getConnection().url
+        }),
         identity: null,
       })
     } else {

@@ -88,3 +88,19 @@ export function testnet (options: Partial<ScrtChain> = {}): Promise<ScrtChain> {
 }
 
 const pickRandom = <T>(set: Set<T>): T => [...set][Math.floor(Math.random()*set.size)]
+
+/** Connect to a mock implementation of Secret Network. */
+export async function mocknet (options: Partial<ScrtChain> = {}): Promise<ScrtChain> {
+  const chain = await ScrtChain.connect({ chainId: 'scrt-mocknet', })
+  chain.connections = [new ScrtMocknetConnection({ chain })]
+  return chain
+}
+
+export async function devnet (options): Promise<ScrtChain> {
+  let devnet
+  try {
+    devnet = await import('@fadroma/devnet')
+  } catch (e) {
+    throw new Error('Failed to import @fadroma/devnet. Is it installed?')
+  }
+}

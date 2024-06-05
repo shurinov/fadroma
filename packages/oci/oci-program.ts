@@ -1,5 +1,6 @@
 import Docker from 'dockerode'
 import { Writable, Transform } from 'node:stream'
+import { basename, dirname } from 'node:path'
 import {
   assign, bold, colors, randomColor, Chain, Connection, Agent, SigningConnection,
   UploadedCode, Contract,
@@ -7,19 +8,22 @@ import {
 import { hideProperties as hide } from '@hackbg/hide'
 import { Error, Console } from './oci-base'
 import type { OCIConnection } from './oci-connection'
+import { toDockerodeOptions, waitStream } from './oci-impl'
 
 export class OCIImage extends UploadedCode {
 
   constructor (properties: Partial<OCIImage> = {}) {
     super(properties)
-    assign(this, properties, ['name', 'engine', 'dockerfile', 'inputFiles', 'buildArgs'])
+    assign(this, properties, [
+      'name', 'engine', 'dockerfile', 'inputFiles', 'buildArgs'
+    ])
     this.log = new Console(this.name || '(container image)')
     hide(this, 'log')
   }
 
-  name:        string
+  name!:       string
   declare log: Console
-  engine:      OCIConnection|null
+  engine!:     OCIConnection|null
   dockerfile:  string|null = null
   inputFiles:  string[] = []
   buildArgs:   Record<string, string> = {}
@@ -216,16 +220,18 @@ export class OCIContainer extends Contract {
 
   constructor (properties: Partial<OCIContainer> = {}) {
     super(properties)
-    assign(this, properties, ['id', 'engine', 'image', 'entrypoint', 'command', 'options'])
+    assign(this, properties, [
+      'id', 'engine', 'image', 'entrypoint', 'command', 'options'
+    ])
     this.engine ??= this.image?.engine
     this.log = new Console('OCIContainer')
     hide(this, 'log')
   }
 
   id?:         string
-  name:        string
+  name?:       string
   engine:      OCIConnection|null
-  image:       OCIImage
+  image!:      OCIImage
   entrypoint?: ContainerCommand
   command?:    ContainerCommand
   options:     Partial<ContainerOptions> = {}
@@ -259,6 +265,9 @@ export class OCIContainer extends Contract {
   }
 
   exists (): Promise<boolean> {
+    if (!this.id) {
+      return Promise.resolve(false)
+    }
     return this.inspect().then(()=>true, e=>{
       if (e.statusCode === 404) return false
       throw e
@@ -282,10 +291,10 @@ export class OCIContainer extends Contract {
       // Make sure the image exists
       await this.image.pullOrBuild()
       // Create the container
-      const container = await this.engine.api.createContainer(opts)
+      const container = await this.engine!.api.createContainer(opts)
       this.id = container.id
       // Update the logger tag with the container id
-      this.log.label = toLabel(this)
+      this.log.label = toLogLabel(this)
     }
     return this
   }
@@ -490,7 +499,7 @@ export class LineTransformStream extends Transform {
   }
 }
 
-export const toLabel = (
+export const toLogLabel = (
   {id, shortId, name}: {id?: string, shortId?: string, name?: string}
 ) => {
   let label = ''

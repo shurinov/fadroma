@@ -38,7 +38,7 @@ export function version (platformVersion: Version, baseImage: string, baseSha256
   return {
     platformName,
     platformVersion,
-    Connection:   Scrt.ScrtConnection as { new (...args: unknown[]): Connection },
+    Connection:   Scrt.Connection as { new (...args: unknown[]): Connection },
     Identity:     Scrt.MnemonicIdentity as { new (...args: unknown[]): Identity },
     gasToken:     new Token.Native('uscrt'),
     nodePortMode: 'http' as APIMode,

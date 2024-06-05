@@ -1,10 +1,12 @@
 export {
   OCI,
+  OCIConnection,
   OCIAgent,
 } from './oci-connection'
 export {
   OCIImage,
   OCIContainer,
+  toLogLabel
 } from './oci-program'
 
 import { OCI } from './oci-connection'

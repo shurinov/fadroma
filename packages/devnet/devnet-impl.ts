@@ -109,39 +109,41 @@ export function initContainer (
     throw new Error('At least devnet.container.image.name needs to be specified')
   }
 
-  if (!(devnet.container.image instanceof OCI.Image)) {
-    devnet.container.image = new OCI.Image(devnet.container.image)
+  if (!(devnet.container.image instanceof OCI.OCIImage)) {
+    devnet.container.image = new OCI.OCIImage(devnet.container.image)
   }
   devnet.container.image.log.label = devnet.log.label
 
-  if (!(devnet.container instanceof OCI.Container)) {
-    devnet.container = new OCI.Container(devnet.container)
+  if (!(devnet.container instanceof OCI.OCIContainer)) {
+    devnet.container = new OCI.OCIContainer(devnet.container)
   }
   devnet.container.log.label = devnet.log.label
 
   if (!devnet.container.image.engine || !devnet.container.engine) {
-    devnet.container.engine = devnet.container.image.engine = new OCI.Connection()
+    devnet.container.engine = devnet.container.image.engine =
+      new OCI.OCI().getConnection()
   }
 
-  const defineGetter = (name: string, get: () => any) => Object.defineProperty(devnet, name, {
-    enumerable: true, configurable: true, get
-  })
-  defineGetter('created', () => {
+  const defineGetter = (name: string, get: () => any) =>
+    Object.defineProperty(devnet, name, {
+      enumerable: true, configurable: true, get
+    })
+  defineGetter('created', function doCreateDevnetContainer () {
     const creating = createDevnetContainer(devnet)
     defineGetter('created', () => creating)
     return creating
   })
-  defineGetter('started', () => {
+  defineGetter('started', function doStartDevnetContainer () {
     const starting = startDevnetContainer(devnet)
     defineGetter('started', () => starting)
     return starting
   })
-  defineGetter('paused', () => {
+  defineGetter('paused', function doPauseDevnetContainer () {
     const pausing = pauseDevnetContainer(devnet)
     defineGetter('paused', () => pausing)
     return pausing
   })
-  defineGetter('removed', () => {
+  defineGetter('removed', function doRemoveDevnetContainer () {
     const deleting = removeDevnetContainer(devnet)
     defineGetter('removed', () => deleting)
     return deleting
@@ -180,7 +182,7 @@ export async function createDevnetContainer (
     devnet.container.options = containerOptions(devnet)
     devnet.container.command = [ENTRYPOINT_MOUNTPOINT, devnet.chainId]
     await devnet.container.create()
-    devnet.container.log.label = devnet.log.label = OCI.toLabel(devnet.container)
+    devnet.container.log.label = devnet.log.label = OCI.toLogLabel(devnet.container)
     // set id and save
     if (devnet.verbose) {
       devnet.log.debug(`Created container:`, bold(devnet.container.shortId))
@@ -237,7 +239,7 @@ export function containerEnvironment (
     'log'|'chainId'|'gasToken'|'nodeBinary'|'nodePortMode'|'nodePort'|'genesisAccounts'|'verbose'
   >
 ) {
-  const env: Record<string, string> = {
+  const env: Record<string, string|undefined> = {
     DAEMON:    devnet.nodeBinary||'',
     TOKEN:     devnet.gasToken?.denom,
     CHAIN_ID:  devnet.chainId!,
@@ -275,7 +277,7 @@ export async function removeDevnetContainer (
       }
       await devnet.container.remove()
     }
-  } catch (e) {
+  } catch (e: any) {
     if (e.statusCode !== 404) {
       throw e
     }

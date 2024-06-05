@@ -28,6 +28,7 @@ export class OCI extends Chain {
   constructor (properties: ConstructorParameters<typeof Chain>[0] & {
     api?: string|DockerHandle
   }) {
+    properties ??= {} as any
     super(properties)
     this.#connection = new OCIConnection({
       chain: this,
@@ -40,7 +41,9 @@ export class OCI extends Chain {
     return this.#connection
   }
   async authenticate (): Promise<OCIAgent> {
-    return new OCIAgent({ chain: this })
+    return new OCIAgent({
+      chain: this
+    })
   }
 
   image (
@@ -83,9 +86,10 @@ export class OCIConnection extends Connection {
       throw new Error('invalid docker engine configuration')
     }
     super(properties)
+    this.api = properties.api
   }
 
-  declare api: DockerHandle
+  api: DockerHandle
 
   override async fetchHeightImpl (): Promise<never> {
     throw new Error('fetchHeightImpl: not applicable')

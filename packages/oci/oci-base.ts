@@ -18,7 +18,7 @@ export type DockerHandle = Pick<Dockerode,
 
 class OCIError extends Error {
   static NoDockerode = this.define('NoDockerode',
-    ()=>'Dockerode API handle not set'
+    ()=>'Dockerode API not provided'
   )
   static NotDockerode = this.define('NotDockerode',
     ()=>'OCIImage: pass a Dock.OCIConnection instance'

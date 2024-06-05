@@ -29,7 +29,7 @@ export abstract class Chain extends Logged {
       & Pick<Chain, 'chainId'>
       & Partial<Pick<Chain, 'blockInterval'>>
   ) {
-    super(properties)
+    super(properties||{})
     this.chainId = properties.chainId
   }
 
