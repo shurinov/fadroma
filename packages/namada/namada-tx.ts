@@ -55,8 +55,8 @@ class NamadaBlock extends Block {
 
   static async fetchByHeight (
     connection: { url: string|URL, decode?: typeof Decode, chain?: Namada },
-    height: number|string|bigint,
-    raw?: boolean
+    height:     number|string|bigint,
+    raw?:       boolean,
   ): Promise<NamadaBlock> {
 
     const { url, decode = Decode, chain } = connection ?? {}
@@ -120,33 +120,53 @@ class NamadaBlock extends Block {
 
 class NamadaTransaction {
 
-  id!:         string
-  height?:     number
-  chainId!:    string
-  expiration!: string|null
-  timestamp!:  string
-  codeHash!:   string
-  dataHash!:   string
-  memoHash!:   string
-  txType!:     'Raw'|'Wrapper'|'Decrypted'|'Protocol'
-  sections!:   Section[]
-  content?:    object
-
   constructor (properties: Partial<NamadaTransaction> = {}) {
+    console.log(properties)
     assign(this, properties, [
       'id',
       'height',
       'chainId',
       'expiration',
       'timestamp',
-      'codeHash',
-      'dataHash',
-      'memoHash',
       'txType',
       'sections',
-      'content'
+      'content',
+      'batch',
     ])
   }
+
+  id!: string
+
+  height?: number
+
+  chainId!: string
+
+  expiration!: string|null
+
+  timestamp!: string
+
+  feeToken?: string
+
+  feeAmountPerGasUnit?: string
+
+  multiplier?: BigInt
+
+  gasLimitMultiplier?: BigInt
+
+  atomic!: boolean
+
+  txType!: 'Raw'|'Wrapper'|'Decrypted'|'Protocol'
+
+  sections!: Section[]
+
+  content?: object
+
+  batch!: Array<{
+    hash: string,
+    codeHash: string,
+    dataHash: string,
+    memoHash: string
+  }>
 
   static fromDecoded ({ id, sections, type, ...header }: {
     id: string,
@@ -275,12 +295,11 @@ class NamadaProtocolTransaction extends NamadaTransaction {
     //['ValSetUpdateVext',   unit],
   //)],
 //]
-
 }
 
 export {
-  NamadaBlock as Block,
-  NamadaTransaction as Transaction
+  NamadaBlock       as Block,
+  NamadaTransaction as Transaction,
 }
 
 export const Transactions = {

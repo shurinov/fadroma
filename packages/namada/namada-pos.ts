@@ -146,10 +146,11 @@ class NamadaValidator extends Staking.Validator {
       connection.log.warn("consensus address when fetching all validators: not implemented")
     }
 
+    const prefix = `validator ${this.namadaAddress} details: ${requests.length} request(s)`
     if (options?.parallel) {
-      connection.log.debug(`fetchDetails: ${requests.length} request(s) in parallel`)
+      connection.log.debug(prefix, `in parallel`)
     } else {
-      connection.log.debug(`fetchDetails: ${requests.length} request(s) in sequence`)
+      connection.log.debug(prefix, `in sequence`)
     }
     await optionallyParallel(options?.parallel, requests)
 
