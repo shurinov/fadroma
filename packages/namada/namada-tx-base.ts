@@ -46,6 +46,7 @@ class NamadaTransaction {
   })
 
   id!:         string
+  height?:     number
   chainId!:    string
   expiration!: string|null
   timestamp!:  string
@@ -59,6 +60,7 @@ class NamadaTransaction {
   constructor (properties: Partial<NamadaTransaction> = {}) {
     assign(this, properties, [
       'id',
+      'height',
       'chainId',
       'expiration',
       'timestamp',

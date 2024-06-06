@@ -29,7 +29,6 @@ import {
 import * as TX from './namada-tx'
 import {
   Decode,
-  decodeTxs,
   initDecoder,
 } from './namada-decode'
 
@@ -183,32 +182,13 @@ export class NamadaConnection extends CW.Connection {
       throw new CW.Error("Can't fetch block: missing connection URL")
     }
     if ((!parameter) || ('height' in parameter)) {
-      const wantedHeight = parameter?.height || ''
-      // Fetch block and results as undecoded JSON
-      const [block, results] = await Promise.all([
-        fetch(`${this.url}/block?height=${wantedHeight}`)
-          .then(response=>response.text()),
-        fetch(`${this.url}/block_results?height=${wantedHeight}`)
-          .then(response=>response.text()),
-      ])
-      const { id, txs, header } = this.decode.block(block, results) as {
-        id:     string,
-        txs:    Partial<TX.Transaction[]>[]
-        header: TX.NamadaBlock["header"]
-      }
-      return new TX.NamadaBlock(Object.assign({
-        id,
-        header,
-        height:             Number(header.height),
-        timestamp:          header.time,
-        transactions:       decodeTxs(txs, header.height),
-        chain:              this.chain,
-      }, parameter?.raw ? {
-        rawBlockResponse:   block,
-        rawResultsResponse: results,
-      } : {}))
+      return TX.NamadaBlock.fetchByHeight(
+        this, parameter?.height || '', parameter?.raw
+      )
     } else if ('hash' in parameter) {
-      throw new Error('NamadaConnection.fetchBlock({ hash }): unimplemented!')
+      return TX.NamadaBlock.fetchByHash(
+        this, parameter.hash || '', parameter.raw
+      )
     } else {
       throw new Error('Pass { height } or { hash }')
     }
