@@ -59,10 +59,10 @@ export class Namada extends CW.Chain {
   /** Connect to Namada using `testnetChainId` and `testnetURLs`. */
   static testnet (properties: Parameters<typeof Namada["connect"]>[0]) {
     return this.connect({
-      chainId: properties.chainId || Namada.testnetChainId,
-      urls: (properties as any).url
+      chainId: properties?.chainId || Namada.testnetChainId,
+      urls: (properties as any)?.url
         ? [(properties as any).url]
-        : ((properties as any).urls || [...Namada.testnetURLs]),
+        : ((properties as any)?.urls || [...Namada.testnetURLs]),
     })
   }
 
