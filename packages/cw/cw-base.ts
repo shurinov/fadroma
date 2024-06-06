@@ -3,7 +3,11 @@ import { Error, Console } from '@hackbg/fadroma'
 
 export class CWError extends Error {}
 
-export class CWConsole extends Console { label = '@fadroma/cw' }
+export class CWConsole extends Console {
+  constructor (label: string = '@fadroma/cw') {
+    super(label)
+  }
+}
 
 class CWBaseCLI extends CLI {
   constructor (...args: ConstructorParameters<typeof CLI>) {
