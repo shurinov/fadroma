@@ -1,14 +1,13 @@
-export { Transaction } from './namada-tx-base'
-export * as Transactions from './namada-tx-variant'
-export { Section } from './namada-tx-section-base'
+export { default as Transaction } from './namada-tx-base'
+export * as Transactions from './namada-tx-base'
+export { default as Section } from './namada-tx-section'
 export * as Sections from './namada-tx-section'
 export { default as wasmToContent } from './namada-tx-content'
 export * as Contents from './namada-tx-content'
 
 import { Block } from '@fadroma/cw'
-import { Transaction } from './namada-tx-base'
 import { Decode } from './namada-decode'
-import { Undecoded } from './namada-tx-variant'
+import Transaction, { Undecoded } from './namada-tx-base'
 import type { Namada } from './namada-connection'
 
 export class NamadaBlock extends Block {

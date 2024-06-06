@@ -1,33 +1,24 @@
 import { Console, bold } from '@hackbg/fadroma'
 import type { Transaction } from './namada-tx-base'
 import type { VoteProposal } from './namada-gov-tx'
+import type Section from './namada-tx-section'
 import * as Sections from './namada-tx-section'
-import type {
-  Validator
-} from './namada-pos'
+import type { Validator } from './namada-pos'
 
 export class NamadaConsole extends Console {
 
-  printTx (
-    {
-      txType, chainId, timestamp, expiration, codeHash, dataHash, memoHash, sections
-    }: Partial<Transaction> = {},
-    indent = 0
-  ) {
-    this.log('-', bold(`${txType} transaction:`))
-      .log('  Chain ID:  ', bold(chainId))
-      .log('  Timestamp: ', bold(timestamp))
-      .log('  Expiration:', bold(expiration))
-      .log('  Code hash: ', bold(codeHash))
-      .log('  Data hash: ', bold(dataHash))
-      .log('  Memo hash: ', bold(memoHash))
-      .log('  Sections:  ', bold(sections?.length))
+  printTx (tx: Partial<Transaction> = {}, indent = 0) {
+    this.log('-', bold(`${tx.txType} transaction:`))
+      .log('  Chain ID:  ', bold(tx.chainId))
+      .log('  Timestamp: ', bold(tx.timestamp))
+      .log('  Expiration:', bold(tx.expiration))
+      .log('  Code hash: ', bold(tx.codeHash))
+      .log('  Data hash: ', bold(tx.dataHash))
+      .log('  Memo hash: ', bold(tx.memoHash))
+      .log('  Sections:  ', bold(tx.sections?.length))
   }
 
-  printTxSections (
-    sections: Array<Partial<Sections.Section>> = [],
-    indent = 0
-  ) {
+  printTxSections (sections: Array<Partial<Section>> = [], indent = 0) {
     console.log(bold('  Sections:  '))
     for (const section of sections) {
       this.printTxSection(section)
@@ -35,10 +26,7 @@ export class NamadaConsole extends Console {
     return true
   }
 
-  printTxSection (
-    section: Partial<Sections.Section> = {},
-    indent = 0
-  ) {
+  printTxSection (section: Partial<Section> = {}, indent = 0) {
     switch (true) {
       case (section instanceof Sections.Data):
         return this.printDataSection(section)

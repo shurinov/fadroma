@@ -1,6 +1,23 @@
 import { assign } from '@hackbg/fadroma'
 import type { Fields } from '@hackbg/borshest'
-import { Section } from './namada-tx-section-base'
+
+class Section {
+  static noun = 'Section'
+  type!: null
+    |'Data'
+    |'ExtraData'
+    |'Code'
+    |'Signature'
+    |'Ciphertext'
+    |'MaspTx'
+    |'MaspBuilder'
+    |'Header'
+  constructor (properties: Partial<Section> = {}) {
+    assign(this, properties, [
+      "type"
+    ])
+  }
+}
 
 class UnknownSection extends Section {
   static noun = 'Unknown Section'
@@ -160,8 +177,8 @@ class HeaderSection extends Section {
   }
 }
 
+export default Section
 export {
-  Section,
   UnknownSection     as Unknown,
   DataSection        as Data,
   CodeSection        as Code,
