@@ -177,16 +177,16 @@ export class NamadaConnection extends CW.Connection {
   }
   override async fetchBlockImpl (
     parameter?: ({ height: number }|{ hash: string }) & { raw?: boolean }
-  ): Promise<TX.NamadaBlock> {
+  ): Promise<TX.Block> {
     if (!this.url) {
       throw new CW.Error("Can't fetch block: missing connection URL")
     }
     if ((!parameter) || ('height' in parameter)) {
-      return TX.NamadaBlock.fetchByHeight(
+      return TX.Block.fetchByHeight(
         this, parameter?.height || '', parameter?.raw
       )
     } else if ('hash' in parameter) {
-      return TX.NamadaBlock.fetchByHash(
+      return TX.Block.fetchByHash(
         this, parameter.hash || '', parameter.raw
       )
     } else {
