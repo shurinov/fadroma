@@ -13,17 +13,27 @@ import * as Sections from './namada-tx-section'
 class NamadaBlock extends Block {
 
   constructor ({
-    header,
-    rawBlockResponse,
-    rawResultsResponse,
-    ...properties
+    header, responses, ...properties
   }: ConstructorParameters<typeof Block>[0]
-    & Pick<NamadaBlock, 'header'|'rawBlockResponse'|'rawResultsResponse'>
+    & Pick<NamadaBlock, 'header'|'responses'|'chain'>
   ) {
     super(properties)
-    this.header             = header
-    this.rawBlockResponse   = rawBlockResponse
-    this.rawResultsResponse = rawResultsResponse
+    this.#chain     = properties.chain
+    this.#responses = responses
+    this.header     = header
+  }
+
+  #chain: Namada
+  get chain (): Namada {
+    return this.#chain
+  }
+
+  #responses?: {
+    block:   { url: string, response: string }
+    results: { url: string, response: string }
+  }
+  get responses () {
+    return this.#responses
   }
 
   /** Block header. */
@@ -47,44 +57,65 @@ class NamadaBlock extends Block {
   /** Transaction in block. */
   declare transactions: NamadaTransaction[]
 
-  /** Response from block API endpoint. */
-  rawBlockResponse?: string
-
-  /** Response from block_results API endpoint. */
-  rawResultsResponse?: string
+  /** Responses from block API endpoints. */
 
   static async fetchByHeight (
-    connection: { url: string|URL, decode?: typeof Decode, chain?: Namada },
-    height:     number|string|bigint,
-    raw?:       boolean,
+    { url, decode = Decode, chain }: {
+      url: string|URL, decode?: typeof Decode, chain?: Namada
+    },
+    { height, raw }: {
+      height: number|string|bigint,
+      raw?: boolean,
+    }
   ): Promise<NamadaBlock> {
-
-    const { url, decode = Decode, chain } = connection ?? {}
-
     if (!url) {
       throw new Error("Can't fetch block: missing connection URL")
     }
-
     // Fetch block and results as undecoded JSON
+    const blockUrl = `${url}/block?height=${height}`
+    const resultsUrl = `${url}/block_results?height=${height}`
     const [block, results] = await Promise.all([
-      fetch(`${url}/block?height=${height}`)
-        .then(response=>response.text()),
-      fetch(`${url}/block_results?height=${height}`)
-        .then(response=>response.text()),
+      fetch(blockUrl).then(response=>response.text()),
+      fetch(resultsUrl).then(response=>response.text()),
     ])
+    return this.fromResponses({
+      block: { url: blockUrl, response: block, },
+      results: { url: resultsUrl, response: results, },
+    }, { chain, decode, height })
+  }
 
-    const { id, header, txs } = decode.block(block, results) as {
-      id:     string,
-      txs:    Partial<NamadaTransaction[]>[]
+  static async fetchByHash (
+    _1: { url: string|URL, decode?: typeof Decode, chain?: Namada },
+    _2: { hash: string, raw?: boolean },
+  ): Promise<NamadaBlock> {
+    throw new Error('NamadaBlock.fetchByHash: not implemented')
+  }
+
+  static fromResponses (
+    responses: NonNullable<NamadaBlock["responses"]>,
+    { decode = Decode, chain, height }: {
+      decode?: typeof Decode
+      chain?:  Namada,
+      height?: string|number|bigint
+    },
+  ): NamadaBlock {
+    const { id, header, txs } = decode.block(
+      responses.block.response,
+      responses.results.response
+    ) as {
+      id: string,
+      txs: Partial<NamadaTransaction[]>[]
       header: NamadaBlock["header"]
     }
 
     return new NamadaBlock({
       id,
       header,
-      chain:        chain!,
-      height:       Number(header.height),
-      timestamp:    header.time,
+
+      chain: chain!,
+      height: Number(header.height),
+      timestamp: header.time,
+
       transactions: txs.map((tx, i)=>{
         try {
           return NamadaTransaction.fromDecoded({
@@ -100,20 +131,10 @@ class NamadaBlock extends Block {
           })
         }
       }),
-      ...raw ? {
-        rawBlockResponse:   block,
-        rawResultsResponse: results,
-      } : {}
+
+      responses
     })
 
-  }
-
-  static async fetchByHash (
-    connection: { url: string|URL, decode?: typeof Decode, chain?: Namada },
-    hash: string,
-    raw?: boolean
-  ): Promise<NamadaBlock> {
-    throw new Error('NamadaBlock.fetchByHash: not implemented')
   }
 
 }
@@ -121,46 +142,37 @@ class NamadaBlock extends Block {
 class NamadaTransaction {
 
   constructor (properties: Partial<NamadaTransaction> = {}) {
-    console.log(properties)
     assign(this, properties, [
       'id',
       'height',
       'chainId',
       'expiration',
       'timestamp',
+      'feeToken',
+      'feeAmountPerGasUnit',
+      'multiplier',
+      'gasLimitMultiplier',
       'txType',
       'sections',
       'content',
       'batch',
+      'atomic'
     ])
   }
 
   id!: string
-
   height?: number
-
   chainId!: string
-
   expiration!: string|null
-
   timestamp!: string
-
   feeToken?: string
-
   feeAmountPerGasUnit?: string
-
   multiplier?: BigInt
-
   gasLimitMultiplier?: BigInt
-
   atomic!: boolean
-
   txType!: 'Raw'|'Wrapper'|'Decrypted'|'Protocol'
-
   sections!: Section[]
-
   content?: object
-
   batch!: Array<{
     hash: string,
     codeHash: string,

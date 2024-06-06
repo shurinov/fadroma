@@ -181,14 +181,13 @@ export class NamadaConnection extends CW.Connection {
     if (!this.url) {
       throw new CW.Error("Can't fetch block: missing connection URL")
     }
-    if ((!parameter) || ('height' in parameter)) {
-      return TX.Block.fetchByHeight(
-        this, parameter?.height || '', parameter?.raw
-      )
-    } else if ('hash' in parameter) {
-      return TX.Block.fetchByHash(
-        this, parameter.hash || '', parameter.raw
-      )
+    if (!parameter) {
+      parameter = {} as any
+    }
+    if ('height' in parameter!) {
+      return TX.Block.fetchByHeight(this, parameter)
+    } else if ('hash' in parameter!) {
+      return TX.Block.fetchByHash(this, parameter)
     } else {
       throw new Error('Pass { height } or { hash }')
     }
