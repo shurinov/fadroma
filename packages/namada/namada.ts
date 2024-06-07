@@ -6,7 +6,8 @@ export {
   NamadaMnemonicIdentity as MnemonicIdentity,
 } from './namada-identity'
 export {
-  initDecoder
+  initDecoder,
+  Decode
 } from './namada-decode'
 export {
   Transaction
