@@ -1,4 +1,3 @@
-import * as TX from './namada-tx'
 import init, { Decode } from './pkg/fadroma_namada.js'
 
 export async function initDecoder (decoder: string|URL|Uint8Array): Promise<void> {

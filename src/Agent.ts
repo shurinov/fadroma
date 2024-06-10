@@ -64,7 +64,7 @@ export abstract class Agent extends Logged {
     contract: CodeId|Partial<UploadedCode>,
     options:  Partial<Contract> & {
       initMsg:   Into<Message>,
-      initSend?: Token.Native[]
+      initSend?: Token.ICoin[]
     }
   ): Promise<Contract & {
     address: Address,

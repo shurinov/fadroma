@@ -30,16 +30,16 @@ type Connection = {
   }
 }
 
-export async function getPGFParameters (connection: Connection) {
+export async function fetchPGFParameters (connection: Connection) {
   const binary = await connection.abciQuery(`/vp/pgf/parameters`)
   return new PGFParameters(connection.decode.pgf_parameters(binary))
 }
 
-export async function getPGFStewards (connection: Connection) {
+export async function fetchPGFStewards (connection: Connection) {
   throw new Error("not implemented")
 }
 
-export async function getPGFFundings (connection: Connection) {
+export async function fetchPGFFundings (connection: Connection) {
   throw new Error("not implemented")
 }
 

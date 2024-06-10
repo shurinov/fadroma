@@ -2,6 +2,16 @@ import { assign } from '@hackbg/fadroma'
 import type { Address } from '@hackbg/fadroma'
 import { decode, u64 } from '@hackbg/borshest'
 
+export async function fetchProposalCount (connection: Connection) {
+  const binary = await connection.abciQuery(`/shell/value/#${INTERNAL_ADDRESS}/counter`)
+  return decode(u64, binary) as bigint
+}
+
+export async function fetchGovernanceParameters (connection: Connection) {
+  const binary = await connection.abciQuery(`/vp/governance/parameters`)
+  return new GovernanceParameters(connection.decode.gov_parameters(binary))
+}
+
 class GovernanceParameters {
   minProposalFund!:         bigint
   maxProposalCodeSize!:     bigint
@@ -18,6 +28,28 @@ class GovernanceParameters {
       'maxProposalContentSize',
       'minProposalGraceEpochs',
     ])
+  }
+}
+
+export async function fetchProposalInfo (connection: Connection, id: number) {
+  const proposal = await connection.abciQuery(`/vp/governance/proposal/${id}`)
+  if (proposal[0] === 0) {
+    return null
+  }
+  const [ votes, result ] = await Promise.all([
+    connection.abciQuery(`/vp/governance/proposal/${id}/votes`),
+    connection.abciQuery(`/vp/governance/stored_proposal_result/${id}`),
+  ])
+  return {
+    proposal: new GovernanceProposal(
+      connection.decode.gov_proposal(proposal.slice(1))
+    ),
+    votes: connection.decode.gov_votes(votes).map(
+      vote=>new GovernanceVote(vote)
+    ),
+    result: (result[0] === 0) ? null : new GovernanceProposalResult(
+      connection.decode.gov_result(result.slice(1))
+    )
   }
 }
 
@@ -108,37 +140,5 @@ type Connection = {
     gov_proposal   (binary: Uint8Array): Partial<GovernanceProposal>
     gov_votes      (binary: Uint8Array): Array<Partial<GovernanceVote>>
     gov_result     (binary: Uint8Array): Partial<GovernanceProposalResult>
-  }
-}
-
-export async function getGovernanceParameters (connection: Connection) {
-  const binary = await connection.abciQuery(`/vp/governance/parameters`)
-  return new GovernanceParameters(connection.decode.gov_parameters(binary))
-}
-
-export async function getProposalCount (connection: Connection) {
-  const binary = await connection.abciQuery(`/shell/value/#${INTERNAL_ADDRESS}/counter`)
-  return decode(u64, binary) as bigint
-}
-
-export async function getProposalInfo (connection: Connection, id: number) {
-  const proposal = await connection.abciQuery(`/vp/governance/proposal/${id}`)
-  if (proposal[0] === 0) {
-    return null
-  }
-  const [ votes, result ] = await Promise.all([
-    connection.abciQuery(`/vp/governance/proposal/${id}/votes`),
-    connection.abciQuery(`/vp/governance/stored_proposal_result/${id}`),
-  ])
-  return {
-    proposal: new GovernanceProposal(
-      connection.decode.gov_proposal(proposal.slice(1))
-    ),
-    votes: connection.decode.gov_votes(votes).map(
-      vote=>new GovernanceVote(vote)
-    ),
-    result: (result[0] === 0) ? null : new GovernanceProposalResult(
-      connection.decode.gov_result(result.slice(1))
-    )
   }
 }

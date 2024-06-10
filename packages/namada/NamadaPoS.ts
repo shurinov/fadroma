@@ -2,8 +2,10 @@ import type { Address } from '@hackbg/fadroma'
 import { Console, assign, base16, optionallyParallel} from '@hackbg/fadroma'
 import { Staking } from '@fadroma/cw'
 import { decode, u8, u64, u256, array, set } from '@hackbg/borshest'
-import { NamadaConnection } from './namada-connection'
-import type { Namada } from './namada-connection'
+import type {
+  Chain as Namada,
+  Connection as NamadaConnection
+} from './Namada'
 
 class NamadaPoSParameters {
   maxProposalPeriod!:             bigint
@@ -177,17 +179,17 @@ export {
   NamadaCommissionPair    as CommissionPair,
 }
 
-export async function getStakingParameters (connection: NamadaConnection) {
+export async function fetchStakingParameters (connection: NamadaConnection) {
   const binary = await connection.abciQuery("/vp/pos/pos_params")
   return new NamadaPoSParameters(connection.decode.pos_parameters(binary))
 }
 
-export async function getTotalStaked (connection: NamadaConnection) {
+export async function fetchTotalStaked (connection: NamadaConnection) {
   const binary = await connection.abciQuery("/vp/pos/total_stake")
   return decode(u64, binary)
 }
 
-export async function getValidators (
+export async function fetchValidators (
   chain: Namada,
   options: Partial<Parameters<typeof Staking.getValidators>[1]> & {
     addresses?:       string[],
@@ -200,7 +202,7 @@ export async function getValidators (
   const connection = chain.getConnection()
   if (options.allStates) {
     let { addresses } = options
-    addresses ??= await getValidatorAddresses(connection)
+    addresses ??= await fetchValidatorAddresses(connection)
     if (options.pagination && (options.pagination as Array<number>).length !== 0) {
       if (options.pagination.length !== 2) {
         throw new Error("pagination format: [page, per_page]")
@@ -238,17 +240,17 @@ export async function getValidators (
   }
 }
 
-export async function getValidatorAddresses (connection: NamadaConnection): Promise<Address[]> {
+export async function fetchValidatorAddresses (connection: NamadaConnection): Promise<Address[]> {
   const binary = await connection.abciQuery("/vp/pos/validator/addresses")
   return connection.decode.addresses(binary)
 }
 
-export async function getValidatorsConsensus (connection: NamadaConnection) {
+export async function fetchValidatorsConsensus (connection: NamadaConnection) {
   const binary = await connection.abciQuery("/vp/pos/validator_set/consensus")
   return connection.decode.pos_validator_set(binary).sort(byBondedStake)
 }
 
-export async function getValidatorsBelowCapacity (connection: NamadaConnection) {
+export async function fetchValidatorsBelowCapacity (connection: NamadaConnection) {
   const binary = await connection.abciQuery("/vp/pos/validator_set/below_capacity")
   return connection.decode.pos_validator_set(binary).sort(byBondedStake)
 }
@@ -260,7 +262,7 @@ const byBondedStake = (
   : (a.bondedStake < b.bondedStake) ?  1
   : 0
 
-export async function getValidator (chain: Namada, namadaAddress: Address) {
+export async function fetchValidator (chain: Namada, namadaAddress: Address) {
   return await new NamadaValidator({
     chain,
     address: '',
@@ -268,17 +270,17 @@ export async function getValidator (chain: Namada, namadaAddress: Address) {
   }).fetchDetails()
 }
 
-export async function getValidatorStake (connection: NamadaConnection, address: Address) {
+export async function fetchValidatorStake (connection: NamadaConnection, address: Address) {
   const totalStake = await connection.abciQuery(`/vp/pos/validator/stake/${address}`)
   return decode(u256, totalStake)
 }
 
-export async function getDelegations (connection: NamadaConnection, address: Address) {
+export async function fetchDelegations (connection: NamadaConnection, address: Address) {
   const binary = await connection.abciQuery(`/vp/pos/delegations/${address}`)
   return connection.decode.addresses(binary)
 }
 
-export async function getDelegationsAt (
+export async function fetchDelegationsAt (
   connection: NamadaConnection, address: Address, epoch?: number
 ): Promise<Record<string, bigint>> {
   let query = `/vp/pos/delegations_at/${address}`

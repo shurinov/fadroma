@@ -1,19 +1,18 @@
-import Namada, { initDecoder } from './namada'
-import { NamadaConsole } from './namada-console'
+import * as Namada from './Namada'
 import init, { Decode } from './pkg/fadroma_namada.js'
 import { readFileSync } from 'node:fs'
 
-const console = new NamadaConsole('test')
+const console = new Namada.Console('test')
 
 export default async function main () {
-  await initDecoder(readFileSync('./pkg/fadroma_namada_bg.wasm'))
+  await Namada.initDecoder(readFileSync('./pkg/fadroma_namada_bg.wasm'))
   const namada = await Namada.connect({
     url: 'https://namada-testnet-rpc.itrocket.net'
   })
-  console.log(await namada.getDelegationsAt(
+  console.log(await namada.fetchDelegationsAt(
     'tnam1qpr2uzf9pgrd6sucp34wq5gss5rm2un5lszcwzqc'
   ))
-  const test = await namada.getValidators({
+  const test = await namada.fetchValidators({
     details:         true,
     parallel:        false,
     parallelDetails: true,
