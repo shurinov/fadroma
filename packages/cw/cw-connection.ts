@@ -211,13 +211,13 @@ export class CWConnection extends Connection {
     return await CWCompute.query(this, ...args) as T
   }
 
-  fetchValidators ({ details = false }: {
+  fetchValidatorsImpl ({ details = false }: {
     details?: boolean
   } = {}) {
     return this.tendermintClient.then(()=>CWStaking.getValidators(this, { details }))
   }
 
-  fetchValidatorInfo (address: Address): Promise<unknown> {
+  fetchValidatorInfoImpl (address: Address): Promise<unknown> {
     return Promise.all([
       this.queryClient,
       this.tendermintClient

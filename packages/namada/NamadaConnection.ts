@@ -1,5 +1,5 @@
 import * as CW from '@fadroma/cw'
-import Block from './NamadaBlock'
+import NamadaBlock from './NamadaBlock'
 import * as PoS from './NamadaPoS'
 import * as PGF from './NamadaPGF'
 import * as Gov from './NamadaGov'
@@ -15,7 +15,7 @@ export default class NamadaConnection extends CW.Connection {
   }
   override async fetchBlockImpl (
     parameter?: ({ height: number }|{ hash: string }) & { raw?: boolean }
-  ): Promise<Block> {
+  ): Promise<NamadaBlock> {
     if (!this.url) {
       throw new CW.Error("Can't fetch block: missing connection URL")
     }
@@ -23,9 +23,9 @@ export default class NamadaConnection extends CW.Connection {
       parameter = {} as any
     }
     if ('height' in parameter!) {
-      return Block.fetchByHeight(this, parameter)
+      return NamadaBlock.fetchByHeight(this, parameter)
     } else if ('hash' in parameter!) {
-      return Block.fetchByHash(this, parameter)
+      return NamadaBlock.fetchByHash(this, parameter)
     } else {
       throw new Error('Pass { height } or { hash }')
     }
@@ -34,15 +34,16 @@ export default class NamadaConnection extends CW.Connection {
   fetchCurrentEpochImpl () {
     return Epoch.fetchCurrentEpoch(this)
   }
+  fetchCurrentEpochFirstBlockImpl () {
+    return Epoch.fetchCurrentEpochFirstBlock(this)
+  }
 
   fetchGovernanceParametersImpl () {
     return Gov.fetchGovernanceParameters(this)
   }
-
   fetchProposalCountImpl () {
     return Gov.fetchProposalCount(this)
   }
-
   fetchProposalInfoImpl (id: number) {
     return Gov.fetchProposalInfo(this, id)
   }
@@ -50,15 +51,12 @@ export default class NamadaConnection extends CW.Connection {
   fetchPGFParametersImpl () {
     return PGF.fetchPGFParameters(this)
   }
-
   fetchPGFStewardsImpl () {
     return PGF.fetchPGFStewards(this)
   }
-
   fetchPGFFundingsImpl () {
     return PGF.fetchPGFFundings(this)
   }
-
   isPGFStewardImpl (address: string) {
     return PGF.isPGFSteward(this)
   }
@@ -66,15 +64,12 @@ export default class NamadaConnection extends CW.Connection {
   fetchStakingParametersImpl () {
     return PoS.fetchStakingParameters(this)
   }
-
   fetchValidatorAddressesImpl () {
     return PoS.fetchValidatorAddresses(this)
   }
-
   fetchValidatorImpl (address: string) {
     return PoS.fetchValidator(this.chain, address)
   }
-
   fetchValidatorsImpl (options?: {
     details?:         boolean,
     pagination?:      [number, number]
@@ -85,27 +80,21 @@ export default class NamadaConnection extends CW.Connection {
   }) {
     return PoS.fetchValidators(this.chain, options)
   }
-
   fetchValidatorsConsensusImpl () {
     return PoS.fetchValidatorsConsensus(this)
   }
-
   fetchValidatorsBelowCapacityImpl () {
     return PoS.fetchValidatorsBelowCapacity(this)
   }
-
   fetchDelegationsImpl (address: string) {
     return PoS.fetchDelegations(this, address)
   }
-
   fetchDelegationsAtImpl (address: string, epoch?: number) {
     return PoS.fetchDelegationsAt(this, address, epoch)
   }
-
   fetchTotalStakedImpl () {
     return PoS.fetchTotalStaked(this)
   }
-
   fetchValidatorStakeImpl (address: string) {
     return PoS.fetchValidatorStake(this, address)
   }

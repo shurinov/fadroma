@@ -1,6 +1,7 @@
 import * as CW from '@fadroma/cw'
 import type { ChainId } from '@hackbg/fadroma'
 import NamadaConnection from './NamadaConnection'
+import type { Validator } from './NamadaPoS'
 import { Decode, initDecoder } from './NamadaDecode'
 
 export default class NamadaChain extends CW.Chain {
@@ -61,31 +62,21 @@ export default class NamadaChain extends CW.Chain {
   fetchPGFParameters () {
     return this.getConnection().fetchPGFParametersImpl()
   }
-
   fetchPGFStewards () {
     return this.getConnection().fetchPGFStewardsImpl()
   }
-
   fetchPGFFundings () {
     return this.getConnection().fetchPGFFundingsImpl()
   }
-
   isPGFSteward (address: string) {
     return this.getConnection().isPGFStewardImpl(address)
   }
-
   fetchStakingParameters () {
     return this.getConnection().fetchStakingParametersImpl()
   }
-
   fetchValidatorAddresses () {
     return this.getConnection().fetchValidatorAddressesImpl()
   }
-
-  fetchValidator (address: string) {
-    return this.getConnection().fetchValidatorImpl(address)
-  }
-
   fetchValidators (options?: {
     details?:         boolean,
     pagination?:      [number, number]
@@ -94,46 +85,68 @@ export default class NamadaChain extends CW.Chain {
     parallel?:        boolean,
     parallelDetails?: boolean,
   }) {
-    return this.getConnection().fetchValidators(options)
+    return this.getConnection().fetchValidatorsImpl(options)
   }
-
-  fetchValidatorsConsensus () {
-    return this.getConnection().fetchValidatorsConsensusImpl()
+  async fetchValidatorsConsensus (options?: { max?: number, percentage?: boolean }) {
+    let validators = await this.getConnection().fetchValidatorsConsensusImpl()
+    if (options?.max) {
+      validators = validators.slice(0, options.max)
+    }
+    if (options?.percentage) {
+      const totalStake = Number(await this.fetchTotalStaked())
+      validators = validators.map((v: Validator)=>Object.assign(v, {
+        bondedStake: Number(v.bondedStake),
+        stakePercentage: (Number(v.bondedStake) / totalStake) * 100
+      }))
+    }
+    return validators.map((v: Validator)=>Object.assign(v, {
+      status: 'consensus'
+    }))
   }
-
-  fetchValidatorsBelowCapacity () {
-    return this.getConnection().fetchValidatorsBelowCapacityImpl()
+  async fetchValidatorsBelowCapacity (options?: { max?: number, percentage?: boolean }) {
+    let validators = await this.getConnection().fetchValidatorsBelowCapacityImpl()
+    if (options?.max) {
+      validators = validators.slice(0, options.max)
+    }
+    if (options?.percentage) {
+      const totalStake = Number(await this.fetchTotalStaked())
+      validators = validators.map((v: Validator)=>Object.assign(v, {
+        bondedStake: Number(v.bondedStake),
+        stakePercentage: (Number(v.bondedStake) / totalStake) * 100
+      }))
+    }
+    return validators.map((v: Validator)=>Object.assign(v, {
+      status: 'below_capacity'
+    }))
   }
-
+  fetchValidator (address: string) {
+    return this.getConnection().fetchValidatorImpl(address)
+  }
+  fetchValidatorStake (address: string) {
+    return this.getConnection().fetchValidatorStakeImpl(address)
+  }
   fetchDelegations (address: string) {
     return this.getConnection().fetchDelegationsImpl(address)
   }
-
   fetchDelegationsAt (address: string, epoch?: number) {
     return this.getConnection().fetchDelegationsAtImpl(address, epoch)
   }
-
   fetchGovernanceParameters () {
     return this.getConnection().fetchGovernanceParametersImpl()
   }
-
   fetchProposalCount () {
     return this.getConnection().fetchProposalCountImpl()
   }
-
   fetchProposalInfo (id: number) {
     return this.getConnection().fetchProposalInfoImpl(id)
   }
-
   fetchCurrentEpoch () {
     return this.getConnection().fetchCurrentEpochImpl()
   }
-
+  fetchCurrentEpochFirstBlock () {
+    return this.getConnection().fetchCurrentEpochFirstBlockImpl()
+  }
   fetchTotalStaked () {
     return this.getConnection().fetchTotalStakedImpl()
-  }
-
-  fetchValidatorStake (address: string) {
-    return this.getConnection().fetchValidatorStakeImpl(address)
   }
 }

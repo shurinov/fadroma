@@ -27,3 +27,4 @@ export function mainnet (...args: never) {
     'You can pass them to Namada.connect function if you have them.'
   )
 }
+export type { Validator } from './NamadaPoS'

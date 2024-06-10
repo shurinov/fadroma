@@ -77,6 +77,7 @@ class NamadaValidator extends Staking.Validator {
   commission!:    NamadaCommissionPair
   state!:         unknown
   stake!:         bigint
+  bondedStake?:   number
   async fetchDetails (options?: { parallel?: boolean }) {
 
     const connection = this.chain.getConnection()
