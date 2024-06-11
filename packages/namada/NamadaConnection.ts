@@ -13,6 +13,7 @@ export default class NamadaConnection extends CW.Connection {
   get decode () {
     return this.chain.decode
   }
+
   override async fetchBlockImpl (
     parameter?: ({ height: number }|{ hash: string }) & { raw?: boolean }
   ): Promise<NamadaBlock> {
@@ -27,7 +28,7 @@ export default class NamadaConnection extends CW.Connection {
     } else if ('hash' in parameter!) {
       return NamadaBlock.fetchByHash(this, parameter)
     } else {
-      throw new Error('Pass { height } or { hash }')
+      return NamadaBlock.fetchByHeight(this, {})
     }
   }
 

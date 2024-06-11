@@ -57,7 +57,7 @@ export default class NamadaBlock extends Block {
       url: string|URL, decode?: typeof Decode, chain?: Namada
     },
     { height, raw }: {
-      height: number|string|bigint,
+      height?: number|string|bigint,
       raw?: boolean,
     }
   ): Promise<NamadaBlock> {
@@ -65,8 +65,8 @@ export default class NamadaBlock extends Block {
       throw new Error("Can't fetch block: missing connection URL")
     }
     // Fetch block and results as undecoded JSON
-    const blockUrl = `${url}/block?height=${height}`
-    const resultsUrl = `${url}/block_results?height=${height}`
+    const blockUrl = `${url}/block?height=${height??''}`
+    const resultsUrl = `${url}/block_results?height=${height??''}`
     const [block, results] = await Promise.all([
       fetch(blockUrl).then(response=>response.text()),
       fetch(resultsUrl).then(response=>response.text()),
