@@ -32,11 +32,11 @@ export default class NamadaConnection extends CW.Connection {
     }
   }
 
-  fetchCurrentEpochImpl () {
-    return Epoch.fetchCurrentEpoch(this)
+  fetchEpochImpl () {
+    return Epoch.fetchEpoch(this)
   }
-  fetchCurrentEpochFirstBlockImpl () {
-    return Epoch.fetchCurrentEpochFirstBlock(this)
+  fetchEpochFirstBlockImpl () {
+    return Epoch.fetchEpochFirstBlock(this)
   }
 
   fetchGovernanceParametersImpl () {
