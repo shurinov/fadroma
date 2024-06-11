@@ -48,12 +48,22 @@ export abstract class Chain extends Logged {
 
   /** Get the current block height. */
   get height (): Promise<number> {
+    this.log.warn('chain.height is deprecated, use chain.fetchHeight()')
+    this.log.debug('Querying block height')
+    return this.getConnection().fetchHeightImpl()
+  }
+  fetchHeight (): Promise<number> {
     this.log.debug('Querying block height')
     return this.getConnection().fetchHeightImpl()
   }
 
   /** Wait until the block height increments, or until `this.alive` is set to false. */
   get nextBlock (): Promise<number> {
+    this.log.warn('chain.nextBlock is deprecated, use chain.fetchNextBlock()')
+    return nextBlock(this)
+  }
+  fetchNextBlock (): Promise<number> {
+    this.log.debug('Querying block height')
     return nextBlock(this)
   }
 
