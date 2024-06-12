@@ -16,8 +16,9 @@ impl Decode {
             .map_err(|e|Error::new(&format!("{e}")))?;
         let results = BlockResultsResponse::from_string(&block_results_json)
             .map_err(|e|Error::new(&format!("{e}")))?;
+        let header = block.block.header();
 
-        let id = block.block.header.hash();
+        let id = header.hash();
         let mut txs: Vec<Object> = Vec::with_capacity(block.block.data.len());
         for tx in block.block.data.iter() {
             let tx = Tx::try_from(tx.as_slice())
@@ -25,24 +26,81 @@ impl Decode {
             txs.push(Self::block_tx(&results, &tx)?);
         }
 
+        let last_block_id = if let Some(id) = header.last_block_id {
+            Some(to_object! {
+                "hash"           = hex::encode_upper(id.hash.as_bytes()),
+                "partSetHeader"  = to_object! {
+                    "total"      = format!("{}", id.part_set_header.total),
+                    "hash"       = hex::encode_upper(id.part_set_header.hash.as_bytes()),
+                },
+            })
+        } else {
+            None
+        };
+
         Ok(to_object! {
-            "id"     = format!("{id}"),
-            "header" = block.block.header(),
-            "txs"    = txs,
+            "id" = format!("{id}"),
+            "header" = to_object! {
+                "version" = to_object! {
+                    "block"          = header.version.block,
+                    "app"            = header.version.app,
+                },
+                "chainId"            = header.chain_id.as_str(),
+                "height"             = header.height.value(),
+                "time"               = header.time.to_rfc3339(),
+                "lastBlockId"        = last_block_id,
+                "lastCommitHash"     = header.last_commit_hash.map(
+                    |hash|hex::encode_upper(hash.as_bytes())
+                ),
+                "dataHash"           = header.data_hash.map(
+                    |hash|hex::encode_upper(hash.as_bytes())
+                ),
+                "validatorsHash"     = hex::encode_upper(
+                    header.validators_hash.as_bytes()
+                ),
+                "nextValidatorsHash" = hex::encode_upper(
+                    header.next_validators_hash.as_bytes()
+                ),
+                "consensusHash"      = hex::encode_upper(
+                    header.consensus_hash.as_bytes()
+                ),
+                "appHash"            = hex::encode_upper(
+                    header.app_hash.as_bytes()
+                ),
+                "lastResultsHash"    = header.last_results_hash.map(
+                    |hash|hex::encode_upper(hash.as_bytes())
+                ),
+                "evidenceHash"       = header.evidence_hash.map(
+                    |hash|hex::encode_upper(hash.as_bytes())
+                ),
+                "proposerAddress"    = hex::encode_upper(
+                    header.proposer_address.as_bytes()
+                ),
+            },
+            "txs" = txs,
         })
     }
 
     fn block_tx (results: &BlockResultsResponse, tx: &Tx) -> Result<Object, Error> {
         let mut id = tx.header_hash().to_vec();
 
+        let batch = Array::new();
+        for commitment in tx.header.batch.iter() {
+            batch.push(&JsValue::from(object(&[
+                ("hash".into(),     commitment.get_hash().raw().into()),
+                ("codeHash".into(), commitment.code_sechash().raw().into()),
+                ("dataHash".into(), commitment.data_sechash().raw().into()),
+                ("memoHash".into(), commitment.memo_sechash().raw().into()),
+            ])?));
+        }
+
         let tx_common = to_object! {
             "id"         = hex::encode_upper(&id),
             "chainId"    = tx.header().chain_id.as_str(),
             "expiration" = tx.header().expiration.map(|t|t.to_rfc3339()),
             "timestamp"  = tx.header().timestamp.to_rfc3339(),
-            "codeHash"   = tx.header().code_hash.raw(),
-            "dataHash"   = tx.header().data_hash.raw(),
-            "memoHash"   = tx.header().memo_hash.raw(),
+            "atomic"     = tx.header().atomic,
+            "batch"      = batch,
             "sections"   = {
                 let sections = Array::new();
                 for section in tx.sections.iter() {
@@ -54,28 +112,28 @@ impl Decode {
 
         let tx_specific = match tx.header().tx_type {
 
-            TxType::Decrypted(..) => {
-                id = tx.clone().update_header(TxType::Raw).header_hash().to_vec();
-                let mut ret: Option<i32> = None;
-                for event in results.end_block_events.clone().unwrap() {
-                    for attr in event.attributes.iter() {
-                        if attr.key == "hash"
-                            && attr.value.to_ascii_lowercase() == hex::encode(&id)
-                        {
-                            for attr in event.attributes.iter() {
-                                if attr.key == "code" {
-                                    ret = Some(attr.value.parse().unwrap());
-                                }
-                            }
-                        }
-                    }
-                }
-                to_object! {
-                    "id"         = hex::encode_upper(&id),
-                    "type"       = "Decrypted",
-                    "returnCode" = ret,
-                }
-            },
+            //TxType::Decrypted(..) => {
+                //id = tx.clone().update_header(TxType::Raw).header_hash().to_vec();
+                //let mut ret: Option<i32> = None;
+                //for event in results.end_block_events.clone().unwrap() {
+                    //for attr in event.attributes.iter() {
+                        //if attr.key == "hash"
+                            //&& attr.value.to_ascii_lowercase() == hex::encode(&id)
+                        //{
+                            //for attr in event.attributes.iter() {
+                                //if attr.key == "code" {
+                                    //ret = Some(attr.value.parse().unwrap());
+                                //}
+                            //}
+                        //}
+                    //}
+                //}
+                //to_object! {
+                    //"id"         = hex::encode_upper(&id),
+                    //"type"       = "Decrypted",
+                    //"returnCode" = ret,
+                //}
+            //},
 
             TxType::Wrapper(txw) => {
                 // values only set if transaction type is Wrapper
@@ -260,7 +318,7 @@ impl Decode {
             "type"             = proposal.r#type,
             "votingStartEpoch" = proposal.voting_start_epoch,
             "votingEndEpoch"   = proposal.voting_end_epoch,
-            "graceEpoch"       = proposal.grace_epoch,
+            "activationEpoch"  = proposal.activation_epoch,
         })
     }
 
@@ -298,24 +356,29 @@ impl Decode {
         let tx = Tx::try_from_slice(&to_bytes(&source))
             .map_err(|e|Error::new(&format!("{e}")))?;
         let header = tx.header();
+        let batch = Array::new();
+        for commitment in header.batch.iter() {
+            batch.push(&JsValue::from(object(&[
+                ("hash".into(),     commitment.get_hash().raw().into()),
+                ("codeHash".into(), commitment.code_sechash().raw().into()),
+                ("dataHash".into(), commitment.data_sechash().raw().into()),
+                ("memoHash".into(), commitment.memo_sechash().raw().into()),
+            ])?));
+        }
         let result = to_object! {
             "txId"       = tx.clone().update_header(TxType::Raw).header_hash().raw(),
             "chainId"    = header.chain_id.as_str(),
             "expiration" = header.expiration.map(|t|t.to_rfc3339()),
             "timestamp"  = header.timestamp.to_rfc3339(),
-            "codeHash"   = header.code_hash.raw(),
-            "dataHash"   = header.data_hash.raw(),
-            "memoHash"   = header.memo_hash.raw(),
+            "batch"      = batch,
             "txType"     = match header.tx_type {
                 TxType::Raw          => "Raw",
                 TxType::Wrapper(_)   => "Wrapper",
-                TxType::Decrypted(_) => "Decrypted",
                 TxType::Protocol(_)  => "Protocol",
             },
             "details"    = match header.tx_type {
                 TxType::Raw                => JsValue::NULL,
                 TxType::Wrapper(details)   => Self::tx_details_wrapper(&details)?.into(),
-                TxType::Decrypted(details) => Self::tx_details_decrypted(&details)?.into(),
                 TxType::Protocol(details)  => Self::tx_details_protocol(&details)?.into(),
             },
             "sections"   = {
@@ -331,22 +394,10 @@ impl Decode {
 
     fn tx_details_wrapper (tx: &WrapperTx) -> Result<Object, Error> {
         Ok(to_object! {
-            "fee"                   = tx.fee,
-            "pk"                    = tx.pk,
-            "epoch"                 = tx.epoch,
-            "gas_limit"             = tx.gas_limit,
-            "unshield_section_hash" = tx.unshield_section_hash,
-        })
-    }
-
-    fn tx_details_decrypted (tx: &DecryptedTx) -> Result<Object, Error> {
-        Ok(match tx {
-            DecryptedTx::Decrypted => to_object! {
-                "decrypted" = true,
-            },
-            DecryptedTx::Undecryptable => to_object! {
-                "undecryptable" = true,
-            }
+            "fee"       = tx.fee,
+            "pk"        = tx.pk,
+            "payer"     = tx.fee_payer(),
+            "gas_limit" = tx.gas_limit,
         })
     }
 
@@ -599,13 +650,12 @@ impl Decode {
         let inner = InitProposalData::try_from_slice(&binary[..])
             .map_err(|e|Error::new(&format!("{e}")))?;
         Ok(to_object! {
-            "id"      = inner.id,
-            "content" = inner.content,
-            "author"  = inner.author,
-            "type"    = inner.r#type,
+            "content"          = inner.content,
+            "author"           = inner.author,
+            "type"             = inner.r#type,
             "votingStartEpoch" = inner.voting_start_epoch,
             "votingEndEpoch"   = inner.voting_end_epoch,
-            "graceEpoch"       = inner.grace_epoch,
+            "activationEpoch"  = inner.activation_epoch,
         })
     }
 
@@ -661,8 +711,6 @@ impl Decode {
                 inner.token.encode().into()),//pub token: Address,
             ("amount".into(),
                 format!("{}", inner.amount).into()),//pub amount: DenominatedAmount,
-            ("key".into(),
-                inner.key.into()),//pub key: Option<String>,
             ("shielded".into(),
                 inner.shielded.map(|x|format!("{x}")).into()),//pub shielded: Option<Hash>,*/
         ])
@@ -749,13 +797,6 @@ impl Decode {
                 }.into()),
             ("voter".into(),
                 inner.voter.encode().into()),//pub voter: Address,
-            ("delegations".into(), {
-                let result = Array::new();
-                for delegation in inner.delegations.iter() {
-                    result.push(&delegation.encode().into());
-                }
-                result
-            }.into()),
         ])
     }
 
@@ -779,10 +820,8 @@ impl Decode {
                 Self::tx_section_extra_data(code),
             Section::Code(code) =>
                 Self::tx_section_code(code),
-            Section::Signature(signature) =>
-                Self::tx_section_signature(signature),
-            Section::Ciphertext(_) =>
-                Self::tx_section_ciphertext(()),
+            Section::Authorization(authorization) =>
+                Self::tx_section_authorization(authorization),
             Section::MaspBuilder(masp_builder) =>
                 Self::tx_section_masp_builder(masp_builder),
             Section::Header(header) =>
@@ -885,7 +924,7 @@ impl Decode {
                                 ])?.into());
                             }
                             let value_balance = Object::new();
-                            for (asset_type, value) in bundle_data.value_balance.0.iter() {
+                            for (asset_type, value) in bundle_data.value_balance.components() {
                                 Reflect::set(
                                     &value_balance,
                                     &hex::encode_upper(asset_type.get_identifier()).into(),
@@ -939,17 +978,17 @@ impl Decode {
         ])
     }
 
-    fn tx_section_signature (signature: &Signature) -> Result<Object, Error> {
+    fn tx_section_authorization (authorization: &Authorization) -> Result<Object, Error> {
         object(&[
             ("type".into(), "Signature".into()),
             ("targets".into(), {
                 let targets = Array::new();
-                for target in signature.targets.iter() {
+                for target in authorization.targets.iter() {
                     targets.push(&hex::encode_upper(target.0).into());
                 }
                 targets
             }.into()),
-            ("signer".into(), match &signature.signer {
+            ("signer".into(), match &authorization.signer {
                 Signer::Address(address) => {
                     address.encode().into()
                 },
@@ -963,17 +1002,11 @@ impl Decode {
             }),
             ("signatures".into(), {
                 let output = Object::new();
-                for (key, value) in signature.signatures.iter() {
+                for (key, value) in authorization.signatures.iter() {
                     Reflect::set(&output, &format!("{key}").into(), &format!("{value}").into())?;
                 }
                 output
             }.into()),
-        ])
-    }
-
-    fn tx_section_ciphertext (_ciphertext: ()) -> Result<Object, Error> {
-        object(&[
-            ("type".into(), "Ciphertext".into()),
         ])
     }
 
@@ -1011,18 +1044,26 @@ impl Decode {
     }
 
     fn tx_section_header (header: &TxHeader) -> Result<Object, Error> {
+        let batch = Array::new();
+        for commitment in header.batch.iter() {
+            batch.push(&JsValue::from(object(&[
+                ("hash".into(),     commitment.get_hash().raw().into()),
+                ("codeHash".into(), commitment.code_sechash().raw().into()),
+                ("dataHash".into(), commitment.data_sechash().raw().into()),
+                ("memoHash".into(), commitment.memo_sechash().raw().into()),
+            ])?));
+        }
         object(&[
             ("type".into(),       "Header".into()),
             ("chain_id".into(),   header.chain_id.as_str().into()),
             ("expiration".into(), header.expiration.map(|t|t.to_rfc3339()).into()),
             ("timestamp".into(),  header.timestamp.to_rfc3339().into()),
-            ("codeHash".into(),   header.code_hash.raw().into()),
-            ("dataHash".into(),   header.data_hash.raw().into()),
-            ("memoHash".into(),   header.memo_hash.raw().into()),
+            ("atomic".into(),     header.atomic.into()),
+            ("batch".into(),      batch.into()),
             ("txType".into(),     match header.tx_type {
                 TxType::Raw          => "Raw",
                 TxType::Wrapper(_)   => "Wrapper",
-                TxType::Decrypted(_) => "Decrypted",
+                //TxType::Decrypted(_) => "Decrypted",
                 TxType::Protocol(_)  => "Protocol",
             }.into()),
         ])
