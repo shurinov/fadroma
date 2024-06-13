@@ -74,8 +74,11 @@ pub(crate) use namada::{
     token::{
         Amount,
         MaspDigitPos,
-        Transfer,
-        DenominatedAmount
+        DenominatedAmount,
+        ShieldedTransfer,
+        ShieldingTransfer,
+        TransparentTransfer,
+        UnshieldingTransfer,
     },
     tx::{
         Tx, Header as TxHeader,
@@ -108,8 +111,10 @@ pub(crate) use namada::{
 
 mod decode;
 mod to_js;
-
+mod tx;
+pub use to_js::*;
 pub use decode::*;
+pub use tx::*;
 
 #[macro_export] macro_rules! to_object {
     ($($id:literal = $val:expr, )+) => {

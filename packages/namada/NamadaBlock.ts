@@ -1,7 +1,7 @@
 import { Block } from '@fadroma/cw'
 import type { Chain as Namada } from './Namada'
 import { Decode } from './NamadaDecode'
-import Transaction, { NamadaUndecodedTransaction } from './NamadaTransaction'
+import NamadaTransaction, { NamadaUndecodedTransaction } from './NamadaTransaction'
 
 export default class NamadaBlock extends Block {
 
@@ -11,26 +11,25 @@ export default class NamadaBlock extends Block {
     & Pick<NamadaBlock, 'header'|'responses'|'chain'>
   ) {
     super(properties)
-    this.#chain     = properties.chain
     this.#responses = responses
     this.header     = header
   }
 
-  #chain: Namada
-  get chain (): Namada {
-    return this.#chain
+  get chain (): Namada|undefined {
+    return super.chain as Namada|undefined
   }
 
   #responses?: {
     block:   { url: string, response: string }
     results: { url: string, response: string }
   }
+
   get responses () {
     return this.#responses
   }
 
   /** Block header. */
-  header: {
+  declare header: {
     version:            object
     chainId:            string
     height:             bigint
@@ -46,9 +45,17 @@ export default class NamadaBlock extends Block {
     evidenceHash:       string
     proposerAddress:    string
   }
+  /** Monotonically incrementing ID of block. */
+  get height () {
+    return Number((this.header as any)?.height)
+  }
+  /** Timestamp of block */
+  get time () {
+    return (this.header as any)?.time
+  }
 
   /** Transaction in block. */
-  declare transactions: Transaction[]
+  declare transactions: NamadaTransaction[]
 
   /** Responses from block API endpoints. */
 
@@ -92,42 +99,30 @@ export default class NamadaBlock extends Block {
       height?: string|number|bigint
     },
   ): NamadaBlock {
-    const { id, header, txs } = decode.block(
+    const { hash, header, transactions } = decode.block(
       responses.block.response,
       responses.results.response
     ) as {
-      id: string,
-      txs: Partial<Transaction[]>[]
-      header: NamadaBlock["header"]
+      height:       bigint,
+      hash:         string,
+      header:       NamadaBlock["header"]
+      transactions: Partial<NamadaTransaction[]>[]
     }
-
-    return new NamadaBlock({
-      id,
+    const block = new NamadaBlock({
+      id: hash,
       header,
-
-      chain: chain!,
-      height: Number(header.height),
-      timestamp: header.time,
-
-      transactions: txs.map((tx, i)=>{
-        try {
-          return Transaction.fromDecoded({
-            height,
-            ...tx as any
-          })
-        } catch (error) {
-          console.error(error)
-          console.warn(`Failed to decode transaction #${i} in block ${height}, see above for details.`)
-          return new NamadaUndecodedTransaction({
-            error: error as any,
-            data: tx as any,
-          })
-        }
-      }),
-
+      chain:        chain!,
+      height:       Number(header.height),
+      timestamp:    header.time,
+      transactions: [],
       responses
     })
-
+    block.transactions = transactions.map(tx=>new NamadaTransaction({
+      id: tx.id,
+      ...tx,
+      block
+    }))
+    return block
   }
 
 }

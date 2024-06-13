@@ -36,6 +36,9 @@ export abstract class Chain extends Logged {
   /** Chain ID. This is a string that uniquely identifies a chain.
     * A project's mainnet and testnet have different chain IDs. */
   chainId: ChainId
+  get id () {
+    return this.chainId
+  }
 
   /** Time to ping for next block. */
   blockInterval = 250

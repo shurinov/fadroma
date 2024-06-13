@@ -9,16 +9,24 @@ import * as Token from './dlt/Token'
 
 /** A transaction in a block on a chain. */
 export class Transaction {
-  constructor (properties: Pick<Transaction, 'id'|'block'>) {
+  constructor (properties: Pick<Transaction, 'id'|'block'|'data'>) {
+    this.id     = properties.id
     this.#block = properties.block
-    this.id = properties.id
+    this.data   = properties.data
   }
-
+  id: string
   #block?: Block
+  data: unknown
   get block () {
     return this.#block
   }
-
-  id: string
-
+  get chainId () {
+    return this.block?.chainId
+  }
+  get blockId () {
+    return this.block?.id
+  }
+  get height () {
+    return this.block?.height
+  }
 }

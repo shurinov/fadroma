@@ -10,23 +10,29 @@ import type { Chain, Transaction } from '../index'
   * Contains zero or more transactions. */
 export abstract class Block {
   constructor (
-    properties: Pick<Block, 'chain'|'height'|'id'|'timestamp'|'transactions'>
+    properties: Pick<Block, 'id'|'chain'|'header'|'transactions'>
   ) {
-    this.#chain = properties.chain
-    assign(this, properties, [ "id", "height", "timestamp", "transactions" ])
+    this.#chain       = properties.chain
+    this.id           = properties.id
+    this.header       = properties.header
+    this.transactions = properties?.transactions || []
   }
-
-  #chain: Chain
-  get chain () { return this.#chain }
-
   /** Unique ID of block. */
-  id!:           string
-  /** Monotonically incrementing ID of block. */
-  height!:       number
-  /** Timestamp of block */
-  timestamp?:    string
+  id!: string
+  /** Private reference to chain to which this block belongs. */
+  #chain?: Chain
+  /** Chain to which this block belongs. */
+  get chain () {
+    return this.#chain
+  }
+  /** ID of chain to which this block belongs. */
+  get chainId () {
+    return this.chain?.id
+  }
+  /** Contents of block header. */
+  header?: unknown
   /** Transactions in block */
-  transactions!: unknown[]
+  transactions: unknown[] = []
 }
 
 export async function fetchBlock (chain: Chain, ...args: Parameters<Chain["fetchBlock"]>):
