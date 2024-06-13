@@ -155,20 +155,25 @@ impl Decode {
         Ok(to_object! {
             "commissionRate"              = pair.commission_rate,
             "maxCommissionChangePerEpoch" = pair.max_commission_change_per_epoch,
+            "epoch"                       = pair.epoch,
         })
     }
 
     #[wasm_bindgen]
     pub fn pos_validator_state (source: Uint8Array) -> Result<JsValue, Error> {
-        let state = ValidatorState::try_from_slice(&to_bytes(&source))
+        let (state, epoch) = ValidatorStateInfo::try_from_slice(&to_bytes(&source))
             .map_err(|e|Error::new(&format!("{e}")))?;
-        Ok(match state {
-            ValidatorState::Consensus      => "Consensus",
-            ValidatorState::BelowCapacity  => "BelowCapacity",
-            ValidatorState::BelowThreshold => "BelowThreshold",
-            ValidatorState::Inactive       => "Inactive",
-            ValidatorState::Jailed         => "Jailed",
-        }.into())
+        Ok(JsValue::from(object(&[
+            ("state".into(), match state {
+                Some(ValidatorState::Consensus) => "Consensus".into(),
+                Some(ValidatorState::BelowCapacity) => "BelowCapacity".into(),
+                Some(ValidatorState::BelowThreshold) => "BelowThreshold".into(),
+                Some(ValidatorState::Inactive) => "Inactive".into(),
+                Some(ValidatorState::Jailed) => "Jailed".into(),
+                None => JsValue::UNDEFINED,
+            }),
+            ("epoch".into(), epoch.0.into()),
+        ])?))
     }
 
     #[wasm_bindgen]

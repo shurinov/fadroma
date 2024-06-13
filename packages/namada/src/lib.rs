@@ -55,6 +55,7 @@ pub(crate) use namada::{
             CommissionPair,
             ValidatorMetaData,
             ValidatorState,
+            ValidatorStateInfo,
             WeightedValidator,
         }
     },

@@ -6,15 +6,19 @@ import NamadaTransaction, { NamadaUndecodedTransaction } from './NamadaTransacti
 export default class NamadaBlock extends Block {
 
   constructor ({
-    header, responses, ...properties
-  }: ConstructorParameters<typeof Block>[0]
-    & Pick<NamadaBlock, 'header'|'responses'|'chain'>
-  ) {
-    super(properties)
+    chain, hash, header, transactions, responses
+  }: Omit<
+    ConstructorParameters<typeof Block>[0], 'id'
+  > & Pick<
+    NamadaBlock, 'chain'|'hash'|'header'|'transactions'|'responses'
+  >) {
+    super({ chain, id: hash, header, transactions })
     this.#responses = responses
-    this.header     = header
   }
 
+  get hash (): string {
+    return this.id
+  }
   get chain (): Namada|undefined {
     return super.chain as Namada|undefined
   }
@@ -93,36 +97,30 @@ export default class NamadaBlock extends Block {
 
   static fromResponses (
     responses: NonNullable<NamadaBlock["responses"]>,
-    { decode = Decode, chain, height }: {
+    { decode = Decode, chain, height, raw = false }: {
       decode?: typeof Decode
       chain?:  Namada,
-      height?: string|number|bigint
+      height?: string|number|bigint,
+      raw?:    boolean
     },
   ): NamadaBlock {
     const { hash, header, transactions } = decode.block(
       responses.block.response,
       responses.results.response
     ) as {
-      height:       bigint,
       hash:         string,
       header:       NamadaBlock["header"]
       transactions: Partial<NamadaTransaction[]>[]
     }
     const block = new NamadaBlock({
-      id: hash,
-      header,
-      chain:        chain!,
-      height:       Number(header.height),
-      timestamp:    header.time,
-      transactions: [],
-      responses
+      chain, hash, header, transactions: [], responses
     })
-    block.transactions = transactions.map(tx=>new NamadaTransaction({
-      id: tx.id,
-      ...tx,
-      block
-    }))
-    return block
+    return Object.assign(block, {
+      transactions: transactions.map(tx=>new NamadaTransaction({
+        id: tx?.id,
+        ...tx,
+        block
+      }))
+    })
   }
-
 }
