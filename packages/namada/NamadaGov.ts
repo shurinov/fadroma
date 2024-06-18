@@ -31,7 +31,7 @@ class GovernanceParameters {
   }
 }
 
-export async function fetchProposalInfo (connection: Connection, id: number) {
+export async function fetchProposalInfo (connection: Connection, id: number|bigint) {
   const proposal = await connection.abciQuery(`/vp/governance/proposal/${id}`)
   if (proposal[0] === 0) {
     return null
