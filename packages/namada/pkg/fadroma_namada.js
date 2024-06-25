@@ -173,6 +173,43 @@ export class Decode {
         wasm.__wbg_decode_free(ptr);
     }
     /**
+    * @returns {object}
+    */
+    static storage_keys() {
+        try {
+            const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+            wasm.decode_storage_keys(retptr);
+            var r0 = getInt32Memory0()[retptr / 4 + 0];
+            var r1 = getInt32Memory0()[retptr / 4 + 1];
+            var r2 = getInt32Memory0()[retptr / 4 + 2];
+            if (r2) {
+                throw takeObject(r1);
+            }
+            return takeObject(r0);
+        } finally {
+            wasm.__wbindgen_add_to_stack_pointer(16);
+        }
+    }
+    /**
+    * @param {Uint8Array} source
+    * @returns {object}
+    */
+    static epoch_duration(source) {
+        try {
+            const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+            wasm.decode_epoch_duration(retptr, addHeapObject(source));
+            var r0 = getInt32Memory0()[retptr / 4 + 0];
+            var r1 = getInt32Memory0()[retptr / 4 + 1];
+            var r2 = getInt32Memory0()[retptr / 4 + 2];
+            if (r2) {
+                throw takeObject(r1);
+            }
+            return takeObject(r0);
+        } finally {
+            wasm.__wbindgen_add_to_stack_pointer(16);
+        }
+    }
+    /**
     * @param {Uint8Array} source
     * @returns {object}
     */
@@ -509,20 +546,20 @@ function __wbg_get_imports() {
         const ret = getObject(arg0);
         return addHeapObject(ret);
     };
-    imports.wbg.__wbindgen_bigint_from_u64 = function(arg0) {
-        const ret = BigInt.asUintN(64, arg0);
-        return addHeapObject(ret);
-    };
-    imports.wbg.__wbindgen_bigint_from_i64 = function(arg0) {
-        const ret = arg0;
-        return addHeapObject(ret);
-    };
     imports.wbg.__wbindgen_number_new = function(arg0) {
         const ret = arg0;
         return addHeapObject(ret);
     };
+    imports.wbg.__wbindgen_bigint_from_u64 = function(arg0) {
+        const ret = BigInt.asUintN(64, arg0);
+        return addHeapObject(ret);
+    };
     imports.wbg.__wbindgen_bigint_from_i128 = function(arg0, arg1) {
         const ret = arg0 << BigInt(64) | BigInt.asUintN(64, arg1);
+        return addHeapObject(ret);
+    };
+    imports.wbg.__wbindgen_bigint_from_i64 = function(arg0) {
+        const ret = arg0;
         return addHeapObject(ret);
     };
     imports.wbg.__wbg_new_16b304a2cfa7ff4a = function() { return logError(function () {

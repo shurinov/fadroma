@@ -59,6 +59,10 @@ pub(crate) use namada::{
             WeightedValidator,
         }
     },
+    parameters::{
+        EpochDuration,
+        storage::get_epoch_duration_storage_key,
+    },
     storage::KeySeg,
     string_encoding::Format,
     tendermint::{
@@ -88,7 +92,7 @@ pub(crate) use namada::{
             Fee,
             GasLimit,
             TxType,
-            WrapperTx,
+            //WrapperTx,
             pos::{
                 BecomeValidator,
                 Bond,
@@ -102,7 +106,7 @@ pub(crate) use namada::{
             },
             pgf::UpdateStewardCommission,
             protocol::{
-                ProtocolTx,
+                //ProtocolTx,
                 ProtocolTxType,
             }
         }

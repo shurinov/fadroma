@@ -7,6 +7,23 @@ pub struct Decode;
 impl Decode {
 
     #[wasm_bindgen]
+    pub fn storage_keys () -> Result<Object, Error> {
+        Ok(to_object! {
+            "epochDuration" = get_epoch_duration_storage_key().to_string(),
+        })
+    }
+
+    #[wasm_bindgen]
+    pub fn epoch_duration (source: Uint8Array) -> Result<Object, Error> {
+        let data = EpochDuration::try_from_slice(&to_bytes(&source))
+            .map_err(|e|Error::new(&format!("{e}")))?;
+        Ok(to_object! {
+            "minNumOfBlocks" = data.min_num_of_blocks,
+            "minDuration"    = data.min_duration.0,
+        })
+    }
+
+    #[wasm_bindgen]
     pub fn tx (source: Uint8Array) -> Result<Object, Error> {
         let tx = Tx::try_from_slice(&to_bytes(&source)).map_err(|e|Error::new(&format!("{e}")))?;
         crate::tx::tx(&tx)
@@ -48,7 +65,7 @@ impl Decode {
     ) -> Result<Object, Error> {
         let block = BlockResponse::from_string(&block_json)
             .map_err(|e|Error::new(&format!("{e}")))?;
-        let results = BlockResultsResponse::from_string(&block_results_json)
+        let _ = BlockResultsResponse::from_string(&block_results_json)
             .map_err(|e|Error::new(&format!("{e}")))?;
         let header = block.block.header();
         let mut transactions: Vec<Object> = Vec::with_capacity(block.block.data.len());

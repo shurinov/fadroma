@@ -5,6 +5,15 @@
 export class Decode {
   free(): void;
 /**
+* @returns {object}
+*/
+  static storage_keys(): object;
+/**
+* @param {Uint8Array} source
+* @returns {object}
+*/
+  static epoch_duration(source: Uint8Array): object;
+/**
 * @param {Uint8Array} source
 * @returns {object}
 */
@@ -87,6 +96,8 @@ export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembl
 export interface InitOutput {
   readonly memory: WebAssembly.Memory;
   readonly __wbg_decode_free: (a: number) => void;
+  readonly decode_storage_keys: (a: number) => void;
+  readonly decode_epoch_duration: (a: number, b: number) => void;
   readonly decode_tx: (a: number, b: number) => void;
   readonly decode_address: (a: number, b: number) => void;
   readonly decode_addresses: (a: number, b: number) => void;

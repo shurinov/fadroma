@@ -32,11 +32,18 @@ export default class NamadaConnection extends CW.Connection {
     }
   }
 
+  fetchStorageValueImpl (key: string) {
+    return fetchStorageValue(this, key)
+  }
+
   fetchEpochImpl () {
     return Epoch.fetchEpoch(this)
   }
   fetchEpochFirstBlockImpl () {
     return Epoch.fetchEpochFirstBlock(this)
+  }
+  fetchEpochDurationImpl () {
+    return Epoch.fetchEpochDuration(this)
   }
 
   fetchGovernanceParametersImpl () {
@@ -99,4 +106,10 @@ export default class NamadaConnection extends CW.Connection {
   fetchValidatorStakeImpl (address: string) {
     return PoS.fetchValidatorStake(this, address)
   }
+}
+
+export function fetchStorageValue (connection: {
+  abciQuery: (path: string) => Promise<Uint8Array>
+}, key: string): Promise<Uint8Array> {
+  return connection.abciQuery(`/shell/value/${key}`)
 }

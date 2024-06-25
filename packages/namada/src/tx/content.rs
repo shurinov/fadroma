@@ -107,7 +107,7 @@ fn bond (binary: &[u8]) -> Result<Object, Error> {
     ])
 }
 
-fn bridge_pool (binary: &[u8]) -> Result<Object, Error> {
+fn bridge_pool (_binary: &[u8]) -> Result<Object, Error> {
     // TODO
     Ok(Object::new())
     //let inner = BridgePool::try_from_slice(&binary[..])

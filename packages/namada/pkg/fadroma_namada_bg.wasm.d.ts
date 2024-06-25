@@ -2,6 +2,8 @@
 /* eslint-disable */
 export const memory: WebAssembly.Memory;
 export function __wbg_decode_free(a: number): void;
+export function decode_storage_keys(a: number): void;
+export function decode_epoch_duration(a: number, b: number): void;
 export function decode_tx(a: number, b: number): void;
 export function decode_address(a: number, b: number): void;
 export function decode_addresses(a: number, b: number): void;

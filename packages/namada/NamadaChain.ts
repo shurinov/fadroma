@@ -54,6 +54,9 @@ export default class NamadaChain extends CW.Chain {
     throw new Error('Transacting on Namada is currently not supported.')
   }
 
+  fetchStorageValue (key: string) {
+    return this.getConnection().fetchStorageValueImpl(key)
+  }
   fetchPGFParameters () {
     return this.getConnection().fetchPGFParametersImpl()
   }
@@ -140,6 +143,9 @@ export default class NamadaChain extends CW.Chain {
   }
   fetchEpochFirstBlock () {
     return this.getConnection().fetchEpochFirstBlockImpl()
+  }
+  fetchEpochDuration () {
+    return this.getConnection().fetchEpochDurationImpl()
   }
   fetchTotalStaked () {
     return this.getConnection().fetchTotalStakedImpl()
