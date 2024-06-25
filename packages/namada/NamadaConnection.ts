@@ -122,12 +122,19 @@ export async function fetchProtocolParameters (
 ) {
   const keys = connection.decode.storage_keys();
   const [
-    maxBlockDuration, maxGasForBlock, feeUnshieldingGasLimit, gasCostTable,
+    maxBlockDuration,
+    maxGasForBlock,
+    feeUnshieldingGasLimit,
+    gasCostTable,
   ] = await Promise.all([
-    connection.fetchStorageValueImpl(keys.maxBlockDuration),
-    connection.fetchStorageValueImpl(keys.maxGasForBlock),
-    connection.fetchStorageValueImpl(keys.feeUnshieldingGasLimit),
-    connection.fetchStorageValueImpl(keys.gasCostTable),
+    connection.fetchStorageValueImpl(keys.maxBlockDuration)
+      .then(x=>connection.decode.u64(x)),
+    connection.fetchStorageValueImpl(keys.maxGasForBlock)
+      .then(x=>connection.decode.u64(x)),
+    connection.fetchStorageValueImpl(keys.feeUnshieldingGasLimit)
+      .then(x=>connection.decode.u64(x)),
+    connection.fetchStorageValueImpl(keys.gasCostTable)
+      .then(x=>connection.decode.gas_cost_table(x)),
   ])
   return {
     maxBlockDuration,

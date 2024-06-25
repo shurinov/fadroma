@@ -67,6 +67,7 @@ pub(crate) use namada::{
             get_max_block_gas_key,
             get_fee_unshielding_gas_limit_key,
             get_gas_cost_key,
+            get_tx_allowlist_storage_key,
         },
     },
     storage::KeySeg,

@@ -7,12 +7,21 @@ pub struct Decode;
 impl Decode {
 
     #[wasm_bindgen]
+    pub fn u64 (source: Uint8Array) -> Result<BigInt, Error> {
+        let value = u64::try_from_slice(&to_bytes(&source))
+            .map_err(|e|Error::new(&format!("{e}")))?;
+        Ok(BigInt::from(value))
+    }
+
+    #[wasm_bindgen]
     pub fn storage_keys () -> Result<Object, Error> {
         Ok(to_object! {
             "epochDuration" =
                 get_epoch_duration_storage_key().to_string(),
             "maxBlockDuration" =
                 get_max_expected_time_per_block_key().to_string(),
+            "vpAllowlist" =
+                get_tx_allowlist_storage_key().to_string(),
             "maxGasForBlock" =
                 get_max_block_gas_key().to_string(),
             "feeUnshieldingGasLimit" =
@@ -32,6 +41,17 @@ impl Decode {
             "minDuration" =
                 data.min_duration.0,
         })
+    }
+
+    #[wasm_bindgen]
+    pub fn gas_cost_table (source: Uint8Array) -> Result<Object, Error> {
+        let data = BTreeMap::<namada::core::address::Address, namada::token::Amount>
+            ::try_from_slice(&to_bytes(&source)).map_err(|e|Error::new(&format!("{e}")))?;
+        let result = Object::new();
+        for (key, val) in data.iter() {
+            Reflect::set(&result, &format!("{key}").into(), &format!("{val}").into())?;
+        }
+        Ok(result)
     }
 
     #[wasm_bindgen]
