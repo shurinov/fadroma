@@ -3,9 +3,10 @@ import type { ChainId } from '@hackbg/fadroma'
 import NamadaConnection from './NamadaConnection'
 import type { Validator } from './NamadaPoS'
 import { Decode, initDecoder } from './NamadaDecode'
+import type { NamadaDecoder } from './NamadaDecode'
 
 export default class NamadaChain extends CW.Chain {
-  decode = Decode
+  decode: NamadaDecoder = Decode as NamadaDecoder
 
   /** Connect to Namada over one or more endpoints. */
   static async connect (
@@ -54,6 +55,9 @@ export default class NamadaChain extends CW.Chain {
     throw new Error('Transacting on Namada is currently not supported.')
   }
 
+  fetchProtocolParameters () {
+    return this.getConnection().fetchProtocolParametersImpl()
+  }
   fetchStorageValue (key: string) {
     return this.getConnection().fetchStorageValueImpl(key)
   }

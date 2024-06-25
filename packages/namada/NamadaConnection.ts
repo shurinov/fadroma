@@ -1,5 +1,5 @@
 import * as CW from '@fadroma/cw'
-import NamadaBlock from './NamadaBlock'
+import Block from './NamadaBlock'
 import * as PoS from './NamadaPoS'
 import * as PGF from './NamadaPGF'
 import * as Gov from './NamadaGov'
@@ -16,7 +16,7 @@ export default class NamadaConnection extends CW.Connection {
 
   override async fetchBlockImpl (
     parameter?: ({ height: number }|{ hash: string }) & { raw?: boolean }
-  ): Promise<NamadaBlock> {
+  ): Promise<Block> {
     if (!this.url) {
       throw new CW.Error("Can't fetch block: missing connection URL")
     }
@@ -24,16 +24,19 @@ export default class NamadaConnection extends CW.Connection {
       parameter = {} as any
     }
     if ('height' in parameter!) {
-      return NamadaBlock.fetchByHeight(this, parameter)
+      return Block.fetchByHeight(this, parameter)
     } else if ('hash' in parameter!) {
-      return NamadaBlock.fetchByHash(this, parameter)
+      return Block.fetchByHash(this, parameter)
     } else {
-      return NamadaBlock.fetchByHeight(this, {})
+      return Block.fetchByHeight(this, {})
     }
   }
 
   fetchStorageValueImpl (key: string) {
     return fetchStorageValue(this, key)
+  }
+  fetchProtocolParametersImpl () {
+    return fetchProtocolParameters(this)
   }
 
   fetchEpochImpl () {
@@ -108,8 +111,28 @@ export default class NamadaConnection extends CW.Connection {
   }
 }
 
-export function fetchStorageValue (connection: {
-  abciQuery: (path: string) => Promise<Uint8Array>
-}, key: string): Promise<Uint8Array> {
+export function fetchStorageValue (
+  connection: Pick<NamadaConnection, 'abciQuery'>, key: string
+): Promise<Uint8Array> {
   return connection.abciQuery(`/shell/value/${key}`)
+}
+
+export async function fetchProtocolParameters (
+  connection: Pick<NamadaConnection, 'fetchStorageValueImpl'|'decode'>
+) {
+  const keys = connection.decode.storage_keys();
+  const [
+    maxBlockDuration, maxGasForBlock, feeUnshieldingGasLimit, gasCostTable,
+  ] = await Promise.all([
+    connection.fetchStorageValueImpl(keys.maxBlockDuration),
+    connection.fetchStorageValueImpl(keys.maxGasForBlock),
+    connection.fetchStorageValueImpl(keys.feeUnshieldingGasLimit),
+    connection.fetchStorageValueImpl(keys.gasCostTable),
+  ])
+  return {
+    maxBlockDuration,
+    maxGasForBlock,
+    feeUnshieldingGasLimit,
+    gasCostTable,
+  }
 }

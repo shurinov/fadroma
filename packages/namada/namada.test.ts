@@ -10,6 +10,7 @@ console.log(Decode.storage_keys())
 const url = 'https://rpc.luminara.icu'
 const namada = await Namada.connect({ url })
 console.log(await namada.fetchEpochDuration())
+console.log(await namada.fetchProtocolParameters())
   //console.log(await namada.fetchDelegationsAt(
     //'tnam1qpr2uzf9pgrd6sucp34wq5gss5rm2un5lszcwzqc'
   //))

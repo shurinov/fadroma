@@ -9,7 +9,16 @@ impl Decode {
     #[wasm_bindgen]
     pub fn storage_keys () -> Result<Object, Error> {
         Ok(to_object! {
-            "epochDuration" = get_epoch_duration_storage_key().to_string(),
+            "epochDuration" =
+                get_epoch_duration_storage_key().to_string(),
+            "maxBlockDuration" =
+                get_max_expected_time_per_block_key().to_string(),
+            "maxGasForBlock" =
+                get_max_block_gas_key().to_string(),
+            "feeUnshieldingGasLimit" =
+                get_fee_unshielding_gas_limit_key().to_string(),
+            "gasCostTable" =
+                get_gas_cost_key().to_string(),
         })
     }
 
@@ -18,8 +27,10 @@ impl Decode {
         let data = EpochDuration::try_from_slice(&to_bytes(&source))
             .map_err(|e|Error::new(&format!("{e}")))?;
         Ok(to_object! {
-            "minNumOfBlocks" = data.min_num_of_blocks,
-            "minDuration"    = data.min_duration.0,
+            "minNumOfBlocks" =
+                data.min_num_of_blocks,
+            "minDuration" =
+                data.min_duration.0,
         })
     }
 

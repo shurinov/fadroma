@@ -1,32 +1,24 @@
 import { decode, u64 } from '@hackbg/borshest'
 import type { Decode } from './NamadaDecode'
+import type NamadaConnection from './NamadaConnection'
 
-export async function fetchEpoch (connection: {
-  abciQuery (path: string): Promise<Uint8Array>
-}) {
-  const binary = await connection.abciQuery("/shell/epoch")
-  return decode(u64, binary)
+export async function fetchEpoch (
+  connection: Pick<NamadaConnection, 'abciQuery'>
+) {
+  return decode(u64, await connection.abciQuery("/shell/epoch"))
 }
 
-export async function fetchEpochFirstBlock (connection: {
-  abciQuery (path: string): Promise<Uint8Array>
-}) {
-  const epochFirstBlock = await connection.abciQuery(
+export async function fetchEpochFirstBlock (
+  connection: Pick<NamadaConnection, 'abciQuery'>
+) {
+  return Number(decode(u64, await connection.abciQuery(
     '/shell/first_block_height_of_current_epoch'
-  );
-  return Number(decode(u64, epochFirstBlock))
+  )))
 }
 
-export async function fetchEpochDuration (connection: {
-  fetchStorageValueImpl (key: string): Promise<Uint8Array>,
-  decode: {
-    storage_keys (): ({ epochDuration: string })
-    epoch_duration (source: Uint8Array): {
-      minNumOfBlocks: Number,
-      minDuration:    Number,
-    }
-  }
-}) {
+export async function fetchEpochDuration (
+  connection: Pick<NamadaConnection, 'decode'|'fetchStorageValueImpl'>
+) {
   const { epochDuration } = connection.decode.storage_keys()
   const binary = await connection.fetchStorageValueImpl(epochDuration)
   return connection.decode.epoch_duration(binary)

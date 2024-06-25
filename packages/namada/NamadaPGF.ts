@@ -1,21 +1,19 @@
 import { assign } from '@hackbg/fadroma'
+import type NamadaConnection from './NamadaConnection'
 
-class PGFParameters {
-  stewards!:              Set<string>
-  pgfInflationRate!:      bigint
-  stewardsInflationRate!: bigint
-  constructor (properties: Partial<PGFParameters> = {}) {
-    assign(this, properties, [
-      'stewards',
-      'pgfInflationRate',
-      'stewardsInflationRate'
-    ])
-  }
+interface PGFParameters {
+  stewards:              Set<string>
+  pgfInflationRate:      bigint
+  stewardsInflationRate: bigint
 }
 
-class PGFSteward { /*TODO*/ }
+interface PGFSteward {
+  /*TODO*/
+}
 
-class PGFFunding { /*TODO*/ }
+interface PGFFunding {
+  /*TODO*/
+}
 
 export {
   PGFParameters as Parameters,
@@ -23,26 +21,19 @@ export {
   PGFFunding    as Funding,
 }
 
-type Connection = {
-  abciQuery: (path: string)=>Promise<Uint8Array>
-  decode: {
-    pgf_parameters (binary: Uint8Array): Partial<PGFParameters>
-  }
-}
-
-export async function fetchPGFParameters (connection: Connection) {
+export async function fetchPGFParameters (connection: Pick<NamadaConnection, 'abciQuery'|'decode'>) {
   const binary = await connection.abciQuery(`/vp/pgf/parameters`)
-  return new PGFParameters(connection.decode.pgf_parameters(binary))
+  return connection.decode.pgf_parameters(binary)
 }
 
-export async function fetchPGFStewards (connection: Connection) {
+export async function fetchPGFStewards (connection: Pick<NamadaConnection, 'abciQuery'|'decode'>) {
   throw new Error("not implemented")
 }
 
-export async function fetchPGFFundings (connection: Connection) {
+export async function fetchPGFFundings (connection: Pick<NamadaConnection, 'abciQuery'|'decode'>) {
   throw new Error("not implemented")
 }
 
-export async function isPGFSteward (connection: Connection) {
+export async function isPGFSteward (connection: Pick<NamadaConnection, 'abciQuery'|'decode'>) {
   throw new Error("not implemented")
 }

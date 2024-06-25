@@ -6,11 +6,11 @@ import type { Validator } from './NamadaPoS'
 export default class NamadaConsole extends Console {
 
   printTx (tx: Partial<Transaction> = {}, indent = 0) {
-    this.log('-', bold(`${tx.txType} transaction:`))
+    this.log('-', bold(`${tx.data?.txType} transaction:`))
       .log('  Chain ID:  ', bold(tx.chainId))
-      .log('  Timestamp: ', bold(tx.timestamp))
-      .log('  Expiration:', bold(tx.expiration))
-      .log('  Sections:  ', bold(tx.sections?.length))
+      .log('  Timestamp: ', bold(tx.data?.timestamp))
+      .log('  Expiration:', bold(tx.data?.expiration))
+      .log('  Sections:  ', bold(tx.data?.sections?.length))
   }
 
   printValidator (validator: Validator) {

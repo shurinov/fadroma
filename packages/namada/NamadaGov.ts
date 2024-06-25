@@ -1,13 +1,14 @@
 import { assign } from '@hackbg/fadroma'
 import type { Address } from '@hackbg/fadroma'
 import { decode, u64 } from '@hackbg/borshest'
+import type Connection from './NamadaConnection'
 
-export async function fetchProposalCount (connection: Connection) {
+export async function fetchProposalCount (connection: Pick<Connection, 'abciQuery'>) {
   const binary = await connection.abciQuery(`/shell/value/#${INTERNAL_ADDRESS}/counter`)
   return decode(u64, binary) as bigint
 }
 
-export async function fetchGovernanceParameters (connection: Connection) {
+export async function fetchGovernanceParameters (connection: Pick<Connection, 'abciQuery'|'decode'>) {
   const binary = await connection.abciQuery(`/vp/governance/parameters`)
   return new GovernanceParameters(connection.decode.gov_parameters(binary))
 }
@@ -31,7 +32,9 @@ class GovernanceParameters {
   }
 }
 
-export async function fetchProposalInfo (connection: Connection, id: number|bigint) {
+export async function fetchProposalInfo (
+  connection: Pick<Connection, 'abciQuery'|'decode'>, id: number|bigint
+) {
   const proposal = await connection.abciQuery(`/vp/governance/proposal/${id}`)
   if (proposal[0] === 0) {
     return null
@@ -132,13 +135,3 @@ export {
 }
 
 export const INTERNAL_ADDRESS = "tnam1q5qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqrw33g6"
-
-type Connection = {
-  abciQuery: (path: string)=>Promise<Uint8Array>
-  decode: {
-    gov_parameters (binary: Uint8Array): Partial<GovernanceParameters>
-    gov_proposal   (binary: Uint8Array): Partial<GovernanceProposal>
-    gov_votes      (binary: Uint8Array): Array<Partial<GovernanceVote>>
-    gov_result     (binary: Uint8Array): Partial<GovernanceProposalResult>
-  }
-}

@@ -61,7 +61,13 @@ pub(crate) use namada::{
     },
     parameters::{
         EpochDuration,
-        storage::get_epoch_duration_storage_key,
+        storage::{
+            get_epoch_duration_storage_key,
+            get_max_expected_time_per_block_key,
+            get_max_block_gas_key,
+            get_fee_unshielding_gas_limit_key,
+            get_gas_cost_key,
+        },
     },
     storage::KeySeg,
     string_encoding::Format,
