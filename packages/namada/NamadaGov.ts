@@ -2,82 +2,51 @@ import { assign } from '@hackbg/fadroma'
 import type { Address } from '@hackbg/fadroma'
 import { decode, u64 } from '@hackbg/borshest'
 import type Connection from './NamadaConnection'
+import type { NamadaDecoder } from './NamadaDecode'
+
+export type Params = Awaited<ReturnType<typeof fetchGovernanceParameters>>
+
+export async function fetchGovernanceParameters (connection: Pick<Connection, 'abciQuery'|'decode'>) {
+  const binary = await connection.abciQuery(`/vp/governance/parameters`)
+  return connection.decode.gov_parameters(binary)
+}
 
 export async function fetchProposalCount (connection: Pick<Connection, 'abciQuery'>) {
   const binary = await connection.abciQuery(`/shell/value/#${INTERNAL_ADDRESS}/counter`)
   return decode(u64, binary) as bigint
 }
 
-export async function fetchGovernanceParameters (connection: Pick<Connection, 'abciQuery'|'decode'>) {
-  const binary = await connection.abciQuery(`/vp/governance/parameters`)
-  return new GovernanceParameters(connection.decode.gov_parameters(binary))
-}
-
-class GovernanceParameters {
-  minProposalFund!:         bigint
-  maxProposalCodeSize!:     bigint
-  minProposalVotingPeriod!: bigint
-  maxProposalPeriod!:       bigint
-  maxProposalContentSize!:  bigint
-  minProposalGraceEpochs!:  bigint
-  constructor (properties: Partial<GovernanceParameters> = {}) {
-    assign(this, properties, [
-      'minProposalFund',
-      'maxProposalCodeSize',
-      'minProposalVotingPeriod',
-      'maxProposalPeriod',
-      'maxProposalContentSize',
-      'minProposalGraceEpochs',
-    ])
-  }
-}
+export type ProposalInfo = Awaited<ReturnType<typeof fetchProposalInfo>>
 
 export async function fetchProposalInfo (
   connection: Pick<Connection, 'abciQuery'|'decode'>, id: number|bigint
 ) {
-  const proposal = await connection.abciQuery(`/vp/governance/proposal/${id}`)
-  if (proposal[0] === 0) {
+  const proposalResponse = await connection.abciQuery(`/vp/governance/proposal/${id}`)
+  if (proposalResponse[0] === 0) {
     return null
   }
-  const [ votes, result ] = await Promise.all([
-    connection.abciQuery(`/vp/governance/proposal/${id}/votes`),
-    connection.abciQuery(`/vp/governance/stored_proposal_result/${id}`),
-  ])
-  return {
-    proposal: new GovernanceProposal(
-      connection.decode.gov_proposal(proposal.slice(1))
-    ),
-    votes: connection.decode.gov_votes(votes).map(
-      vote=>new GovernanceVote(vote)
-    ),
-    result: (result[0] === 0) ? null : new GovernanceProposalResult(
-      connection.decode.gov_result(result.slice(1))
-    )
-  }
+  const [
+    votesResponse, resultResponse 
+  ] = await Promise.all([
+    `/vp/governance/proposal/${id}/votes`,
+    `/vp/governance/stored_proposal_result/${id}`,
+  ].map(
+    x=>connection.abciQuery(x)
+  ))
+  const proposal =
+    connection.decode.gov_proposal(proposalResponse.slice(1))
+  const votes =
+    connection.decode.gov_votes(votesResponse)
+  const result: GovernanceProposalResult|null =
+    (resultResponse[0] === 0)
+      ? null
+      : new GovernanceProposalResult(
+          connection.decode.gov_result(resultResponse.slice(1))
+        )
+  return { proposal, votes, result }
 }
 
-class GovernanceProposal {
-  id!:               string
-  content!:          Map<string, string>
-  author!:           string
-  type!:             unknown
-  votingStartEpoch!: bigint
-  votingEndEpoch!:   bigint
-  graceEpoch!:       bigint
-  constructor (properties: Partial<GovernanceProposal> = {}) {
-    assign(this, properties, [
-      'id',
-      'content',
-      'author',
-      'type',
-      'votingStartEpoch',
-      'votingEndEpoch',
-      'graceEpoch',
-    ])
-  }
-}
-
-class GovernanceProposalResult {
+class GovernanceProposalResult implements ReturnType<NamadaDecoder["gov_result"]> {
   result!:            "Passed"|"Rejected"
   tallyType!:         "TwoThirds"|"OneHalfOverOneThird"|"LessOneHalfOverOneThirdNay"
   totalVotingPower!:  bigint
@@ -111,27 +80,11 @@ class GovernanceProposalResult {
   }
 }
 
-class GovernanceVote {
-  validator!: Address
-  delegator!: Address
-  data!:      "Yay"|"Nay"|"Abstain"
-  constructor (properties: Partial<GovernanceVote> = {}) {
-    assign(this, properties, [
-      'validator',
-      'delegator',
-      'data',
-    ])
-  }
-}
-
 const percent = (a: bigint, b: bigint) =>
   ((Number(a * 1000000n / b) / 10000).toFixed(2) + '%').padStart(7)
 
 export {
-  GovernanceParameters     as Parameters,
-  GovernanceProposal       as Proposal,
   GovernanceProposalResult as ProposalResult,
-  GovernanceVote           as Vote,
 }
 
 export const INTERNAL_ADDRESS = "tnam1q5qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqrw33g6"

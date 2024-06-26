@@ -1,25 +1,7 @@
 import { assign } from '@hackbg/fadroma'
 import type NamadaConnection from './NamadaConnection'
 
-interface PGFParameters {
-  stewards:              Set<string>
-  pgfInflationRate:      bigint
-  stewardsInflationRate: bigint
-}
-
-interface PGFSteward {
-  /*TODO*/
-}
-
-interface PGFFunding {
-  /*TODO*/
-}
-
-export {
-  PGFParameters as Parameters,
-  PGFSteward    as Steward,
-  PGFFunding    as Funding,
-}
+export type Params = Awaited<ReturnType<typeof fetchPGFParameters>>
 
 export async function fetchPGFParameters (connection: Pick<NamadaConnection, 'abciQuery'|'decode'>) {
   const binary = await connection.abciQuery(`/vp/pgf/parameters`)

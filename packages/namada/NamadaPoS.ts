@@ -7,6 +7,18 @@ import type {
   Connection as NamadaConnection
 } from './Namada'
 
+export type Params = Awaited<ReturnType<typeof fetchStakingParameters>>
+
+export async function fetchStakingParameters (connection: NamadaConnection) {
+  const binary = await connection.abciQuery("/vp/pos/pos_params")
+  return connection.decode.pos_parameters(binary)
+}
+
+export async function fetchTotalStaked (connection: NamadaConnection) {
+  const binary = await connection.abciQuery("/vp/pos/total_stake")
+  return decode(u64, binary)
+}
+
 class NamadaValidator extends Staking.Validator {
   constructor (properties: Omit<ConstructorParameters<typeof Staking.Validator>[0], 'chain'> & {
     chain: Namada, namadaAddress?: string,
@@ -44,17 +56,7 @@ class NamadaValidator extends Staking.Validator {
   }
 }
 
-export { NamadaValidator as Validator, }
-
-export async function fetchStakingParameters (connection: NamadaConnection) {
-  const binary = await connection.abciQuery("/vp/pos/pos_params")
-  return connection.decode.pos_parameters(binary)
-}
-
-export async function fetchTotalStaked (connection: NamadaConnection) {
-  const binary = await connection.abciQuery("/vp/pos/total_stake")
-  return decode(u64, binary)
-}
+export { NamadaValidator as Validator }
 
 export async function fetchValidators (
   chain: Namada,
