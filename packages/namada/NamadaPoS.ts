@@ -115,7 +115,7 @@ class NamadaValidator extends Staking.Validator {
       () => connection.abciQuery(`/vp/pos/validator/state/${this.namadaAddress}`)
         .then(binary => {
           if (binary[0] === 1) {
-            this.state = connection.decode.pos_validator_state(binary.slice(1))
+            this.state = connection.decode.pos_validator_state(binary)
           }
         })
         .catch(e => connection.log.warn(
