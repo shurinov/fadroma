@@ -188,7 +188,6 @@ export async function fetchValidatorDetails (
     () => connection.abciQuery(`/vp/pos/validator/consensus_key/${v}`)
       .then(binary => {
         const publicKey = base16.encode(binary.slice(2))
-        console.log({validator, publicKey})
         if (validator.publicKey && (validator.publicKey !== publicKey)) {
           throw Object.assign(new Error(`Fetched different public key for ${v}`), {
             oldPublicKey: validator.publicKey,
@@ -206,7 +205,6 @@ export async function fetchValidatorDetails (
     connection.log.debug(prefix, `in sequence`)
   }
   await optionallyParallel(options?.parallel, requests)
-  console.log({validator})
   return validator
 }
 
