@@ -44,14 +44,11 @@ class NamadaValidator extends Staking.Validator {
   }
 }
 
-export {
-  NamadaPoSParameters     as Parameters,
-  NamadaValidator         as Validator,
-}
+export { NamadaValidator as Validator, }
 
 export async function fetchStakingParameters (connection: NamadaConnection) {
   const binary = await connection.abciQuery("/vp/pos/pos_params")
-  return new NamadaPoSParameters(connection.decode.pos_parameters(binary))
+  return connection.decode.pos_parameters(binary)
 }
 
 export async function fetchTotalStaked (connection: NamadaConnection) {
