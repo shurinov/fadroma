@@ -7,47 +7,6 @@ import type {
   Connection as NamadaConnection
 } from './Namada'
 
-class NamadaPoSParameters {
-  maxProposalPeriod!:             bigint
-  maxValidatorSlots!:             bigint
-  pipelineLen!:                   bigint
-  unbondingLen!:                  bigint
-  tmVotesPerToken!:               bigint
-  blockProposerReward!:           bigint
-  blockVoteReward!:               bigint
-  maxInflationRate!:              bigint
-  targetStakedRatio!:             bigint
-  duplicateVoteMinSlashRate!:     bigint
-  lightClientAttackMinSlashRate!: bigint
-  cubicSlashingWindowLength!:     bigint
-  validatorStakeThreshold!:       bigint
-  livenessWindowCheck!:           bigint
-  livenessThreshold!:             bigint
-  rewardsGainP!:                  bigint
-  rewardsGainD!:                  bigint
-  constructor (properties: Partial<NamadaPoSParameters> = {}) {
-    assign(this, properties, [
-      'maxProposalPeriod',
-      'maxValidatorSlots',
-      'pipelineLen',
-      'unbondingLen',
-      'tmVotesPerToken',
-      'blockProposerReward',
-      'blockVoteReward',
-      'maxInflationRate',
-      'targetStakedRatio',
-      'duplicateVoteMinSlashRate',
-      'lightClientAttackMinSlashRate',
-      'cubicSlashingWindowLength',
-      'validatorStakeThreshold',
-      'livenessWindowCheck',
-      'livenessThreshold',
-      'rewardsGainP',
-      'rewardsGainD',
-    ])
-  }
-}
-
 class NamadaValidator extends Staking.Validator {
   constructor (properties: Omit<ConstructorParameters<typeof Staking.Validator>[0], 'chain'> & {
     chain: Namada, namadaAddress?: string,
@@ -78,9 +37,10 @@ class NamadaValidator extends Staking.Validator {
   bondedStake?:                   number
 
   async fetchDetails (options?: { parallel?: boolean }) {
-    return fetchValidatorDetails(this.chain.getConnection(), {
+    await fetchValidatorDetails(this.chain.getConnection(), {
       ...options, validator: this
     })
+    return this
   }
 }
 
@@ -106,7 +66,7 @@ export async function fetchValidators (
     parallelDetails?: boolean,
     interval?:        number,
   } = {}
-): Promise<Record<string, NamadaValidator>> {
+): Promise<NamadaValidator[]> {
   const connection =
     chain.getConnection()
   const validators: Record<string, NamadaValidator> =
@@ -129,7 +89,7 @@ export async function fetchValidators (
       parallelDetails: options?.parallelDetails,
     })
   }
-  return validators
+  return Object.values(validators)
 }
 
 export async function fetchValidatorAddresses (connection: NamadaConnection): Promise<Address[]> {

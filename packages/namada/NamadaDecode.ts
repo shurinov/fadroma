@@ -26,7 +26,25 @@ export interface NamadaDecoder {
   gov_result          (_: Uint8Array): Partial<Gov.ProposalResult>
   pgf_parameters      (_: Uint8Array): Partial<PGF.Parameters>
   pos_validator_set   (_: Uint8Array): { bondedStake: number|bigint }[]
-  pos_parameters      (_: Uint8Array): Partial<PoS.Parameters>
+  pos_parameters      (_: Uint8Array): Partial<{
+    maxProposalPeriod:             bigint
+    maxValidatorSlots:             bigint
+    pipelineLen:                   bigint
+    unbondingLen:                  bigint
+    tmVotesPerToken:               bigint
+    blockProposerReward:           bigint
+    blockVoteReward:               bigint
+    maxInflationRate:              bigint
+    targetStakedRatio:             bigint
+    duplicateVoteMinSlashRate:     bigint
+    lightClientAttackMinSlashRate: bigint
+    cubicSlashingWindowLength:     bigint
+    validatorStakeThreshold:       bigint
+    livenessWindowCheck:           bigint
+    livenessThreshold:             bigint
+    rewardsGainP:                  bigint
+    rewardsGainD:                  bigint
+  }>
   pos_validator_state (_: Uint8Array): unknown
   storage_keys ():
     { epochDuration:          string
