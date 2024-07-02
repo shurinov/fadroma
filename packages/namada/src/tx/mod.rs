@@ -27,22 +27,14 @@ pub fn tx_type (tx: &Tx) -> Result<Object, Error> {
             let multiplier: u64 = tx.gas_limit.into();
             to_object! {
                 "Wrapper" = to_object! {
-                    "fee" =
-                        tx.fee,
-                    "pk" =
-                        tx.pk,
-                    "payer" =
-                        tx.fee_payer(),
-                    "gasLimit" =
-                        tx.gas_limit,
-                    "feeAmountPerGasUnit" =
-                        tx.fee.amount_per_gas_unit.to_string_precise(),
-                    "feeToken" =
-                        tx.fee.token.to_string(),
-                    "multiplier" =
-                        multiplier,
-                    "gasLimitMultiplier" =
-                        multiplier as i64,
+                    "fee"                 = tx.fee,
+                    "pk"                  = tx.pk,
+                    "payer"               = tx.fee_payer(),
+                    "gasLimit"            = tx.gas_limit,
+                    "feeAmountPerGasUnit" = tx.fee.amount_per_gas_unit.to_string_precise(),
+                    "feeToken"            = tx.fee.token.to_string(),
+                    "multiplier"          = multiplier,
+                    "gasLimitMultiplier"  = multiplier as i64,
                 },
             }
         },
