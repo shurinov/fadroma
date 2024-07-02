@@ -21,11 +21,10 @@
 export { Agent }                         from './src/Agent'
 export { Backend }                       from './src/Backend'
 export { Batch }                         from './src/Batch'
-export { Block }                         from './src/Block'
+export { Block, Transaction }            from './src/Block'
 export { Chain }                         from './src/Chain'
 export { Connection, SigningConnection } from './src/Connection'
 export { Identity }                      from './src/Identity'
-export { Transaction }                   from './src/Transaction'
 
 export { Proposal, Vote }                from './src/dlt/Governance'
 export { Validator }                     from './src/dlt/Staking'

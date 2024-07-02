@@ -1,5 +1,7 @@
 {
   "include": [
+    "./index.ts",
+    "./index.node.ts",
     "./src"
   ],
   "exclude": [

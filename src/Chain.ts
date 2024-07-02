@@ -5,7 +5,7 @@ import { Logged, assign, bold, timed } from './Util'
 import { fetchBalance } from './dlt/Bank'
 import { Contract, fetchCodeInstances, query } from './compute/Contract'
 import { UploadedCode, fetchCodeInfo, } from './compute/Upload'
-import { Block, fetchBlock, nextBlock } from './Block'
+import { Block, fetchBlock, fetchNextBlock } from './Block'
 import { Connection } from './Connection'
 import type {
   Address,
@@ -50,24 +50,15 @@ export abstract class Chain extends Logged {
   abstract authenticate (properties?: { mnemonic: string }|Identity): Promise<Agent>
 
   /** Get the current block height. */
-  get height (): Promise<number> {
-    this.log.warn('chain.height is deprecated, use chain.fetchHeight()')
-    this.log.debug('Querying block height')
-    return this.getConnection().fetchHeightImpl()
-  }
   fetchHeight (): Promise<number> {
     this.log.debug('Querying block height')
     return this.getConnection().fetchHeightImpl()
   }
 
   /** Wait until the block height increments, or until `this.alive` is set to false. */
-  get nextBlock (): Promise<number> {
-    this.log.warn('chain.nextBlock is deprecated, use chain.fetchNextBlock()')
-    return nextBlock(this)
-  }
   fetchNextBlock (): Promise<number> {
     this.log.debug('Querying block height')
-    return nextBlock(this)
+    return fetchNextBlock(this)
   }
 
   /** Get info about the latest block. */

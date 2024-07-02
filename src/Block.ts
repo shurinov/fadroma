@@ -2,7 +2,7 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program. If not, see <http://www.gnu.org/licenses/>. **/
 import { assign, bold } from './Util'
-import type { Chain, Transaction } from '../index'
+import type { Chain } from '../index'
 
 /** The building block of a blockchain, as obtained by
   * [the `fetchBlock` method of `Connection`](#method-connectionfetchblock)
@@ -10,17 +10,23 @@ import type { Chain, Transaction } from '../index'
   * Contains zero or more transactions. */
 export abstract class Block {
   constructor (
-    properties: Pick<Block, 'id'|'chain'|'header'|'transactions'>
+    properties: Pick<Block, 'hash'|'chain'|'header'|'transactions'>
   ) {
+    this.hash         = properties.hash
     this.#chain       = properties.chain
-    this.id           = properties.id
     this.header       = properties.header
     this.transactions = properties?.transactions || []
   }
   /** Unique ID of block. */
-  id!: string
+  hash?: string
+  /** Height of block. */
+  height?: number
+  /** Contents of block header. */
+  header?: unknown
   /** Private reference to chain to which this block belongs. */
   #chain?: Chain
+  /** Transactions in block */
+  transactions?: Transaction[] = []
   /** Chain to which this block belongs. */
   get chain () {
     return this.#chain
@@ -29,12 +35,41 @@ export abstract class Block {
   get chainId () {
     return this.chain?.id
   }
-  /** Contents of block header. */
-  header?: unknown
-  /** Transactions in block */
-  transactions: unknown[] = []
 }
 
+/** A transaction in a block on a chain. */
+export class Transaction {
+  constructor (properties: Pick<Transaction, 'hash'|'data'|'block'>) {
+    this.#block = properties?.block
+    this.hash   = properties?.hash
+    this.data   = properties?.data
+  }
+  hash?:   string
+  data?:   unknown
+  #block?: Block
+  /** Block to which this transaction belongs. */
+  get block () {
+    return this.#block
+  }
+  /** Hash of block to which this transaction belongs. */
+  get blockHash () {
+    return this.block?.hash
+  }
+  /** Height of block to which this transaction belongs. */
+  get blockHeight () {
+    return this.block?.height
+  }
+  /** Chain to which this transaction belongs. */
+  get chain () {
+    return this.block?.chain
+  }
+  /** ID of chain to which this transaction belongs. */
+  get chainId () {
+    return this.block?.chain?.id
+  }
+}
+
+/** Implementation of Connection#fetchBlock -> Connection#fetchBlockImpl */
 export async function fetchBlock (chain: Chain, ...args: Parameters<Chain["fetchBlock"]>):
   Promise<Block>
 {
@@ -61,10 +96,11 @@ export async function fetchBlock (chain: Chain, ...args: Parameters<Chain["fetch
   return chain.getConnection().fetchBlockImpl()
 }
 
-export async function nextBlock (chain: Chain):
+/** Implementation of Chain#fetchNextBlock -> Connection#fetchNextBlockImpl */
+export async function fetchNextBlock (chain: Chain):
   Promise<number>
 {
-  return chain.height.then(async startingHeight=>{
+  return chain.fetchHeight().then(async startingHeight=>{
     startingHeight = Number(startingHeight)
     if (isNaN(startingHeight)) {
       chain.log.warn('Current block height undetermined. Not waiting for next block')
@@ -83,7 +119,7 @@ export async function nextBlock (chain: Chain):
             `Waiting for block > ${bold(String(startingHeight))} ` +
             `(${((+ new Date() - t)/1000).toFixed(3)}s elapsed)`
           )
-          const height = await chain.height
+          const height = await chain.fetchHeight()
           if (height > startingHeight) {
             chain.log.log(`Block height incremented to ${bold(String(height))}, proceeding`)
             return resolve(height as number)
