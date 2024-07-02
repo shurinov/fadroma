@@ -55,16 +55,16 @@ const tests: Array<[string, Function]> = [
     if (await chain.getConnection()) return OK
   }],
 
-  ["Chain#height", async ({ platform, connectOptions }: any) => {
+  ["fetchHeight", async ({ platform, connectOptions }: any) => {
     if (platform === OCI) return NA
     const chain = await platform.connect(connectOptions)
     if (await chain["height"]) return OK
   }],
 
-  ["Chain#nextBlock", async ({ platform, connectOptions }: any) => {
+  ["Chain#fetchNextBlock", async ({ platform, connectOptions }: any) => {
     if (platform === OCI) return NA
     const chain = await platform.connect(connectOptions)
-    if (await chain["nextBlock"]) return OK
+    if (await chain.fetchNextBlock()) return OK
   }],
 
   ["Chain#fetchBlock", async ({ platform, connectOptions }: any) => {
@@ -72,6 +72,8 @@ const tests: Array<[string, Function]> = [
     const chain = await platform.connect(connectOptions)
     if (await chain.fetchBlock()) return OK
   }],
+
+  ["Chain#fetchTransaction", () => NI ],
 
   ["Chain#fetchBalance", async ({ platform, connectOptions }: any) => {
     if (platform === OCI) return NA
@@ -93,6 +95,18 @@ const tests: Array<[string, Function]> = [
     const chain = await platform.connect(connectOptions)
     if (await chain.fetchContractInfo()) return OK
   }],
+
+  ["Chain#fetchParameters", () => NI ],
+
+  ["Chain#fetchProposals", () => NI ],
+
+  ["Chain#fetchProposal", () => NI ],
+
+  ["Chain#fetchTotalStaked", () => NI ],
+
+  ["Chain#fetchValidators", () => NI ],
+
+  ["Chain#fetchValidator", () => NI ],
 
   ["Chain#query", async ({ platform, connectOptions }: any) => {
     const chain = await platform.connect(connectOptions)
