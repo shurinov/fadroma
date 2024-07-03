@@ -67,6 +67,26 @@ export interface NamadaDecoder {
     stewardsInflationRate: bigint
   }>
 
+  pos_commission_pair (_: Uint8Array): {
+    epoch:                       string
+    commissionRate:              bigint
+    maxCommissionChangePerEpoch: bigint
+  }
+
+  pos_validator_state (_: Uint8Array): {
+    epoch: bigint
+    state: 'Consensus'|'BelowCapacity'|'BelowThreshold'|'Inactive'|'Jailed'
+  }
+
+  pos_validator_metadata (_: Uint8Array): {
+    name?:          string
+    email?:         string
+    description?:   string
+    website?:       string
+    discordHandle?: string
+    avatar?:        string
+  }
+
   pos_validator_set (_: Uint8Array): {
     bondedStake: number|bigint
   }[]

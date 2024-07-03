@@ -188,6 +188,7 @@ impl Decode {
         let meta = ValidatorMetaData::try_from_slice(&to_bytes(&source))
             .map_err(|e|Error::new(&format!("{e}")))?;
         Ok(to_object! {
+            "name"          = meta.name,
             "email"         = meta.email,
             "description"   = meta.description,
             "website"       = meta.website,

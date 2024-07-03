@@ -31,6 +31,7 @@ class NamadaValidator extends Staking.Validator {
 
   namadaAddress?:                 Address
   metadata?: {
+    name?:                        string
     email?:                       string
     description?:                 string|null
     website?:                     string|null
