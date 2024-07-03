@@ -55,7 +55,7 @@ const tests: Array<[string, Function]> = [
     if (await chain.getConnection()) return OK
   }],
 
-  ["fetchHeight", async ({ platform, connectOptions }: any) => {
+  ["Chain#fetchHeight", async ({ platform, connectOptions }: any) => {
     if (platform === OCI) return NA
     const chain = await platform.connect(connectOptions)
     if (await chain["height"]) return OK
@@ -71,6 +71,13 @@ const tests: Array<[string, Function]> = [
     if (platform === OCI) return NA
     const chain = await platform.connect(connectOptions)
     if (await chain.fetchBlock()) return OK
+  }],
+
+  ["Chain#authenticate", async ({ platform, connectOptions }: any) => {
+    if (platform === Namada) return NA
+    const chain = await platform.connect(connectOptions)
+    const agent = await chain.authenticate()
+    if (agent instanceof Agent) return OK
   }],
 
   ["Chain#fetchTransaction", () => NI ],
@@ -113,26 +120,11 @@ const tests: Array<[string, Function]> = [
     if (await chain.query()) return OK
   }],
 
-  ["Chain#authenticate", async ({ platform, connectOptions }: any) => {
-    if (platform === Namada) return NA
-    const chain = await platform.connect(connectOptions)
-    const agent = await chain.authenticate()
-    if (agent instanceof Agent) return OK
-  }],
-
   ["Agent#getConnection", async ({ platform, connectOptions }: any) => {
     if (platform === Namada) return NA
     const chain = await platform.connect(connectOptions)
     const agent = await chain.authenticate()
     if (await agent.getConnection()) return OK
-  }],
-
-  ["Agent#fetchBalance", async ({ platform, connectOptions }: any) => {
-    if (platform === Namada) return NA
-    if (platform === OCI) return NA
-    const chain = await platform.connect(connectOptions)
-    const agent = await chain.authenticate()
-    if (await agent.fetchBalance()) return OK
   }],
 
   ["Agent#send", async ({ platform, connectOptions }: any) => {
@@ -141,6 +133,14 @@ const tests: Array<[string, Function]> = [
     const chain = await platform.connect(connectOptions)
     const agent = await chain.authenticate()
     if (await agent.send()) return OK
+  }],
+
+  ["Agent#fetchBalance", async ({ platform, connectOptions }: any) => {
+    if (platform === Namada) return NA
+    if (platform === OCI) return NA
+    const chain = await platform.connect(connectOptions)
+    const agent = await chain.authenticate()
+    if (await agent.fetchBalance()) return OK
   }],
 
   ["Agent#upload", async ({ platform, connectOptions }: any) => {
