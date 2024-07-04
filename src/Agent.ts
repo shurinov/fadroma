@@ -1,15 +1,31 @@
 /** Fadroma. Copyright (C) 2023 Hack.bg. License: GNU AGPLv3 or custom.
     You should have received a copy of the GNU Affero General Public License
     along with this program. If not, see <http://www.gnu.org/licenses/>. **/
-import type { Address, Uint128, ChainId, CodeId, Token, Batch, Message, Into } from '../index'
+import type { Address, Uint128, ChainId, CodeId, Token, Message, Into } from '../index'
 import { assign, timed, bold, Logged, into } from './Util'
-import { SigningConnection } from './Connection'
 import { Chain } from './Chain'
-import { Identity } from './Identity'
 import { send } from './dlt/Bank'
 import { CompiledCode } from './compute/Compile'
-import { UploadedCode, upload } from './compute/Upload'
+import { UploadedCode, UploadStore, upload } from './compute/Upload'
 import { Contract, instantiate, execute } from './compute/Contract'
+
+/** A cryptographic identity. */
+export class Identity extends Logged {
+  constructor (
+    properties: ConstructorParameters<typeof Logged>[0] & Pick<Identity, 'name'|'address'> = {}
+  ) {
+    super(properties)
+    assign(this, properties, ['name', 'address'])
+  }
+  /** Display name. */
+  name?: Address
+  /** Address of account. */
+  address?: Address
+  /** Sign some data with the identity's private key. */
+  sign (doc: any): unknown {
+    throw new Error("can't sign: stub")
+  }
+}
 
 /** Enables non-read-only transactions by binding an `Identity` to a `Connection`. */
 export abstract class Agent extends Logged {
@@ -81,3 +97,117 @@ export abstract class Agent extends Logged {
     return await execute(this, contract, message, options) as T
   }
 }
+
+/** Extend this class and implement the abstract methods to add support for a new kind of chain. */
+export abstract class SigningConnection {
+  constructor (properties: { chain: Chain, identity: Identity }) {
+    this.#chain    = properties.chain
+    this.#identity = properties.identity
+  }
+  #chain: Chain
+  /** Chain to which this connection points. */
+  get chain (): Chain {
+    return this.#chain
+  }
+  get chainId (): ChainId {
+    return this.chain.chainId
+  }
+  #identity: Identity
+  get identity (): Identity {
+    return this.#identity
+  }
+  get address (): Address {
+    return this.identity.address!
+  }
+  /** Chain-specific implementation of native token transfer. */
+  abstract sendImpl (parameters: {
+    outputs:   Record<Address, Record<string, Uint128>>,
+    sendFee?:  Token.IFee,
+    sendMemo?: string,
+    parallel?: boolean
+  }): Promise<unknown>
+  /** Chain-specific implementation of code upload. */
+  abstract uploadImpl (parameters: {
+    binary:       Uint8Array,
+    reupload?:    boolean,
+    uploadStore?: UploadStore,
+    uploadFee?:   Token.IFee
+    uploadMemo?:  string
+  }): Promise<Partial<UploadedCode & {
+    chainId: ChainId,
+    codeId:  CodeId
+  }>>
+  /** Chain-specific implementation of contract instantiation. */
+  abstract instantiateImpl (parameters: Partial<Contract> & {
+    initMsg:   Into<Message>
+    initFee?:  Token.IFee
+    initSend?: Token.ICoin[]
+    initMemo?: string
+  }):
+    Promise<Contract & { address: Address }>
+  /** Chain-specific implementation of contract transaction. */
+  abstract executeImpl <T> (parameters: {
+    address:   Address
+    codeHash?: string
+    message:   Message
+    execFee?:  Token.IFee
+    execSend?: Token.ICoin[]
+    execMemo?: string
+  }): Promise<T>
+}
+
+    //if ((this.identity && (this.identity.name||this.identity.address))) {
+      //const identityColor = randomColor({ // address takes priority in determining color
+        //luminosity: 'dark', seed: this.identity.address||this.identity.name
+      //})
+      //this.log.label += ' '
+      //this.log.label += colors.bgHex(identityColor).whiteBright(
+        //` ${this.identity.name||this.identity.address} `
+      //)
+    //}
+    //if ((this.identity && (this.identity.name||this.identity.address))) {
+      //let myTag = `${this.identity.name||this.identity.address}`
+      //const myColor = randomColor({ luminosity: 'dark', seed: myTag })
+      //myTag = colors.bgHex(myColor).whiteBright.bold(myTag)
+      //tag = [tag, myTag].filter(Boolean).join(':')
+    //}
+
+/** Builder object for batched transactions. */
+export class Batch extends Logged {
+  constructor (
+    properties: ConstructorParameters<typeof Logged>[0] & Pick<Batch, 'agent'>
+  ) {
+    super(properties)
+    this.agent = properties.agent
+  }
+
+  /** The chain targeted by the batch. */
+  get chain (): Chain {
+    return this.agent.chain
+  }
+
+  /** The agent that will broadcast the batch. */
+  agent: Agent
+
+  /** Add an upload message to the batch. */
+  upload (...args: Parameters<Agent["upload"]>): this {
+    this.log.warn('upload: stub (not implemented)')
+    return this
+  }
+  /** Add an instantiate message to the batch. */
+  instantiate (...args: Parameters<Agent["instantiate"]>): this {
+    this.log.warn('instantiate: stub (not implemented)')
+    return this
+  }
+  /** Add an execute message to the batch. */
+  execute (...args: Parameters<Agent["execute"]>): this {
+    this.log.warn('execute: stub (not implemented)')
+    return this
+  }
+  /** Submit the batch. */
+  async submit (...args: unknown[]): Promise<unknown> {
+    this.log.warn('submit: stub (not implemented)')
+    return {}
+  }
+}
+

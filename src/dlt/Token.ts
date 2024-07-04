@@ -1,7 +1,7 @@
 /** Fadroma. Copyright (C) 2023 Hack.bg. License: GNU AGPLv3 or custom.
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>. **/
-import type { Address, Uint128 } from '../Types'
+import type { Address, Uint128 } from '../../index'
 
 /** Represents some amount of native token. */
 export interface ICoin { amount: Uint128, denom: string }

@@ -80,9 +80,16 @@ class NamadaBlock extends Block {
       header:       NamadaBlock["header"]
       transactions: Array<Partial<NamadaTransaction> & {id: string}>
     }
-    const block = new NamadaBlock({
-      chain, hash, header, responses, transactions: [],
-    })
+    const props = {
+      chain,
+      hash,
+      header,
+      responses,
+      transactions: [],
+      height: height ? BigInt(height) : undefined
+    }
+    console.log({props})
+    const block = new NamadaBlock(props)
     return Object.assign(block, {
       transactions: transactions.map(tx=>new NamadaTransaction({
         hash: tx?.id,
