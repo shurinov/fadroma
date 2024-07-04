@@ -88,7 +88,6 @@ class NamadaBlock extends Block {
       transactions: [],
       height: height ? BigInt(height) : undefined
     }
-    console.log({props})
     const block = new NamadaBlock(props)
     return Object.assign(block, {
       transactions: transactions.map(tx=>new NamadaTransaction({
