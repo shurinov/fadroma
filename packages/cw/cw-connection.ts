@@ -10,6 +10,16 @@ import { Amino, Proto, CosmWasmClient, SigningCosmWasmClient } from '@hackbg/cos
 import type { Block } from '@hackbg/cosmjs-esm'
 
 export class CWChain extends Chain {
+  constructor (
+    properties: ConstructorParameters<typeof Chain>[0]
+      & Pick<CWChain, 'coinType'|'bech32Prefix'|'hdAccountIndex'|'connections'>
+  ) {
+    super(properties)
+    this.coinType       = properties.coinType
+    this.bech32Prefix   = properties.bech32Prefix
+    this.hdAccountIndex = properties.hdAccountIndex
+    this.connections    = properties.connections
+  }
 
   static get Connection () {
     return CWConnection
@@ -45,17 +55,6 @@ export class CWChain extends Chain {
     }
     chain.connections = await Promise.all(connections)
     return chain
-  }
-
-  constructor (
-    properties: ConstructorParameters<typeof Chain>[0]
-      & Pick<CWChain, 'coinType'|'bech32Prefix'|'hdAccountIndex'|'connections'>
-  ) {
-    super(properties)
-    this.coinType       = properties.coinType
-    this.bech32Prefix   = properties.bech32Prefix
-    this.hdAccountIndex = properties.hdAccountIndex
-    this.connections    = properties.connections
   }
 
   /** The bech32 prefix for the account's address  */
@@ -153,17 +152,16 @@ export class CWConnection extends Connection {
     })
   }
 
-  async fetchBlockImpl (parameter?: { height: number }|{ hash: string }):
+  async fetchBlockImpl (parameter?: { height: number|bigint }|{ hash: string }):
     Promise<CWBlock>
   {
     const api = await this.api
-    if ((parameter as { height: number })?.height) {
+    if ((parameter as { height: number|bigint })?.height) {
       const { id, header, txs } = await api.getBlock((parameter as { height: number }).height)
       return new CWBlock({
         chain: this.chain,
-        id,
-        height: header.height,
-        timestamp: header.time,
+        hash: id,
+        height: BigInt(header.height),
         transactions: [],
         rawTransactions: txs as Uint8Array[],
       })
@@ -173,9 +171,8 @@ export class CWConnection extends Connection {
       const { id, header, txs } = await api.getBlock()
       return new CWBlock({
         chain: this.chain,
-        id,
-        height: header.height,
-        timestamp: header.time,
+        hash: id,
+        height: BigInt(header.height),
         transactions: [],
         rawTransactions: txs as Uint8Array[],
       })
@@ -184,7 +181,7 @@ export class CWConnection extends Connection {
 
   async fetchHeightImpl () {
     const { height } = await this.fetchBlockImpl()
-    return height
+    return height!
   }
 
   /** Query native token balance. */

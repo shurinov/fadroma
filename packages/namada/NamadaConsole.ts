@@ -1,5 +1,5 @@
 import { Console, bold } from '@hackbg/fadroma'
-import type Transaction from './NamadaTransaction'
+import type { Transaction } from './NamadaBlock'
 import type { Proposal } from './NamadaGov'
 import type { Validator } from './NamadaPoS'
 

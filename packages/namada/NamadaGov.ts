@@ -16,44 +16,55 @@ export async function fetchProposalCount (connection: Pick<Connection, 'abciQuer
   return decode(u64, binary) as bigint
 }
 
-export type ProposalInfo = Awaited<ReturnType<typeof fetchProposalInfo>>
+export const INTERNAL_ADDRESS =
+  "tnam1q5qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqrw33g6"
 
-export async function fetchProposalInfo (
-  connection: Pick<Connection, 'abciQuery'|'decode'>, id: number|bigint
-) {
-  const proposalResponse = await connection.abciQuery(`/vp/governance/proposal/${id}`)
-  if (proposalResponse[0] === 0) {
-    return null
+class NamadaGovernanceProposal {
+  readonly id:       bigint
+  readonly proposal: ReturnType<NamadaDecoder["gov_proposal"]>
+  readonly votes:    ReturnType<NamadaDecoder["gov_votes"]>
+  readonly result:   NamadaGovernanceProposalResult|null
+  constructor (props: Pick<NamadaGovernanceProposal, 'id'|'proposal'|'votes'|'result'>) {
+    this.id       = props?.id
+    this.proposal = props?.proposal
+    this.votes    = props?.votes
+    this.result   = props?.result ? new NamadaGovernanceProposalResult(props.result) : null
   }
-  const [
-    votesResponse, resultResponse 
-  ] = await Promise.all([
-    `/vp/governance/proposal/${id}/votes`,
-    `/vp/governance/stored_proposal_result/${id}`,
-  ].map(
-    x=>connection.abciQuery(x)
-  ))
-  const proposal =
-    connection.decode.gov_proposal(proposalResponse.slice(1))
-  const votes =
-    connection.decode.gov_votes(votesResponse)
-  const result: GovernanceProposalResult|null =
-    (resultResponse[0] === 0)
-      ? null
-      : new GovernanceProposalResult(
-          connection.decode.gov_result(resultResponse.slice(1))
-        )
-  return { proposal, votes, result }
+  static async fetch (
+    connection: Pick<Connection, 'abciQuery'|'decode'>, id: number|bigint
+  ) {
+    const proposalResponse = await connection.abciQuery(`/vp/governance/proposal/${id}`)
+    if (proposalResponse[0] === 0) return null
+    const [ votesResponse, resultResponse  ] = await Promise.all([
+      `/vp/governance/proposal/${id}/votes`,
+      `/vp/governance/stored_proposal_result/${id}`,
+    ].map(x=>connection.abciQuery(x)))
+    return new this({
+      id:
+        BigInt(id),
+      proposal:
+        connection.decode.gov_proposal(proposalResponse.slice(1)) as
+          ReturnType<NamadaDecoder["gov_proposal"]>,
+      votes:
+        connection.decode.gov_votes(votesResponse) as
+          ReturnType<NamadaDecoder["gov_votes"]>,
+      result: (resultResponse[0] === 0)
+        ? null
+        : new NamadaGovernanceProposalResult(
+            connection.decode.gov_result(resultResponse.slice(1))
+          )
+    })
+  }
 }
 
-class GovernanceProposalResult implements ReturnType<NamadaDecoder["gov_result"]> {
+class NamadaGovernanceProposalResult implements ReturnType<NamadaDecoder["gov_result"]> {
   result!:            "Passed"|"Rejected"
   tallyType!:         "TwoThirds"|"OneHalfOverOneThird"|"LessOneHalfOverOneThirdNay"
   totalVotingPower!:  bigint
   totalYayPower!:     bigint
   totalNayPower!:     bigint
   totalAbstainPower!: bigint
-  constructor (properties: Partial<GovernanceProposalResult> = {}) {
+  constructor (properties: Partial<NamadaGovernanceProposalResult> = {}) {
     assign(this, properties, [
       'result',
       'tallyType',
@@ -84,7 +95,6 @@ const percent = (a: bigint, b: bigint) =>
   ((Number(a * 1000000n / b) / 10000).toFixed(2) + '%').padStart(7)
 
 export {
-  GovernanceProposalResult as ProposalResult,
+  NamadaGovernanceProposal       as Proposal,
+  NamadaGovernanceProposalResult as ProposalResult,
 }
-
-export const INTERNAL_ADDRESS = "tnam1q5qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqrw33g6"

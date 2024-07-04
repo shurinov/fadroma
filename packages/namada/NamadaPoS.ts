@@ -80,7 +80,7 @@ export async function fetchValidators (
       return [base16.encode(binary.slice(2)), address]
     })))
   for (const [publicKey, namadaAddress] of Object.entries(publicKeyToNamadaAddress)) {
-    validators[publicKey] ??= new NamadaValidator({ chain, publicKey })
+    validators[publicKey] ??= new NamadaValidator({ chain, publicKey, address: '' })
     validators[publicKey].namadaAddress = namadaAddress
   }
   if (options?.details ?? true) {

@@ -57,11 +57,11 @@ export abstract class Connection extends Logged {
 
   /** Chain-specific implementation of fetchBlock. */
   abstract fetchBlockImpl (parameters?:
-    { raw?: boolean } & ({ height: number }|{ hash: string })
+    { raw?: boolean } & ({ height: number|bigint }|{ hash: string })
   ): Promise<Block>
   /** Chain-specific implementation of fetchHeight. */
   abstract fetchHeightImpl ():
-    Promise<number>
+    Promise<bigint>
   /** Chain-specific implementation of fetchBalance. */
   abstract fetchBalanceImpl (parameters: {
     addresses: Record<Address, string[]>,

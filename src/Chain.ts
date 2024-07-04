@@ -50,13 +50,13 @@ export abstract class Chain extends Logged {
   abstract authenticate (properties?: { mnemonic: string }|Identity): Promise<Agent>
 
   /** Get the current block height. */
-  fetchHeight (): Promise<number> {
+  fetchHeight (): Promise<bigint> {
     this.log.debug('Querying block height')
     return this.getConnection().fetchHeightImpl()
   }
 
   /** Wait until the block height increments, or until `this.alive` is set to false. */
-  fetchNextBlock (): Promise<number> {
+  fetchNextBlock (): Promise<bigint> {
     this.log.debug('Querying block height')
     return fetchNextBlock(this)
   }
@@ -65,7 +65,7 @@ export abstract class Chain extends Logged {
   fetchBlock ():
     Promise<Block>
   /** Get info about the block with a specific height. */
-  fetchBlock ({ height }: { height: number, raw?: boolean }):
+  fetchBlock ({ height }: { height: number|bigint, raw?: boolean }):
     Promise<Block>
   /** Get info about the block with a specific hash. */
   fetchBlock ({ hash }: { hash: string, raw?: boolean }):

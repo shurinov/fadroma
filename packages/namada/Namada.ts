@@ -1,25 +1,26 @@
-import NamadaConsole from './NamadaConsole'
-import NamadaChain from './NamadaChain'
-import NamadaConnection from './NamadaConnection'
-import NamadaTransaction from './NamadaTransaction'
+import Console from './NamadaConsole'
+import Chain from './NamadaChain'
+import Connection from './NamadaConnection'
+import Block, { Transaction } from './NamadaBlock'
 import { Decode, initDecoder } from './NamadaDecode'
 import * as Identity from './NamadaIdentity'
 export {
   Decode,
   initDecoder,
-  NamadaConsole      as Console,
-  NamadaChain        as Chain,
-  NamadaConnection   as Connection,
-  NamadaTransaction  as Transaction,
+  Console,
+  Chain,
+  Connection,
+  Block,
+  Transaction,
   Identity
 }
-export const testnetChainId = NamadaChain.testnetChainId
-export const testnetURLs    = NamadaChain.testnetURLs
-export function connect (...args: Parameters<typeof NamadaChain.connect>) {
-  return NamadaChain.connect(...args)
+export const testnetChainId = Chain.testnetChainId
+export const testnetURLs    = Chain.testnetURLs
+export function connect (...args: Parameters<typeof Chain.connect>) {
+  return Chain.connect(...args)
 }
-export function testnet (...args: Parameters<typeof NamadaChain.testnet>) {
-  return NamadaChain.testnet(...args)
+export function testnet (...args: Parameters<typeof Chain.testnet>) {
+  return Chain.testnet(...args)
 }
 export function mainnet (...args: never) {
   throw new Error(

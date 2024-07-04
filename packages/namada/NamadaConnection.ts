@@ -15,7 +15,7 @@ export default class NamadaConnection extends CW.Connection {
   }
 
   override async fetchBlockImpl (
-    parameter?: ({ height: number }|{ hash: string }) & { raw?: boolean }
+    parameter?: ({ height: bigint|number }|{ hash: string }) & { raw?: boolean }
   ): Promise<Block> {
     if (!this.url) {
       throw new CW.Error("Can't fetch block: missing connection URL")
@@ -56,7 +56,7 @@ export default class NamadaConnection extends CW.Connection {
     return Gov.fetchProposalCount(this)
   }
   fetchProposalInfoImpl (id: number|bigint) {
-    return Gov.fetchProposalInfo(this, id)
+    return Gov.Proposal.fetch(this, id)
   }
 
   fetchPGFParametersImpl () {

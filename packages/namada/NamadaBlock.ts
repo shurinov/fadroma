@@ -1,71 +1,39 @@
-import { Block } from '@fadroma/cw'
-import type { Chain as Namada } from './Namada'
+import type * as Namada from './Namada'
 import { Decode } from './NamadaDecode'
-import NamadaTransaction, { NamadaUndecodedTransaction } from './NamadaTransaction'
+import { Block, Transaction } from '@fadroma/cw'
 
-export default class NamadaBlock extends Block {
+type NamadaBlockParameters =
+  ConstructorParameters<typeof Block>[0]
+  & Pick<NamadaBlock, 'chain'|'hash'|'header'|'transactions'|'responses'>
 
-  constructor ({
-    chain, hash, header, transactions, responses
-  }: Omit<
-    ConstructorParameters<typeof Block>[0], 'id'
-  > & Pick<
-    NamadaBlock, 'chain'|'hash'|'header'|'transactions'|'responses'
-  >) {
-    super({ chain, id: hash, header, transactions })
+class NamadaBlock extends Block {
+  constructor ({ responses, ...props }: NamadaBlockParameters) {
+    super(props)
     this.#responses = responses
   }
-
-  get hash (): string {
-    return this.id
+  get chain (): Namada.Chain|undefined {
+    return super.chain as Namada.Chain|undefined
   }
-  get chain (): Namada|undefined {
-    return super.chain as Namada|undefined
-  }
-
   #responses?: {
     block:   { url: string, response: string }
     results: { url: string, response: string }
   }
-
   get responses () {
     return this.#responses
   }
-
   /** Block header. */
-  declare header: {
-    version:            object
-    chainId:            string
-    height:             bigint
-    time:               string
-    lastBlockId:        string
-    lastCommitHash:     string
-    dataHash:           string
-    validatorsHash:     string
-    nextValidatorsHash: string
-    consensusHash:      string
-    appHash:            string
-    lastResultsHash:    string
-    evidenceHash:       string
-    proposerAddress:    string
-  }
-  /** Monotonically incrementing ID of block. */
-  get height () {
-    return Number((this.header as any)?.height)
-  }
+  declare header: NamadaBlockHeader
   /** Timestamp of block */
   get time () {
     return (this.header as any)?.time
   }
-
   /** Transaction in block. */
   declare transactions: NamadaTransaction[]
 
   /** Responses from block API endpoints. */
-
   static async fetchByHeight (
     { url, decode = Decode, chain }: {
-      url: string|URL, decode?: typeof Decode, chain?: Namada
+      url: string|URL, decode?: typeof Decode, chain?: Namada.Chain
     },
     { height, raw }: {
       height?: number|string|bigint,
@@ -89,7 +57,7 @@ export default class NamadaBlock extends Block {
   }
 
   static async fetchByHash (
-    _1: { url: string|URL, decode?: typeof Decode, chain?: Namada },
+    _1: { url: string|URL, decode?: typeof Decode, chain?: Namada.Chain },
     _2: { hash: string, raw?: boolean },
   ): Promise<NamadaBlock> {
     throw new Error('NamadaBlock.fetchByHash: not implemented')
@@ -99,7 +67,7 @@ export default class NamadaBlock extends Block {
     responses: NonNullable<NamadaBlock["responses"]>,
     { decode = Decode, chain, height, raw = false }: {
       decode?: typeof Decode
-      chain?:  Namada,
+      chain?:  Namada.Chain,
       height?: string|number|bigint,
       raw?:    boolean
     },
@@ -110,17 +78,69 @@ export default class NamadaBlock extends Block {
     ) as {
       hash:         string,
       header:       NamadaBlock["header"]
-      transactions: Partial<NamadaTransaction[]>[]
+      transactions: Array<Partial<NamadaTransaction> & {id: string}>
     }
     const block = new NamadaBlock({
-      chain, hash, header, transactions: [], responses
+      chain, hash, header, responses, transactions: [],
     })
     return Object.assign(block, {
       transactions: transactions.map(tx=>new NamadaTransaction({
-        id: tx?.id,
+        hash: tx?.id,
         ...tx,
         block
       }))
     })
   }
+}
+
+type NamadaBlockHeader = {
+  version:            object
+  chainId:            string
+  height:             bigint
+  time:               string
+  lastBlockId:        string
+  lastCommitHash:     string
+  dataHash:           string
+  validatorsHash:     string
+  nextValidatorsHash: string
+  consensusHash:      string
+  appHash:            string
+  lastResultsHash:    string
+  evidenceHash:       string
+  proposerAddress:    string
+}
+
+type NamadaTransactionParameters =
+  Pick<NamadaTransaction, 'hash'|'block'> & NamadaTransaction['data']
+
+class NamadaTransaction extends Transaction {
+  constructor ({ hash, block, ...data }: NamadaTransactionParameters) {
+    super({ hash, block, data })
+  }
+  get block (): NamadaBlock|undefined {
+    return super.block as NamadaBlock|undefined
+  }
+  declare data: {
+    expiration?: string|null
+    timestamp?: string
+    feeToken?: string
+    feeAmountPerGasUnit?: string
+    multiplier?: BigInt
+    gasLimitMultiplier?: BigInt
+    atomic?: boolean
+    txType?: 'Raw'|'Wrapper'|'Decrypted'|'Protocol'
+    sections?: object[]
+    content?: object
+    batch?: Array<{
+      hash: string,
+      codeHash: string,
+      dataHash: string,
+      memoHash: string
+    }>
+  }|undefined
+}
+
+export {
+  NamadaBlock       as default,
+  NamadaTransaction as Transaction,
 }

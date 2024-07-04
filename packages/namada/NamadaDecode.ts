@@ -27,6 +27,10 @@ export interface NamadaDecoder {
 
   gas_cost_table (_: Uint8Array): Record<string, string>
 
+  gov_proposal (_: Uint8Array): unknown
+
+  gov_votes (_: Uint8Array): unknown
+
   gov_parameters (_: Uint8Array): Partial<{
     minProposalFund:         bigint
     maxProposalCodeSize:     bigint

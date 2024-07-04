@@ -26,8 +26,9 @@ export {
   CWConnection       as Connection,
 } from './cw-connection'
 export {
-  CWBlock            as Block,
-  CWBatch            as Batch,
+  CWBlock       as Block,
+  CWTransaction as Transaction,
+  CWBatch       as Batch,
 } from './cw-tx'
 export {
   CWIdentity         as Identity,
