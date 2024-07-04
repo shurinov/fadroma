@@ -272,6 +272,8 @@ export abstract class Block {
   get chainId () { return this.chain?.id }
   /** Unique ID of block. */
   readonly hash?: string
+  /** Unique ID of block. */
+  get id () { return this.hash }
   /** Unique identifying hash of block. */
   readonly height?: bigint
   /** Contents of block header. */
@@ -300,6 +302,8 @@ export class Transaction {
   get chainId () { return this.block?.chain?.id }
   /** Unique identifying hash of transaction. */
   readonly hash?: string
+  /** Unique ID of block. */
+  get id () { return this.hash }
   /** Any custom data attached to the transaction. */
   readonly data?: unknown
 }
