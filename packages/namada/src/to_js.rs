@@ -140,7 +140,7 @@ impl ToJS for Vec<Object> {
     }
 }
 
-impl ToJS for BTreeSet<Address> {
+impl<T: ToJS> ToJS for BTreeSet<T> {
     fn to_js (&self) -> Result<JsValue, Error> {
         let set = Set::new(&JsValue::UNDEFINED);
         for value in self.iter() {
@@ -150,11 +150,11 @@ impl ToJS for BTreeSet<Address> {
     }
 }
 
-impl ToJS for BTreeMap<String, String> {
+impl<K: ToJS, V: ToJS> ToJS for BTreeMap<K, V> {
     fn to_js (&self) -> Result<JsValue, Error> {
         let object = Object::new();
         for (key, value) in self.iter() {
-            Reflect::set(&object, &key.into(), &value.into())?;
+            Reflect::set(&object, &key.to_js()?, &value.to_js()?)?;
         }
         Ok(object.into())
     }
@@ -340,6 +340,15 @@ impl ToJS for BlockVersion {
 impl ToJS for ChainId {
     fn to_js (&self) -> Result<JsValue, Error> {
         self.as_str().to_js()
+    }
+}
+
+impl ToJS for Account {
+    fn to_js (&self) -> Result<JsValue, Error> {
+        Ok(to_object! {
+            "owner" = self.owner,
+            "token" = self.token,
+        }.into())
     }
 }
 

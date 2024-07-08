@@ -18,16 +18,30 @@ impl Decode {
         Ok(to_object! {
             "epochDuration" =
                 get_epoch_duration_storage_key().to_string(),
-            "maxBlockDuration" =
-                get_max_expected_time_per_block_key().to_string(),
-            "vpAllowlist" =
-                get_tx_allowlist_storage_key().to_string(),
-            "maxGasForBlock" =
-                get_max_block_gas_key().to_string(),
-            "feeUnshieldingGasLimit" =
-                get_fee_unshielding_gas_limit_key().to_string(),
+            "epochsPerYear" =
+                get_epochs_per_year_key().to_string(),
             "gasCostTable" =
                 get_gas_cost_key().to_string(),
+            "gasScale" =
+                get_gas_scale_key().to_string(),
+            "implicitVp" =
+                get_implicit_vp_key().to_string(),
+            "maspEpochMultipler" =
+                get_masp_epoch_multiplier_key().to_string(),
+            "maspFeePaymentGasLimi" =
+                get_masp_fee_payment_gas_limit_key().to_string(),
+            "maxBlockGas" =
+                get_max_block_gas_key().to_string(),
+            "maxProposalBytes" =
+                get_max_proposal_bytes_key().to_string(),
+            "maxTxBytes" =
+                get_max_tx_bytes_key().to_string(),
+            "nativeTokenTransferable" =
+                get_native_token_transferable_key().to_string(),
+            "txAllowlist" =
+                get_tx_allowlist_storage_key().to_string(),
+            "vpAllowlist" =
+                get_vp_allowlist_storage_key().to_string(),
         })
     }
 

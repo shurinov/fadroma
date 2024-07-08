@@ -205,7 +205,7 @@ fn section_masp_builder (masp_builder: &MaspBuilder) -> Result<Object, Error> {
         ("type".into(),
             "MaspBuilder".into()),
         ("target".into(),
-            hex::encode_upper(masp_builder.target.0).into()),
+            format!("{:?}", masp_builder.target).into()),
         ("asset_types".into(), {
             let types = Set::new(&JsValue::UNDEFINED);
             for asset_type in masp_builder.asset_types.iter() {

@@ -41,12 +41,9 @@ pub fn tx_content (tx: &Tx, result: Object) -> Result<Object, Error> {
         "tx_redelegate.wasm" => redelegate(binary),
         "tx_resign_steward.wasm" => resign_steward(binary),
         "tx_reveal_pk.wasm" => reveal_pk(binary),
-        "tx_shield.wasm" => shielding_transfer(binary),
-        "tx_transfer.wasm" => shielded_transfer(binary),
-        "tx_transparent_transfer.wasm" => transparent_transfer(binary),
+        "tx_transfer.wasm" => transfer(binary),
         "tx_unbond.wasm" => unbond(binary),
         "tx_unjail_validator.wasm" => unjail_validator(binary),
-        "tx_unshield.wasm" => unshielding_transfer(binary),
         "tx_update_account.wasm" => update_account(binary),
         "tx_update_steward_commission.wasm" => update_steward_commission(binary),
         "tx_vote_proposal.wasm" => vote_proposal(binary),
@@ -247,58 +244,15 @@ fn reveal_pk (binary: &[u8]) -> Result<Object, Error> {
     })
 }
 
-fn shielded_transfer (binary: &[u8]) -> Result<Object, Error> {
-    let inner = ShieldedTransfer::try_from_slice(&binary[..])
+fn transfer (binary: &[u8]) -> Result<Object, Error> {
+    let inner = Transfer::try_from_slice(&binary[..])
         .map_err(|e|Error::new(&format!("{e}")))?;
-    object(&[
-        ("sectionHash".into(),
-            hex::encode_upper(inner.section_hash).into()),
-    ])
-}
-
-fn shielding_transfer (binary: &[u8]) -> Result<Object, Error> {
-    let inner = ShieldingTransfer::try_from_slice(&binary[..])
-        .map_err(|e|Error::new(&format!("{e}")))?;
-    object(&[
-        ("source".into(),
-            inner.source.encode().into()),
-        ("token".into(),
-            inner.token.encode().into()),
-        ("amount".into(),
-            format!("{}", inner.amount).into()),
-        ("shieldedSectionHash".into(),
-            hex::encode_upper(inner.shielded_section_hash).into()),
-    ])
-}
-
-fn transparent_transfer (binary: &[u8]) -> Result<Object, Error> {
-    let inner = TransparentTransfer::try_from_slice(&binary[..])
-        .map_err(|e|Error::new(&format!("{e}")))?;
-    object(&[
-        ("source".into(),
-            inner.source.encode().into()),//        /*    pub source: Address,
-        ("target".into(),
-            inner.target.encode().into()),//pub target: Address,
-        ("token".into(),
-            inner.token.encode().into()),//pub token: Address,
-        ("amount".into(),
-            format!("{}", inner.amount).into()),//pub amount: DenominatedAmount,
-    ])
-}
-
-fn unshielding_transfer (binary: &[u8]) -> Result<Object, Error> {
-    let inner = UnshieldingTransfer::try_from_slice(&binary[..])
-        .map_err(|e|Error::new(&format!("{e}")))?;
-    object(&[
-        ("target".into(),
-            inner.target.encode().into()),//pub target: Address,
-        ("token".into(),
-            inner.token.encode().into()),//pub token: Address,
-        ("amount".into(),
-            format!("{}", inner.amount).into()),//pub amount: DenominatedAmount,
-        ("shieldedSectionHash".into(),
-            hex::encode_upper(inner.shielded_section_hash).into()),
-    ])
+    Ok(to_object! {
+        "sources" = inner.sources,
+        "targets" = inner.targets,
+        "shieldedSectionHash" = inner.shielded_section_hash
+            .map(|hash|format!("{:?}", hash)),
+    })
 }
 
 fn unbond (binary: &[u8]) -> Result<Object, Error> {
