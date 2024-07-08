@@ -38,10 +38,10 @@ export default class NamadaChain extends CW.Chain {
   }
 
   /** Default chain ID of testnet. */
-  static testnetChainId = 'luminara.902d53d31e224eebb8ca3'
+  static testnetChainId = 'tududes-test.81efb06d86523ae4f'
 
   /** Default RPC endpoints for testnet. */
-  static testnetURLs = new Set(['https://rpc.luminara.icu'])
+  static testnetURLs = new Set(['https://rpc.namada.tududes.com'])
 
   static get Connection () {
     return NamadaConnection
