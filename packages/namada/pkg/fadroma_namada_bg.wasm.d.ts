@@ -2,7 +2,10 @@
 /* eslint-disable */
 export const memory: WebAssembly.Memory;
 export function __wbg_decode_free(a: number): void;
+export function decode_u32(a: number, b: number): void;
 export function decode_u64(a: number, b: number): void;
+export function decode_vec_string(a: number, b: number): void;
+export function decode_code_hash(a: number, b: number): void;
 export function decode_storage_keys(a: number): void;
 export function decode_epoch_duration(a: number, b: number): void;
 export function decode_gas_cost_table(a: number, b: number): void;

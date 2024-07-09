@@ -14,7 +14,10 @@ export async function initDecoder (decoder: string|URL|Uint8Array): Promise<void
 export { Decode }
 
 export interface NamadaDecoder {
+  u32 (_: Uint8Array): bigint
   u64 (_: Uint8Array): bigint
+  vec_string (_: Uint8Array): string[]
+  code_hash (_: Uint8Array): string
 
   address_to_amount (_: Uint8Array): Record<string, bigint>
   addresses         (_: Uint8Array): string[]
@@ -118,10 +121,18 @@ export interface NamadaDecoder {
   pos_validator_state (_: Uint8Array): unknown
 
   storage_keys (): {
-    epochDuration:          string,
-    maxBlockDuration:       string,
-    maxGasForBlock:         string,
-    feeUnshieldingGasLimit: string,
-    gasCostTable:           string
+    epochDuration:             string
+    epochsPerYear:             string
+    gasCostTable:              string
+    gasScale:                  string
+    implicitVpCodeHash:        string
+    maspEpochMultipler:        string
+    maspFeePaymentGasLimi:     string
+    maxBlockGas:               string
+    maxProposalBytes:          string
+    maxTxBytes:                string
+    isNativeTokenTransferable: string
+    txAllowlist:               string
+    vpAllowlist:               string
   }
 }

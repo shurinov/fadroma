@@ -8,7 +8,22 @@ export class Decode {
 * @param {Uint8Array} source
 * @returns {bigint}
 */
+  static u32(source: Uint8Array): bigint;
+/**
+* @param {Uint8Array} source
+* @returns {bigint}
+*/
   static u64(source: Uint8Array): bigint;
+/**
+* @param {Uint8Array} source
+* @returns {Array<any>}
+*/
+  static vec_string(source: Uint8Array): Array<any>;
+/**
+* @param {Uint8Array} source
+* @returns {string}
+*/
+  static code_hash(source: Uint8Array): string;
 /**
 * @returns {object}
 */
@@ -106,7 +121,10 @@ export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembl
 export interface InitOutput {
   readonly memory: WebAssembly.Memory;
   readonly __wbg_decode_free: (a: number) => void;
+  readonly decode_u32: (a: number, b: number) => void;
   readonly decode_u64: (a: number, b: number) => void;
+  readonly decode_vec_string: (a: number, b: number) => void;
+  readonly decode_code_hash: (a: number, b: number) => void;
   readonly decode_storage_keys: (a: number) => void;
   readonly decode_epoch_duration: (a: number, b: number) => void;
   readonly decode_gas_cost_table: (a: number, b: number) => void;

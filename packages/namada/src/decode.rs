@@ -3,14 +3,39 @@ use crate::{*, to_js::*};
 #[wasm_bindgen]
 pub struct Decode;
 
+fn decode <T: namada::core::borsh::BorshDeserialize> (source: &Uint8Array) -> Result<T, Error> {
+    T::try_from_slice(&to_bytes(&source)).map_err(|e|Error::new(&format!("{e}")))
+}
+
 #[wasm_bindgen]
 impl Decode {
 
     #[wasm_bindgen]
+    pub fn u32 (source: Uint8Array) -> Result<BigInt, Error> {
+        decode::<u32>(&source).map(BigInt::from)
+    }
+
+    #[wasm_bindgen]
     pub fn u64 (source: Uint8Array) -> Result<BigInt, Error> {
-        let value = u64::try_from_slice(&to_bytes(&source))
+        decode::<u64>(&source).map(BigInt::from)
+    }
+
+    #[wasm_bindgen]
+    pub fn vec_string (source: Uint8Array) -> Result<Array, Error> {
+        let values = Vec::<String>::try_from_slice(&to_bytes(&source))
             .map_err(|e|Error::new(&format!("{e}")))?;
-        Ok(BigInt::from(value))
+        let result = Array::new();
+        for value in values.into_iter() {
+            result.push(&value.into());
+        }
+        Ok(result)
+    }
+
+    #[wasm_bindgen]
+    pub fn code_hash (source: Uint8Array) -> Result<JsString, Error> {
+        decode::<namada::core::hash::Hash>(&source)
+            .map(hex::encode_upper)
+            .map(JsString::from)
     }
 
     #[wasm_bindgen]
@@ -24,7 +49,7 @@ impl Decode {
                 get_gas_cost_key().to_string(),
             "gasScale" =
                 get_gas_scale_key().to_string(),
-            "implicitVp" =
+            "implicitVpCodeHash" =
                 get_implicit_vp_key().to_string(),
             "maspEpochMultipler" =
                 get_masp_epoch_multiplier_key().to_string(),
@@ -36,7 +61,7 @@ impl Decode {
                 get_max_proposal_bytes_key().to_string(),
             "maxTxBytes" =
                 get_max_tx_bytes_key().to_string(),
-            "nativeTokenTransferable" =
+            "isNativeTokenTransferable" =
                 get_native_token_transferable_key().to_string(),
             "txAllowlist" =
                 get_tx_allowlist_storage_key().to_string(),
