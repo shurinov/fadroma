@@ -53,7 +53,7 @@ impl Decode {
                 get_implicit_vp_key().to_string(),
             "maspEpochMultipler" =
                 get_masp_epoch_multiplier_key().to_string(),
-            "maspFeePaymentGasLimi" =
+            "maspFeePaymentGasLimit" =
                 get_masp_fee_payment_gas_limit_key().to_string(),
             "maxBlockGas" =
                 get_max_block_gas_key().to_string(),
