@@ -142,8 +142,8 @@ export default class NamadaChain extends CW.Chain {
   fetchProposalInfo (id: number|bigint) {
     return this.getConnection().fetchProposalInfoImpl(id)
   }
-  fetchEpoch () {
-    return this.getConnection().fetchEpochImpl()
+  fetchEpoch (...args: Parameters<NamadaConnection["fetchEpochImpl"]>) {
+    return this.getConnection().fetchEpochImpl(...args)
   }
   fetchEpochFirstBlock () {
     return this.getConnection().fetchEpochFirstBlockImpl()

@@ -3,9 +3,14 @@ import type { Decode } from './NamadaDecode'
 import type NamadaConnection from './NamadaConnection'
 
 export async function fetchEpoch (
-  connection: Pick<NamadaConnection, 'abciQuery'>
+  connection: Pick<NamadaConnection, 'abciQuery'>,
+  height?: number|bigint
 ) {
-  return decode(u64, await connection.abciQuery("/shell/epoch"))
+  if (height !== undefined) {
+    return decode(u64, await connection.abciQuery(`/shell/epoch_at_height/${height}`))
+  } else {
+    return decode(u64, await connection.abciQuery("/shell/epoch"))
+  }
 }
 
 export async function fetchEpochFirstBlock (

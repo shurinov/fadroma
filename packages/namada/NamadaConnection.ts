@@ -39,8 +39,8 @@ export default class NamadaConnection extends CW.Connection {
     return fetchProtocolParameters(this)
   }
 
-  fetchEpochImpl () {
-    return Epoch.fetchEpoch(this)
+  fetchEpochImpl (options?: { height?: number|bigint }) {
+    return Epoch.fetchEpoch(this, options?.height)
   }
   fetchEpochFirstBlockImpl () {
     return Epoch.fetchEpochFirstBlock(this)
