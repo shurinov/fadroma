@@ -7,7 +7,8 @@ export async function fetchEpoch (
   height?: number|bigint
 ) {
   if (height !== undefined) {
-    return decode(u64, await connection.abciQuery(`/shell/epoch_at_height/${height}`))
+    const binary = await connection.abciQuery(`/shell/epoch_at_height/${height}`)
+    return binary[0] ? decode(u64, binary.slice(1)) : null
   } else {
     return decode(u64, await connection.abciQuery("/shell/epoch"))
   }
