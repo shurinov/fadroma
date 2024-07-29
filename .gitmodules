@@ -1,19 +1,24 @@
 [submodule "toolbox"]
-  path   = toolbox
-  url    = https://github.com/hackbg/toolbox.git
-  branch = main
+  path    = toolbox
+  url     = https://github.com/hackbg/toolbox.git
+  branch  = main
+  shallow = true
 [submodule "ganesha"]
-  path   = ensuite/ganesha
-  url    = https://github.com/hackbg/ganesha.git
-  branch = develop
+  path    = ensuite/ganesha
+  url     = https://github.com/hackbg/ganesha.git
+  branch  = develop
+  shallow = true
 [submodule "connect/cw/cosmjs-esm"]
-	path = packages/cosmjs-esm
-  url    = https://github.com/hackbg/cosmjs-esm.git
-  branch = unified
+  path    = packages/cosmjs-esm
+  url     = https://github.com/hackbg/cosmjs-esm.git
+  branch  = unified
+  shallow = true
 [submodule "connect/scrt/secret.js"]
-	path = packages/secretjs-esm
-  url    = https://github.com/hackbg/secret.js.git
-  branch = fix/esm-nonflat
+  path    = packages/secretjs-esm
+  url     = https://github.com/hackbg/secret.js.git
+  branch  = fix/esm-nonflat
+  shallow = true
 [submodule "assets/cantarell"]
-  path   = assets/cantarell
-  url    = https://github.com/reinhart1010/cantarell
+  path    = assets/cantarell
+  url     = https://github.com/reinhart1010/cantarell
+  shallow = true
