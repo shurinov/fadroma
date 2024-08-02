@@ -16,83 +16,70 @@ export async function fetchProposalCount (connection: Pick<Connection, 'abciQuer
   return decode(u64, binary) as bigint
 }
 
+export async function fetchProposalInfo (
+  connection: Pick<Connection, 'abciQuery'|'decode'>, id: number|bigint
+): Promise<NamadaGovernanceProposal|null> {
+  const proposalResponse = await connection.abciQuery(`/vp/governance/proposal/${id}`)
+  if (proposalResponse[0] === 0) return null
+  const [ votesResponse, resultResponse  ] = await Promise.all([
+    `/vp/governance/proposal/${id}/votes`,
+    `/vp/governance/stored_proposal_result/${id}`,
+  ].map(x=>connection.abciQuery(x)))
+  const proposal = connection.decode.gov_proposal(proposalResponse.slice(1)) as
+    ReturnType<NamadaDecoder["gov_proposal"]>
+  const votes = connection.decode.gov_votes(votesResponse) as
+    ReturnType<NamadaDecoder["gov_votes"]>
+  const result = (resultResponse[0] === 0) ? null
+    : decodeResultResponse(connection.decode.gov_result(resultResponse.slice(1)) as 
+        Required<ReturnType<NamadaDecoder["gov_result"]>>)
+  return { id: BigInt(id), proposal, votes, result }
+}
+
+const decodeResultResponse = (
+  decoded: {
+    result:            "Passed"|"Rejected"
+    tallyType:         "TwoThirds"|"OneHalfOverOneThird"|"LessOneHalfOverOneThirdNay"
+    totalVotingPower:  bigint
+    totalYayPower:     bigint
+    totalNayPower:     bigint
+    totalAbstainPower: bigint
+  },
+  turnout = decoded.totalYayPower! + decoded.totalNayPower! + decoded.totalAbstainPower!
+): NamadaGovernanceProposalResult => ({
+  ...decoded,
+  turnout:        String(turnout),
+  turnoutPercent: (decoded.totalVotingPower! > 0) ? percent(turnout, decoded.totalVotingPower!) : '0',
+  yayPercent:     (turnout > 0) ? percent(decoded.totalYayPower!, turnout) : '0',
+  nayPercent:     (turnout > 0) ? percent(decoded.totalNayPower!, turnout) : '0',
+  abstainPercent: (turnout > 0) ? percent(decoded.totalAbstainPower!, turnout) : '0',
+})
+
 export const INTERNAL_ADDRESS =
   "tnam1q5qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqrw33g6"
 
-class NamadaGovernanceProposal {
+interface NamadaGovernanceProposal {
   readonly id:       bigint
   readonly proposal: ReturnType<NamadaDecoder["gov_proposal"]>
   readonly votes:    ReturnType<NamadaDecoder["gov_votes"]>
   readonly result:   NamadaGovernanceProposalResult|null
-  constructor (props: Pick<NamadaGovernanceProposal, 'id'|'proposal'|'votes'|'result'>) {
-    this.id       = props?.id
-    this.proposal = props?.proposal
-    this.votes    = props?.votes
-    this.result   = props?.result ? new NamadaGovernanceProposalResult(props.result) : null
-  }
-  static async fetch (
-    connection: Pick<Connection, 'abciQuery'|'decode'>, id: number|bigint
-  ) {
-    const proposalResponse = await connection.abciQuery(`/vp/governance/proposal/${id}`)
-    if (proposalResponse[0] === 0) return null
-    const [ votesResponse, resultResponse  ] = await Promise.all([
-      `/vp/governance/proposal/${id}/votes`,
-      `/vp/governance/stored_proposal_result/${id}`,
-    ].map(x=>connection.abciQuery(x)))
-    return new this({
-      id:
-        BigInt(id),
-      proposal:
-        connection.decode.gov_proposal(proposalResponse.slice(1)) as
-          ReturnType<NamadaDecoder["gov_proposal"]>,
-      votes:
-        connection.decode.gov_votes(votesResponse) as
-          ReturnType<NamadaDecoder["gov_votes"]>,
-      result: (resultResponse[0] === 0)
-        ? null
-        : new NamadaGovernanceProposalResult(
-            connection.decode.gov_result(resultResponse.slice(1))
-          )
-    })
-  }
 }
 
-class NamadaGovernanceProposalResult implements ReturnType<NamadaDecoder["gov_result"]> {
-  result!:            "Passed"|"Rejected"
-  tallyType!:         "TwoThirds"|"OneHalfOverOneThird"|"LessOneHalfOverOneThirdNay"
-  totalVotingPower!:  bigint
-  totalYayPower!:     bigint
-  totalNayPower!:     bigint
-  totalAbstainPower!: bigint
-  constructor (properties: Partial<NamadaGovernanceProposalResult> = {}) {
-    assign(this, properties, [
-      'result',
-      'tallyType',
-      'totalVotingPower',
-      'totalYayPower',
-      'totalNayPower',
-      'totalAbstainPower',
-    ])
-  }
-  get turnout () {
-    return this.totalYayPower + this.totalNayPower + this.totalAbstainPower
-  }
-  get turnoutPercent () {
-    return percent(this.turnout, this.totalVotingPower)
-  }
-  get yayPercent () {
-    return percent(this.totalYayPower, this.turnout)
-  }
-  get nayPercent () {
-    return percent(this.totalNayPower, this.turnout)
-  }
-  get abstainPercent () {
-    return percent(this.totalAbstainPower, this.turnout)
-  }
+interface NamadaGovernanceProposalResult {
+  readonly result:            "Passed"|"Rejected"
+  readonly tallyType:         "TwoThirds"|"OneHalfOverOneThird"|"LessOneHalfOverOneThirdNay"
+  readonly totalVotingPower:  bigint
+  readonly totalYayPower:     bigint
+  readonly totalNayPower:     bigint
+  readonly totalAbstainPower: bigint
+  readonly turnout:           string
+  readonly turnoutPercent:    string
+  readonly yayPercent:        string
+  readonly nayPercent:        string
+  readonly abstainPercent:    string
 }
 
-const percent = (a: bigint, b: bigint) =>
-  ((Number(a * 1000000n / b) / 10000).toFixed(2) + '%').padStart(7)
+const percent = (a: string|number|bigint, b: string|number|bigint) =>
+  ((Number(BigInt(a) * 1000000n / BigInt(b)) / 10000).toFixed(2) + '%').padStart(7)
 
 export {
   NamadaGovernanceProposal       as Proposal,
