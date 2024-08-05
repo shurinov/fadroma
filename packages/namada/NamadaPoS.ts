@@ -188,24 +188,6 @@ export async function fetchValidatorAddresses (connection: NamadaConnection): Pr
   return connection.decode.addresses(binary)
 }
 
-export async function fetchValidatorsDetails (
-  connection: NamadaConnection,
-  validators: Record<string, NamadaValidator>,
-  options:    { parallel?: boolean, parallelDetails?: boolean },
-) {
-  const thunks = Object.values(validators)
-    .map(validator=>async()=>fetchValidatorDetails(connection, {
-      validator,
-      parallel: options.parallelDetails
-    }))
-  if (options?.parallel) {
-    connection.log.debug(`NamadaPoS/fetchValidators: ${thunks.length} request(s) in parallel`)
-  } else {
-    connection.log.debug(`NamadaPoS/fetchValidators: ${thunks.length} request(s) in sequence`)
-  }
-  await optionallyParallel(options?.parallel, thunks)
-}
-
 export async function fetchValidatorDetails (
   connection: NamadaConnection,
   options?:   { parallel?: boolean, validator?: Partial<NamadaValidator> }
