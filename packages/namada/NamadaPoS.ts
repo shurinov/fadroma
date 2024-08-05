@@ -62,34 +62,125 @@ export { NamadaValidator as Validator }
 export async function fetchValidators (
   chain: Namada,
   options: Partial<Parameters<typeof Staking.getValidators>[1]> & {
-    parallel?:        boolean,
-    parallelDetails?: boolean,
-    interval?:        number,
+    tendermintMetadata?: 'parallel'|'sequential'|boolean
+    namadaMetadata?:     'parallel'|'sequential'|boolean
   } = {}
 ): Promise<NamadaValidator[]> {
-  const connection =
-    chain.getConnection()
-  const validators: Record<string, NamadaValidator> =
-    (await Staking.getValidators(connection, { ...options||{}, Validator: NamadaValidator }))
-      .reduce((vv, v)=>Object.assign(vv, { [v.publicKey]: v }), {})
-  const addresses =
-    await fetchValidatorAddresses(connection)
-  const publicKeyToNamadaAddress: Record<string, string> =
-    Object.fromEntries(await Promise.all(addresses.map(async address => {
-      const binary = await connection.abciQuery(`/vp/pos/validator/consensus_key/${address}`)
-      return [base16.encode(binary.slice(2)), address]
-    })))
-  for (const [publicKey, namadaAddress] of Object.entries(publicKeyToNamadaAddress)) {
-    validators[publicKey] ??= new NamadaValidator({ chain, publicKey, address: '' })
-    validators[publicKey].namadaAddress = namadaAddress
-  }
-  if (options?.details ?? true) {
-    await fetchValidatorsDetails(connection, validators, {
-      parallel:        options?.parallel,
-      parallelDetails: options?.parallelDetails,
+  const connection = chain.getConnection()
+
+  // This will be the return value: map of Namada address to validator details object.
+  const validatorsByNamadaAddress: Record<string, NamadaValidator> = {}
+
+  // This is the full list of validators known to the chain.
+  // However, it contains no other data than the identifier.
+  // The rest we will have to piece together ourselves.
+  const namadaAddresses = await fetchValidatorAddresses(connection)
+  for (const namadaAddress of namadaAddresses) {
+    validatorsByNamadaAddress[namadaAddress] = new NamadaValidator({
+      chain,
+      publicKey: null as any, // FIXME: explicitly state nullability
+      address:   null as any, // FIXME: in the type definition
+      namadaAddress
     })
   }
-  return Object.values(validators)
+
+  // This is how we will store the public keys. This needs to be done only once,
+  // either when fetching Tendermint metadata or when fetching Namada metadata.
+  // The public keys corresponding to each Namada address have to be ABCI-queries,
+  // one by one. Doing this in parallel can crash the nodes. There's an option to
+  // avoid that, but IMHO it should be fixed upstream. On our side, an improvement
+  // to this would constitute a rate limiter, allowing a precise number of parallel
+  // requests to be specified.
+  let publicKeys: Record<string, string>|null = null
+  const fetchAndPopulatePublicKeys = async (parallel = false) => Object.fromEntries(
+    await optionallyParallel(parallel, namadaAddresses.map(addr => async () => {
+      const binary = await connection.abciQuery(`/vp/pos/validator/consensus_key/${addr}`)
+      const publicKey = base16.encode(binary.slice(2))
+      validatorsByNamadaAddress[addr].publicKey = publicKey
+      return [addr, publicKey]
+    })))
+
+  // This will fetch the generic "list of all validators" metadata, which is provided by
+  // Namada's Tendermint core, and is therefore not behind an ABCI query. It contains
+  // consensus address, public key, voting power, and proposer priority. However,
+  // it only contains those validators which are currently active (state = consensus).
+  // Other validators don't have these values, and if you need to e.g. cross-reference
+  // by past public key or consensus address, you will have to persist them yourself.
+  // (https://github.com/hackbg/undexer does that)
+  if (options?.tendermintMetadata ?? true) {
+    publicKeys ??= await fetchAndPopulatePublicKeys(options.tendermintMetadata === 'parallel')
+    const tendermintMetadata = (await Staking.getValidators(connection, { ...options||{} }))
+      // `getValidators` returns an array, so we rekey it by public key.
+      // (Identifier rebinding would have been really nice here.)
+      .reduce((vs, v)=>Object.assign(vs, {[v.publicKey]: v}), {}) as Record<string, {
+        address:          string,
+        publicKey:        string,
+        votingPower:      bigint,
+        proposerPriority: bigint,
+      }>
+    // Now we can populate the validators with the Tendermint metadata corresponding to
+    // each validator's public key.
+    for (const [namadaAddress, validator] of Object.entries(validatorsByNamadaAddress)) {
+      if (validator.publicKey) {
+        const publicKey = validator.publicKey
+        const validatorTendermintMetadata = tendermintMetadata[validator.publicKey]
+        if (validatorTendermintMetadata) {
+          validator.address          = tendermintMetadata[validator.publicKey].address
+          validator.publicKey        = tendermintMetadata[validator.publicKey].publicKey
+          validator.votingPower      = tendermintMetadata[validator.publicKey].votingPower
+          validator.proposerPriority = tendermintMetadata[validator.publicKey].proposerPriority
+        } else {
+          connection.log.info(
+            'Missing metadata for validator with public key',
+            publicKey,
+            ' - this is usually fine and means validator is outside consensus'
+          )
+        }
+      } else {
+        connection.log.warn(
+          'Missing publicKey for validator with address',
+          namadaAddress,
+          ' - this should not happen and means something is failing.'
+        )
+      }
+    }
+  }
+
+  // This will fetch the Namada-specific metadata. It persists for validators even when they
+  // leave consensus. However, it's spread between multiple ABCI queries. Sending 4-5x queries
+  // per validator, all at once, is a good way to crash underprovisioned nodes.
+  if (options?.namadaMetadata ?? true) {
+    publicKeys ??= await fetchAndPopulatePublicKeys(options.namadaMetadata === 'parallel')
+    // This generates a warning handler for each request.
+    const warn = (...args: Parameters<typeof connection["log"]["warn"]>) => (e: Error) =>
+      connection.log.warn(...args)
+    // This generates the requests for fetching each validator's metadata, as well as
+    // state, stake, and commission values, but does not yet execute them.
+    const requests = (validator: NamadaValidator) => [
+      () => connection.abciQuery(`/vp/pos/validator/commission/${validator.namadaAddress}`)
+        .then(binary => validator.commission = connection.decode.pos_commission_pair(binary))
+        .catch(warn(`Failed to provide validator commission pair for ${validator.namadaAddress}`)),
+      () => connection.abciQuery(`/vp/pos/validator/state/${validator.namadaAddress}`)
+        .then(binary => validator.state = connection.decode.pos_validator_state(binary))
+        .catch(warn(`Failed to provide validator state for ${validator.namadaAddress}`)),
+      () => connection.abciQuery(`/vp/pos/validator/stake/${validator.namadaAddress}`)
+        .then(binary => binary[0] && (validator.stake = decode(u256, binary.slice(1))))
+        .catch(warn(`Failed to provide validator stake for ${validator.namadaAddress}`)),
+      () => connection.abciQuery(`/vp/pos/validator/metadata/${validator.namadaAddress}`)
+        .then(binary =>binary[0] && (
+          validator.metadata = connection.decode.pos_validator_metadata(binary.slice(1))
+        ))
+        .catch(warn(`Failed to provide validator metadata for ${validator.namadaAddress}`)),
+    ] as Array<()=>Promise<unknown>>
+    // Since this is a *lot* of requests, the parallel/sequential switch only determines
+    // whether to do each validator's group of 4 requests simultaneously or sequentially;
+    // iteration over all validators is always sequential.
+    for (const validator of Object.values(validatorsByNamadaAddress)) {
+      await optionallyParallel(options.namadaMetadata === 'parallel', requests(validator))
+    }
+  }
+
+  return Object.values(validatorsByNamadaAddress)
 }
 
 export async function fetchValidatorAddresses (connection: NamadaConnection): Promise<Address[]> {
