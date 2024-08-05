@@ -9,12 +9,12 @@
   branch  = develop
   shallow = true
 [submodule "connect/cw/cosmjs-esm"]
-  path    = packages/cosmjs-esm
+  path = vendored/cosmjs-esm
   url     = https://github.com/hackbg/cosmjs-esm.git
   branch  = unified
   shallow = true
 [submodule "connect/scrt/secret.js"]
-  path    = packages/secretjs-esm
+  path = vendored/secretjs-esm
   url     = https://github.com/hackbg/secret.js.git
   branch  = fix/esm-nonflat
   shallow = true

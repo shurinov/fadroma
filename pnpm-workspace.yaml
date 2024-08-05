@@ -7,4 +7,5 @@ packages:
   - '!toolbox/ganesha/test'
   - 'fixtures'
   - 'packages/*'
-  - 'packages/cosmjs-esm/protobuf.js'
+  - 'vendored/*'
+  - 'vendored/cosmjs-esm/protobuf.js'
