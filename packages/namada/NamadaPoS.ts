@@ -153,7 +153,7 @@ export async function fetchValidators (
     publicKeys ??= await fetchAndPopulatePublicKeys(options.namadaMetadata === 'parallel')
     // This generates a warning handler for each request.
     const warn = (...args: Parameters<typeof connection["log"]["warn"]>) => (e: Error) =>
-      connection.log.warn(...args)
+      connection.log.warn(...args, e.message)
     // This generates the requests for fetching each validator's metadata, as well as
     // state, stake, and commission values, but does not yet execute them.
     const requests = (validator: NamadaValidator) => [
