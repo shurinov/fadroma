@@ -79,7 +79,7 @@ export default class NamadaConnection extends CW.Connection {
     return PoS.fetchValidatorAddresses(this)
   }
   fetchValidatorImpl (address: string) {
-    return PoS.fetchValidator(this.chain, address)
+    return PoS.fetchValidator(this, address)
   }
   fetchValidatorsImpl (options?: {
     details?:         boolean,
@@ -89,7 +89,10 @@ export default class NamadaConnection extends CW.Connection {
     parallel?:        boolean,
     parallelDetails?: boolean,
   }) {
-    return PoS.fetchValidators(this.chain, options)
+    return PoS.fetchValidators(this, options)
+  }
+  fetchValidatorsIterImpl (options?: { parallel?: boolean }) {
+    return PoS.fetchValidatorsIter(this, options)
   }
   fetchValidatorsConsensusImpl () {
     return PoS.fetchValidatorsConsensus(this)

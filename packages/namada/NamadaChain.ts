@@ -89,6 +89,9 @@ export default class NamadaChain extends CW.Chain {
   }) {
     return this.getConnection().fetchValidatorsImpl(options)
   }
+  fetchValidatorsIter (options?: { parallel?: boolean }) {
+    return this.getConnection().fetchValidatorsIterImpl(options)
+  }
   async fetchValidatorsConsensus (options?: { max?: number, percentage?: boolean }) {
     let validators = await this.getConnection().fetchValidatorsConsensusImpl()
     if (options?.max) {
@@ -99,11 +102,11 @@ export default class NamadaChain extends CW.Chain {
       validators = validators.map((v: Validator)=>Object.assign(v, {
         bondedStake: Number(v.bondedStake),
         stakePercentage: (Number(v.bondedStake) / totalStake) * 100
-      }))
+      }) as Validator)
     }
     return validators.map((v: Validator)=>Object.assign(v, {
       status: 'consensus'
-    }))
+    }) as Validator)
   }
   async fetchValidatorsBelowCapacity (options?: { max?: number, percentage?: boolean }) {
     let validators = await this.getConnection().fetchValidatorsBelowCapacityImpl()
@@ -115,11 +118,11 @@ export default class NamadaChain extends CW.Chain {
       validators = validators.map((v: Validator)=>Object.assign(v, {
         bondedStake: Number(v.bondedStake),
         stakePercentage: (Number(v.bondedStake) / totalStake) * 100
-      }))
+      }) as Validator)
     }
     return validators.map((v: Validator)=>Object.assign(v, {
       status: 'below_capacity'
-    }))
+    }) as Validator)
   }
   fetchValidator (address: string) {
     return this.getConnection().fetchValidatorImpl(address)

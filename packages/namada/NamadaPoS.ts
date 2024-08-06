@@ -47,7 +47,7 @@ class NamadaValidator extends Staking.Validator {
     epoch?:                       bigint,
   }
   stake?:                         bigint
-  bondedStake?:                   number
+  bondedStake?:                   bigint|number
 
   async fetchDetails (options?: { parallel?: boolean }) {
     await fetchValidatorDetails(this.chain.getConnection(), {
@@ -60,14 +60,12 @@ class NamadaValidator extends Staking.Validator {
 export { NamadaValidator as Validator }
 
 export async function fetchValidators (
-  chain: Namada,
+  connection: NamadaConnection,
   options: Partial<Parameters<typeof Staking.getValidators>[1]> & {
     tendermintMetadata?: 'parallel'|'sequential'|boolean
     namadaMetadata?:     'parallel'|'sequential'|boolean
   } = {}
 ): Promise<NamadaValidator[]> {
-  const connection = chain.getConnection()
-
   // This will be the return value: map of Namada address to validator details object.
   const validatorsByNamadaAddress: Record<string, NamadaValidator> = {}
 
@@ -77,7 +75,7 @@ export async function fetchValidators (
   const namadaAddresses = await fetchValidatorAddresses(connection)
   for (const namadaAddress of namadaAddresses) {
     validatorsByNamadaAddress[namadaAddress] = new NamadaValidator({
-      chain,
+      chain:     connection.chain,
       publicKey: null as any, // FIXME: explicitly state nullability
       address:   null as any, // FIXME: in the type definition
       namadaAddress
@@ -157,6 +155,9 @@ export async function fetchValidators (
     // This generates the requests for fetching each validator's metadata, as well as
     // state, stake, and commission values, but does not yet execute them.
     const requests = (validator: NamadaValidator) => [
+      () => {
+        throw new Error('TODO: fetch single validator')
+      },
       () => connection.abciQuery(`/vp/pos/validator/commission/${validator.namadaAddress}`)
         .then(binary => validator.commission = connection.decode.pos_commission_pair(binary))
         .catch(warn(`Failed to provide validator commission pair for ${validator.namadaAddress}`)),
@@ -181,6 +182,59 @@ export async function fetchValidators (
   }
 
   return Object.values(validatorsByNamadaAddress)
+}
+
+/** Generator implementation of fetchValidators. */
+export async function * fetchValidatorsIter (
+  connection: NamadaConnection,
+  options?: { parallel?: boolean }
+) {
+  const namadaAddresses = await fetchValidatorAddresses(connection)
+  const tendermintMetadata = (await Staking.getValidators(connection)).reduce((vs, v)=>
+    Object.assign(vs, {[v.publicKey]: v}), {}) as Record<string, {
+      address:          string
+      publicKey:        string
+      votingPower:      bigint
+      proposerPriority: bigint
+    }>
+  for (const addr of namadaAddresses) {
+    const validator = new NamadaValidator({
+      chain:         connection.chain,
+      publicKey:     null as any, // FIXME: explicitly state nullability
+      address:       null as any, // FIXME: in the type definition
+      namadaAddress: addr
+    })
+    const warn = (...args: Parameters<typeof connection["log"]["warn"]>) =>
+      (e: Error) => connection.log.warn(...args)
+    const requests: Array<()=>Promise<unknown>> = [
+      () => connection.abciQuery(`/vp/pos/validator/metadata/${addr}`)
+        .then(binary =>binary[0] && (validator.metadata = connection.decode.pos_validator_metadata(binary.slice(1))))
+        .catch(warn(`Failed to provide validator metadata for ${addr}`)),
+
+      () => connection.abciQuery(`/vp/pos/validator/commission/${addr}`)
+        .then(binary => validator.commission = connection.decode.pos_commission_pair(binary))
+        .catch(warn(`Failed to provide validator commission pair for ${addr}`)),
+
+      () => connection.abciQuery(`/vp/pos/validator/state/${addr}`)
+        .then(binary => validator.state = connection.decode.pos_validator_state(binary))
+        .catch(warn(`Failed to provide validator state for ${addr}`)),
+
+      () => connection.abciQuery(`/vp/pos/validator/stake/${addr}`)
+        .then(binary => binary[0] && (validator.stake = decode(u256, binary.slice(1))))
+        .catch(warn(`Failed to provide validator stake for ${addr}`)),
+
+      () => connection.abciQuery(`/vp/pos/validator/consensus_key/${addr}`)
+        .then(binary => {
+          validator.publicKey = base16.encode(binary.slice(2))
+          Object.assign(validator, tendermintMetadata[validator.publicKey] || {})
+        })
+        .catch(
+          warn(`Failed to decode validator public key for ${addr}`)
+        )
+      ]
+    await optionallyParallel(options?.parallel, requests)
+    yield validator
+  }
 }
 
 export async function fetchValidatorAddresses (connection: NamadaConnection): Promise<Address[]> {
@@ -258,10 +312,10 @@ const byBondedStake = (
   : (a.bondedStake < b.bondedStake) ?  1
   : 0
 
-export async function fetchValidator (chain: Namada, namadaAddress: Address) {
+export async function fetchValidator (connection: NamadaConnection, namadaAddress: Address) {
   return await new NamadaValidator({
-    chain,
-    address: '',
+    chain:   connection.chain,
+    address: null as any, // FIXME
     namadaAddress
   }).fetchDetails()
 }

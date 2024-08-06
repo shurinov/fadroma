@@ -16,8 +16,7 @@ RUN apt update && \
   apt install -y nodejs npm binaryen git curl wget clang cmake wabt jq tree && \
   ls -al /var/cache/apt/archives && \
   apt-get clean
-RUN npm i -g n && n i 20
-RUN corepack enable
+RUN npm i -g n && n i 20 && npm i -g pnpm
 
 # Install Docker CLI
 ENV DOCKERVERSION=20.10.23
