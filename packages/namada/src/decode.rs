@@ -3,7 +3,7 @@ use crate::{*, to_js::*};
 #[wasm_bindgen]
 pub struct Decode;
 
-fn decode <T: namada::core::borsh::BorshDeserialize> (source: &Uint8Array) -> Result<T, Error> {
+fn decode <T: BorshDeserialize> (source: &Uint8Array) -> Result<T, Error> {
     T::try_from_slice(&to_bytes(&source)).map_err(|e|Error::new(&format!("{e}")))
 }
 
@@ -33,7 +33,7 @@ impl Decode {
 
     #[wasm_bindgen]
     pub fn code_hash (source: Uint8Array) -> Result<JsString, Error> {
-        decode::<namada::core::hash::Hash>(&source)
+        decode::<Hash>(&source)
             .map(hex::encode_upper)
             .map(JsString::from)
     }
@@ -84,8 +84,8 @@ impl Decode {
 
     #[wasm_bindgen]
     pub fn gas_cost_table (source: Uint8Array) -> Result<Object, Error> {
-        let data = BTreeMap::<namada::core::address::Address, namada::token::Amount>
-            ::try_from_slice(&to_bytes(&source)).map_err(|e|Error::new(&format!("{e}")))?;
+        let data = BTreeMap::<Address, Amount>::try_from_slice(&to_bytes(&source))
+            .map_err(|e|Error::new(&format!("{e}")))?;
         let result = Object::new();
         for (key, val) in data.iter() {
             Reflect::set(&result, &format!("{key}").into(), &format!("{val}").into())?;

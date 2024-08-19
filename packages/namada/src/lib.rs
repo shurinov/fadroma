@@ -14,13 +14,13 @@ pub(crate) use tendermint_rpc::{
     }
 };
 
-pub(crate) use namada::{
+pub(crate) use namada_sdk::{
     account::{
         InitAccount,
         UpdateAccount,
     },
     address::Address,
-    core::borsh::{
+    borsh::{
         BorshSerialize,
         BorshDeserialize,
     },
@@ -49,16 +49,6 @@ pub(crate) use namada::{
     },
     hash::Hash,
     key::common::PublicKey,
-    ledger::pos::{
-        PosParams,
-        types::{
-            CommissionPair,
-            ValidatorMetaData,
-            ValidatorState,
-            ValidatorStateInfo,
-            WeightedValidator,
-        }
-    },
     parameters::{
         EpochDuration,
         storage::{
@@ -76,6 +66,16 @@ pub(crate) use namada::{
             get_tx_allowlist_storage_key,
             get_vp_allowlist_storage_key,
         },
+    },
+    proof_of_stake::{
+        PosParams,
+        types::{
+            CommissionPair,
+            ValidatorMetaData,
+            ValidatorState,
+            ValidatorStateInfo,
+            WeightedValidator,
+        }
     },
     storage::KeySeg,
     string_encoding::Format,
