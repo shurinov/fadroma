@@ -62,8 +62,23 @@ pub fn tx_batch (tx: &Tx) -> Result<Array, Error> {
     for commitment in tx.header().batch.iter() {
         batch.push(&JsValue::from(object(&[
             ("hash".into(),     commitment.get_hash().raw().into()),
+            //("code".into(),     match tx.code(&commitment) {
+                //Some(x) => JsValue::from(hex::encode_upper(x)),
+                //None => JsValue::NULL
+            //}),
             ("codeHash".into(), commitment.code_sechash().raw().into()),
+            //("data".into(),     match tx.data(&commitment) {
+                //Some(x) => JsValue::from(hex::encode_upper(x)),
+                //None => JsValue::NULL
+            //}),
             ("dataHash".into(), commitment.data_sechash().raw().into()),
+            ("memo".into(),     match tx.memo(&commitment) {
+                Some(x) => match std::str::from_utf8(&x) {
+                    Ok(text) => to_object! { "text" = text, }.into(),
+                    Err(_) => to_object! { "binary" = hex::encode_upper(x), }.into()
+                },
+                None => JsValue::NULL
+            }),
             ("memoHash".into(), commitment.memo_sechash().raw().into()),
         ])?));
     }
