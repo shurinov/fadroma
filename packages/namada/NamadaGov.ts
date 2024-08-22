@@ -40,6 +40,9 @@ export async function fetchProposalInfo (
     const hasKey = await connection.abciQuery(`/shell/has_key/${codeKey}`)
     if (hasKey[0] === 1) {
       wasm = await connection.abciQuery(`/shell/value/${codeKey}`)
+      wasm = wasm.slice(4) // trim length prefix
+      //const { writeFile } = await import('node:fs/promises')
+      //writeFile(`${bigId}.wasm`, wasm)
     } else {
       console.warn(`WASM for proposal ${id} was not found at key ${codeKey}`)
     }
