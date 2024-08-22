@@ -47,11 +47,13 @@ export interface NamadaDecoder {
     id:               string
     content:          Map<string, string>
     author:           string
-    type:             unknown
+    type:             { type: string, [k: string]: unknown }
     votingStartEpoch: bigint
     votingEndEpoch:   bigint
     graceEpoch:       bigint
   }>
+
+  gov_proposal_code_key (id: bigint): string
 
   gov_votes (_: Uint8Array): Partial<{
     validator: string

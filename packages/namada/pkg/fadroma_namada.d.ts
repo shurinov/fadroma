@@ -105,6 +105,11 @@ export class Decode {
 */
   static gov_proposal(source: Uint8Array): object;
 /**
+* @param {bigint} id
+* @returns {string}
+*/
+  static gov_proposal_code_key(id: bigint): string;
+/**
 * @param {Uint8Array} source
 * @returns {Array<any>}
 */
@@ -141,11 +146,13 @@ export interface InitOutput {
   readonly decode_pgf_parameters: (a: number, b: number) => void;
   readonly decode_gov_parameters: (a: number, b: number) => void;
   readonly decode_gov_proposal: (a: number, b: number) => void;
+  readonly decode_gov_proposal_code_key: (a: number, b: number) => void;
   readonly decode_gov_votes: (a: number, b: number) => void;
   readonly decode_gov_result: (a: number, b: number) => void;
   readonly __wbindgen_add_to_stack_pointer: (a: number) => number;
   readonly __wbindgen_malloc: (a: number, b: number) => number;
   readonly __wbindgen_realloc: (a: number, b: number, c: number, d: number) => number;
+  readonly __wbindgen_free: (a: number, b: number, c: number) => void;
   readonly __wbindgen_exn_store: (a: number) => void;
 }
 

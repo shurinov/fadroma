@@ -116,6 +116,10 @@ function passStringToWasm0(arg, malloc, realloc) {
     return ptr;
 }
 
+function _assertBigInt(n) {
+    if (typeof(n) !== 'bigint') throw new Error(`expected a bigint argument, found ${typeof(n)}`);
+}
+
 function logError(f, args) {
     try {
         return f.apply(this, args);
@@ -554,6 +558,27 @@ export class Decode {
             return takeObject(r0);
         } finally {
             wasm.__wbindgen_add_to_stack_pointer(16);
+        }
+    }
+    /**
+    * @param {bigint} id
+    * @returns {string}
+    */
+    static gov_proposal_code_key(id) {
+        let deferred1_0;
+        let deferred1_1;
+        try {
+            const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+            _assertBigInt(id);
+            wasm.decode_gov_proposal_code_key(retptr, id);
+            var r0 = getInt32Memory0()[retptr / 4 + 0];
+            var r1 = getInt32Memory0()[retptr / 4 + 1];
+            deferred1_0 = r0;
+            deferred1_1 = r1;
+            return getStringFromWasm0(r0, r1);
+        } finally {
+            wasm.__wbindgen_add_to_stack_pointer(16);
+            wasm.__wbindgen_free(deferred1_0, deferred1_1, 1);
         }
     }
     /**

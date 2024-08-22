@@ -319,6 +319,12 @@ impl Decode {
     }
 
     #[wasm_bindgen]
+    pub fn gov_proposal_code_key (id: u64) -> String {
+        let key = namada_sdk::governance::storage::keys::get_proposal_code_key(id);
+        format!("{key}")
+    }
+
+    #[wasm_bindgen]
     pub fn gov_votes (source: Uint8Array) -> Result<Array, Error> {
         let votes: Vec<Vote> = Vec::try_from_slice(&to_bytes(&source))
             .map_err(|e|Error::new(&format!("{e}")))?;
