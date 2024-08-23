@@ -58,6 +58,9 @@ export default class NamadaConnection extends CW.Connection {
   fetchProposalInfoImpl (id: number|bigint) {
     return Gov.fetchProposalInfo(this, id)
   }
+  fetchProposalWasmImpl (id: number|bigint) {
+    return Gov.fetchProposalWasm(this, id)
+  }
 
   fetchPGFParametersImpl () {
     return PGF.fetchPGFParameters(this)

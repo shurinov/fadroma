@@ -33,21 +33,23 @@ export async function fetchProposalInfo (
     : decodeResultResponse(connection.decode.gov_result(resultResponse.slice(1)) as 
         Required<ReturnType<NamadaDecoder["gov_result"]>>)
 
-  const bigId = BigInt(id)
+  return { id: BigInt(id), proposal, votes, result }
+}
+
+export async function fetchProposalWasm (
+  connection: Pick<Connection, 'abciQuery'|'decode'>, id: number|bigint
+) {
+  id = BigInt(id)
   const codeKey = connection.decode.gov_proposal_code_key(BigInt(id))
   let wasm
-  if (proposal.type?.type === 'DefaultWithWasm') {
-    const hasKey = await connection.abciQuery(`/shell/has_key/${codeKey}`)
-    if (hasKey[0] === 1) {
-      wasm = await connection.abciQuery(`/shell/value/${codeKey}`)
-      wasm = wasm.slice(4) // trim length prefix
-      //const { writeFile } = await import('node:fs/promises')
-      //writeFile(`${bigId}.wasm`, wasm)
-    } else {
-      console.warn(`WASM for proposal ${id} was not found at key ${codeKey}`)
-    }
+  const hasKey = await connection.abciQuery(`/shell/has_key/${codeKey}`)
+  if (hasKey[0] === 1) {
+    wasm = await connection.abciQuery(`/shell/value/${codeKey}`)
+    wasm = wasm.slice(4) // trim length prefix
+    return { id, codeKey, wasm }
+  } else {
+    throw new Error(`WASM for proposal ${id} was not found at key ${codeKey}`)
   }
-  return { id: bigId, proposal, votes, result, codeKey, wasm }
 }
 
 const decodeResultResponse = (
@@ -77,6 +79,9 @@ interface NamadaGovernanceProposal {
   readonly proposal: ReturnType<NamadaDecoder["gov_proposal"]>
   readonly votes:    ReturnType<NamadaDecoder["gov_votes"]>
   readonly result:   NamadaGovernanceProposalResult|null
+}
+
+interface NamadaGovernanceProposalWasm {
   readonly codeKey:  string
   readonly wasm?:    Uint8Array
 }
