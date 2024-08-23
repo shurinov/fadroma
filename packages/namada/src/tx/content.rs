@@ -247,9 +247,23 @@ fn reveal_pk (binary: &[u8]) -> Result<Object, Error> {
 fn transfer (binary: &[u8]) -> Result<Object, Error> {
     let inner = Transfer::try_from_slice(&binary[..])
         .map_err(|e|Error::new(&format!("{e}")))?;
+    let sources = Array::new();
+    let targets = Array::new();
+    for (key, value) in inner.sources.iter() {
+        let source = Array::new();
+        source.push(&key.to_js()?);
+        source.push(&value.to_js()?);
+        sources.push(&source);
+    }
+    for (key, value) in inner.targets.iter() {
+        let target = Array::new();
+        target.push(&key.to_js()?);
+        target.push(&value.to_js()?);
+        targets.push(&target);
+    }
     Ok(to_object! {
-        "sources" = inner.sources,
-        "targets" = inner.targets,
+        "sources" = sources,
+        "targets" = targets,
         "shieldedSectionHash" = inner.shielded_section_hash
             .map(|hash|format!("{:?}", hash)),
     })
