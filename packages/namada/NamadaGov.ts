@@ -38,7 +38,7 @@ export async function fetchProposalInfo (
 
 export async function fetchProposalWasm (
   connection: Pick<Connection, 'abciQuery'|'decode'>, id: number|bigint
-) {
+): Promise<NamadaGovernanceProposalWasm|null> {
   id = BigInt(id)
   const codeKey = connection.decode.gov_proposal_code_key(BigInt(id))
   let wasm
@@ -48,7 +48,7 @@ export async function fetchProposalWasm (
     wasm = wasm.slice(4) // trim length prefix
     return { id, codeKey, wasm }
   } else {
-    throw new Error(`WASM for proposal ${id} was not found at key ${codeKey}`)
+    return null
   }
 }
 
@@ -82,8 +82,9 @@ interface NamadaGovernanceProposal {
 }
 
 interface NamadaGovernanceProposalWasm {
-  readonly codeKey:  string
-  readonly wasm?:    Uint8Array
+  readonly id:      bigint
+  readonly codeKey: string
+  readonly wasm?:   Uint8Array
 }
 
 interface NamadaGovernanceProposalResult {
