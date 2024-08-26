@@ -76,6 +76,7 @@ fn become_validator (binary: &[u8]) -> Result<Object, Error> {
         ("website".into(), inner.website.into()),
         ("discordHandle".into(), inner.discord_handle.into()),
         ("avatar".into(), inner.avatar.into()),
+        ("name".into(), inner.name.into()),
     ])
 }
 
@@ -129,6 +130,7 @@ fn change_validator_metadata (binary: &[u8]) -> Result<Object, Error> {
         ("discordHandle".into(), inner.discord_handle.into()),
         ("avatar".into(), inner.avatar.into()),
         ("commissionRate".into(), inner.commission_rate.map(|x|format!("{x}")).into()),
+        ("name".into(), inner.name.into()),
     ])
 }
 
