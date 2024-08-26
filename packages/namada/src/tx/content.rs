@@ -64,30 +64,18 @@ fn become_validator (binary: &[u8]) -> Result<Object, Error> {
     let inner = BecomeValidator::try_from_slice(&binary[..])
         .map_err(|e|Error::new(&format!("{e}")))?;
     object(&[
-        ("address".into(),
-            inner.address.encode().into()), // Address
-        ("consensusKey".into(),
-            to_hex_borsh(&inner.consensus_key)?.into()), //PublicKey,
-        ("ethColdKey".into(),
-            to_hex_borsh(&inner.eth_cold_key)?.into()), //PublicKey,
-        ("ethHotKey".into(),
-            to_hex_borsh(&inner.eth_hot_key)?.into()), //PublicKey,
-        ("protocolKey".into(),
-            to_hex_borsh(&inner.protocol_key)?.into()), //PublicKey,
-        ("commissionRate".into(),
-            format!("{}", inner.commission_rate).into()), //Dec,
-        ("maxCommissionRateChange".into(),
-            format!("{}", inner.max_commission_rate_change).into()), //Dec,
-        ("email".into(),
-            inner.email.into()), //String,
-        ("description".into(),
-            inner.description.into()), //Option<String>,
-        ("website".into(),
-            inner.website.into()), //Option<String>,
-        ("discordHandle".into(),
-            inner.discord_handle.into()), //Option<String>,
-        ("avatar".into(),
-            inner.avatar.into()), //Option<String>,
+        ("address".into(), inner.address.encode().into()),
+        ("consensusKey".into(), to_hex_borsh(&inner.consensus_key)?.into()),
+        ("ethColdKey".into(), to_hex_borsh(&inner.eth_cold_key)?.into()),
+        ("ethHotKey".into(), to_hex_borsh(&inner.eth_hot_key)?.into()),
+        ("protocolKey".into(), to_hex_borsh(&inner.protocol_key)?.into()),
+        ("commissionRate".into(), format!("{}", inner.commission_rate).into()),
+        ("maxCommissionRateChange".into(), format!("{}", inner.max_commission_rate_change).into()),
+        ("email".into(), inner.email.into()),
+        ("description".into(), inner.description.into()),
+        ("website".into(), inner.website.into()),
+        ("discordHandle".into(), inner.discord_handle.into()),
+        ("avatar".into(), inner.avatar.into()),
     ])
 }
 
@@ -95,12 +83,9 @@ fn bond (binary: &[u8]) -> Result<Object, Error> {
     let inner = Bond::try_from_slice(&binary[..])
         .map_err(|e|Error::new(&format!("{e}")))?;
     object(&[
-        ("validator".into(),
-            inner.validator.encode().into()), //    pub validator: Address,
-        ("amount".into(),
-            format!("{}", inner.amount).into()), // Amount
-        ("source".into(),
-            inner.source.map(|a|a.encode()).into()) //        pub source: Option<Address>,*/
+        ("validator".into(), inner.validator.encode().into()),
+        ("amount".into(), format!("{}", inner.amount).into()),
+        ("source".into(), inner.source.map(|a|a.encode()).into())
     ])
 }
 
@@ -119,10 +104,8 @@ fn change_consensus_key (binary: &[u8]) -> Result<Object, Error> {
     let inner = ConsensusKeyChange::try_from_slice(&binary[..])
         .map_err(|e|Error::new(&format!("{e}")))?;
     object(&[
-        ("validator".into(),
-            inner.validator.encode().into()), // Address,
-        ("consensusKey".into(),
-            format!("{}", inner.consensus_key).into()), //   pub consensus_key: PublicKey,*/
+        ("validator".into(), inner.validator.encode().into()),
+        ("consensusKey".into(), format!("{}", inner.consensus_key).into()),
     ])
 }
 
@@ -130,10 +113,8 @@ fn change_validator_commission (binary: &[u8]) -> Result<Object, Error> {
     let inner = CommissionChange::try_from_slice(&binary[..])
         .map_err(|e|Error::new(&format!("{e}")))?;
     object(&[
-        ("validator".into(),
-            inner.validator.encode().into()), // Address,
-        ("newRate".into(),
-            format!("{}", inner.new_rate).into()), // Dec,*/
+        ("validator".into(), inner.validator.encode().into()),
+        ("newRate".into(), format!("{}", inner.new_rate).into()),
     ])
 }
 
@@ -141,20 +122,13 @@ fn change_validator_metadata (binary: &[u8]) -> Result<Object, Error> {
     let inner = MetaDataChange::try_from_slice(&binary[..])
         .map_err(|e|Error::new(&format!("{e}")))?;
     object(&[
-        ("validator".into(),
-            inner.validator.encode().into()), // validator: Address,
-        ("email".into(),
-            inner.email.into()),//    pub email: Option<String>,
-        ("description".into(),
-            inner.description.into()),//    pub description: Option<String>,
-        ("website".into(),
-            inner.website.into()), //    pub website: Option<String>,
-        ("discordHandle".into(),
-            inner.discord_handle.into()),//    pub discord_handle: Option<String>,
-        ("avatar".into(),
-            inner.avatar.into()),//    pub avatar: Option<String>,
-        ("commissionRate".into(),
-            inner.commission_rate.map(|x|format!("{x}")).into()),//   pub commission_rate: Option<Dec>,*/
+        ("validator".into(), inner.validator.encode().into()),
+        ("email".into(), inner.email.into()),
+        ("description".into(), inner.description.into()),
+        ("website".into(), inner.website.into()),
+        ("discordHandle".into(), inner.discord_handle.into()),
+        ("avatar".into(), inner.avatar.into()),
+        ("commissionRate".into(), inner.commission_rate.map(|x|format!("{x}")).into()),
     ])
 }
 
@@ -188,11 +162,9 @@ fn init_account (binary: &[u8]) -> Result<Object, Error> {
                 result.push(&format!("{pk}").into());
             }
             result
-        }.into()),//               /*   pub public_keys: Vec<PublicKey>,
-        ("vpCodeHash".into(),
-            (&format!("{}", inner.vp_code_hash)).into()), //    pub vp_code_hash: Hash,
-        ("threshold".into(),
-            inner.threshold.into()),//: u8,*/
+        }.into()),
+        ("vpCodeHash".into(), (&format!("{}", inner.vp_code_hash)).into()),
+        ("threshold".into(), inner.threshold.into()),
     ])
 }
 
@@ -273,12 +245,9 @@ fn unbond (binary: &[u8]) -> Result<Object, Error> {
     let inner = Unbond::try_from_slice(&binary[..])
         .map_err(|e|Error::new(&format!("{e}")))?;
     object(&[
-        ("validator".into(),
-            inner.validator.encode().into()),//        /*   pub validator: Address,
-        ("amount".into(),
-            format!("{}", inner.amount).into()),//pub amount: Amount,
-        ("source".into(),
-            inner.source.map(|a|a.encode()).into()),//pub source: Option<Address>,*/
+        ("validator".into(), inner.validator.encode().into()),
+        ("amount".into(), format!("{}", inner.amount).into()),
+        ("source".into(), inner.source.map(|a|a.encode()).into()),
     ])
 }
 
@@ -286,8 +255,7 @@ fn unjail_validator (binary: &[u8]) -> Result<Object, Error> {
     let inner = Address::try_from_slice(&binary[..])
         .map_err(|e|Error::new(&format!("{e}")))?;
     object(&[
-        ("address".into(),
-            inner.encode().into()),
+        ("address".into(), inner.encode().into()),
     ])
 }
 
@@ -295,10 +263,8 @@ fn update_account (binary: &[u8]) -> Result<Object, Error> {
     let inner = UpdateAccount::try_from_slice(&binary[..])
         .map_err(|e|Error::new(&format!("{e}")))?;
     object(&[
-        ("address".into(),
-            inner.addr.encode().into()),//        /*    pub addr: Address,
-        ("vpCodeHash".into(),
-            inner.vp_code_hash.map(|x|format!("{x}")).into()),
+        ("address".into(), inner.addr.encode().into()),
+        ("vpCodeHash".into(), inner.vp_code_hash.map(|x|format!("{x}")).into()),
         ("publicKeys".into(), {
             let result = Array::new();
             for pk in inner.public_keys.iter() {
@@ -306,8 +272,7 @@ fn update_account (binary: &[u8]) -> Result<Object, Error> {
             }
             result
         }.into()),
-        ("threshold".into(),
-            inner.threshold.into()),//pub threshold: Option<u8>,*/
+        ("threshold".into(), inner.threshold.into()),
     ])
 }
 
@@ -315,8 +280,7 @@ fn update_steward_commission (binary: &[u8]) -> Result<Object, Error> {
     let inner = UpdateStewardCommission::try_from_slice(&binary[..])
         .map_err(|e|Error::new(&format!("{e}")))?;
     object(&[
-        ("steward".into(),
-            inner.steward.encode().into()),
+        ("steward".into(), inner.steward.encode().into()),
         ("commission".into(), {
             let result = Object::new();
             for (key, value) in inner.commission.iter() {
@@ -335,16 +299,14 @@ fn vote_proposal (binary: &[u8]) -> Result<Object, Error> {
     let inner = VoteProposalData::try_from_slice(&binary[..])
         .map_err(|e|Error::new(&format!("{e}")))?;
     object(&[
-        ("id".into(),
-            inner.id.into()),//        /* pub id: u64,
+        ("id".into(), inner.id.into()),
         ("vote".into(),
             match inner.vote {
                 ProposalVote::Yay => "yay",
                 ProposalVote::Nay => "nay",
                 ProposalVote::Abstain => "abstain",
             }.into()),
-        ("voter".into(),
-            inner.voter.encode().into()),//pub voter: Address,
+        ("voter".into(), inner.voter.encode().into()),
     ])
 }
 
@@ -352,10 +314,8 @@ fn withdraw (binary: &[u8]) -> Result<Object, Error> {
     let inner = Withdraw::try_from_slice(&binary[..])
         .map_err(|e|Error::new(&format!("{e}")))?;
     object(&[
-        ("validator".into(),
-            inner.validator.encode().into()),//        /*pub validator: Address,
-        ("source".into(),
-            inner.source.map(|a|a.encode()).into()),//pub source: Option<Address>,*/
+        ("validator".into(), inner.validator.encode().into()),//        /*pub validator: Address,
+        ("source".into(), inner.source.map(|a|a.encode()).into()),//pub source: Option<Address>,*/
     ])
 }
 
