@@ -66,19 +66,13 @@ pub fn tx_batch (tx: &Tx) -> Result<Array, Error> {
 
             ("codeHash".into(), commitment.code_sechash().raw().into()),
             ("code".into(),     match tx.code(&commitment) {
-                Some(x) => match std::str::from_utf8(&x) {
-                    Ok(text) => to_object! { "text" = text, }.into(),
-                    Err(_) => to_object! { "binary" = hex::encode_upper(x), }.into()
-                },
+                Some(x) => to_object! { "binary" = hex::encode_upper(x), }.into(),
                 None => JsValue::NULL
             }),
 
             ("dataHash".into(), commitment.data_sechash().raw().into()),
             ("data".into(),     match tx.data(&commitment) {
-                Some(x) => match std::str::from_utf8(&x) {
-                    Ok(text) => to_object! { "text" = text, }.into(),
-                    Err(_) => to_object! { "binary" = hex::encode_upper(x), }.into()
-                },
+                Some(x) => to_object! { "binary" = hex::encode_upper(x), }.into(),
                 None => JsValue::NULL
             }),
 
