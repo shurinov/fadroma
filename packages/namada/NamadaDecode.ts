@@ -137,4 +137,141 @@ export interface NamadaDecoder {
     txAllowlist:               string
     vpAllowlist:               string
   }
+
+  tx (): {
+    content: NamadaTxContent,
+    [key: string]: unknown
+  }
+}
+
+export type NamadaTxContent = {
+  type: 'tx_become_validator.wasm'
+  data: {
+    address: string,
+    [key: string]: unknown
+  }
+} | {
+  type: 'tx_bond.wasm'
+  data: {
+    validator: string,
+    [key: string]: unknown
+  }
+} | {
+  type: 'tx_bridge_pool.wasm'
+  data: unknown
+} | {
+  type: 'tx_change_consensus_key.wasm'
+  data: {
+    validator: string,
+    [key: string]: unknown
+  }
+} | {
+  type: 'tx_change_validator_commission.wasm'
+  data: {
+    validator: string,
+    [key: string]: unknown
+  }
+} | {
+  type: 'tx_change_validator_metadata.wasm'
+  data: {
+    validator: string,
+    [key: string]: unknown
+  }
+} | {
+  type: 'tx_claim_rewards.wasm'
+  data: {
+    validator: string,
+    [key: string]: unknown
+  }
+} | {
+  type: 'tx_deactivate_validator.wasm'
+  data: {
+    address: string,
+    [key: string]: unknown
+  }
+} | {
+  type: 'tx_ibc.wasm'
+  data: unknown
+} | {
+  type: 'tx_init_account.wasm'
+  data: unknown
+} | {
+  type: 'tx_init_proposal.wasm'
+  data: {
+    author: string,
+    [key: string]: unknown
+  }
+} | {
+  type: 'tx_reactivate_validator.wasm'
+  data: {
+    address: string,
+    [key: string]: unknown
+  }
+} | {
+  type: 'tx_redelegate.wasm'
+  data: {
+    srcValidator: string,
+    destValidator: string,
+    [key: string]: unknown
+  }
+} | {
+  type: 'tx_resign_steward.wasm'
+  data: {
+    address: string,
+    [key: string]: unknown
+  }
+} | {
+  type: 'tx_reveal_pk.wasm'
+  data: unknown
+} | {
+  type: 'tx_transfer.wasm'
+  data: {
+    sources: [{ owner: string, token: string }, string][],
+    targets: [{ owner: string, token: string }, string][],
+    [key: string]: unknown
+  }
+} | {
+  type: 'tx_unbond.wasm'
+  data: {
+    validator: string,
+    [key: string]: unknown
+  }
+} | {
+  type: 'tx_unjail_validator.wasm'
+  data: {
+    address: string,
+    [key: string]: unknown
+  }
+} | {
+  type: 'tx_update_account.wasm'
+  data: {
+    address: string,
+    [key: string]: unknown
+  }
+} | {
+  type: 'tx_update_steward_commission.wasm'
+  data: {
+    steward: string,
+    [key: string]: unknown
+  }
+} | {
+  type: 'tx_vote_proposal.wasm'
+  data: {
+    voter: string,
+    [key: string]: unknown
+  }
+} | {
+  type: 'tx_withdraw.wasm'
+  data: {
+    validator: string,
+    [key: string]: unknown
+  }
+} | {
+  type: 'vp_implicit.wasm'
+  data: unknown
+} | {
+  type: 'vp_user.wasm'
+  data: unknown
+} | {
+  [key: string]: unknown
 }
