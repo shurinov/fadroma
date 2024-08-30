@@ -8,16 +8,18 @@ resolver = "2"
 crate-type = [ "cdylib", "rlib" ]
 
 [dependencies]
+js-sys = "0.3.70"
+web-sys = "0.3.70"
+wasm-bindgen = "0.2.93"
+
 hex = "0.4.3"
-js-sys = "0.3.64"
+
+tendermint = "0.34.0"
+tendermint-rpc = { version = "0.34.0", default-features = false }
+
+namada_sdk = { git = "https://github.com/anoma/namada", tag = "v0.43.0", default-features = false }
 masp_primitives = { git = "https://github.com/anoma/masp", tag = "v1.1.0" }
 masp_proofs = { git = "https://github.com/anoma/masp", tag = "v1.1.0", default-features = false, features = ["local-prover"] }
-namada_sdk = { git = "https://github.com/anoma/namada", tag = "v0.43.0", default-features = false }
-tendermint = "0.34.0"
-#tendermint-config = "0.34.0"
-#tendermint-proto = "0.34.0"
-tendermint-rpc = { version = "0.34.0", default-features = false }
-wasm-bindgen = "0.2.86"
 
 [dev-dependencies]
 wasm-bindgen-test = "0.3.13"
