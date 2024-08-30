@@ -1,4 +1,5 @@
 import type * as Namada from './Namada'
+import type { NamadaDecoder } from './NamadaDecode'
 import { Decode } from './NamadaDecode'
 import { Block, Transaction } from '@fadroma/cw'
 
@@ -32,8 +33,8 @@ class NamadaBlock extends Block {
 
   /** Responses from block API endpoints. */
   static async fetchByHeight (
-    { url, decode = Decode, chain }: {
-      url: string|URL, decode?: typeof Decode, chain?: Namada.Chain
+    { url, decode = Decode as unknown as NamadaDecoder, chain }: {
+      url: string|URL, decode?: NamadaDecoder, chain?: Namada.Chain
     },
     { height, raw }: {
       height?: number|string|bigint,
@@ -57,7 +58,7 @@ class NamadaBlock extends Block {
   }
 
   static async fetchByHash (
-    _1: { url: string|URL, decode?: typeof Decode, chain?: Namada.Chain },
+    _1: { url: string|URL, decode?: NamadaDecoder, chain?: Namada.Chain },
     _2: { hash: string, raw?: boolean },
   ): Promise<NamadaBlock> {
     throw new Error('NamadaBlock.fetchByHash: not implemented')
@@ -65,8 +66,8 @@ class NamadaBlock extends Block {
 
   static fromResponses (
     responses: NonNullable<NamadaBlock["responses"]>,
-    { decode = Decode, chain, height, raw = false }: {
-      decode?: typeof Decode
+    { decode = Decode as unknown as NamadaDecoder, chain, height, raw = false }: {
+      decode?: NamadaDecoder
       chain?:  Namada.Chain,
       height?: string|number|bigint,
       raw?:    boolean

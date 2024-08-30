@@ -1,4 +1,6 @@
 import init, { Decode } from './pkg/fadroma_namada.js'
+import type NamadaBlock from './NamadaBlock'
+import type { Transaction as NamadaTransaction } from './NamadaBlock'
 import type * as PGF from './NamadaPGF'
 import type * as PoS from './NamadaPoS'
 import type * as Gov from './NamadaGov'
@@ -136,6 +138,12 @@ export interface NamadaDecoder {
     isNativeTokenTransferable: string
     txAllowlist:               string
     vpAllowlist:               string
+  }
+
+  block (blockResponse: unknown, resultsResponse: unknown): {
+    hash:         string,
+    header:       NamadaBlock["header"]
+    transactions: Array<Partial<NamadaTransaction> & {id: string}>
   }
 
   tx (): {

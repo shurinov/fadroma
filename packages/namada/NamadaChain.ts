@@ -6,7 +6,7 @@ import { Decode, initDecoder } from './NamadaDecode'
 import type { NamadaDecoder } from './NamadaDecode'
 
 export default class NamadaChain extends CW.Chain {
-  decode: NamadaDecoder = Decode as NamadaDecoder
+  decode: NamadaDecoder = Decode as unknown as NamadaDecoder
 
   /** Connect to Namada over one or more endpoints. */
   static async connect (
@@ -99,14 +99,12 @@ export default class NamadaChain extends CW.Chain {
     }
     if (options?.percentage) {
       const totalStake = Number(await this.fetchTotalStaked())
-      validators = validators.map((v: Validator)=>Object.assign(v, {
+      validators = validators.map((v: Partial<Validator>)=>Object.assign(v, {
         bondedStake: Number(v.bondedStake),
         stakePercentage: (Number(v.bondedStake) / totalStake) * 100
-      }) as Validator)
+      }))
     }
-    return validators.map((v: Validator)=>Object.assign(v, {
-      status: 'consensus'
-    }) as Validator)
+    return validators.map((v: Partial<Validator>)=>Object.assign(v, { status: 'consensus' }))
   }
   async fetchValidatorsBelowCapacity (options?: { max?: number, percentage?: boolean }) {
     let validators = await this.getConnection().fetchValidatorsBelowCapacityImpl()
@@ -115,14 +113,14 @@ export default class NamadaChain extends CW.Chain {
     }
     if (options?.percentage) {
       const totalStake = Number(await this.fetchTotalStaked())
-      validators = validators.map((v: Validator)=>Object.assign(v, {
+      validators = validators.map((v: Partial<Validator>)=>Object.assign(v, {
         bondedStake: Number(v.bondedStake),
         stakePercentage: (Number(v.bondedStake) / totalStake) * 100
-      }) as Validator)
+      }))
     }
-    return validators.map((v: Validator)=>Object.assign(v, {
+    return validators.map((v: Partial<Validator>)=>Object.assign(v, {
       status: 'below_capacity'
-    }) as Validator)
+    }))
   }
   fetchValidator (address: string) {
     return this.getConnection().fetchValidatorImpl(address)
