@@ -140,6 +140,8 @@ export interface NamadaDecoder {
     vpAllowlist:               string
   }
 
+  balance_key (token: string, address: string): string
+
   block (blockResponse: unknown, resultsResponse: unknown): {
     hash:         string,
     header:       NamadaBlock["header"]

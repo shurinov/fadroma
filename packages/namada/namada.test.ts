@@ -7,10 +7,16 @@ const console = new Namada.Console('test')
 
 await Namada.initDecoder(readFileSync('./pkg/fadroma_namada_bg.wasm'))
 console.log(Decode.storage_keys())
-const url = 'https://rpc.luminara.icu'
+
+const url = 'https://rpc.namada.tududes.com/'
 const namada = await Namada.connect({ url })
-console.log(await namada.fetchEpochDuration())
-console.log(await namada.fetchProtocolParameters())
+console.log(await namada.fetchBalance(
+  'tnam1qplr7kkgzunahhtwsc6r3ltmw0fw97t7rc9u6g9m',
+  'tnam1q87wtaqqtlwkw927gaff34hgda36huk0kgry692a',
+))
+
+//console.log(await namada.fetchEpochDuration())
+//console.log(await namada.fetchProtocolParameters())
   //console.log(await namada.fetchDelegationsAt(
     //'tnam1qpr2uzf9pgrd6sucp34wq5gss5rm2un5lszcwzqc'
   //))

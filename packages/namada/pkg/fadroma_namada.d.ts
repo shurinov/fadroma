@@ -110,6 +110,12 @@ export class Decode {
 */
   static gov_proposal_code_key(id: bigint): string;
 /**
+* @param {string} token
+* @param {string} owner
+* @returns {string}
+*/
+  static balance_key(token: string, owner: string): string;
+/**
 * @param {Uint8Array} source
 * @returns {Array<any>}
 */
@@ -125,7 +131,7 @@ export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembl
 
 export interface InitOutput {
   readonly memory: WebAssembly.Memory;
-  readonly __wbg_decode_free: (a: number) => void;
+  readonly __wbg_decode_free: (a: number, b: number) => void;
   readonly decode_u32: (a: number, b: number) => void;
   readonly decode_u64: (a: number, b: number) => void;
   readonly decode_vec_string: (a: number, b: number) => void;
@@ -147,6 +153,7 @@ export interface InitOutput {
   readonly decode_gov_parameters: (a: number, b: number) => void;
   readonly decode_gov_proposal: (a: number, b: number) => void;
   readonly decode_gov_proposal_code_key: (a: number, b: number) => void;
+  readonly decode_balance_key: (a: number, b: number, c: number, d: number, e: number) => void;
   readonly decode_gov_votes: (a: number, b: number) => void;
   readonly decode_gov_result: (a: number, b: number) => void;
   readonly __wbindgen_add_to_stack_pointer: (a: number) => number;
@@ -161,18 +168,18 @@ export type SyncInitInput = BufferSource | WebAssembly.Module;
 * Instantiates the given `module`, which can either be bytes or
 * a precompiled `WebAssembly.Module`.
 *
-* @param {SyncInitInput} module
+* @param {{ module: SyncInitInput }} module - Passing `SyncInitInput` directly is deprecated.
 *
 * @returns {InitOutput}
 */
-export function initSync(module: SyncInitInput): InitOutput;
+export function initSync(module: { module: SyncInitInput } | SyncInitInput): InitOutput;
 
 /**
 * If `module_or_path` is {RequestInfo} or {URL}, makes a request and
 * for everything else, calls `WebAssembly.instantiate` directly.
 *
-* @param {InitInput | Promise<InitInput>} module_or_path
+* @param {{ module_or_path: InitInput | Promise<InitInput> }} module_or_path - Passing `InitInput` directly is deprecated.
 *
 * @returns {Promise<InitOutput>}
 */
-export default function __wbg_init (module_or_path: InitInput | Promise<InitInput>): Promise<InitOutput>;
+export default function __wbg_init (module_or_path: { module_or_path: InitInput | Promise<InitInput> } | InitInput | Promise<InitInput>): Promise<InitOutput>;

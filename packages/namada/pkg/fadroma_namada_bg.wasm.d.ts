@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export const memory: WebAssembly.Memory;
-export function __wbg_decode_free(a: number): void;
+export function __wbg_decode_free(a: number, b: number): void;
 export function decode_u32(a: number, b: number): void;
 export function decode_u64(a: number, b: number): void;
 export function decode_vec_string(a: number, b: number): void;
@@ -23,6 +23,7 @@ export function decode_pgf_parameters(a: number, b: number): void;
 export function decode_gov_parameters(a: number, b: number): void;
 export function decode_gov_proposal(a: number, b: number): void;
 export function decode_gov_proposal_code_key(a: number, b: number): void;
+export function decode_balance_key(a: number, b: number, c: number, d: number, e: number): void;
 export function decode_gov_votes(a: number, b: number): void;
 export function decode_gov_result(a: number, b: number): void;
 export function __wbindgen_add_to_stack_pointer(a: number): number;

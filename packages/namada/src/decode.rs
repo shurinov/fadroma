@@ -129,10 +129,7 @@ impl Decode {
     }
 
     #[wasm_bindgen]
-    pub fn block (
-        block_json: String,
-        block_results_json: String
-    ) -> Result<Object, Error> {
+    pub fn block (block_json: String, block_results_json: String) -> Result<Object, Error> {
         let block = BlockResponse::from_string(&block_json)
             .map_err(|e|Error::new(&format!("{e}")))?;
         let _ = BlockResultsResponse::from_string(&block_results_json)
@@ -322,6 +319,17 @@ impl Decode {
     pub fn gov_proposal_code_key (id: u64) -> String {
         let key = namada_sdk::governance::storage::keys::get_proposal_code_key(id);
         format!("{key}")
+    }
+
+    #[wasm_bindgen]
+    pub fn balance_key (token: String, owner: String) -> Result<String, Error> {
+        //web_sys::console::debug_1(&format!("{token} {owner}").into());
+        let token = Address::decode(&token)
+            .map_err(|e|Error::new(&format!("{e}")))?;
+        let owner = Address::decode(&owner)
+            .map_err(|e|Error::new(&format!("{e}")))?;
+        let key = namada_sdk::eth_bridge::token::storage_key::balance_key(&token, &owner);
+        Ok(format!("{key}"))
     }
 
     #[wasm_bindgen]

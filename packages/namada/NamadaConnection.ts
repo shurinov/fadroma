@@ -32,6 +32,30 @@ export default class NamadaConnection extends CW.Connection {
     }
   }
 
+  override async fetchBalanceImpl (parameters: {
+    addresses: Record<string, string[]>,
+    parallel?: false
+  }): Promise<Record<string, Record<string, string>>> {
+    if (parameters.parallel) {
+      this.log.warn('Parallel balance fetching on Namada is not supported yet.')
+    }
+    const result: Record<string, Record<string, string>> = {}
+    for (const [address, tokens] of Object.entries(parameters.addresses)) {
+      result[address] = {}
+      for (const token of tokens) {
+        if (token.split('1')[1]?.length !== 40) {
+          throw new Error(`Invalid token address: ${token}`)
+        }
+        const balanceKey  = this.decode.balance_key(token, address)
+        const balanceAbci = `/shell/value/${balanceKey}`
+        const balance     = await this.abciQuery(balanceAbci)
+        this.log.debug({balanceKey, balanceAbci, balance})
+        result[address][token] = balance
+      }
+    }
+    return result
+  }
+
   fetchStorageValueImpl (key: string) {
     return fetchStorageValue(this, key)
   }
