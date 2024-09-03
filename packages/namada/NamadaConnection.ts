@@ -5,6 +5,7 @@ import * as PGF from './NamadaPGF'
 import * as Gov from './NamadaGov'
 import * as Epoch from './NamadaEpoch'
 import type { Chain as Namada } from './Namada'
+import { decode, u256 } from '@hackbg/borshest'
 
 export default class NamadaConnection extends CW.Connection {
   get chain (): Namada {
@@ -49,8 +50,11 @@ export default class NamadaConnection extends CW.Connection {
         const balanceKey  = this.decode.balance_key(token, address)
         const balanceAbci = `/shell/value/${balanceKey}`
         const balance     = await this.abciQuery(balanceAbci)
-        this.log.debug({balanceKey, balanceAbci, balance})
-        result[address][token] = balance
+        if (balance.length > 0) {
+          result[address][token] = String(decode(u256, balance))
+        } else {
+          result[address][token] = "0"
+        }
       }
     }
     return result
