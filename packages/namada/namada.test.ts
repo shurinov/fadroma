@@ -8,10 +8,13 @@ const console = new Namada.Console('test')
 await Namada.initDecoder(readFileSync('./pkg/fadroma_namada_bg.wasm'))
 console.log(Decode.storage_keys())
 
-const url = 'https://rpc.namada.tududes.com/'
+const url = 'https://rpc.knowable.run/'
 const namada = await Namada.connect({ url })
+//console.log(await namada.getConnection().abciQuery(
+  //'/shell/value/#tnam1qsqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqxdl54l/max_tx_bytes'
+//))
 console.log(await namada.fetchBalance(
-  'tnam1qplr7kkgzunahhtwsc6r3ltmw0fw97t7rc9u6g9m',
+  'tnam1qrklwz5rvjqv9qafdgkjwn94pke770w46gzggsm9',
   'tnam1q87wtaqqtlwkw927gaff34hgda36huk0kgry692a',
 ))
 
