@@ -187,23 +187,13 @@ export async function fetchValidators (
 /** Generator implementation of fetchValidators. */
 export async function * fetchValidatorsIter (
   connection: NamadaConnection,
-  options?: { parallel?: boolean }
+  options?: { parallel?: boolean, addresses?: string[] }
 ) {
 
-  const namadaValidatorsListConsensus = await fetchValidatorsConsensus(connection);
-  const namadaValidatorsAddresses = await fetchValidatorAddresses(connection)
+  const namadaAddresses = options?.addresses?.length 
+  ? options.addresses 
+  : await fetchValidatorAddresses(connection);
 
-  const validatorsSet = new Set();
-
-  for (const validator of namadaValidatorsListConsensus) {
-    validatorsSet.add(validator.address);
-  }
-
-  for (const address of namadaValidatorsAddresses) {
-    validatorsSet.add(address);
-  }
-
-  const namadaAddresses = Array.from(validatorsSet);
   const tendermintMetadata = (await Staking.getValidators(connection)).reduce((vs, v)=>
     Object.assign(vs, {[v.publicKey]: v}), {}) as Record<string, {
       address:          string
