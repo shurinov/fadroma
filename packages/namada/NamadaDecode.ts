@@ -1,3 +1,4 @@
+import type { Address, Uint128 } from '@hackbg/fadroma'
 import init, { Decode } from './pkg/fadroma_namada.js'
 import type NamadaBlock from './NamadaBlock'
 import type { Transaction as NamadaTransaction } from './NamadaBlock'
@@ -157,13 +158,15 @@ export interface NamadaDecoder {
 export type NamadaTxContent = {
   type: 'tx_become_validator.wasm'
   data: {
-    address: string,
+    address: Address,
     [key: string]: unknown
   }
 } | {
   type: 'tx_bond.wasm'
   data: {
-    validator: string,
+    source:    Address,
+    validator: Address,
+    amount:    Uint128,
     [key: string]: unknown
   }
 } | {
@@ -172,31 +175,31 @@ export type NamadaTxContent = {
 } | {
   type: 'tx_change_consensus_key.wasm'
   data: {
-    validator: string,
+    validator: Address,
     [key: string]: unknown
   }
 } | {
   type: 'tx_change_validator_commission.wasm'
   data: {
-    validator: string,
+    validator: Address,
     [key: string]: unknown
   }
 } | {
   type: 'tx_change_validator_metadata.wasm'
   data: {
-    validator: string,
+    validator: Address,
     [key: string]: unknown
   }
 } | {
   type: 'tx_claim_rewards.wasm'
   data: {
-    validator: string,
+    validator: Address,
     [key: string]: unknown
   }
 } | {
   type: 'tx_deactivate_validator.wasm'
   data: {
-    address: string,
+    address: Address,
     [key: string]: unknown
   }
 } | {
@@ -208,26 +211,26 @@ export type NamadaTxContent = {
 } | {
   type: 'tx_init_proposal.wasm'
   data: {
-    author: string,
+    author: Address,
     [key: string]: unknown
   }
 } | {
   type: 'tx_reactivate_validator.wasm'
   data: {
-    address: string,
+    address: Address,
     [key: string]: unknown
   }
 } | {
   type: 'tx_redelegate.wasm'
   data: {
-    srcValidator: string,
-    destValidator: string,
+    srcValidator: Address,
+    destValidator: Address,
     [key: string]: unknown
   }
 } | {
   type: 'tx_resign_steward.wasm'
   data: {
-    address: string,
+    address: Address,
     [key: string]: unknown
   }
 } | {
@@ -236,44 +239,44 @@ export type NamadaTxContent = {
 } | {
   type: 'tx_transfer.wasm'
   data: {
-    sources: [{ owner: string, token: string }, string][],
-    targets: [{ owner: string, token: string }, string][],
+    sources: [{ owner: Address, token: Address }, Uint128][],
+    targets: [{ owner: Address, token: Address }, Uint128][],
     [key: string]: unknown
   }
 } | {
   type: 'tx_unbond.wasm'
   data: {
-    validator: string,
+    validator: Address,
     [key: string]: unknown
   }
 } | {
   type: 'tx_unjail_validator.wasm'
   data: {
-    address: string,
+    address: Address,
     [key: string]: unknown
   }
 } | {
   type: 'tx_update_account.wasm'
   data: {
-    address: string,
+    address: Address,
     [key: string]: unknown
   }
 } | {
   type: 'tx_update_steward_commission.wasm'
   data: {
-    steward: string,
+    steward: Address,
     [key: string]: unknown
   }
 } | {
   type: 'tx_vote_proposal.wasm'
   data: {
-    voter: string,
+    voter: Address,
     [key: string]: unknown
   }
 } | {
   type: 'tx_withdraw.wasm'
   data: {
-    validator: string,
+    validator: Address,
     [key: string]: unknown
   }
 } | {
