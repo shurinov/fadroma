@@ -246,7 +246,9 @@ export type NamadaTxContent = {
 } | {
   type: 'tx_unbond.wasm'
   data: {
+    source:    Address,
     validator: Address,
+    amount:    Uint128,
     [key: string]: unknown
   }
 } | {
