@@ -189,11 +189,9 @@ export async function * fetchValidatorsIter (
   connection: NamadaConnection,
   options?: { parallel?: boolean, addresses?: string[] }
 ) {
-
-  const namadaAddresses = options?.addresses?.length 
-  ? options.addresses 
-  : await fetchValidatorAddresses(connection);
-
+  const namadaAddresses = options?.addresses?.length
+    ? options.addresses
+    : await fetchValidatorAddresses(connection)
   const tendermintMetadata = (await Staking.getValidators(connection)).reduce((vs, v)=>
     Object.assign(vs, {[v.publicKey]: v}), {}) as Record<string, {
       address:          string
@@ -209,7 +207,10 @@ export async function * fetchValidatorsIter (
       namadaAddress: addr
     })
     const warn = (...args: Parameters<typeof connection["log"]["warn"]>) =>
-      (e: Error) => connection.log.warn(...args)
+      (e: Error) => {
+        connection.log.warn(...args)
+        return null
+      }
     const requests: Array<()=>Promise<unknown>> = [
       () => connection.abciQuery(`/vp/pos/validator/metadata/${addr}`)
         .then(binary =>binary[0] && (validator.metadata = connection.decode.pos_validator_metadata(binary.slice(1))))
@@ -262,7 +263,10 @@ export async function fetchValidatorDetails (
   }
   const v = validator.namadaAddress
   const warn = (...args: Parameters<typeof connection["log"]["warn"]>) =>
-    (e: Error) => connection.log.warn(...args)
+    (e: Error) => {
+      connection.log.warn(...args)
+      return null
+    }
   const requests: Array<()=>Promise<unknown>> = [
     () => connection.abciQuery(`/vp/pos/validator/metadata/${v}`)
       .then(binary =>binary[0] && (validator.metadata = connection.decode.pos_validator_metadata(binary.slice(1))))
