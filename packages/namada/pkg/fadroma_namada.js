@@ -715,9 +715,6 @@ function __wbg_get_imports() {
         const ret = arg0 << BigInt(64) | BigInt.asUintN(64, arg1);
         return addHeapObject(ret);
     };
-    imports.wbg.__wbg_debug_5a33c41aeac15ee6 = function() { return logError(function (arg0) {
-        console.debug(getObject(arg0));
-    }, arguments) };
     imports.wbg.__wbg_new_a220cf903aa02ca2 = function() { return logError(function () {
         const ret = new Array();
         return addHeapObject(ret);

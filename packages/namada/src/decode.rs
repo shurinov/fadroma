@@ -339,9 +339,10 @@ impl Decode {
         let result = Array::new();
         for vote in votes.iter() {
             result.push(&to_object! {
-                "validator" = vote.validator,
-                "delegator" = vote.delegator,
-                "data"      = vote.data,
+                "isValidator" = vote.is_validator(),
+                "validator"   = vote.validator,
+                "delegator"   = vote.delegator,
+                "data"        = vote.data,
             }.into());
         }
         Ok(result)
