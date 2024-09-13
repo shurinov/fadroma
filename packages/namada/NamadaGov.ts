@@ -21,7 +21,7 @@ export async function fetchProposalInfo (
 ): Promise<NamadaGovernanceProposal|null> {
   const proposalResponse = await connection.abciQuery(`/vp/governance/proposal/${id}`)
   if (proposalResponse[0] === 0) return null
-  const [ votesResponse, resultResponse  ] = await Promise.all([
+  const [ votesResponse, resultResponse ] = await Promise.all([
     `/vp/governance/proposal/${id}/votes`,
     `/vp/governance/stored_proposal_result/${id}`,
   ].map(x=>connection.abciQuery(x)))
@@ -32,7 +32,6 @@ export async function fetchProposalInfo (
   const result = (resultResponse[0] === 0) ? null
     : decodeResultResponse(connection.decode.gov_result(resultResponse.slice(1)) as 
         Required<ReturnType<NamadaDecoder["gov_result"]>>)
-
   return { id: BigInt(id), proposal, votes, result }
 }
 
@@ -65,7 +64,7 @@ const decodeResultResponse = (
 ): NamadaGovernanceProposalResult => ({
   ...decoded,
   turnout:        String(turnout),
-  turnoutPercent: (decoded.totalVotingPower! > 0) ? percent(turnout, decoded.totalVotingPower!) : '0',
+  turnoutPercent: (decoded.totalVotingPower! > 0) ? percent2(turnout, decoded.totalVotingPower!) : '0',
   yayPercent:     (turnout > 0) ? percent(decoded.totalYayPower!, turnout) : '0',
   nayPercent:     (turnout > 0) ? percent(decoded.totalNayPower!, turnout) : '0',
   abstainPercent: (turnout > 0) ? percent(decoded.totalAbstainPower!, turnout) : '0',
@@ -102,7 +101,9 @@ interface NamadaGovernanceProposalResult {
 }
 
 const percent = (a: string|number|bigint, b: string|number|bigint) =>
-  ((Number(BigInt(a) * 1000000n / BigInt(b)) / 10000).toFixed(2) + '%').padStart(7)
+  ((Number(BigInt(a) * 1000000n / BigInt(b)) / 10000).toFixed(2) + '%')
+const percent2 = (a: string|number|bigint, b: string|number|bigint) =>
+  ((Number(BigInt(a) * 1000000n / BigInt(b)) / 1000000).toFixed(2) + '%')
 
 export {
   NamadaGovernanceProposal       as Proposal,

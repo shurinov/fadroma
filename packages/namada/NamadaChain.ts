@@ -80,6 +80,7 @@ export default class NamadaChain extends CW.Chain {
     return this.getConnection().fetchValidatorAddressesImpl()
   }
   fetchValidators (options?: {
+    epoch?:           string|number|bigint,
     details?:         boolean,
     pagination?:      [number, number]
     allStates?:       boolean,
@@ -125,13 +126,16 @@ export default class NamadaChain extends CW.Chain {
   fetchValidator (address: string) {
     return this.getConnection().fetchValidatorImpl(address)
   }
-  fetchValidatorStake (address: string) {
-    return this.getConnection().fetchValidatorStakeImpl(address)
+  fetchValidatorStake (address: string, epoch?: number|string|bigint) {
+    return this.getConnection().fetchValidatorStakeImpl(address, epoch)
+  }
+  fetchBondWithSlashing (validator: string, delegator: string, epoch?: number|string|bigint) {
+    return this.getConnection().fetchBondWithSlashingImpl(validator, delegator, epoch)
   }
   fetchDelegations (address: string) {
     return this.getConnection().fetchDelegationsImpl(address)
   }
-  fetchDelegationsAt (address: string, epoch?: number) {
+  fetchDelegationsAt (address: string, epoch?: number|string|bigint) {
     return this.getConnection().fetchDelegationsAtImpl(address, epoch)
   }
   fetchGovernanceParameters () {
@@ -155,7 +159,7 @@ export default class NamadaChain extends CW.Chain {
   fetchEpochDuration () {
     return this.getConnection().fetchEpochDurationImpl()
   }
-  fetchTotalStaked () {
-    return this.getConnection().fetchTotalStakedImpl()
+  fetchTotalStaked (epoch?: number|string|bigint) {
+    return this.getConnection().fetchTotalStakedImpl(epoch)
   }
 }

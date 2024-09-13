@@ -14,8 +14,10 @@ export async function fetchStakingParameters (connection: NamadaConnection) {
   return connection.decode.pos_parameters(binary)
 }
 
-export async function fetchTotalStaked (connection: NamadaConnection) {
-  const binary = await connection.abciQuery("/vp/pos/total_stake")
+export async function fetchTotalStaked (connection: NamadaConnection, epoch?: number|bigint|string) {
+  let query = "/vp/pos/total_stake"
+  if (epoch) query += `/${epoch}`
+  const binary = await connection.abciQuery(query)
   return decode(u64, binary)
 }
 
@@ -62,6 +64,7 @@ export { NamadaValidator as Validator }
 export async function fetchValidators (
   connection: NamadaConnection,
   options: Partial<Parameters<typeof Staking.getValidators>[1]> & {
+    epoch?:              number|string|bigint
     tendermintMetadata?: 'parallel'|'sequential'|boolean
     namadaMetadata?:     'parallel'|'sequential'|boolean
   } = {}
@@ -72,7 +75,7 @@ export async function fetchValidators (
   // This is the full list of validators known to the chain.
   // However, it contains no other data than the identifier.
   // The rest we will have to piece together ourselves.
-  const namadaAddresses = await fetchValidatorAddresses(connection)
+  const namadaAddresses = await fetchValidatorAddresses(connection, options?.epoch)
   for (const namadaAddress of namadaAddresses) {
     validatorsByNamadaAddress[namadaAddress] = new NamadaValidator({
       chain:     connection.chain,
@@ -185,13 +188,14 @@ export async function fetchValidators (
 }
 
 /** Generator implementation of fetchValidators. */
-export async function * fetchValidatorsIter (
-  connection: NamadaConnection,
-  options?: { parallel?: boolean, addresses?: string[] }
-) {
-  const namadaAddresses = options?.addresses?.length
-    ? options.addresses
-    : await fetchValidatorAddresses(connection)
+export async function * fetchValidatorsIter (connection: NamadaConnection, options?: {
+  epoch?:     number|string|bigint,
+  parallel?:  boolean,
+  addresses?: string[]
+}) {
+  const { addresses = [], epoch, parallel = false } = options || {}
+  const namadaAddresses = addresses?.length
+    ? addresses : await fetchValidatorAddresses(connection, epoch)
   const tendermintMetadata = (await Staking.getValidators(connection)).reduce((vs, v)=>
     Object.assign(vs, {[v.publicKey]: v}), {}) as Record<string, {
       address:          string
@@ -224,7 +228,9 @@ export async function * fetchValidatorsIter (
         .then(binary => validator.state = connection.decode.pos_validator_state(binary))
         .catch(warn(`Failed to provide validator state for ${addr}`)),
 
-      () => connection.abciQuery(`/vp/pos/validator/stake/${addr}`)
+      () => connection.abciQuery(
+        `/vp/pos/validator/stake/${addr}` + (epoch ? `/${epoch}` : ``)
+      )
         .then(binary => binary[0] && (validator.stake = decode(u256, binary.slice(1))))
         .catch(warn(`Failed to provide validator stake for ${addr}`)),
 
@@ -237,22 +243,26 @@ export async function * fetchValidatorsIter (
           warn(`Failed to decode validator public key for ${addr}`)
         )
       ]
-    await optionallyParallel(options?.parallel, requests)
+    await optionallyParallel(parallel, requests)
     yield validator
   }
 }
 
-export async function fetchValidatorAddresses (connection: NamadaConnection): Promise<Address[]> {
-  const binary = await connection.abciQuery("/vp/pos/validator/addresses")
+export async function fetchValidatorAddresses (
+  connection: NamadaConnection, epoch?: number|string|bigint
+): Promise<Address[]> {
+  let query = "/vp/pos/validator/addresses"
+  if (epoch) query = query + `/${epoch}`
+  const binary = await connection.abciQuery(query)
   return connection.decode.addresses(binary)
 }
 
-export async function fetchValidatorDetails (
-  connection: NamadaConnection,
-  options?:   { parallel?: boolean, validator?: Partial<NamadaValidator> }
-) {
-  const validator = options?.validator || {}
-
+export async function fetchValidatorDetails (connection: NamadaConnection, options?: {
+  epoch?:     number|string|bigint,
+  parallel?:  boolean,
+  validator?: Partial<NamadaValidator>
+}) {
+  const { epoch, validator = {}, parallel = false } = options || {}
   if (!validator.namadaAddress) {
     if (!validator.address) {
       throw new Error('missing tendermint or namada address for validator')
@@ -274,10 +284,10 @@ export async function fetchValidatorDetails (
     () => connection.abciQuery(`/vp/pos/validator/commission/${v}`)
       .then(binary => validator.commission = connection.decode.pos_commission_pair(binary))
       .catch(warn(`Failed to provide validator commission pair for ${v}`)),
-    () => connection.abciQuery(`/vp/pos/validator/state/${v}`)
+    () => connection.abciQuery(`/vp/pos/validator/state/${v}` + (epoch?`/${epoch}`:''))
       .then(binary => validator.state = connection.decode.pos_validator_state(binary))
       .catch(warn(`Failed to provide validator state for ${v}`)),
-    () => connection.abciQuery(`/vp/pos/validator/stake/${v}`)
+    () => connection.abciQuery(`/vp/pos/validator/stake/${v}` + (epoch?`/${epoch}`:''))
       .then(binary => binary[0] && (validator.stake = decode(u256, binary.slice(1))))
       .catch(warn(`Failed to provide validator stake for ${v}`)),
     () => connection.abciQuery(`/vp/pos/validator/consensus_key/${v}`)
@@ -328,8 +338,14 @@ export async function fetchValidator (connection: NamadaConnection, namadaAddres
   }).fetchDetails()
 }
 
-export async function fetchValidatorStake (connection: NamadaConnection, address: Address) {
-  const totalStake = await connection.abciQuery(`/vp/pos/validator/stake/${address}`)
+export async function fetchValidatorStake (
+  connection: NamadaConnection,
+  address:    Address,
+  epoch?:     number|bigint|string
+) {
+  let query = `/vp/pos/validator/stake/${address}`
+  if (epoch) query += `/${epoch}`
+  const totalStake = await connection.abciQuery(query)
   return decode(u256, totalStake)
 }
 
@@ -339,7 +355,9 @@ export async function fetchDelegations (connection: NamadaConnection, address: A
 }
 
 export async function fetchDelegationsAt (
-  connection: NamadaConnection, address: Address, epoch?: number
+  connection: NamadaConnection,
+  address:    Address,
+  epoch?:     number|string|bigint
 ): Promise<Record<string, bigint>> {
   let query = `/vp/pos/delegations_at/${address}`
   epoch = Number(epoch)
@@ -348,4 +366,16 @@ export async function fetchDelegationsAt (
   }
   const binary = await connection.abciQuery(query)
   return connection.decode.address_to_amount(binary) as Record<string, bigint>
+}
+
+export async function fetchBondWithSlashing (
+  connection: NamadaConnection,
+  validator:  Address,
+  delegator:  Address,
+  epoch?:     number|bigint|string
+) {
+  let query = `/vp/pos/bond_with_slashing/${validator}/${delegator}`
+  if (epoch) query += `/${epoch}`
+  const totalStake = await connection.abciQuery(query)
+  return decode(u256, totalStake)
 }

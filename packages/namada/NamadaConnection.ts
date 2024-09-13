@@ -113,6 +113,7 @@ export default class NamadaConnection extends CW.Connection {
     return PoS.fetchValidator(this, address)
   }
   fetchValidatorsImpl (options?: {
+    epoch?:           string|number|bigint,
     details?:         boolean,
     pagination?:      [number, number]
     allStates?:       boolean,
@@ -134,14 +135,17 @@ export default class NamadaConnection extends CW.Connection {
   fetchDelegationsImpl (address: string) {
     return PoS.fetchDelegations(this, address)
   }
-  fetchDelegationsAtImpl (address: string, epoch?: number) {
+  fetchDelegationsAtImpl (address: string, epoch?: number|string|bigint) {
     return PoS.fetchDelegationsAt(this, address, epoch)
   }
-  fetchTotalStakedImpl () {
-    return PoS.fetchTotalStaked(this)
+  fetchTotalStakedImpl (epoch?: number|string|bigint) {
+    return PoS.fetchTotalStaked(this, epoch)
   }
-  fetchValidatorStakeImpl (address: string) {
-    return PoS.fetchValidatorStake(this, address)
+  fetchValidatorStakeImpl (address: string, epoch?: number|string|bigint) {
+    return PoS.fetchValidatorStake(this, address, epoch)
+  }
+  fetchBondWithSlashingImpl (validator: string, delegator: string, epoch?: number|string|bigint) {
+    return PoS.fetchBondWithSlashing(this, validator, delegator, epoch)
   }
 }
 
