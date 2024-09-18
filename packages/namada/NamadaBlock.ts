@@ -16,8 +16,8 @@ class NamadaBlock extends Block {
     return super.chain as Namada.Chain|undefined
   }
   #responses?: {
-    block:   { url: string, response: string }
-    results: { url: string, response: string }
+    block:    { url: string, response: string }
+    results?: { url: string, response: string }
   }
   get responses () {
     return this.#responses
@@ -45,15 +45,15 @@ class NamadaBlock extends Block {
       throw new Error("Can't fetch block: missing connection URL")
     }
     // Fetch block and results as undecoded JSON
-    const blockUrl = `${url}/block?height=${height??''}`
-    const resultsUrl = `${url}/block_results?height=${height??''}`
-    const [block, results] = await Promise.all([
+    const blockUrl   = `${url}/block?height=${height??''}`
+    //const resultsUrl = `${url}/block_results?height=${height??''}`
+    const [block/*, results*/] = await Promise.all([
       fetch(blockUrl).then(response=>response.text()),
-      fetch(resultsUrl).then(response=>response.text()),
+      //fetch(resultsUrl).then(response=>response.text()),
     ])
     return this.fromResponses({
       block: { url: blockUrl, response: block, },
-      results: { url: resultsUrl, response: results, },
+      //results: { url: resultsUrl, response: results, },
     }, { chain, decode, height })
   }
 
@@ -75,7 +75,7 @@ class NamadaBlock extends Block {
   ): NamadaBlock {
     const { hash, header, transactions } = decode.block(
       responses.block.response,
-      responses.results.response
+      null//responses.results?.response
     ) as {
       hash:         string,
       header:       NamadaBlock["header"]

@@ -129,11 +129,11 @@ impl Decode {
     }
 
     #[wasm_bindgen]
-    pub fn block (block_json: String, block_results_json: String) -> Result<Object, Error> {
+    pub fn block (block_json: String, _block_results_json: Option<String>) -> Result<Object, Error> {
         let block = BlockResponse::from_string(&block_json)
             .map_err(|e|Error::new(&format!("{e}")))?;
-        let _ = BlockResultsResponse::from_string(&block_results_json)
-            .map_err(|e|Error::new(&format!("{e}")))?;
+        //let _ = BlockResultsResponse::from_string(&block_results_json)
+            //.map_err(|e|Error::new(&format!("{e}")))?;
         let header = block.block.header();
         let mut transactions: Vec<Object> = Vec::with_capacity(block.block.data.len());
         for tx in block.block.data.iter() {

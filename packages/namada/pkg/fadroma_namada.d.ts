@@ -60,10 +60,10 @@ export class Decode {
   static address_to_amount(source: Uint8Array): object;
 /**
 * @param {string} block_json
-* @param {string} block_results_json
+* @param {string | undefined} [_block_results_json]
 * @returns {object}
 */
-  static block(block_json: string, block_results_json: string): object;
+  static block(block_json: string, _block_results_json?: string): object;
 /**
 * @param {Uint8Array} source
 * @returns {object}

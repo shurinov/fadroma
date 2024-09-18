@@ -10,7 +10,7 @@ pub(crate) use tendermint_rpc::{
     Response,
     endpoint::{
         block::Response as BlockResponse,
-        block_results::Response as BlockResultsResponse,
+        //block_results::Response as BlockResultsResponse,
     }
 };
 
