@@ -222,15 +222,6 @@ export async function fetchValidatorDetails (connection: NamadaConnection, optio
   return validator
 }
 
-export {
-  NamadaValidator as Validator
-}
-export type {
-  NamadaValidatorMetadata   as ValidatorMetadata,
-  NamadaValidatorCommission as ValidatorCommission,
-  NamadaValidatorState      as ValidatorState,
-}
-
 export async function fetchValidators (
   connection: NamadaConnection,
   options: Partial<Parameters<typeof Staking.getValidators>[1]> & {
@@ -241,7 +232,6 @@ export async function fetchValidators (
 ): Promise<NamadaValidator[]> {
   // This will be the return value: map of Namada address to validator details object.
   const validatorsByNamadaAddress: Record<string, NamadaValidator> = {}
-
   // This is the full list of validators known to the chain.
   // However, it contains no other data than the identifier.
   // The rest we will have to piece together ourselves.
@@ -254,7 +244,6 @@ export async function fetchValidators (
       namadaAddress
     })
   }
-
   // This is how we will store the public keys. This needs to be done only once,
   // either when fetching Tendermint metadata or when fetching Namada metadata.
   // The public keys corresponding to each Namada address have to be ABCI-queries,
@@ -270,7 +259,6 @@ export async function fetchValidators (
       validatorsByNamadaAddress[addr].publicKey = publicKey
       return [addr, publicKey]
     })))
-
   // This will fetch the generic "list of all validators" metadata, which is provided by
   // Namada's Tendermint core, and is therefore not behind an ABCI query. It contains
   // consensus address, public key, voting power, and proposer priority. However,
@@ -278,9 +266,10 @@ export async function fetchValidators (
   // Other validators don't have these values, and if you need to e.g. cross-reference
   // by past public key or consensus address, you will have to persist them yourself.
   // (https://github.com/hackbg/undexer does that)
+  let tendermintMetadata: TendermintMetadata = {}
   if (options?.tendermintMetadata ?? true) {
     publicKeys ??= await fetchAndPopulatePublicKeys(options.tendermintMetadata === 'parallel')
-    const tendermintMetadata = (await Staking.getValidators(connection, { ...options||{} }))
+    tendermintMetadata = (await Staking.getValidators(connection, { ...options||{} }))
       // `getValidators` returns an array, so we rekey it by public key.
       // (Identifier rebinding would have been really nice here.)
       .reduce((vs, v)=>Object.assign(vs, {[v.publicKey]: v}), {}) as Record<string, {
@@ -316,46 +305,26 @@ export async function fetchValidators (
       }
     }
   }
-
   // This will fetch the Namada-specific metadata. It persists for validators even when they
   // leave consensus. However, it's spread between multiple ABCI queries. Sending 4-5x queries
   // per validator, all at once, is a good way to crash underprovisioned nodes.
   if (options?.namadaMetadata ?? true) {
     publicKeys ??= await fetchAndPopulatePublicKeys(options.namadaMetadata === 'parallel')
-    // This generates a warning handler for each request.
-    const warn = (...args: Parameters<typeof connection["log"]["warn"]>) => (e: Error) =>
-      connection.log.warn(...args, e.message)
-    // This generates the requests for fetching each validator's metadata, as well as
-    // state, stake, and commission values, but does not yet execute them.
-    const requests = (validator: NamadaValidator) => [
-      () => {
-        throw new Error('TODO: fetch single validator')
-      },
-      () => connection.abciQuery(`/vp/pos/validator/commission/${validator.namadaAddress}`)
-        .then(binary => validator.commission = connection.decode.pos_commission_pair(binary))
-        .catch(warn(`Failed to provide validator commission pair for ${validator.namadaAddress}`)),
-      () => connection.abciQuery(`/vp/pos/validator/state/${validator.namadaAddress}`)
-        .then(binary => validator.state = connection.decode.pos_validator_state(binary))
-        .catch(warn(`Failed to provide validator state for ${validator.namadaAddress}`)),
-      () => connection.abciQuery(`/vp/pos/validator/stake/${validator.namadaAddress}`)
-        .then(binary => binary[0] && (validator.stake = decode(u256, binary.slice(1))))
-        .catch(warn(`Failed to provide validator stake for ${validator.namadaAddress}`)),
-      () => connection.abciQuery(`/vp/pos/validator/metadata/${validator.namadaAddress}`)
-        .then(binary =>binary[0] && (
-          validator.metadata = connection.decode.pos_validator_metadata(binary.slice(1))
-        ))
-        .catch(warn(`Failed to provide validator metadata for ${validator.namadaAddress}`)),
-    ] as Array<()=>Promise<unknown>>
-    // Since this is a *lot* of requests, the parallel/sequential switch only determines
-    // whether to do each validator's group of 4 requests simultaneously or sequentially;
+    // Since this adds up to a *lot* of requests, the parallel/sequential switch only determines
+    // whether to do each validator's group of 5 requests simultaneously or sequentially; and
     // iteration over all validators is always sequential.
     for (const validator of Object.values(validatorsByNamadaAddress)) {
-      await optionallyParallel(options.namadaMetadata === 'parallel', requests(validator))
+      await optionallyParallel(options.namadaMetadata === 'parallel', getRequests(
+        connection, tendermintMetadata, validator, validator.namadaAddress!, options?.epoch
+      ))
     }
   }
-
   return Object.values(validatorsByNamadaAddress)
 }
+
+type TendermintMetadata = Record<string, {
+  address: string, publicKey: string, votingPower: bigint, proposerPriority: bigint
+}>
 
 /** Generator implementation of fetchValidators. */
 export async function * fetchValidatorsIter (connection: NamadaConnection, options?: {
@@ -365,55 +334,105 @@ export async function * fetchValidatorsIter (connection: NamadaConnection, optio
 }) {
   const { addresses = [], epoch, parallel = false } = options || {}
   const namadaAddresses = addresses?.length
-    ? addresses : await fetchValidatorAddresses(connection, epoch)
-  const tendermintMetadata = (await Staking.getValidators(connection)).reduce((vs, v)=>
-    Object.assign(vs, {[v.publicKey]: v}), {}) as Record<string, {
-      address:          string
-      publicKey:        string
-      votingPower:      bigint
-      proposerPriority: bigint
-    }>
-  for (const addr of namadaAddresses) {
+    ? addresses
+    : await fetchValidatorAddresses(connection, epoch)
+  const meta: TendermintMetadata = (await Staking.getValidators(connection)).reduce(
+    (vs, v)=>Object.assign(vs, {[v.publicKey]: v}), {}
+  )
+  for (const namadaAddress of namadaAddresses) {
     const validator = new NamadaValidator({
       chain:         connection.chain,
       publicKey:     null as any, // FIXME: explicitly state nullability
       address:       null as any, // FIXME: in the type definition
-      namadaAddress: addr
+      namadaAddress
     })
-    const warn = (...args: Parameters<typeof connection["log"]["warn"]>) =>
-      (e: Error) => {
-        connection.log.warn(...args)
-        return null
-      }
-    const requests: Array<()=>Promise<unknown>> = [
-      () => connection.abciQuery(`/vp/pos/validator/metadata/${addr}`)
-        .then(binary =>binary[0] && (validator.metadata = connection.decode.pos_validator_metadata(binary.slice(1))))
-        .catch(warn(`Failed to provide validator metadata for ${addr}`)),
-
-      () => connection.abciQuery(`/vp/pos/validator/commission/${addr}`)
-        .then(binary => validator.commission = connection.decode.pos_commission_pair(binary))
-        .catch(warn(`Failed to provide validator commission pair for ${addr}`)),
-
-      () => connection.abciQuery(`/vp/pos/validator/state/${addr}`)
-        .then(binary => validator.state = connection.decode.pos_validator_state(binary))
-        .catch(warn(`Failed to provide validator state for ${addr}`)),
-
-      () => connection.abciQuery(
-        `/vp/pos/validator/stake/${addr}` + (epoch ? `/${epoch}` : ``)
-      )
-        .then(binary => binary[0] && (validator.stake = decode(u256, binary.slice(1))))
-        .catch(warn(`Failed to provide validator stake for ${addr}`)),
-
-      () => connection.abciQuery(`/vp/pos/validator/consensus_key/${addr}`)
-        .then(binary => {
-          validator.publicKey = base16.encode(binary.slice(2))
-          Object.assign(validator, tendermintMetadata[validator.publicKey] || {})
-        })
-        .catch(
-          warn(`Failed to decode validator public key for ${addr}`)
-        )
-      ]
+    const requests = getRequests(connection, meta, validator, namadaAddress, options?.epoch)
     await optionallyParallel(parallel, requests)
     yield validator
   }
+}
+
+/** Generate full ABCI queries with decoding and error handling for fetching each field
+  * of data about a validator (metadata, state, stake, commmission, consensus key) but
+  * do not launch the requests yet. */
+const getRequests = (
+  connection: NamadaConnection,
+  meta:       TendermintMetadata,
+  validator:  NamadaValidator,
+  address:    Address,
+  epoch?:     Epoch,
+) => {
+  const { warnMetadata, warnCommission, warnState, warnStake, warnConsensusKey } =
+    getWarnings(connection, address, epoch)
+  const { metadataPath, commissionPath, statePath, stakePath, consensusKeyPath } =
+    getAbciQueryPaths(address, epoch)
+  const { decodeMetadata, decodeCommission, decodeState, decodeStake, decodePublicKey } =
+    getDecoders(connection, validator, meta)
+  const requests: Array<()=>Promise<unknown>> = [
+    () => connection.abciQuery(metadataPath).then(decodeMetadata).catch(warnMetadata),
+    () => connection.abciQuery(commissionPath).then(decodeCommission).catch(warnCommission),
+    () => connection.abciQuery(statePath).then(decodeState).catch(warnState),
+    () => connection.abciQuery(stakePath).then(decodeStake).catch(warnStake),
+    () => connection.abciQuery(consensusKeyPath).then(decodePublicKey).catch(warnConsensusKey),
+  ]
+  return requests
+}
+
+/** Generates a warning handler for each request. */
+const getWarnings = (connection: NamadaConnection, address: Address, epoch?: Epoch) => {
+  const warn = (msg: string) => (_: Error) => {
+    if (!isNaN(epoch)) msg += ` for epoch ${epoch}`
+    connection.log.warn(`${address}:`, msg)
+    return null
+  }
+  const warnMetadata     = warn(`Failed to provide validator metadata`)
+  const warnCommission   = warn(`Failed to provide validator commission pair`)
+  const warnState        = warn(`Failed to provide validator state`)
+  const warnStake        = warn(`Failed to provide validator stake`)
+  const warnConsensusKey = warn(`Failed to decode validator public key`)
+  return { warnMetadata, warnCommission, warnState, warnStake, warnConsensusKey }
+}
+
+const getAbciQueryPaths = (address: Address, epoch?: Epoch) => {
+  const consensusKeyPath = `/vp/pos/validator/consensus_key/${address}`
+  const metadataPath     = `/vp/pos/validator/metadata/${address}`
+  let commissionPath = `/vp/pos/validator/commission/${address}`
+  let statePath      = `/vp/pos/validator/state/${address}`
+  let stakePath      = `/vp/pos/validator/stake/${address}`
+  if (!isNaN(epoch)) {
+    const epochSuffix = `/${epoch}`
+    commissionPath += epochSuffix
+    statePath      += epochSuffix
+    stakePath      += epochSuffix
+  }
+  return { metadataPath, commissionPath, statePath, stakePath, consensusKeyPath }
+}
+
+const getDecoders = (
+  connection:         NamadaConnection,
+  validator:          NamadaValidator,
+  tendermintMetadata: TendermintMetadata
+) => {
+  const decodeMetadata = (binary: Uint8Array) =>
+    binary[0] && (validator.metadata = connection.decode.pos_validator_metadata(binary.slice(1)))
+  const decodeCommission = (binary: Uint8Array) =>
+    validator.commission = connection.decode.pos_commission_pair(binary)
+  const decodeState = (binary: Uint8Array) =>
+    validator.state = connection.decode.pos_validator_state(binary)
+  const decodeStake = (binary: Uint8Array) =>
+    binary[0] && (validator.stake = decode(u256, binary.slice(1)))
+  const decodePublicKey = (binary: Uint8Array) => {
+    validator.publicKey = base16.encode(binary.slice(2))
+    Object.assign(validator, tendermintMetadata[validator.publicKey] || {})
+  }
+  return { decodeMetadata, decodeCommission, decodeState, decodeStake, decodePublicKey }
+}
+
+export {
+  NamadaValidator as Validator
+}
+export type {
+  NamadaValidatorMetadata   as ValidatorMetadata,
+  NamadaValidatorCommission as ValidatorCommission,
+  NamadaValidatorState      as ValidatorState,
 }
