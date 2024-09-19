@@ -96,15 +96,10 @@ const byBondedStake = (a: {bondedStake: number|bigint}, b: {bondedStake: number|
 
 /** Fetch details about one validator. */
 export async function fetchValidator (
-  connection: NamadaConnection, namadaAddress: Address, epoch?: Epoch
+  connection: NamadaConnection, namadaAddress: Address, options?: { epoch?: Epoch }
 ) {
-  return await new NamadaValidator({
-    chain:   connection.chain,
-    address: null as any, // FIXME
-    namadaAddress
-  }).fetchDetails({
-    epoch
-  })
+  const base = { chain: connection.chain, address: null as any, namadaAddress }
+  return await new NamadaValidator(base).fetchDetails(options)
 }
 
 /** Describes a Namada validator. */

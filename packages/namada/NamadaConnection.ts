@@ -4,7 +4,7 @@ import * as PoS from './NamadaPoS'
 import * as PGF from './NamadaPGF'
 import * as Gov from './NamadaGov'
 import * as Epoch from './NamadaEpoch'
-import type { Chain as Namada } from './Namada'
+import type { Chain as Namada, Epoch } from './Namada'
 import { decode, u256 } from '@hackbg/borshest'
 
 export default class NamadaConnection extends CW.Connection {
@@ -109,8 +109,8 @@ export default class NamadaConnection extends CW.Connection {
   fetchValidatorAddressesImpl () {
     return PoS.fetchValidatorAddresses(this)
   }
-  fetchValidatorImpl (address: string) {
-    return PoS.fetchValidator(this, address)
+  fetchValidatorImpl (address: string, options?: { epoch?: Epoch }) {
+    return PoS.fetchValidator(this, address, options)
   }
   fetchValidatorsImpl (options?: {
     epoch?:           string|number|bigint,

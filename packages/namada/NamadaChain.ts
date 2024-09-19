@@ -4,6 +4,7 @@ import NamadaConnection from './NamadaConnection'
 import type { Validator } from './NamadaPoS'
 import { Decode, initDecoder } from './NamadaDecode'
 import type { NamadaDecoder } from './NamadaDecode'
+import type { Epoch } from './Namada'
 
 export default class NamadaChain extends CW.Chain {
   decode: NamadaDecoder = Decode as unknown as NamadaDecoder
@@ -123,8 +124,8 @@ export default class NamadaChain extends CW.Chain {
       status: 'below_capacity'
     }))
   }
-  fetchValidator (address: string) {
-    return this.getConnection().fetchValidatorImpl(address)
+  fetchValidator (address: string, options?: { epoch?: Epoch }) {
+    return this.getConnection().fetchValidatorImpl(address, options)
   }
   fetchValidatorStake (address: string, epoch?: number|string|bigint) {
     return this.getConnection().fetchValidatorStakeImpl(address, epoch)
