@@ -86,6 +86,12 @@ export default class NamadaConnection extends CW.Connection {
   fetchProposalInfoImpl (id: number|bigint) {
     return Gov.fetchProposalInfo(this, id)
   }
+  fetchProposalVotesImpl (id: number|bigint) {
+    return Gov.fetchProposalVotes(this, id)
+  }
+  fetchProposalResultImpl (id: number|bigint) {
+    return Gov.fetchProposalResult(this, id)
+  }
   fetchProposalWasmImpl (id: number|bigint) {
     return Gov.fetchProposalWasm(this, id)
   }
@@ -100,7 +106,7 @@ export default class NamadaConnection extends CW.Connection {
     return PGF.fetchPGFFundings(this)
   }
   isPGFStewardImpl (address: string) {
-    return PGF.isPGFSteward(this)
+    return PGF.isPGFSteward(this, address)
   }
 
   fetchStakingParametersImpl () {
@@ -109,11 +115,11 @@ export default class NamadaConnection extends CW.Connection {
   fetchValidatorAddressesImpl () {
     return PoS.fetchValidatorAddresses(this)
   }
-  fetchValidatorImpl (address: string, options?: { epoch?: Epoch }) {
+  fetchValidatorImpl (address: string, options?: { epoch?: Epoch.Epoch }) {
     return PoS.fetchValidator(this, address, options)
   }
   fetchValidatorsImpl (options?: {
-    epoch?:           string|number|bigint,
+    epoch?:           Epoch.Epoch,
     details?:         boolean,
     pagination?:      [number, number]
     allStates?:       boolean,
@@ -123,7 +129,10 @@ export default class NamadaConnection extends CW.Connection {
   }) {
     return PoS.fetchValidators(this, options)
   }
-  fetchValidatorsIterImpl (options?: { parallel?: boolean }) {
+  fetchValidatorsIterImpl (options?: {
+    epoch?:    Epoch.Epoch,
+    parallel?: boolean
+  }) {
     return PoS.fetchValidatorsIter(this, options)
   }
   fetchValidatorsConsensusImpl () {

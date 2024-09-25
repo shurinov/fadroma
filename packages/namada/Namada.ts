@@ -29,4 +29,3 @@ export function mainnet (...args: never) {
   )
 }
 export type { Validator } from './NamadaPoS'
-export type Epoch = number|bigint|string

@@ -2,6 +2,8 @@ import { decode, u64 } from '@hackbg/borshest'
 import type { Decode } from './NamadaDecode'
 import type NamadaConnection from './NamadaConnection'
 
+export type Epoch = number|bigint|string
+
 export async function fetchEpoch (
   connection: Pick<NamadaConnection, 'abciQuery'>,
   height?: number|bigint

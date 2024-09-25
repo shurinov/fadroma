@@ -1,42 +1,59 @@
-import { assign } from '@hackbg/fadroma'
-import type { Address } from '@hackbg/fadroma'
 import { decode, u64 } from '@hackbg/borshest'
-import type Connection from './NamadaConnection'
+import type NamadaConnection from './NamadaConnection'
 import type { NamadaDecoder } from './NamadaDecode'
 
 export type Params = Awaited<ReturnType<typeof fetchGovernanceParameters>>
 
-export async function fetchGovernanceParameters (connection: Pick<Connection, 'abciQuery'|'decode'>) {
+type Connection = Pick<NamadaConnection, 'abciQuery'|'decode'>
+
+export const INTERNAL_ADDRESS = "tnam1q5qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqrw33g6"
+
+export async function fetchGovernanceParameters (
+  connection: Connection
+) {
   const binary = await connection.abciQuery(`/vp/governance/parameters`)
   return connection.decode.gov_parameters(binary)
 }
 
-export async function fetchProposalCount (connection: Pick<Connection, 'abciQuery'>) {
+export async function fetchProposalCount (
+  connection: Connection
+) {
   const binary = await connection.abciQuery(`/shell/value/#${INTERNAL_ADDRESS}/counter`)
   return decode(u64, binary) as bigint
 }
 
 export async function fetchProposalInfo (
-  connection: Pick<Connection, 'abciQuery'|'decode'>, id: number|bigint
-): Promise<NamadaGovernanceProposal|null> {
-  const proposalResponse = await connection.abciQuery(`/vp/governance/proposal/${id}`)
-  if (proposalResponse[0] === 0) return null
-  const [ votesResponse, resultResponse ] = await Promise.all([
-    `/vp/governance/proposal/${id}/votes`,
-    `/vp/governance/stored_proposal_result/${id}`,
-  ].map(x=>connection.abciQuery(x)))
-  const proposal = connection.decode.gov_proposal(proposalResponse.slice(1)) as
-    ReturnType<NamadaDecoder["gov_proposal"]>
-  const votes = connection.decode.gov_votes(votesResponse) as
-    ReturnType<NamadaDecoder["gov_votes"]>
-  const result = (resultResponse[0] === 0) ? null
-    : decodeResultResponse(connection.decode.gov_result(resultResponse.slice(1)) as 
-        Required<ReturnType<NamadaDecoder["gov_result"]>>)
-  return { id: BigInt(id), proposal, votes, result }
+  connection: Connection, id: number|bigint
+): Promise<ReturnType<NamadaDecoder["gov_proposal"]>|null> {
+  const query    = `/vp/governance/proposal/${id}`
+  const response = await connection.abciQuery(query)
+  if (response[0] === 0) return null
+  const decoded = connection.decode.gov_proposal(response.slice(1))
+  return decoded as ReturnType<NamadaDecoder["gov_proposal"]>
+}
+
+export async function fetchProposalVotes (
+  connection: Connection, id: number|bigint
+): Promise<ReturnType<NamadaDecoder["gov_votes"]>> {
+  const query    = `/vp/governance/proposal/${id}/votes`
+  const response = await connection.abciQuery(query)
+  const decoded  = connection.decode.gov_votes(response)
+  return decoded as ReturnType<NamadaDecoder["gov_votes"]>
+}
+
+export async function fetchProposalResult (
+  connection: Connection, id: number|bigint
+): Promise<NamadaGovernanceProposalResult|null> {
+  const query    = `/vp/governance/stored_proposal_result/${id}`
+  const response = await connection.abciQuery(query)
+  if (response[0] === 0) return null
+  const decoded = connection.decode.gov_result(response.slice(1))
+  const results = decodeResultResponse(decoded as Required<typeof decoded>)
+  return results as NamadaGovernanceProposalResult
 }
 
 export async function fetchProposalWasm (
-  connection: Pick<Connection, 'abciQuery'|'decode'>, id: number|bigint
+  connection: Connection, id: number|bigint
 ): Promise<NamadaGovernanceProposalWasm|null> {
   id = BigInt(id)
   const codeKey = connection.decode.gov_proposal_code_key(BigInt(id))
@@ -70,9 +87,6 @@ const decodeResultResponse = (
   abstainPercent: (turnout > 0) ? percent(decoded.totalAbstainPower!, turnout) : '0',
 })
 
-export const INTERNAL_ADDRESS =
-  "tnam1q5qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqrw33g6"
-
 interface NamadaGovernanceProposal {
   readonly id:       bigint
   readonly proposal: ReturnType<NamadaDecoder["gov_proposal"]>
@@ -102,10 +116,12 @@ interface NamadaGovernanceProposalResult {
 
 const percent = (a: string|number|bigint, b: string|number|bigint) =>
   ((Number(BigInt(a) * 1000000n / BigInt(b)) / 10000).toFixed(2) + '%')
+
 const percent2 = (a: string|number|bigint, b: string|number|bigint) =>
   ((Number(BigInt(a) * 1000000n / BigInt(b)) / 1000000).toFixed(2) + '%')
 
-export {
+export type {
   NamadaGovernanceProposal       as Proposal,
+  NamadaGovernanceProposalWasm   as ProposalWasm,
   NamadaGovernanceProposalResult as ProposalResult,
 }
