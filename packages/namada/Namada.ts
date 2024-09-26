@@ -1,7 +1,7 @@
 import Console from './NamadaConsole'
 import Chain from './NamadaChain'
 import Connection from './NamadaConnection'
-import Block, { Transaction } from './NamadaBlock'
+import { Block, Transaction } from './NamadaBlock'
 import { Decode, initDecoder } from './NamadaDecode'
 import * as Identity from './NamadaIdentity'
 export {
