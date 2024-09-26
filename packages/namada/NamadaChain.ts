@@ -56,6 +56,9 @@ export default class NamadaChain extends CW.Chain {
     throw new Error('Transacting on Namada is currently not supported.')
   }
 
+  fetchBlockResults (options?: { height?: number|bigint }) {
+    return this.getConnection().fetchBlockResultsImpl(options)
+  }
   fetchProtocolParameters () {
     return this.getConnection().fetchProtocolParametersImpl()
   }
