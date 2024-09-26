@@ -13,6 +13,7 @@
     "@hackbg/fadroma":  "workspace:*",
     "@fadroma/cw":  "workspace:*",
     "@hackbg/cmds": "workspace:*",
+    "@hackbg/4mat": "workspace:*",
     "@hackbg/borshest": "workspace:*"
   },
   "scripts": {

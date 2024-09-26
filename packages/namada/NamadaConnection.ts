@@ -1,5 +1,5 @@
 import * as CW from '@fadroma/cw'
-import Block from './NamadaBlock'
+import * as Block from './NamadaBlock'
 import * as PoS from './NamadaPoS'
 import * as PGF from './NamadaPGF'
 import * as Gov from './NamadaGov'
@@ -16,21 +16,21 @@ export default class NamadaConnection extends CW.Connection {
   }
 
   override async fetchBlockImpl (
-    parameter?: ({ height: bigint|number }|{ hash: string }) & { raw?: boolean }
-  ): Promise<Block> {
-    if (!this.url) {
-      throw new CW.Error("Can't fetch block: missing connection URL")
-    }
-    if (!parameter) {
-      parameter = {} as any
-    }
+    parameter?: { height: bigint|number }|{ hash: string }
+  ): Promise<Block.Block> {
+    if (!this.url) throw new CW.Error("Can't fetch block: missing connection URL")
+    if (!parameter) parameter = {} as any
     if ('height' in parameter!) {
-      return Block.fetchByHeight(this, parameter)
+      return Block.fetchBlockByHeight(this, parameter)
     } else if ('hash' in parameter!) {
-      return Block.fetchByHash(this, parameter)
+      throw new Error('NamadaBlock.fetchByHash: not implemented')
     } else {
-      return Block.fetchByHeight(this, {})
+      return Block.fetchBlockByHeight(this, {})
     }
+  }
+
+  fetchBlockResultsImpl (parameter?: { height?: bigint|number }) {
+    return Block.fetchBlockResultsByHeight(this, parameter?.height)
   }
 
   override async fetchBalanceImpl (parameters: {
