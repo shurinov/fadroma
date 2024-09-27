@@ -157,7 +157,8 @@ export async function fetchValidatorStake (
   let query = `/vp/pos/validator/stake/${address}`
   if (epoch) query += `/${epoch}`
   const totalStake = await connection.abciQuery(query)
-  return decode(u256, totalStake)
+  if (totalStake[0] === 0) return 0
+  return decode(u256, totalStake.slice(1))
 }
 
 /** Fetch details for a Namada validator. */
