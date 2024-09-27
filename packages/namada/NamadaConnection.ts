@@ -153,8 +153,8 @@ export default class NamadaConnection extends CW.Connection {
   fetchValidatorStakeImpl (address: string, epoch?: Epoch.Epoch) {
     return PoS.fetchValidatorStake(this, address, epoch)
   }
-  fetchBondWithSlashingImpl (validator: string, delegator: string, epoch?: Epoch.Epoch) {
-    return PoS.fetchBondWithSlashing(this, validator, delegator, epoch)
+  fetchBondWithSlashingImpl (delegator: string, validator: string, epoch?: Epoch.Epoch) {
+    return PoS.fetchBondWithSlashing(this, delegator, validator, epoch)
   }
 }
 

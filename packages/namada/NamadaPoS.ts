@@ -49,11 +49,11 @@ export async function fetchDelegationsAt (
 /** Fetch bond with slashing for a given validator and delegator. */
 export async function fetchBondWithSlashing (
   connection: NamadaConnection,
-  validator:  Address,
   delegator:  Address,
+  validator:  Address,
   epoch?:     number|bigint|string
 ) {
-  let query = `/vp/pos/bond_with_slashing/${validator}/${delegator}`
+  let query = `/vp/pos/bond_with_slashing/${delegator}/${validator}`
   if (epoch) query += `/${epoch}`
   const totalStake = await connection.abciQuery(query)
   return decode(u256, totalStake)

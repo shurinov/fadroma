@@ -133,8 +133,8 @@ export default class NamadaChain extends CW.Chain {
   fetchValidatorStake (address: string, epoch?: Epoch) {
     return this.getConnection().fetchValidatorStakeImpl(address, epoch)
   }
-  fetchBondWithSlashing (validator: string, delegator: string, epoch?: Epoch) {
-    return this.getConnection().fetchBondWithSlashingImpl(validator, delegator, epoch)
+  fetchBondWithSlashing (delegator: string, validator: string, epoch?: Epoch) {
+    return this.getConnection().fetchBondWithSlashingImpl(delegator, validator, epoch)
   }
   fetchDelegations (address: string) {
     return this.getConnection().fetchDelegationsImpl(address)
