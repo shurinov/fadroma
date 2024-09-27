@@ -4,7 +4,7 @@ import * as PoS from './NamadaPoS'
 import * as PGF from './NamadaPGF'
 import * as Gov from './NamadaGov'
 import * as Epoch from './NamadaEpoch'
-import type { Chain as Namada, Epoch } from './Namada'
+import type { Chain as Namada } from './Namada'
 import { decode, u256 } from '@hackbg/borshest'
 
 export default class NamadaConnection extends CW.Connection {

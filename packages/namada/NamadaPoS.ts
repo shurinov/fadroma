@@ -2,7 +2,8 @@ import type { Address } from '@hackbg/fadroma'
 import { Console, assign, base16, optionallyParallel} from '@hackbg/fadroma'
 import { Staking } from '@fadroma/cw'
 import { decode, u8, u64, u256, array, set } from '@hackbg/borshest'
-import type { Chain as Namada, Connection as NamadaConnection, Epoch } from './Namada'
+import type { Chain as Namada, Connection as NamadaConnection } from './Namada'
+import type { Epoch } from './NamadaEpoch'
 
 export type Params = Awaited<ReturnType<typeof fetchStakingParameters>>
 
@@ -377,7 +378,7 @@ const getRequests = (
 /** Generates a warning handler for each request. */
 const getWarnings = (connection: NamadaConnection, address: Address, epoch?: Epoch) => {
   const warn = (msg: string) => (_: Error) => {
-    if (!isNaN(epoch)) msg += ` for epoch ${epoch}`
+    if (!isNaN(epoch as number)) msg += ` for epoch ${epoch}`
     connection.log.warn(`${address}:`, msg)
     return null
   }
@@ -395,7 +396,7 @@ const getAbciQueryPaths = (address: Address, epoch?: Epoch) => {
   let commissionPath = `/vp/pos/validator/commission/${address}`
   let statePath      = `/vp/pos/validator/state/${address}`
   let stakePath      = `/vp/pos/validator/stake/${address}`
-  if (!isNaN(epoch)) {
+  if (!isNaN(epoch as number)) {
     const epochSuffix = `/${epoch}`
     commissionPath += epochSuffix
     statePath      += epochSuffix

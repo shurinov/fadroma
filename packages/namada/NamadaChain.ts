@@ -4,7 +4,7 @@ import NamadaConnection from './NamadaConnection'
 import type { Validator } from './NamadaPoS'
 import { Decode, initDecoder } from './NamadaDecode'
 import type { NamadaDecoder } from './NamadaDecode'
-import type { Epoch } from './Namada'
+import type { Epoch } from './NamadaEpoch'
 
 export default class NamadaChain extends CW.Chain {
   decode: NamadaDecoder = Decode as unknown as NamadaDecoder

@@ -54,7 +54,7 @@ export async function fetchBlockResultsByHeight (
   }
   const returned: Partial<BlockResults> = {}
   for (const [key, value] of Object.entries(result)) {
-    returned[Case.camel(key) as keyof BlockResults] = value
+    returned[Case.camel(key) as keyof BlockResults] = value as any
   }
   return returned as BlockResults
 }

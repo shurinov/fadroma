@@ -1,7 +1,7 @@
 import type { Address, Uint128 } from '@hackbg/fadroma'
 import init, { Decode } from './pkg/fadroma_namada.js'
-import type NamadaBlock from './NamadaBlock'
-import type { Transaction as NamadaTransaction } from './NamadaBlock'
+import type { Block, Transaction } from './NamadaBlock'
+import type {  } from './NamadaBlock'
 import type * as PGF from './NamadaPGF'
 import type * as PoS from './NamadaPoS'
 import type * as Gov from './NamadaGov'
@@ -145,8 +145,8 @@ export interface NamadaDecoder {
 
   block (blockResponse: unknown, resultsResponse: unknown): {
     hash:         string,
-    header:       NamadaBlock["header"]
-    transactions: Array<Partial<NamadaTransaction> & {id: string}>
+    header:       Block["header"]
+    transactions: Array<Partial<Transaction> & {id: string}>
   }
 
   tx (): {
