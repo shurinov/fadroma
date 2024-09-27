@@ -130,16 +130,16 @@ export default class NamadaChain extends CW.Chain {
   fetchValidator (address: string, options?: { epoch?: Epoch }) {
     return this.getConnection().fetchValidatorImpl(address, options)
   }
-  fetchValidatorStake (address: string, epoch?: number|string|bigint) {
+  fetchValidatorStake (address: string, epoch?: Epoch) {
     return this.getConnection().fetchValidatorStakeImpl(address, epoch)
   }
-  fetchBondWithSlashing (validator: string, delegator: string, epoch?: number|string|bigint) {
+  fetchBondWithSlashing (validator: string, delegator: string, epoch?: Epoch) {
     return this.getConnection().fetchBondWithSlashingImpl(validator, delegator, epoch)
   }
   fetchDelegations (address: string) {
     return this.getConnection().fetchDelegationsImpl(address)
   }
-  fetchDelegationsAt (address: string, epoch?: number|string|bigint) {
+  fetchDelegationsAt (address: string, epoch?: Epoch) {
     return this.getConnection().fetchDelegationsAtImpl(address, epoch)
   }
   fetchGovernanceParameters () {
@@ -169,7 +169,7 @@ export default class NamadaChain extends CW.Chain {
   fetchEpochDuration () {
     return this.getConnection().fetchEpochDurationImpl()
   }
-  fetchTotalStaked (epoch?: number|string|bigint) {
+  fetchTotalStaked (epoch?: Epoch) {
     return this.getConnection().fetchTotalStakedImpl(epoch)
   }
 }

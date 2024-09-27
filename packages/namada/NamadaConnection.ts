@@ -144,16 +144,16 @@ export default class NamadaConnection extends CW.Connection {
   fetchDelegationsImpl (address: string) {
     return PoS.fetchDelegations(this, address)
   }
-  fetchDelegationsAtImpl (address: string, epoch?: number|string|bigint) {
+  fetchDelegationsAtImpl (address: string, epoch?: Epoch.Epoch) {
     return PoS.fetchDelegationsAt(this, address, epoch)
   }
-  fetchTotalStakedImpl (epoch?: number|string|bigint) {
+  fetchTotalStakedImpl (epoch?: Epoch.Epoch) {
     return PoS.fetchTotalStaked(this, epoch)
   }
-  fetchValidatorStakeImpl (address: string, epoch?: number|string|bigint) {
+  fetchValidatorStakeImpl (address: string, epoch?: Epoch.Epoch) {
     return PoS.fetchValidatorStake(this, address, epoch)
   }
-  fetchBondWithSlashingImpl (validator: string, delegator: string, epoch?: number|string|bigint) {
+  fetchBondWithSlashingImpl (validator: string, delegator: string, epoch?: Epoch.Epoch) {
     return PoS.fetchBondWithSlashing(this, validator, delegator, epoch)
   }
 }
