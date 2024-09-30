@@ -172,7 +172,7 @@ impl ToJS for TallyResult {
 impl ToJS for TallyType {
     fn to_js (&self) -> Result<JsValue, Error> {
         Ok(match self {
-            Self::TwoThirds                  => "TwoThirds",
+            Self::TwoFifths                  => "TwoFifths",
             Self::OneHalfOverOneThird        => "OneHalfOverOneThird",
             Self::LessOneHalfOverOneThirdNay => "LessOneHalfOverOneThirdNay"
         }.into())
