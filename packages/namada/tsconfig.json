@@ -5,7 +5,8 @@
   "exclude": [ 
     ".ubik",
     "*.dist.*",
-    "node_modules"
+    "node_modules",
+    "namada.test.ts"
   ],
   "compilerOptions": {
     "target":                       "esnext",
