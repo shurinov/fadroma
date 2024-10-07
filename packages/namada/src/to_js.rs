@@ -196,7 +196,7 @@ impl ToJS for ProposalType {
                     set.add(&op.to_js()?);
                 }
                 Reflect::set(&object, &"type".into(), &"PGFSteward".into())?;
-                Reflect::set(&object, &"ops".into(), &set.into())?;
+                Reflect::set(&object, &"ops".into(), &Array::from(&set.into()).into())?;
             },
             Self::PGFPayment(actions) => {
                 let set = Set::new(&JsValue::UNDEFINED);
@@ -204,7 +204,7 @@ impl ToJS for ProposalType {
                     set.add(&op.to_js()?);
                 }
                 Reflect::set(&object, &"type".into(), &"PGFPayment".into())?;
-                Reflect::set(&object, &"ops".into(), &set.into())?;
+                Reflect::set(&object, &"ops".into(), &Array::from(&set.into()).into())?;
             }
         };
         Ok(object.into())
