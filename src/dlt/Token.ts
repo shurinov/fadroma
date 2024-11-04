@@ -1,7 +1,7 @@
 /** Fadroma. Copyright (C) 2023 Hack.bg. License: GNU AGPLv3 or custom.
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>. **/
-import type { Address, Uint128 } from '../../index'
+import type { Address, Uint128 } from '../../index.ts'
 
 /** Represents some amount of native token. */
 export interface ICoin { amount: Uint128, denom: string }
@@ -56,13 +56,13 @@ abstract class Token {
 /** An abstract non-fungible token. */
 abstract class NonFungibleToken extends Token {
   /** @returns false */
-  isFungible = () => false
+  isFungible (): this is FungibleToken { return false }
 }
 
 /** An abstract fungible token. */
 abstract class FungibleToken extends Token {
   /** @returns true */
-  isFungible = () => true
+  isFungible (): this is FungibleToken { return true }
   /** Whether this token is natively supported by the chain. */
   abstract isNative (): this is NativeToken
   /** Whether this token is implemented by a smart contract. */
@@ -124,9 +124,9 @@ class NativeToken extends FungibleToken {
   /** The token's unique id. */
   get id () { return this.denom }
   /** @returns false */
-  isCustom = () => false
+  isCustom (): this is CustomToken { return false }
   /** @returns true */
-  isNative = () => true
+  isNative (): this is NativeToken { return true }
 
   fee (amount: string|number|bigint): IFee {
     return new Fee(amount, this.id)
@@ -139,9 +139,9 @@ class CustomToken extends FungibleToken {
   /** The token contract's address. */
   get id () { return this.address }
   /** @returns true */
-  isCustom = () => true
+  isCustom (): this is CustomToken { return true }
   /** @returns false */
-  isNative = () => false
+  isNative (): this is NativeToken { return false }
 }
 
 /** A pair of tokens. */
