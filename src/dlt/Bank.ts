@@ -1,7 +1,7 @@
-import { timed, bold } from '../Util'
-import type { Chain, Agent, Address } from '../../index'
+import { timed, bold } from '../Util.ts'
+import type { Chain, Agent, Address } from '../../index.ts'
 
-export async function fetchBalance (chain: Chain, ...args: Parameters<Chain["fetchBalance"]>) {
+export function fetchBalance (chain: Chain, ...args: Parameters<Chain["fetchBalance"]>) {
   const requests: Record<Address, string[]> = {}
   if (args[0] && !(args[0] instanceof Array)) {
     args[0] = [args[0]]

@@ -3,14 +3,14 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>. **/
 import {
   Console, Logged, SHA256, assign, base16, bold, hideProperties, into, timestamp, timed
-} from '../Util'
+} from '../Util.ts'
 import type {
   Address, Agent, Chain, ChainId, CodeId, CodeHash, Connection, Into, Label, Message, Name,
   Token, TxHash,
-} from '../../index'
+} from '../../index.ts'
 import {
   CompiledCode
-} from './Compile'
+} from './Compile.ts'
 
 export class UploadStore extends Map<CodeHash, UploadedCode> {
   log = new Console(this.constructor.name)
@@ -19,11 +19,11 @@ export class UploadStore extends Map<CodeHash, UploadedCode> {
     super()
   }
 
-  get (codeHash: CodeHash): UploadedCode|undefined {
+  override get (codeHash: CodeHash): UploadedCode|undefined {
     return super.get(codeHash)
   }
 
-  set (codeHash: CodeHash, value: Partial<UploadedCode>): this {
+  override set (codeHash: CodeHash, value: Partial<UploadedCode>): this {
     if (!(value instanceof UploadedCode)) {
       value = new UploadedCode(value)
     }

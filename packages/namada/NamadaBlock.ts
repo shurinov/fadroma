@@ -1,6 +1,6 @@
-import type * as Namada from './Namada'
-import type { NamadaDecoder } from './NamadaDecode'
-import { Decode } from './NamadaDecode'
+import type * as Namada from './Namada.ts'
+import type { NamadaDecoder } from './NamadaDecode.ts'
+import { Decode } from './NamadaDecode.ts'
 import { Block, Transaction } from '@fadroma/cw'
 import { Case } from '@hackbg/4mat'
 

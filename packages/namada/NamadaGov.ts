@@ -1,6 +1,6 @@
 import { decode, u64 } from '@hackbg/borshest'
-import type NamadaConnection from './NamadaConnection'
-import type { NamadaDecoder } from './NamadaDecode'
+import type NamadaConnection from './NamadaConnection.ts'
+import type { NamadaDecoder } from './NamadaDecode.ts'
 
 export type Params = Awaited<ReturnType<typeof fetchGovernanceParameters>>
 

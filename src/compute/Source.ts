@@ -1,4 +1,4 @@
-import { Logged, assign } from '../Util'
+import { Logged, assign } from '../Util.ts'
 
 /** An object representing a given source code. */
 export class SourceCode extends Logged {
@@ -64,7 +64,7 @@ export class RustSourceCode extends SourceCode {
     ])
   }
 
-  get [Symbol.toStringTag] () {
+  override get [Symbol.toStringTag] () {
     return [
       this.cargoWorkspace
         ? ((this.cargoCrate ? `crate ${this.cargoCrate} from` : 'unknown crate from')
@@ -74,7 +74,7 @@ export class RustSourceCode extends SourceCode {
     ].filter(Boolean).join(' ')
   }
 
-  serialize (): ReturnType<SourceCode["serialize"]> & {
+  override serialize (): ReturnType<SourceCode["serialize"]> & {
     cargoWorkspace?: string
     cargoCrate?:     string
     cargoFeatures?:  string[]

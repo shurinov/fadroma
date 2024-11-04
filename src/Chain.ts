@@ -1,13 +1,11 @@
 /** Fadroma. Copyright (C) 2023 Hack.bg. License: GNU AGPLv3 or custom.
     You should have received a copy of the GNU Affero General Public License
     along with this program. If not, see <http://www.gnu.org/licenses/>. **/
-import { Logged, assign, bold, timed, colors, randomColor } from './Util'
-import { fetchBalance } from './dlt/Bank'
-import { Contract, fetchCodeInstances, query } from './compute/Contract'
-import { UploadedCode, fetchCodeInfo, } from './compute/Upload'
-import type {
-  Address, Agent, ChainId, CodeId, Identity, Message, Token, Uint128, UploadStore, Into,
-} from '../index'
+import { Logged, bold, colors, randomColor } from './Util.ts'
+import { fetchBalance } from './dlt/Bank.ts'
+import { Contract, fetchCodeInstances, query } from './compute/Contract.ts'
+import { UploadedCode, fetchCodeInfo, } from './compute/Upload.ts'
+import type { Address, Agent, ChainId, CodeId, Identity, Message, Uint128 } from '../index.ts'
 
 export abstract class Chain extends Logged {
 

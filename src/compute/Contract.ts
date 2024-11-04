@@ -1,17 +1,9 @@
 /** Fadroma. Copyright (C) 2023 Hack.bg. License: GNU AGPLv3 or custom.
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>. **/
-
-import {
-  Console, Logged, SHA256, assign, base16, bold, hideProperties, into, timestamp, timed
-} from '../Util'
-import type {
-  Address, Agent, Chain, ChainId, CodeId, CodeHash, Connection, Into, Label, Message, Name,
-  Token, TxHash,
-} from '../../index'
-import {
-  UploadedCode
-} from './Upload'
+import { Logged, assign, bold, into, timed } from '../Util.ts'
+import type { Address, Agent, Chain, CodeId, CodeHash, Label, Message } from '../../index.ts'
+import { UploadedCode } from './Upload.ts'
 
 /** Represents a particular instance of a smart contract.
   *
@@ -75,14 +67,14 @@ export class Contract extends Logged {
   }
 }
 
-export async function fetchCodeInstances (
+export function fetchCodeInstances (
   chain: Chain, ...args: Parameters<Chain["fetchCodeInstances"]>
 ) {
     let $C = Contract
     let custom = false
     if (typeof args[0] === 'function') {
       $C = args.shift() as typeof Contract
-      let custom = true
+      custom = true
     }
     if (!args[0]) {
       throw new Error('Invalid arguments')
@@ -203,7 +195,7 @@ export async function fetchContractInfo (
   throw new Error('Invalid arguments')
 }
 
-export async function query (chain: Chain, ...args: Parameters<Chain["query"]>) {
+export function query (chain: Chain, ...args: Parameters<Chain["query"]>) {
   const [contract, message] = args
   return timed(function doQuery () {
     return chain.getConnection().queryImpl({

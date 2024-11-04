@@ -1,10 +1,10 @@
 import * as CW from '@fadroma/cw'
-import * as Block from './NamadaBlock'
-import * as PoS from './NamadaPoS'
-import * as PGF from './NamadaPGF'
-import * as Gov from './NamadaGov'
-import * as Epoch from './NamadaEpoch'
-import type { Chain as Namada } from './Namada'
+import * as Block from './NamadaBlock.ts'
+import * as PoS from './NamadaPoS.ts'
+import * as PGF from './NamadaPGF.ts'
+import * as Gov from './NamadaGov.ts'
+import * as Epoch from './NamadaEpoch.ts'
+import type { Chain as Namada } from './Namada.ts'
 import { decode, u256 } from '@hackbg/borshest'
 
 export default class NamadaConnection extends CW.Connection {

@@ -1,10 +1,10 @@
 import * as CW from '@fadroma/cw'
 import type { ChainId } from '@hackbg/fadroma'
-import NamadaConnection from './NamadaConnection'
-import type { Validator } from './NamadaPoS'
-import { Decode, initDecoder } from './NamadaDecode'
-import type { NamadaDecoder } from './NamadaDecode'
-import type { Epoch } from './NamadaEpoch'
+import NamadaConnection from './NamadaConnection.ts'
+import type { Validator } from './NamadaPoS.ts'
+import { Decode, initDecoder } from './NamadaDecode.ts'
+import type { NamadaDecoder } from './NamadaDecode.ts'
+import type { Epoch } from './NamadaEpoch.ts'
 
 export default class NamadaChain extends CW.Chain {
   decode: NamadaDecoder = Decode as unknown as NamadaDecoder
@@ -91,7 +91,7 @@ export default class NamadaChain extends CW.Chain {
     addresses?:       string[],
     parallel?:        boolean,
     parallelDetails?: boolean,
-  }) {
+  }): Promise<Validator[]> {
     return this.getConnection().fetchValidatorsImpl(options)
   }
   fetchValidatorsIter (options?: { parallel?: boolean }) {

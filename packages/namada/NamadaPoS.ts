@@ -2,8 +2,8 @@ import type { Address } from '@hackbg/fadroma'
 import { Console, assign, base16, optionallyParallel} from '@hackbg/fadroma'
 import { Staking } from '@fadroma/cw'
 import { decode, u8, u64, u256, array, set } from '@hackbg/borshest'
-import type { Chain as Namada, Connection as NamadaConnection } from './Namada'
-import type { Epoch } from './NamadaEpoch'
+import type { Chain as Namada, Connection as NamadaConnection } from './Namada.ts'
+import type { Epoch } from './NamadaEpoch.ts'
 
 export type Params = Awaited<ReturnType<typeof fetchStakingParameters>>
 

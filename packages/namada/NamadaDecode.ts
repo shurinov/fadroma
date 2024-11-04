@@ -1,10 +1,10 @@
 import type { Address, Uint128 } from '@hackbg/fadroma'
 import init, { Decode } from './pkg/fadroma_namada.js'
-import type { Block, Transaction } from './NamadaBlock'
-import type {  } from './NamadaBlock'
-import type * as PGF from './NamadaPGF'
-import type * as PoS from './NamadaPoS'
-import type * as Gov from './NamadaGov'
+import type { Block, Transaction } from './NamadaBlock.ts'
+import type {  } from './NamadaBlock.ts'
+import type * as PGF from './NamadaPGF.ts'
+import type * as PoS from './NamadaPoS.ts'
+import type * as Gov from './NamadaGov.ts'
 
 export async function initDecoder (decoder: string|URL|Uint8Array): Promise<void> {
   if (decoder instanceof Uint8Array) {

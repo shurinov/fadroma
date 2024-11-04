@@ -1,9 +1,9 @@
 /** Fadroma. Copyright (C) 2023 Hack.bg. License: GNU AGPLv3 or custom.
     You should have received a copy of the GNU Affero General Public License
     along with this program. If not, see <http://www.gnu.org/licenses/>. **/
-import type { Chain, Agent, Identity, Address, ChainId } from '../index'
-import { Logged, assign } from './Util'
-import * as Token from './dlt/Token'
+import type { /*Chain, Agent, Identity, Address,*/ ChainId } from '../index.ts'
+import { Logged, assign } from './Util.ts'
+import * as Token from './dlt/Token.ts'
 
 /** Represents the backend of an [`Endpoint`](#abstract-class-endpoint), managed by us,
   * such as:

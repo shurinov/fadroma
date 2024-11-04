@@ -2,9 +2,9 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program. If not, see <http://www.gnu.org/licenses/>. **/
 
-import { Console, Logged, bold, assign, base16, SHA256 } from '../Util'
-import { SourceCode } from './Source'
-import type { CodeHash } from '../../index'
+import { Console, Logged, bold, assign, base16, SHA256 } from '../Util.ts'
+import { SourceCode } from './Source.ts'
+import type { CodeHash } from '../../index.ts'
 
 /** The default Git ref when not specified. */
 export const HEAD = 'HEAD'

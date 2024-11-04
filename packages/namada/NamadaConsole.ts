@@ -1,7 +1,7 @@
 import { Console, bold } from '@hackbg/fadroma'
-import type { Transaction } from './NamadaBlock'
-import type { Proposal } from './NamadaGov'
-import type { Validator } from './NamadaPoS'
+import type { Transaction } from './NamadaBlock.ts'
+import type { Proposal } from './NamadaGov.ts'
+import type { Validator } from './NamadaPoS.ts'
 
 export default class NamadaConsole extends Console {
 

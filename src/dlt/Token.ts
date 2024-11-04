@@ -28,7 +28,7 @@ export class Fee implements IFee {
     let tag = `${this.gas}`
     if (this.amount.length > 0) {
       tag += ' ('
-      return this.amount.map(({ amount, denom })=>{
+      tag += this.amount.map(({ amount, denom })=>{
         return `${amount} ${denom}`
       }).join('|')
       tag += ')'

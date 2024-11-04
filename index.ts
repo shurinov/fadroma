@@ -16,20 +16,20 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **/
 
-export { Chain, Connection, Block, Transaction } from './src/Chain'
-export { Identity, Agent, SigningConnection, Batch } from './src/Agent'
-export { Backend } from './src/Backend'
+export { Chain, Connection, Block, Transaction } from './src/Chain.ts'
+export { Identity, Agent, SigningConnection, Batch } from './src/Agent.ts'
+export { Backend } from './src/Backend.ts'
 
-export { Proposal, Vote } from './src/dlt/Governance'
-export { Validator } from './src/dlt/Staking'
-export * as Token from './src/dlt/Token'
+export { Proposal, Vote } from './src/dlt/Governance.ts'
+export { Validator } from './src/dlt/Staking.ts'
+export * as Token from './src/dlt/Token.ts'
 
-export { SourceCode, RustSourceCode } from './src/compute/Source'
-export { Compiler, CompiledCode } from './src/compute/Compile'
-export { UploadedCode, UploadStore } from './src/compute/Upload'
-export { Contract } from './src/compute/Contract'
+export { SourceCode, RustSourceCode } from './src/compute/Source.ts'
+export { Compiler, CompiledCode } from './src/compute/Compile.ts'
+export { UploadedCode, UploadStore } from './src/compute/Upload.ts'
+export { Contract } from './src/compute/Contract.ts'
 
-export * from './src/Util'
+export * from './src/Util.ts'
 
 /** An address on a chain. */
 export type Address = string

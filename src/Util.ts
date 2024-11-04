@@ -2,7 +2,6 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>. **/
 import { Error } from '@hackbg/oops'
-import { Console, Logged, bold, colors } from '@hackbg/logs'
 
 class FadromaError extends Error {}
 
@@ -24,7 +23,7 @@ export async function timed <T> (
     elapsed: ((t1-t0)/1000).toFixed(3)+'s',
     result
   })
-  return result
+  return result as T
 }
 
 export async function optionallyParallel <T> (parallel: boolean|undefined, thunks: Array<()=>Promise<T>>) {

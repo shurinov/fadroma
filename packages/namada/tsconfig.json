@@ -12,11 +12,14 @@
     "target":                       "esnext",
     "module":                       "esnext",
     "moduleResolution":             "node",
-    "esModuleInterop":              true,
     "allowSyntheticDefaultImports": true,
-    "noEmitOnError":                true,
+    "esModuleInterop":              true,
+    "allowJs":                      true,
+    "checkJs":                      true,
+    "resolveJsonModule":            true,
+    "downlevelIteration":           true,
     "skipLibCheck":                 true,
-    "experimentalDecorators":       true,
-    "strict":                       true
+    "strict":                       true,
+    "allowImportingTsExtensions":   true
   }
 }

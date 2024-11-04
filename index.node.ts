@@ -16,9 +16,9 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **/
 
-export * from './index'
+export * from './index.ts'
 
 // Monkey patch for fetching from local FS. See docstring.
-import { _$_HACK_$_ } from './src/compute/Upload'
-import { LocalCompiledCode } from './src/compute/Compile.node'
+import { _$_HACK_$_ } from './src/compute/Upload.ts'
+import { LocalCompiledCode } from './src/compute/Compile.node.ts'
 _$_HACK_$_.CompiledCode = LocalCompiledCode

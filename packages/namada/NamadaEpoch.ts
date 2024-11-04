@@ -1,6 +1,6 @@
 import { decode, u64 } from '@hackbg/borshest'
-import type { Decode } from './NamadaDecode'
-import type NamadaConnection from './NamadaConnection'
+import type { Decode } from './NamadaDecode.ts'
+import type NamadaConnection from './NamadaConnection.ts'
 
 export type Epoch = number|bigint|string
 

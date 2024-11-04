@@ -1,4 +1,4 @@
-import type NamadaConnection from './NamadaConnection'
+import type NamadaConnection from './NamadaConnection.ts'
 
 export type Params = Awaited<ReturnType<typeof fetchPGFParameters>>
 

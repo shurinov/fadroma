@@ -1,13 +1,13 @@
 /** Fadroma. Copyright (C) 2023 Hack.bg. License: GNU AGPLv3 or custom.
     You should have received a copy of the GNU Affero General Public License
     along with this program. If not, see <http://www.gnu.org/licenses/>. **/
-import type { Address, Uint128, ChainId, CodeId, Token, Message, Into } from '../index'
-import { assign, timed, bold, Logged, into } from './Util'
-import { Chain } from './Chain'
-import { send } from './dlt/Bank'
-import { CompiledCode } from './compute/Compile'
-import { UploadedCode, UploadStore, upload } from './compute/Upload'
-import { Contract, instantiate, execute } from './compute/Contract'
+import type { Address, Uint128, ChainId, CodeId, Token, Message, Into } from '../index.ts'
+import { assign, Logged } from './Util.ts'
+import { Chain } from './Chain.ts'
+import { send } from './dlt/Bank.ts'
+import { CompiledCode } from './compute/Compile.ts'
+import { UploadedCode, UploadStore, upload } from './compute/Upload.ts'
+import { Contract, instantiate, execute } from './compute/Contract.ts'
 
 /** A cryptographic identity. */
 export class Identity extends Logged {
@@ -22,7 +22,7 @@ export class Identity extends Logged {
   /** Address of account. */
   address?: Address
   /** Sign some data with the identity's private key. */
-  sign (doc: any): unknown {
+  sign (_: unknown): unknown {
     throw new Error("can't sign: stub")
   }
 }
@@ -53,11 +53,11 @@ export abstract class Agent extends Logged {
   get address (): Address|undefined {
     return this.identity?.address
   }
-  async fetchBalance (tokens?: string[]|string): Promise<Record<string, Uint128>> {
+  fetchBalance (_tokens?: string[]|string): Promise<Record<string, Uint128>> {
     throw new Error("unimplemented!")
   }
   /** Send one or more kinds of native tokens to one or more recipients. */
-  async send (
+  send (
     outputs:  Record<Address, Record<string, Uint128>>,
     options?: Omit<Parameters<SigningConnection["sendImpl"]>[0],
       'outputs'>
@@ -65,7 +65,7 @@ export abstract class Agent extends Logged {
     return send(this, outputs, options)
   }
   /** Upload a contract's code, generating a new code id/hash pair. */
-  async upload (
+  upload (
     code:     string|URL|Uint8Array|Partial<CompiledCode>,
     options?: Omit<Parameters<SigningConnection["uploadImpl"]>[0],
       'binary'>,
@@ -76,7 +76,7 @@ export abstract class Agent extends Logged {
     return upload(this, code, options)
   }
   /** Instantiate a new program from a code id, label and init message. */
-  async instantiate (
+  instantiate (
     contract: CodeId|Partial<UploadedCode>,
     options:  Partial<Contract> & {
       initMsg:   Into<Message>,
@@ -190,22 +190,22 @@ export class Batch extends Logged {
   agent: Agent
 
   /** Add an upload message to the batch. */
-  upload (...args: Parameters<Agent["upload"]>): this {
+  upload (..._args: Parameters<Agent["upload"]>): this {
     this.log.warn('upload: stub (not implemented)')
     return this
   }
   /** Add an instantiate message to the batch. */
-  instantiate (...args: Parameters<Agent["instantiate"]>): this {
+  instantiate (..._args: Parameters<Agent["instantiate"]>): this {
     this.log.warn('instantiate: stub (not implemented)')
     return this
   }
   /** Add an execute message to the batch. */
-  execute (...args: Parameters<Agent["execute"]>): this {
+  execute (..._args: Parameters<Agent["execute"]>): this {
     this.log.warn('execute: stub (not implemented)')
     return this
   }
   /** Submit the batch. */
-  async submit (...args: unknown[]): Promise<unknown> {
+  async submit (..._args: unknown[]): Promise<unknown> {
     this.log.warn('submit: stub (not implemented)')
     return {}
   }
