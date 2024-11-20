@@ -1,61 +1,57 @@
 use crate::{*, to_js::*};
 
+
 pub fn tx_content (tx: &Tx, result: Object) -> Result<Object, Error> {
+    let mut content: Vec<Object> = Vec::new();
     let mut tag: Option<String> = None;
+    let mut wait_data = false;
     for section in tx.sections.iter() {
         if let Section::Code(code) = section {
             tag = code.tag.clone();
             if tag.is_some() {
-                break
+                wait_data = true;
+            }
+        }
+        if wait_data {
+            if let Section::Data(data) = section {
+                let binary: Option<&[u8]> = Some(&data.data);
+                let used_tag = tag.clone().unwrap();
+                let binary = binary.unwrap();
+                let data = match used_tag.as_str() {
+                    "tx_become_validator.wasm" => become_validator(binary),
+                    "tx_bond.wasm" => bond(binary),
+                    "tx_bridge_pool.wasm" => bridge_pool(binary),
+                    "tx_change_consensus_key.wasm" => change_consensus_key(binary),
+                    "tx_change_validator_commission.wasm" => change_validator_commission(binary),
+                    "tx_change_validator_metadata.wasm" => change_validator_metadata(binary),
+                    "tx_claim_rewards.wasm" => claim_rewards(binary),
+                    "tx_deactivate_validator.wasm" => deactivate_validator(binary),
+                    "tx_ibc.wasm" => Ok(Object::new()),
+                    "tx_init_account.wasm" => init_account(binary),
+                    "tx_init_proposal.wasm" => init_proposal(binary),
+                    "tx_reactivate_validator.wasm" => reactivate_validator(binary),
+                    "tx_redelegate.wasm" => redelegate(binary),
+                    "tx_resign_steward.wasm" => resign_steward(binary),
+                    "tx_reveal_pk.wasm" => reveal_pk(binary),
+                    "tx_transfer.wasm" => transfer(binary),
+                    "tx_unbond.wasm" => unbond(binary),
+                    "tx_unjail_validator.wasm" => unjail_validator(binary),
+                    "tx_update_account.wasm" => update_account(binary),
+                    "tx_update_steward_commission.wasm" => update_steward_commission(binary),
+                    "tx_vote_proposal.wasm" => vote_proposal(binary),
+                    "tx_withdraw.wasm" => withdraw(binary),
+                    "vp_implicit.wasm" => Ok(Object::new()),
+                    "vp_user.wasm" => Ok(Object::new()),
+                    _ => Ok(Object::new()),
+                }?;
+                content.push(object(&[
+                    ("type".into(), used_tag.into()),
+                    ("data".into(), data.into()),
+                ])?);
+                wait_data = false;
             }
         }
     }
-    if tag.is_none() {
-        return Ok(result)
-    }
-    let mut binary: Option<&[u8]> = None;
-    for section in tx.sections.iter() {
-        if let Section::Data(data) = section {
-            binary = Some(&data.data);
-            break
-        }
-    }
-    if binary.is_none() {
-        return Ok(result)
-    }
-    let binary = binary.unwrap();
-    let tag = tag.unwrap();
-    let data = match tag.as_str() {
-        "tx_become_validator.wasm" => become_validator(binary),
-        "tx_bond.wasm" => bond(binary),
-        "tx_bridge_pool.wasm" => bridge_pool(binary),
-        "tx_change_consensus_key.wasm" => change_consensus_key(binary),
-        "tx_change_validator_commission.wasm" => change_validator_commission(binary),
-        "tx_change_validator_metadata.wasm" => change_validator_metadata(binary),
-        "tx_claim_rewards.wasm" => claim_rewards(binary),
-        "tx_deactivate_validator.wasm" => deactivate_validator(binary),
-        "tx_ibc.wasm" => Ok(Object::new()),
-        "tx_init_account.wasm" => init_account(binary),
-        "tx_init_proposal.wasm" => init_proposal(binary),
-        "tx_reactivate_validator.wasm" => reactivate_validator(binary),
-        "tx_redelegate.wasm" => redelegate(binary),
-        "tx_resign_steward.wasm" => resign_steward(binary),
-        "tx_reveal_pk.wasm" => reveal_pk(binary),
-        "tx_transfer.wasm" => transfer(binary),
-        "tx_unbond.wasm" => unbond(binary),
-        "tx_unjail_validator.wasm" => unjail_validator(binary),
-        "tx_update_account.wasm" => update_account(binary),
-        "tx_update_steward_commission.wasm" => update_steward_commission(binary),
-        "tx_vote_proposal.wasm" => vote_proposal(binary),
-        "tx_withdraw.wasm" => withdraw(binary),
-        "vp_implicit.wasm" => Ok(Object::new()),
-        "vp_user.wasm" => Ok(Object::new()),
-        _ => Ok(Object::new()),
-    }?;
-    let content = object(&[
-        ("type".into(), tag.into()),
-        ("data".into(), data.into()),
-    ])?;
     Reflect::set(&result, &"content".into(), &content.into())?;
     Ok(result)
 }

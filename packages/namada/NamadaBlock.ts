@@ -168,7 +168,7 @@ class NamadaTransaction extends Transaction {
     atomic?:              boolean
     txType?:              'Raw'|'Wrapper'|'Decrypted'|'Protocol'
     sections?:            object[]
-    content?:             object
+    content?:             Array<object>
     batch?:               Array<{
       hash:     string,
       codeHash: string,
