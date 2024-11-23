@@ -11,9 +11,8 @@ pub fn tx_content (tx: &Tx, result: Object) -> Result<Object, Error> {
             if tag.is_some() {
                 wait_data = true;
             }
-        }
-        if wait_data {
-            if let Section::Data(data) = section {
+        } else if let Section::Data(data) = section {
+            if wait_data {
                 let binary: Option<&[u8]> = Some(&data.data);
                 let used_tag = tag.clone().unwrap();
                 let binary = binary.unwrap();
@@ -48,8 +47,9 @@ pub fn tx_content (tx: &Tx, result: Object) -> Result<Object, Error> {
                     ("type".into(), used_tag.into()),
                     ("data".into(), data.into()),
                 ])?);
-                wait_data = false;
             }
+        } else {
+            wait_data = false;
         }
     }
     Reflect::set(&result, &"content".into(), &content.into())?;
