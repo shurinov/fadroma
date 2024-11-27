@@ -280,9 +280,10 @@ impl Decode {
         let params = PgfParameters::try_from_slice(&to_bytes(&source))
             .map_err(|e|Error::new(&format!("{e}")))?;
         Ok(to_object! {
-            "stewards"              = params.stewards,
-            "pgfInflationRate"      = params.pgf_inflation_rate,
-            "stewardsInflationRate" = params.stewards_inflation_rate,
+            "stewards"                = params.stewards,
+            "pgfInflationRate"        = params.pgf_inflation_rate,
+            "stewardsInflationRate"   = params.stewards_inflation_rate,
+            "maximumNumberOfStewards" = params.maximum_number_of_stewards,
         })
     }
 
