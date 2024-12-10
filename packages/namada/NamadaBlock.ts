@@ -20,14 +20,14 @@ export async function fetchBlockByHeight (
   }
   // Fetch block and results as undecoded JSON
   const blockUrl   = `${url}/block?height=${height??''}`
-  //const resultsUrl = `${url}/block_results?height=${height??''}`
-  const [block/*, results*/] = await Promise.all([
+  const resultsUrl = `${url}/block_results?height=${height??''}`
+  const [block, results] = await Promise.all([
     fetch(blockUrl).then(response=>response.text()),
-    //fetch(resultsUrl).then(response=>response.text()),
+    fetch(resultsUrl).then(response=>response.text()),
   ])
   return blockFromResponses({
     block: { url: blockUrl, response: block, },
-    //results: { url: resultsUrl, response: results, },
+    results: { url: resultsUrl, response: results, },
   }, { chain, decode, height })
 }
 
@@ -36,6 +36,7 @@ export async function fetchBlockResultsByHeight (
   height?: bigint|number,
 ): Promise<BlockResults> {
   const response = await fetch(`${url}/block_results?height=${height??''}`)
+  console.log(response);
   const { error, result } = await response.json() as {
     error: {
       data: string
