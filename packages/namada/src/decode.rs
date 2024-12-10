@@ -362,4 +362,85 @@ impl Decode {
             "totalAbstainPower" = result.total_abstain_power,
         })
     }
+
+    #[wasm_bindgen]
+    pub fn bonds_and_unbonds (source: Uint8Array) -> Result<Object, Error> {
+        let data: HashMap<BondId, BondsAndUnbondsDetail> = HashMap::try_from_slice(&to_bytes(&source))
+            .map_err(|e|Error::new(&format!("{e}")))?;
+        let result = Array::new();
+        for (bond_id, details) in data.iter() {
+            let bonds = &details.bonds;
+            let mut bonds_result = vec![];
+            let bonds_arr = Array::new();
+            for item in bonds.iter() {
+                bonds_result.push(item.start.to_string());
+                bonds_result.push(item.amount.to_string());
+                match item.slashed_amount {
+                    Some(amount) => bonds_result.push(amount.to_string()),
+                    None => bonds_result.push("None".to_owned()),
+                }
+                bonds_arr.push(&to_object! {
+                    "start"          = item.start,
+                    "amount"         = item.amount,
+                    "slashedAmount" = item.slashed_amount,
+                }.into());
+            }
+            
+            let unbonds = &details.unbonds;
+            let mut unbonds_result = vec![];
+            let unbonds_arr = Array::new();
+            for item in unbonds.iter() {
+                unbonds_result.push(item.start.to_string());
+                unbonds_result.push(item.withdraw.to_string());
+                unbonds_result.push(item.amount.to_string());
+                match item.slashed_amount {
+                    Some(amount) => unbonds_result.push(amount.to_string()),
+                    None => unbonds_result.push("None".to_owned()),
+                }
+                unbonds_arr.push(&to_object! {
+                    "start"          = item.start,
+                    "withdraw"       = item.withdraw,
+                    "amount"         = item.amount,
+                    "slashedAmount" = item.slashed_amount,
+                }.into());
+            }
+            
+            let slash = &details.slashes;
+            let mut slash_result = vec![];
+            let slashes_arr = Array::new(); 
+            for item in slash.iter() {
+                slash_result.push(item.epoch.to_string());
+                slash_result.push(item.block_height.to_string());
+                slash_result.push(item.r#type.to_string());
+                slash_result.push(item.rate.to_string());
+                slashes_arr.push(&to_object! {
+                    "epoch"        = item.epoch,
+                    "blockHeight"  = item.block_height,
+                    //"slashType"         = item.r#type,
+                    "slashType"    = match Some(item.r#type) {
+                            Some(SlashType::DuplicateVote) => "DuplicateVote".into(),
+                            Some(SlashType::LightClientAttack) => "LightClientAttack".into(),
+                            None => JsValue::UNDEFINED,
+                        },
+                    "rate"         = item.rate,
+                }.into());
+            }
+
+            // let bonds_str = bonds_result.join(", ");
+            // let unbonds_str = unbonds_result.join(", ");
+            // let slashes_str = slash_result.join(", ");
+            // let data_str = bond_id.to_string() + &bonds_str + "\nunbonds: " + &unbonds_str + "\nslash: " + &slashes_str;
+            // result.push(&data_str.to_js()?);
+            result.push(&to_object! {
+                "source"      = bond_id.source,
+                "validator"   = bond_id.validator,
+                "bonds"       = bonds_arr,
+                "unbonds"     = unbonds_arr,
+                "slashes"     = slashes_arr,
+            }.into());
+        }
+        Ok(result.into())
+    }
+
+    
 }

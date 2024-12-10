@@ -142,6 +142,9 @@ export default class NamadaChain extends CW.Chain {
   fetchDelegationsAt (address: string, epoch?: Epoch) {
     return this.getConnection().fetchDelegationsAtImpl(address, epoch)
   }
+  fetchBondsAndUnbonds (address: string, epoch?: Epoch) {
+    return this.getConnection().fetchBondsAndUnbondsImpl(address, epoch)
+  }
   fetchGovernanceParameters () {
     return this.getConnection().fetchGovernanceParametersImpl()
   }
@@ -172,4 +175,8 @@ export default class NamadaChain extends CW.Chain {
   fetchTotalStaked (epoch?: Epoch) {
     return this.getConnection().fetchTotalStakedImpl(epoch)
   }
+  fetchEffectiveNativeSupply (epoch?: Epoch) {
+    return this.getConnection().fetchEffectiveNativeSupplyImpl(epoch)
+  }
+  
 }

@@ -147,6 +147,12 @@ export default class NamadaConnection extends CW.Connection {
   fetchDelegationsAtImpl (address: string, epoch?: Epoch.Epoch) {
     return PoS.fetchDelegationsAt(this, address, epoch)
   }
+  fetchBondsAndUnbondsImpl (address: string, epoch?: Epoch.Epoch) {
+    return PoS.fetchBondsAndUnbonds(this, address, epoch)
+  }
+  fetchEffectiveNativeSupplyImpl (epoch?: Epoch.Epoch) {
+    return PoS.fetchEffectiveNativeSupply(this, epoch)
+  }
   fetchTotalStakedImpl (epoch?: Epoch.Epoch) {
     return PoS.fetchTotalStaked(this, epoch)
   }

@@ -4,6 +4,7 @@ import { Staking } from '@fadroma/cw'
 import { decode, u8, u64, u256, array, set } from '@hackbg/borshest'
 import type { Chain as Namada, Connection as NamadaConnection } from './Namada.ts'
 import type { Epoch } from './NamadaEpoch.ts'
+import type { NamadaDecoder } from './NamadaDecode.ts'
 
 export type Params = Awaited<ReturnType<typeof fetchStakingParameters>>
 
@@ -13,6 +14,16 @@ export async function fetchStakingParameters (
 ) {
   const binary = await connection.abciQuery("/vp/pos/pos_params")
   return connection.decode.pos_parameters(binary)
+}
+
+/** Fetch effective total supply NAM. */
+export async function fetchEffectiveNativeSupply (
+  connection: NamadaConnection, epoch?: number|bigint|string
+) {
+  let query = "/vp/token/effective_native_supply"
+  if (epoch!==undefined) query += `/${epoch}`
+  const binary = await connection.abciQuery(query)
+  return decode(u64, binary)
 }
 
 /** Fetch total staked NAMNAM. */
@@ -44,6 +55,21 @@ export async function fetchDelegationsAt (
   }
   const binary = await connection.abciQuery(query)
   return connection.decode.address_to_amount(binary) as Record<string, bigint>
+}
+
+/** Fetch delegations at given address. */
+export async function fetchBondsAndUnbonds (
+  connection: NamadaConnection,
+  address:    Address,
+  epoch?:     Epoch
+): Promise<ReturnType<NamadaDecoder["bonds_and_unbonds"]>|null> {
+  let query = `/vp/pos/bonds_and_unbonds/to/${address}`
+  epoch = Number(epoch)
+  if (!isNaN(epoch)) {
+    query += `/${epoch}`
+  }
+  const binary = await connection.abciQuery(query)
+  return connection.decode.bonds_and_unbonds(binary) as Promise<ReturnType<NamadaDecoder["bonds_and_unbonds"]>>
 }
 
 /** Fetch bond with slashing for a given validator and delegator. */

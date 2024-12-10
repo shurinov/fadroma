@@ -75,7 +75,10 @@ pub(crate) use namada_sdk::{
             ValidatorState,
             ValidatorStateInfo,
             WeightedValidator,
-        }
+            BondId,
+            BondsAndUnbondsDetail,
+            SlashType,
+        },
     },
     storage::KeySeg,
     string_encoding::Format,

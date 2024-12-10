@@ -26,6 +26,10 @@ export interface NamadaDecoder {
   addresses         (_: Uint8Array): string[]
   address           (_: Uint8Array): string
 
+  bonds_and_unbonds (_: Uint8Array): Partial<{
+
+  }>
+
   epoch_duration (_: Uint8Array): {
     minNumOfBlocks: number,
     minDuration: number
